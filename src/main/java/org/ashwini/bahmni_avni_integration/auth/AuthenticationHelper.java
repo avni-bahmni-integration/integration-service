@@ -14,6 +14,8 @@ import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder
 import com.amazonaws.services.cognitoidp.model.*;
 import com.amazonaws.util.Base64;
 import com.amazonaws.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -30,7 +32,10 @@ import java.util.*;
 /**
  * Private class for SRP client side math.
  */
-class AuthenticationHelper {
+public class AuthenticationHelper {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     private static final String HEX_N =
             "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1"
                     + "29024E088A67CC74020BBEA63B139B22514A08798E3404DD"
@@ -88,7 +93,7 @@ class AuthenticationHelper {
     private String secretKey;
     private String region;
 
-    AuthenticationHelper(String userPoolID, String clientid, String secretKey) {
+    public AuthenticationHelper(String userPoolID, String clientid, String secretKey) {
         do {
             a = new BigInteger(EPHEMERAL_KEY_LENGTH, SECURE_RANDOM).mod(N);
             A = g.modPow(a, N);
@@ -96,32 +101,8 @@ class AuthenticationHelper {
 
         this.userPoolID = userPoolID;
         this.clientId = clientid;
-        this.region = region;
+        this.region = "ap-south-1";
         this.secretKey = secretKey;
-
-        Properties prop = new Properties();
-        InputStream input = null;
-
-        try {
-            input = getClass().getClassLoader().getResourceAsStream("config.properties");
-
-            // load a properties file
-            prop.load(input);
-
-            // Read the property values
-            this.region = prop.getProperty("REGION");
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     private BigInteger getA() {
@@ -173,7 +154,7 @@ class AuthenticationHelper {
      * @param password Password for the SRP request
      * @return the JWT token if the request is successful else null.
      */
-    String PerformSRPAuthentication(String username, String password) {
+    public String PerformSRPAuthentication(String username, String password) {
         String authresult = null;
 
         InitiateAuthRequest initiateAuthRequest = initiateUserSrpAuthRequest(username);
@@ -189,8 +170,6 @@ class AuthenticationHelper {
                 RespondToAuthChallengeRequest challengeRequest = userSrpAuthRequest(initiateAuthResult, password,
                         initiateAuthRequest.getAuthParameters().get("SECRET_HASH"));
                 RespondToAuthChallengeResult result = cognitoIdentityProvider.respondToAuthChallenge(challengeRequest);
-                //System.out.println(result);
-                System.out.println(CognitoJWTParser.getPayload(result.getAuthenticationResult().getIdToken()));
                 authresult = result.getAuthenticationResult().getIdToken();
             }
         } catch (final Exception ex) {
