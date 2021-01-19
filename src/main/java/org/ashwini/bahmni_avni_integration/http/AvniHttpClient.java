@@ -9,6 +9,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Map;
 
 @Component
 public class AvniHttpClient {
@@ -16,19 +19,33 @@ public class AvniHttpClient {
     @Value("${avni.api.url}")
     private String AVNI_API_URL;
 
+    @Value("${avni.impl.username}")
+    private String AVNI_IMPL_USER;
 
-    public ResponseEntity<String> get(String url) {
+    @Value("${avni.impl.password}")
+    private String AVNI_IMPL_PASSWORD;
+
+
+    public ResponseEntity<String> get(String url, Map<String, String> queryParams) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("auth-token", fetchAuthToken());
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
+        for (var entry : queryParams.entrySet()) {
+            builder.queryParam(entry.getKey(), entry.getValue());
+        }
+
+        return restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
+
+    }
+
+    private String fetchAuthToken() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(apiUrl("/cognito-details"), CognitoDetailsResponse.class);
         CognitoDetailsResponse cognitoDetails = response.getBody();
         AuthenticationHelper helper = new AuthenticationHelper(cognitoDetails.getPoolId(), cognitoDetails.getClientId(), "");
-        String authToken = helper.PerformSRPAuthentication("hirent@jsscp", "password");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("auth-token", authToken);
-
-        return restTemplate.exchange(apiUrl(url), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
-
+        return helper.PerformSRPAuthentication(AVNI_IMPL_USER, AVNI_IMPL_PASSWORD);
     }
 
     private String apiUrl(String url) {
