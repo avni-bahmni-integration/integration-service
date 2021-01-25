@@ -25,5 +25,5 @@ build-server: ## Builds the jar file
 test-server: build-test-db
 	./gradlew clean build
 
-open_test_results:
+open-test-results:
 	open build/reports/tests/test/index.html
