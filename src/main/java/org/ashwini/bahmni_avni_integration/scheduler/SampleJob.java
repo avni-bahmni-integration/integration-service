@@ -84,7 +84,7 @@ public class SampleJob implements Job {
 
         AllMarkers allMarkers = new AllMarkersJdbcImpl(transactionManagerImpl);
         AllFailedEvents allFailedEvents = new AllFailedEventsJdbcImpl(transactionManagerImpl);
-        String feedUri = "http://143.110.188.91:8050/openmrs/ws/atomfeed/patient/2";
+        String feedUri = "http://143.110.188.91:8050/openmrs/ws/atomfeed/patient/1";
 
         try {
             AtomFeedClient atomFeedClient = new AtomFeedClient(

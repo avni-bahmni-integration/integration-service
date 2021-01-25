@@ -1,4 +1,5 @@
 SU:=$(shell id -un)
+DB=bahmni_avni
 ADMIN_USER=bahmni_avni_admin
 
 define _build_db
