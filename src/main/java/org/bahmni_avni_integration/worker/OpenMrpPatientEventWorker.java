@@ -2,7 +2,7 @@ package org.bahmni_avni_integration.worker;
 
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.domain.OpenMRSPatientMapper;
+import org.bahmni_avni_integration.mapper.OpenMRSPatientMapper;
 import org.bahmni_avni_integration.util.ObjectMapperRepository;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;

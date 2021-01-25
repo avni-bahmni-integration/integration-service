@@ -1,7 +1,6 @@
 package org.bahmni_avni_integration.contract.bahmni;
 
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.domain.Jsonify;
 import org.bahmni_avni_integration.util.ObjectMapperRepository;
 
 import java.io.IOException;

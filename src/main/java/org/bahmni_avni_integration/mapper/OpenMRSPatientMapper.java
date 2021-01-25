@@ -1,4 +1,4 @@
-package org.bahmni_avni_integration.domain;
+package org.bahmni_avni_integration.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
