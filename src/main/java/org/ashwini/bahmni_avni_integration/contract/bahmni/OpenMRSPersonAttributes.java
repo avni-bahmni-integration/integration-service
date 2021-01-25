@@ -1,13 +1,14 @@
-package org.ashwini.bahmni_avni_integration.domain;
+package org.ashwini.bahmni_avni_integration.contract.bahmni;
 
 import org.apache.log4j.Logger;
+import org.ashwini.bahmni_avni_integration.domain.Jsonify;
 import org.ashwini.bahmni_avni_integration.util.ObjectMapperRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class OpenMRSPersonAttributes extends ArrayList<OpenMRSPersonAttribute> implements Jsonify{
+public class OpenMRSPersonAttributes extends ArrayList<OpenMRSPersonAttribute> implements Jsonify {
 
     public String getGivenLocalName() {
         for (OpenMRSPersonAttribute attribute : this) {

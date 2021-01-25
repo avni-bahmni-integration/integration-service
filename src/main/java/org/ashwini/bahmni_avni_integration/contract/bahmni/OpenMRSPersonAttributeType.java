@@ -1,4 +1,4 @@
-package org.ashwini.bahmni_avni_integration.domain;
+package org.ashwini.bahmni_avni_integration.contract.bahmni;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

@@ -1,7 +1,8 @@
-package org.ashwini.bahmni_avni_integration.domain;
+package org.ashwini.bahmni_avni_integration.contract.bahmni;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.log4j.Logger;
+import org.ashwini.bahmni_avni_integration.domain.Jsonify;
 import org.ashwini.bahmni_avni_integration.util.ObjectMapperRepository;
 
 import java.io.IOException;
