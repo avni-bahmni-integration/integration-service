@@ -1,8 +1,8 @@
 package org.ashwini.bahmni_avni_integration.worker.avni;
 
+import org.ashwini.bahmni_avni_integration.client.AvniHttpClient;
 import org.ashwini.bahmni_avni_integration.domain.AvniEntityStatus;
 import org.ashwini.bahmni_avni_integration.domain.AvniEntityType;
-import org.ashwini.bahmni_avni_integration.http.AvniHttpClient;
 import org.ashwini.bahmni_avni_integration.repository.AvniEntityStatusRepository;
 import org.ashwini.bahmni_avni_integration.util.FormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;

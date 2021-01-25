@@ -1,4 +1,4 @@
-package org.ashwini.bahmni_avni_integration.http;
+package org.ashwini.bahmni_avni_integration.client;
 
 import org.ashwini.bahmni_avni_integration.auth.AuthenticationHelper;
 import org.ashwini.bahmni_avni_integration.web.response.CognitoDetailsResponse;

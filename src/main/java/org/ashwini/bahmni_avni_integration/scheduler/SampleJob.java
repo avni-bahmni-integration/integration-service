@@ -1,7 +1,7 @@
 package org.ashwini.bahmni_avni_integration.scheduler;
 
 import org.ashwini.bahmni_avni_integration.client.OpenMRSWebClient;
-import org.ashwini.bahmni_avni_integration.http.AvniHttpClient;
+import org.ashwini.bahmni_avni_integration.client.AvniHttpClient;
 import org.ashwini.bahmni_avni_integration.worker.OpenMrpPatientEventWorker;
 import org.bahmni.webclients.ClientCookies;
 import org.ict4h.atomfeed.client.AtomFeedProperties;
@@ -43,6 +43,9 @@ public class SampleJob implements Job {
 
     @Autowired
     private OpenMRSWebClient openMRSWebClient;
+
+    @Autowired
+    private OpenMrpPatientEventWorker eventWorker;
 
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -94,12 +97,12 @@ public class SampleJob implements Job {
                     feedProperties,
                     transactionManagerImpl,
                     new URI(feedUri),
-                    new OpenMrpPatientEventWorker());
+                    eventWorker);
             atomFeedClient.processEvents();
         } catch (URISyntaxException e) {
             throw new RuntimeException("error for uri:" + feedUri, e);
         } catch (Exception e) {
-            callBahmni();
+            throw new RuntimeException(e);
         }
     }
 }
