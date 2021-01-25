@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "avni_entity_status")
 public class AvniEntityStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +17,7 @@ public class AvniEntityStatus {
 
     @Column(name = "entity_type")
     @Enumerated(EnumType.STRING)
-    private AvniEntityType avniEntityType;
+    private AvniEntityType entityType;
 
     public Integer getId() {
         return id;
@@ -34,11 +35,11 @@ public class AvniEntityStatus {
         this.readUpto = readUpto;
     }
 
-    public AvniEntityType getAvniEntityType() {
-        return avniEntityType;
+    public AvniEntityType getEntityType() {
+        return entityType;
     }
 
-    public void setAvniEntityType(AvniEntityType avniEntityType) {
-        this.avniEntityType = avniEntityType;
+    public void setEntityType(AvniEntityType entityType) {
+        this.entityType = entityType;
     }
 }
