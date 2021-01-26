@@ -1,17 +1,17 @@
 package org.bahmni_avni_integration.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "mapping_metadata")
 public class MappingMetaData extends BaseEntity {
     @Column(name = "mapping_group_name")
-    private String mappingGroupName;
+    @Enumerated(EnumType.STRING)
+    private MappingGroup mappingGroup;
 
     @Column(name = "mapping_name")
-    private String mappingName;
+    @Enumerated(EnumType.STRING)
+    private MappingType mappingType;
 
     @Column(name = "bahmni_value")
     private String bahmniValue;
@@ -22,20 +22,20 @@ public class MappingMetaData extends BaseEntity {
     @Column(name = "about")
     private String about;
 
-    public String getMappingGroupName() {
-        return mappingGroupName;
+    public MappingGroup getMappingGroup() {
+        return mappingGroup;
     }
 
-    public void setMappingGroupName(String mappingGroupName) {
-        this.mappingGroupName = mappingGroupName;
+    public void setMappingGroup(MappingGroup mappingGroup) {
+        this.mappingGroup = mappingGroup;
     }
 
-    public String getMappingName() {
-        return mappingName;
+    public MappingType getMappingType() {
+        return mappingType;
     }
 
-    public void setMappingName(String mappingName) {
-        this.mappingName = mappingName;
+    public void setMappingType(MappingType mappingType) {
+        this.mappingType = mappingType;
     }
 
     public String getBahmniValue() {

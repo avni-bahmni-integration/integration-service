@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.client.AvniHttpClient;
 import org.bahmni_avni_integration.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.domain.AvniEntityType;
 import org.bahmni_avni_integration.repository.AvniEntityStatusRepository;
+import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.util.FormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,11 +15,13 @@ import java.util.HashMap;
 public class SubjectWorker {
     private AvniHttpClient avniHttpClient;
     private AvniEntityStatusRepository avniEntityStatusRepository;
+    private MappingMetaDataRepository mappingMetaDataRepository;
 
     @Autowired
-    public SubjectWorker(AvniHttpClient avniHttpClient, AvniEntityStatusRepository avniEntityStatusRepository) {
+    public SubjectWorker(AvniHttpClient avniHttpClient, AvniEntityStatusRepository avniEntityStatusRepository, MappingMetaDataRepository mappingMetaDataRepository) {
         this.avniHttpClient = avniHttpClient;
         this.avniEntityStatusRepository = avniEntityStatusRepository;
+        this.mappingMetaDataRepository = mappingMetaDataRepository;
     }
 
     void processSubjects() {
