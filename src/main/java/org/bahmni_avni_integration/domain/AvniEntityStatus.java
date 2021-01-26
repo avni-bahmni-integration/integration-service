@@ -5,12 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "avni_entity_status")
-public class AvniEntityStatus {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Integer id;
-
+public class AvniEntityStatus extends BaseEntity {
     @Column(name = "read_upto", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date readUpto;
@@ -18,14 +13,6 @@ public class AvniEntityStatus {
     @Column(name = "entity_type")
     @Enumerated(EnumType.STRING)
     private AvniEntityType entityType;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Date getReadUpto() {
         return readUpto;
