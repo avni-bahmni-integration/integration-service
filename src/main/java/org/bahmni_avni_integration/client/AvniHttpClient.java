@@ -15,7 +15,6 @@ import java.util.Map;
 
 @Component
 public class AvniHttpClient {
-
     @Value("${avni.api.url}")
     private String AVNI_API_URL;
 
@@ -25,8 +24,9 @@ public class AvniHttpClient {
     @Value("${avni.impl.password}")
     private String AVNI_IMPL_PASSWORD;
 
+    private String authToken;
 
-    public ResponseEntity<String> get(String url, Map<String, String> queryParams) {
+    public <T> ResponseEntity<T> get(String url, Map<String, String> queryParams, Class<T> returnType) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("auth-token", fetchAuthToken());
@@ -36,16 +36,19 @@ public class AvniHttpClient {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
 
-        return restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
-
+        return restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<String>(headers), returnType);
     }
 
     private String fetchAuthToken() {
+        if (authToken != null && !authToken.isEmpty()) {
+            return authToken;
+        }
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(apiUrl("/cognito-details"), CognitoDetailsResponse.class);
         CognitoDetailsResponse cognitoDetails = response.getBody();
         AuthenticationHelper helper = new AuthenticationHelper(cognitoDetails.getPoolId(), cognitoDetails.getClientId(), "");
-        return helper.PerformSRPAuthentication(AVNI_IMPL_USER, AVNI_IMPL_PASSWORD);
+        authToken = helper.PerformSRPAuthentication(AVNI_IMPL_USER, AVNI_IMPL_PASSWORD);
+        return authToken;
     }
 
     private String apiUrl(String url) {

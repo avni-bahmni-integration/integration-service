@@ -66,7 +66,7 @@ public class SampleJob implements Job {
         ResponseEntity<String> response = avniHttpClient.get("/api/subjects", Map.of(
                 "lastModifiedDateTime", "2000-10-31T01:30:00.000Z",
                 "subjectType", "Individual"
-                )
+                ), String.class
         );
         logger.info(response.getBody());
     }
