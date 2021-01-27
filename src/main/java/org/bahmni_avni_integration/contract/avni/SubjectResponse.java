@@ -13,4 +13,8 @@ public class SubjectResponse {
     public void setMap(final String name, final Object value) {
         map.put(name, value);
     }
+
+    public Object get(String name) {
+        return map.get(name);
+    }
 }

@@ -12,6 +12,10 @@ define _drop_db
     -psql postgres -c 'drop database $1';
 endef
 
+define _run_server
+	java -jar build/libs/bahmni_avni_integration-0.0.1-SNAPSHOT.jar --cron.main="0/3 * * * * ?" --avni.api.url=https://staging.avniproject.org/ --avni.impl.username=test-user@bahmni_ashwini --avni.impl.password=password
+endef
+
 build-db:
 	$(call _build_db,bahmni_avni)
 
@@ -33,6 +37,9 @@ clean-db:
 
 build-server: ## Builds the jar file
 	./gradlew clean build -x test
+
+run-server: build-db build-server
+	$(call _run_server)
 
 test-server: drop-test-db build-test-db
 	./gradlew clean build

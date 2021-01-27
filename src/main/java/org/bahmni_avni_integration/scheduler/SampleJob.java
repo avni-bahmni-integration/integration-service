@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.client.AvniHttpClient;
 import org.bahmni_avni_integration.worker.OpenMrpPatientEventWorker;
 import org.bahmni.webclients.ClientCookies;
+import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.ict4h.atomfeed.client.AtomFeedProperties;
 import org.ict4h.atomfeed.client.repository.AllFailedEvents;
 import org.ict4h.atomfeed.client.repository.AllFeeds;
@@ -29,7 +30,6 @@ import java.util.Map;
 
 @Component
 public class SampleJob implements Job {
-
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -47,31 +47,28 @@ public class SampleJob implements Job {
     @Autowired
     private OpenMrpPatientEventWorker eventWorker;
 
+    @Autowired
+    private SubjectWorker subjectWorker;
+
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("Job ** {} ** fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
 
         try {
-            callAvni();
-            callBahmni();
+            syncDataFromAvniToBahmni();
+            syncDataFromBahmniToAvni();
         } catch (Exception e) {
             logger.error("Error calling API", e);
         }
 
-
         logger.info("Next job scheduled @ {}", context.getNextFireTime());
     }
 
-    private void callAvni() {
-        ResponseEntity<String> response = avniHttpClient.get("/api/subjects", Map.of(
-                "lastModifiedDateTime", "2000-10-31T01:30:00.000Z",
-                "subjectType", "Individual"
-                ), String.class
-        );
-        logger.info(response.getBody());
+    private void syncDataFromAvniToBahmni() {
+        subjectWorker.processSubjects();
     }
 
-    private void callBahmni() {
+    private void syncDataFromBahmniToAvni() {
         AtomFeedProperties feedProperties = new AtomFeedProperties();
         feedProperties.setConnectTimeout(500);
         feedProperties.setReadTimeout(20000);

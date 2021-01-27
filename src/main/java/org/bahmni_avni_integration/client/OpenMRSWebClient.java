@@ -31,5 +31,4 @@ public class OpenMRSWebClient extends AbstractWebClient {
     protected Logger getLogger() {
         return logger;
     }
-
 }
