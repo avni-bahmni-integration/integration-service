@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OpenMrpPatientEventWorker implements EventWorker {
+public class OpenMrsPatientEventWorker implements EventWorker {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired

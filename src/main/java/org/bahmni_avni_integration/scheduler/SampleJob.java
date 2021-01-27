@@ -2,7 +2,7 @@ package org.bahmni_avni_integration.scheduler;
 
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.client.AvniHttpClient;
-import org.bahmni_avni_integration.worker.OpenMrpPatientEventWorker;
+import org.bahmni_avni_integration.worker.OpenMrsPatientEventWorker;
 import org.bahmni.webclients.ClientCookies;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.ict4h.atomfeed.client.AtomFeedProperties;
@@ -19,14 +19,12 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 @Component
 public class SampleJob implements Job {
@@ -45,7 +43,7 @@ public class SampleJob implements Job {
     private OpenMRSWebClient openMRSWebClient;
 
     @Autowired
-    private OpenMrpPatientEventWorker eventWorker;
+    private OpenMrsPatientEventWorker eventWorker;
 
     @Autowired
     private SubjectWorker subjectWorker;
