@@ -7,12 +7,11 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSConcept;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.SearchResults;
+import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
-
-import static org.bahmni.webclients.ObjectMapperRepository.objectMapper;
 
 @Component
 public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
@@ -25,11 +24,11 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
     @Autowired
     private OpenMRSWebClient openMRSWebClient;
 
-    public OpenMRSEncounter getEncounterByObservation(String patientIdentifier, String conceptName, Object obsValue) throws JsonProcessingException {
+    public OpenMRSEncounter getEncounter(String patientIdentifier, String conceptName, Object obsValue)  {
         OpenMRSPatient patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
         OpenMRSConcept concept = openMRSConceptRepository.getConceptByName(conceptName);
         String patientJSON = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&obsConcept=%s&obsValues=%s", getResourcePath("encounter"), patient.getUuid(), concept.getUuid(), encode(obsValue.toString()))));
-        SearchResults<OpenMRSEncounter> searchResults = objectMapper.readValue(patientJSON, new TypeReference<SearchResults<OpenMRSEncounter>>() {});
+        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(patientJSON, new TypeReference<SearchResults<OpenMRSEncounter>>() {});
         return pickAndExpectOne(searchResults, String.format("%s-%s-%s", patientIdentifier, conceptName, obsValue));
     }
 }

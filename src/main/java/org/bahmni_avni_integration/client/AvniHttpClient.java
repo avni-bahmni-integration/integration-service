@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.client;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.auth.AuthenticationHelper;
 import org.bahmni_avni_integration.web.response.CognitoDetailsResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,8 @@ public class AvniHttpClient {
 
     private String authToken;
 
+    private static Logger logger = Logger.getLogger(AvniHttpClient.class);
+
     public <T> ResponseEntity<T> get(String url, Map<String, String> queryParams, Class<T> returnType) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -36,7 +39,9 @@ public class AvniHttpClient {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
 
-        return restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<String>(headers), returnType);
+        String uriString = builder.toUriString();
+        logger.info("GETting from: " + uriString);
+        return restTemplate.exchange(uriString, HttpMethod.GET, new HttpEntity<String>(headers), returnType);
     }
 
     private String fetchAuthToken() {
@@ -44,6 +49,7 @@ public class AvniHttpClient {
             return authToken;
         }
         RestTemplate restTemplate = new RestTemplate();
+        logger.info("Getting cognito details");
         ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(apiUrl("/cognito-details"), CognitoDetailsResponse.class);
         CognitoDetailsResponse cognitoDetails = response.getBody();
         AuthenticationHelper helper = new AuthenticationHelper(cognitoDetails.getPoolId(), cognitoDetails.getClientId(), "");

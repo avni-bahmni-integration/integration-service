@@ -15,7 +15,7 @@ class OpenMRSEncounterRepositoryTest {
 
     @Test
     public void getEncounterByObservation() throws JsonProcessingException {
-        OpenMRSEncounter encounter = openMRSEncounterRepository.getEncounterByObservation("TRI01099902", "Departments", "Departments, General OPD");
+        OpenMRSEncounter encounter = openMRSEncounterRepository.getEncounter("TRI01099902", "Departments", "Departments, General OPD");
         assertNull(encounter);
     }
 }

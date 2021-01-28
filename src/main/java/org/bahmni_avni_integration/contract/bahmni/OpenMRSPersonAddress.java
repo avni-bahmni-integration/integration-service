@@ -2,7 +2,7 @@ package org.bahmni_avni_integration.contract.bahmni;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.util.ObjectMapperRepository;
+import org.bahmni_avni_integration.util.ObjectJsonMapper;
 
 import java.io.IOException;
 
@@ -87,12 +87,6 @@ public class OpenMRSPersonAddress implements Jsonify {
 
     @Override
     public String toJsonString() {
-        try {
-            return ObjectMapperRepository.objectMapper.writeValueAsString(this) ;
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(OpenMRSPersonAddress.class);
-            logger.error("Unable to convert personAddress hash to json string. " + e.getMessage());
-        }
-        return null;
+        return ObjectJsonMapper.writeValueAsString(this);
     }
 }

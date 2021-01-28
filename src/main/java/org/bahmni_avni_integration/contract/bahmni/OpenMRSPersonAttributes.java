@@ -1,7 +1,7 @@
 package org.bahmni_avni_integration.contract.bahmni;
 
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.util.ObjectMapperRepository;
+import org.bahmni_avni_integration.util.ObjectJsonMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,15 +58,6 @@ public class OpenMRSPersonAttributes extends ArrayList<OpenMRSPersonAttribute> i
             personAttributes.put(attrName, attrValue);
         }
 
-        String personAttributesJson = "";
-        try {
-            personAttributesJson = ObjectMapperRepository.objectMapper.writeValueAsString(personAttributes);
-        } catch (IOException e) {
-            Logger logger = Logger.getLogger(OpenMRSPersonAttributes.class);
-            logger.error("Unable to convert personAttributes hash to json string. " + e.getMessage());
-        }
-
-        return personAttributesJson;
+        return ObjectJsonMapper.writeValueAsString(personAttributes);
     }
-
 }
