@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSConcept;
 import org.bahmni_avni_integration.contract.bahmni.SearchResults;
+import org.bahmni_avni_integration.repository.MultipleResultsFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,6 @@ public class OpenMRSConceptRepository extends BaseOpenMRSRepository {
     public OpenMRSConcept getConceptByName(String name) throws JsonProcessingException {
         String json = openMRSWebClient.get(URI.create(getFullPath(String.format("concept?q=%s", encode(name)))));
         SearchResults<OpenMRSConcept> searchResults = objectMapper.readValue(json, new TypeReference<SearchResults<OpenMRSConcept>>(){});
-        return pickAndExpectOne(searchResults, name);
+        return searchResults.getResults().stream().filter(openMRSConcept -> openMRSConcept.getDisplay().equals(name)).findFirst().orElse(null);
     }
-
 }
