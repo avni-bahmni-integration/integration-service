@@ -1,8 +1,10 @@
 package org.bahmni_avni_integration.repository.openmrs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
+import org.bahmni_avni_integration.contract.bahmni.SearchResults;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +29,8 @@ public class OpenMRSPatientRepository extends BaseOpenMRSRepository {
     }
 
     public OpenMRSPatient getPatientByIdentifier(String identifier) throws JsonProcessingException {
-        String patientJSON = openMRSWebClient.get(URI.create(String.format("%s%s", getResourcePath("patient"), identifier)));
-        return objectMapper.readValue(patientJSON, OpenMRSPatient.class);
+        String patientJSON = openMRSWebClient.get(URI.create(String.format("%s?identifier=%s", getResourcePath("patient"), identifier)));
+        SearchResults<OpenMRSPatient> searchResults = objectMapper.readValue(patientJSON, new TypeReference<SearchResults<OpenMRSPatient>>() {});
+        return pickAndExpectOne(searchResults, identifier);
     }
 }

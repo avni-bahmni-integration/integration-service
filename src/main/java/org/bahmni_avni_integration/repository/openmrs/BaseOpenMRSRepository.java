@@ -1,5 +1,7 @@
 package org.bahmni_avni_integration.repository.openmrs;
 
+import org.bahmni_avni_integration.contract.bahmni.SearchResults;
+import org.bahmni_avni_integration.repository.MultipleResultsFoundException;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.UnsupportedEncodingException;
@@ -34,5 +36,11 @@ public abstract class BaseOpenMRSRepository {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected <T> T pickAndExpectOne(SearchResults<T> searchResults, String searchParam) {
+        if (searchResults.getResults().size() == 0) return null;
+        if (searchResults.getResults().size() > 1) throw new MultipleResultsFoundException(String.format("More than one entity found with name: %s", searchParam));
+        return searchResults.getResults().get(0);
     }
 }
