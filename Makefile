@@ -41,8 +41,14 @@ build-server: ## Builds the jar file
 run-server: build-db build-server
 	$(call _run_server)
 
-test-server: drop-test-db build-test-db
+test-server: drop-test-db build-test-db build-server
+	./gradlew unitTest
+
+test-server-all: drop-test-db build-test-db
 	./gradlew clean build
 
-open-test-results:
+open-unit-test-results: ## To be used when test-server is run
+	open build/reports/tests/unitTest/index.html
+
+open-test-results: ## To be used when test-server-all is run
 	open build/reports/tests/test/index.html

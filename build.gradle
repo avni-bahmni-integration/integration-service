@@ -45,6 +45,10 @@ dependencies {
 
 }
 
+task unitTest( type: Test ) {
+    useJUnitPlatform()
+    exclude ("**/**AcceptanceTest.class")
+}
 
 test {
     useJUnitPlatform()

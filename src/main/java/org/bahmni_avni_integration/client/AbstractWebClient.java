@@ -12,11 +12,12 @@ import java.net.URISyntaxException;
 public abstract class AbstractWebClient {
     protected HttpClient httpClient;
     protected ConnectionDetails connectionDetails;
+    private static Logger logger = Logger.getLogger(AbstractWebClient.class);
 
     public String get(URI uri) {
+        logger.info(uri.toString());
         return httpClient.get(uri);
     }
-
 
     public <T> T get(String uri, Class<T> klass) throws IOException {
         return httpClient.get(uri,klass);

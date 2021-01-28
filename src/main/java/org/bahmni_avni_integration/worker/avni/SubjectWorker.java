@@ -43,6 +43,7 @@ public class SubjectWorker {
         SubjectMapper subjectMapper = new SubjectMapper();
         Arrays.stream(subjects.getContent()).forEach(subjectResponse -> {
             String subjectUuid = (String) subjectResponse.get("ID");
+//            openMRSPatientRepository.getPatientByIdentifier((String) subjectResponse.get("ID"))
             System.out.println(subjectResponse);
         });
     }
