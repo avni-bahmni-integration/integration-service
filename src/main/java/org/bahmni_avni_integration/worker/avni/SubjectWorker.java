@@ -27,12 +27,15 @@ public class SubjectWorker {
     public void processSubjects() {
         AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
         MappingMetaData patientSubjectMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientSubjectType);
+        MappingMetaData patientIdentifierMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientIdentifierConcept);
         SubjectResponse[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), patientSubjectMapping.getAvniValue());
         SubjectMapper subjectMapper = new SubjectMapper();
         Arrays.stream(subjects).forEach(subject -> {
-            String subjectId = (String) subject.get("Sangam Number");
+            String subjectId = (String) subject.get(patientIdentifierMapping.getAvniValue());
             OpenMRSEncounter encounter = openMRSEncounterRepository.getEncounter(subjectId, "Avni Entity UUID", subject.get("ID"));
-            System.out.println(subject);
+            if (encounter == null) {
+//                openMRSEncounterRepository.createEncounter();
+            }
         });
     }
 }
