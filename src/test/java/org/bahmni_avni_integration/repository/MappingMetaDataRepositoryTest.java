@@ -20,6 +20,6 @@ class MappingMetaDataRepositoryTest {
         Iterable<MappingMetaData> all = mappingMetaDataRepository.findAll();
         List<MappingMetaData> list = new ArrayList<>();
         all.forEach(list::add);
-        assertEquals(true, list.size() > 0);
+        assertEquals(0, list.size());
     }
 }

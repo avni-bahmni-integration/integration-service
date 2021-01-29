@@ -63,7 +63,7 @@ public class SampleJob implements Job {
     }
 
     private void syncDataFromAvniToBahmni() {
-        subjectWorker.processSubjects();
+//        subjectWorker.processSubjects();
     }
 
     private void syncDataFromBahmniToAvni() {
