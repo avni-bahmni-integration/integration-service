@@ -5,5 +5,6 @@ CREATE TABLE mapping_metadata
   mapping_name       CHARACTER VARYING(250)  NOT NULL,
   bahmni_value       CHARACTER VARYING(250)  NULL,
   avni_value         CHARACTER VARYING(250)  NULL,
-  about              CHARACTER VARYING(1000) NULL
+  about              CHARACTER VARYING(1000) NULL,
+  data_type_hint     CHARACTER VARYING(100) NULL
 );
