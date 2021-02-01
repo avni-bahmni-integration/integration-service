@@ -19,6 +19,10 @@ public abstract class AbstractWebClient {
         return httpClient.get(uri);
     }
 
+    public String get(String url) {
+        return this.get(URI.create(url));
+    }
+
     public <T> T get(String uri, Class<T> klass) throws IOException {
         return httpClient.get(uri,klass);
     }

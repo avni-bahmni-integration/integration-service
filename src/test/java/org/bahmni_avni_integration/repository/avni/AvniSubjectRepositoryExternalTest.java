@@ -1,6 +1,6 @@
 package org.bahmni_avni_integration.repository.avni;
 
-import org.bahmni_avni_integration.contract.avni.SubjectResponse;
+import org.bahmni_avni_integration.contract.avni.Subject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,7 @@ class AvniSubjectRepositoryExternalTest {
     @Test
     public void getSubjects() {
         GregorianCalendar calendar = new GregorianCalendar(1900, 0, 1);
-        SubjectResponse[] subjects = avniSubjectRepository.getSubjects(calendar.getTime(), "Individual");
+        Subject[] subjects = avniSubjectRepository.getSubjects(calendar.getTime(), "Individual");
         assertNotEquals(0, subjects.length);
     }
 }

@@ -1,34 +1,19 @@
 package org.bahmni_avni_integration.contract.bahmni;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenMRSEncounter {
-    private List<OpenMRSObservation> observations = new ArrayList<>();
-    private String patientUuid;
-    private String patientId;
-    private String encounterUuid;
+    private Map<String, Object> map = new HashMap<>();
 
-    public String getEncounterUuid() {
-        return encounterUuid;
+    @JsonAnySetter
+    public void setMap(final String name, final Object value) {
+        map.put(name, value);
     }
 
-    public String getPatientUuid() {
-        return patientUuid;
-    }
-
-    public String getPatientId() {
-        return patientId;
-    }
-
-    public List<OpenMRSObservation> getObservations() {
-        return observations;
-    }
-
-    public void setObservations(List<OpenMRSObservation> observations) {
-        this.observations = observations;
+    public Object get(String name) {
+        return map.get(name);
     }
 }

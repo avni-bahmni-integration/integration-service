@@ -1,7 +1,7 @@
 package org.bahmni_avni_integration.repository.avni;
 
 import org.bahmni_avni_integration.client.AvniHttpClient;
-import org.bahmni_avni_integration.contract.avni.SubjectResponse;
+import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.avni.SubjectsResponse;
 import org.bahmni_avni_integration.util.FormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class AvniSubjectRepository {
     @Autowired
     private AvniHttpClient avniHttpClient;
 
-    public SubjectResponse[] getSubjects(Date lastModifiedDateTime, String subjectType) {
+    public Subject[] getSubjects(Date lastModifiedDateTime, String subjectType) {
         String fromTime = FormatUtil.toISODateString(lastModifiedDateTime);
         HashMap<String, String> queryParams = new HashMap<>(1);
         queryParams.put("lastModifiedDateTime", fromTime);

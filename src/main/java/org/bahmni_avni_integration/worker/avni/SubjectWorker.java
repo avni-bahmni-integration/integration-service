@@ -1,6 +1,6 @@
 package org.bahmni_avni_integration.worker.avni;
 
-import org.bahmni_avni_integration.contract.avni.SubjectResponse;
+import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.domain.*;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
@@ -28,7 +28,7 @@ public class SubjectWorker {
         AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
         MappingMetaData patientSubjectMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientSubjectType);
         MappingMetaData patientIdentifierMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientIdentifierConcept);
-        SubjectResponse[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), patientSubjectMapping.getAvniValue());
+        Subject[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), patientSubjectMapping.getAvniValue());
         SubjectMapper subjectMapper = new SubjectMapper();
         Arrays.stream(subjects).forEach(subject -> {
             String subjectId = (String) subject.get(patientIdentifierMapping.getAvniValue());

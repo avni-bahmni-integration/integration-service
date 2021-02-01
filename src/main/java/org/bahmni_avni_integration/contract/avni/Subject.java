@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SubjectResponse {
+public class Subject {
     private Map<String, Object> map = new HashMap<>();
 //    private static final IgnoredFields ignoredFields = new IgnoredFields("");
 

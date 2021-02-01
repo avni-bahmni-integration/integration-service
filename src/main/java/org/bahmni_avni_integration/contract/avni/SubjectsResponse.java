@@ -4,7 +4,7 @@ public class SubjectsResponse {
     private String totalElements;
     private String totalPages;
     private String pageSize;
-    private SubjectResponse[] content;
+    private Subject[] content;
 
     public String getTotalElements() {
         return totalElements;
@@ -30,11 +30,11 @@ public class SubjectsResponse {
         this.pageSize = pageSize;
     }
 
-    public SubjectResponse[] getContent() {
+    public Subject[] getContent() {
         return content;
     }
 
-    public void setContent(SubjectResponse[] content) {
+    public void setContent(Subject[] content) {
         this.content = content;
     }
 }
