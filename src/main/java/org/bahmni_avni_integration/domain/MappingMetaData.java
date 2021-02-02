@@ -22,6 +22,10 @@ public class MappingMetaData extends BaseEntity {
     @Column(name = "about")
     private String about;
 
+    @Column (name = "data_type_hint")
+    @Enumerated(EnumType.STRING)
+    private ObsDataType obsDataType;
+
     public MappingGroup getMappingGroup() {
         return mappingGroup;
     }
@@ -60,5 +64,13 @@ public class MappingMetaData extends BaseEntity {
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public ObsDataType getObsDataType() {
+        return obsDataType;
+    }
+
+    public void setObsDataType(ObsDataType obsDataType) {
+        this.obsDataType = obsDataType;
     }
 }

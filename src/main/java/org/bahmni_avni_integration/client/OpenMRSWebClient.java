@@ -31,4 +31,7 @@ public class OpenMRSWebClient extends AbstractWebClient {
     protected Logger getLogger() {
         return logger;
     }
+
+    public void post(String resourcePath, String json) {
+    }
 }

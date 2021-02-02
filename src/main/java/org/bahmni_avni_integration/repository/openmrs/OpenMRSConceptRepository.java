@@ -8,15 +8,13 @@ import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
-
 @Component
 public class OpenMRSConceptRepository extends BaseOpenMRSRepository {
     @Autowired
     private OpenMRSWebClient openMRSWebClient;
 
     public OpenMRSConcept getConceptByName(String name) {
-        String json = openMRSWebClient.get(URI.create(getFullPath(String.format("concept?q=%s", encode(name)))));
+        String json = openMRSWebClient.get(getFullPath(String.format("concept?q=%s", encode(name))));
         SearchResults<OpenMRSConcept> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSConcept>>(){});
         return searchResults.getResults().stream().filter(openMRSConcept -> openMRSConcept.getDisplay().equals(name)).findFirst().orElse(null);
     }

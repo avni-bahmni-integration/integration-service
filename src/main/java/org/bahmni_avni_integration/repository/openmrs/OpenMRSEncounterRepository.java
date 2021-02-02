@@ -36,4 +36,9 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {});
         return pickAndExpectOne(searchResults, String.format("%s-%s-%s", patientIdentifier, conceptName, obsValue));
     }
+
+    public void createEncounter(OpenMRSEncounter encounter) {
+        String json = ObjectJsonMapper.writeValueAsString(encounter);
+        openMRSWebClient.post(getResourcePath("encounter"), json);
+    }
 }

@@ -14,11 +14,20 @@ public class OpenMRSSaveObservation {
     public OpenMRSSaveObservation() {
     }
 
-    public OpenMRSSaveObservation(String concept, Date obsDatetime, String value, String valueCodedName) {
-        this.concept = concept;
-        this.obsDatetime = obsDatetime;
-        this.value = value;
-        this.valueCodedName = valueCodedName;
+    public static OpenMRSSaveObservation createPrimitiveObs(String concept, Date obsDatetime, String value) {
+        OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
+        openMRSSaveObservation.concept = concept;
+        openMRSSaveObservation.obsDatetime = obsDatetime;
+        openMRSSaveObservation.value = value;
+        return openMRSSaveObservation;
+    }
+
+    public static OpenMRSSaveObservation createCodedObs(String concept, Date obsDatetime, String valueCodedName) {
+        OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
+        openMRSSaveObservation.concept = concept;
+        openMRSSaveObservation.obsDatetime = obsDatetime;
+        openMRSSaveObservation.valueCodedName = valueCodedName;
+        return openMRSSaveObservation;
     }
 
     public String getConcept() {

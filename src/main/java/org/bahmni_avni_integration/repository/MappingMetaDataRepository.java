@@ -22,4 +22,16 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     default MappingMetaDataCollection findAll(MappingGroup mappingGroup, MappingType mappingType) {
         return new MappingMetaDataCollection(findAllByMappingGroupAndMappingType(mappingGroup, mappingType));
     }
+
+    default String getAvniValue(MappingGroup mappingGroup, MappingType mappingType) {
+        MappingMetaData mapping = findByMappingGroupAndMappingType(mappingGroup, mappingType);
+        if (mapping == null) return null;
+        return mapping.getAvniValue();
+    }
+
+    default String getBahmniValue(MappingGroup mappingGroup, MappingType mappingType) {
+        MappingMetaData mapping = findByMappingGroupAndMappingType(mappingGroup, mappingType);
+        if (mapping == null) return null;
+        return mapping.getBahmniValue();
+    }
 }

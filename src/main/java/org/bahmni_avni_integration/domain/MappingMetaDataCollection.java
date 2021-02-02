@@ -10,8 +10,12 @@ public class MappingMetaDataCollection {
     }
 
     public String getBahmniValueForAvniValue(String avniValue) {
-        MappingMetaData metaData = list.stream().filter(mappingMetaData -> avniValue.equals(mappingMetaData.getAvniValue())).findAny().orElse(null);
-        if (metaData == null) return null;
-        return metaData.getBahmniValue();
+        MappingMetaData mapping = getMappingForAvniValue(avniValue);
+        if (mapping == null) return null;
+        return mapping.getBahmniValue();
+    }
+
+    public MappingMetaData getMappingForAvniValue(String avniValue) {
+        return list.stream().filter(mappingMetaData -> avniValue.equals(mappingMetaData.getAvniValue())).findAny().orElse(null);
     }
 }
