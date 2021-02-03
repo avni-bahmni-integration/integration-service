@@ -35,6 +35,7 @@ drop-db:
 
 build-test-db:
 	$(call _build_db,bahmni_avni_test)
+	./gradlew migrateTestDb
 
 drop-test-db:
 	$(call _drop_db,bahmni_avni_test)

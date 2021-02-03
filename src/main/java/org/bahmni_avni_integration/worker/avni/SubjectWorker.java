@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 @Component
 public class SubjectWorker {
@@ -30,23 +31,32 @@ public class SubjectWorker {
     @Autowired
     private OpenMRSPatientRepository patientRepository;
 
-    public void processSubjects() {
+    public void processSubjects(Predicate<Subject[]> predicate) {
         AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
         MappingMetaData patientSubjectMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.Patient_SubjectType);
         MappingMetaData patientIdentifierMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
-        Subject[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), patientSubjectMapping.getAvniValue());
+        String encounterTypeUuid = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Subject_EncounterType);
 
-        Arrays.stream(subjects).forEach(subject -> {
-            String subjectId = (String) subject.get(patientIdentifierMapping.getAvniValue());
-            OpenMRSEncounter encounter = openMRSEncounterRepository.getEncounter(subjectId, "Avni Entity UUID", subject.get("ID"));
-            if (encounter == null) {
-                OpenMRSPatient patient = patientRepository.getPatientByIdentifier(subjectId);
-                if (patient != null) {
-                    String encounterTypeUuid = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Subject_EncounterType);
-                    encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), encounterTypeUuid);
-                    openMRSEncounterRepository.createEncounter(encounter);
+        while (true) {
+            Subject[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), patientSubjectMapping.getAvniValue());
+            if (subjects.length == 0 || !predicate.test(subjects)) break;
+            Arrays.stream(subjects).forEach(subject -> {
+                String subjectId = (String) subject.get(patientIdentifierMapping.getAvniValue());
+                OpenMRSEncounter encounter = openMRSEncounterRepository.getEncounter(subjectId, "Avni Entity UUID", subject.get("ID"));
+                if (encounter == null) {
+                    OpenMRSPatient patient = patientRepository.getPatientByIdentifier(subjectId);
+                    if (patient != null) {
+                        encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), encounterTypeUuid);
+                        openMRSEncounterRepository.createEncounter(encounter);
+                        status.setReadUpto(subject.getLastModifiedDate());
+                        avniEntityStatusRepository.save(status);
+                    }
                 }
-            }
-        });
+            });
+        }
+    }
+
+    public void processSubjects() {
+        this.processSubjects(subjects -> true);
     }
 }

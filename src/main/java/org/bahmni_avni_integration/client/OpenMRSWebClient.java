@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.client;
 
+import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.client.bahmni.ConnectionDetails;
 import org.bahmni_avni_integration.client.bahmni.HttpClient;
@@ -9,9 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OpenMRSWebClient extends AbstractWebClient {
-
     private static Logger logger = Logger.getLogger(OpenMRSWebClient.class);
-
 
     public OpenMRSWebClient(@Autowired OpenERPAtomFeedProperties properties) {
         connectionDetails = connectionDetails(properties);
@@ -32,6 +31,7 @@ public class OpenMRSWebClient extends AbstractWebClient {
         return logger;
     }
 
-    public void post(String resourcePath, String json) {
+    public HttpResponse post(String resourcePath, String json) {
+        return httpClient.post(resourcePath, json);
     }
 }

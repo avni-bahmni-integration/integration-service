@@ -81,4 +81,10 @@ public class HttpClient {
     private String asString(HttpResponse httpResponse) throws IOException {
         return EntityUtils.toString(httpResponse.getEntity());
     }
+
+    public HttpResponse post(String path, String json) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.put("Accept", "application/json");
+        return httpClientInternal.post(authenticator.getRequestDetails(URI.create(path)), httpHeaders, json);
+    }
 }

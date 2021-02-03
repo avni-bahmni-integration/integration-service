@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
+    id "org.flywaydb.flyway" version "7.1.1"
 }
 
 group = 'org.bahmni_avni_integration'
@@ -39,7 +40,12 @@ dependencies {
     compile "log4j:log4j:1.2.16"
     compile "commons-io:commons-io:2.4"
     compile "commons-lang:commons-lang:2.6"
+}
 
+task migrateTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = 'jdbc:postgresql://localhost:5432/bahmni_avni_test'
+    user = 'bahmni_avni_admin'
+    password = 'password'
 }
 
 task unitTest( type: Test ) {

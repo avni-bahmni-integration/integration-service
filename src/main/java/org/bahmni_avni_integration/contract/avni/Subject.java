@@ -1,7 +1,7 @@
 package org.bahmni_avni_integration.contract.avni;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import org.bahmni_avni_integration.util.FormatUtil;
+import org.bahmni_avni_integration.util.FormatAndParseUtil;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +22,12 @@ public class Subject {
 
     public Date getRegistrationDate() {
         String registrationDate = (String) map.get("Registration date");
-        return FormatUtil.fromAvniDate(registrationDate);
+        return FormatAndParseUtil.fromAvniDate(registrationDate);
+    }
+
+    public Date getLastModifiedDate() {
+        Map<String, Object> audit = (Map<String, Object>) map.get("audit");
+        String lastModifiedAtString = (String) audit.get("Last modified at");
+        return FormatAndParseUtil.fromAvniDate(lastModifiedAtString);
     }
 }

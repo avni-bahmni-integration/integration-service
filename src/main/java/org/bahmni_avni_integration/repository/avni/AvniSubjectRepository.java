@@ -3,7 +3,7 @@ package org.bahmni_avni_integration.repository.avni;
 import org.bahmni_avni_integration.client.AvniHttpClient;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.avni.SubjectsResponse;
-import org.bahmni_avni_integration.util.FormatUtil;
+import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class AvniSubjectRepository {
     private AvniHttpClient avniHttpClient;
 
     public Subject[] getSubjects(Date lastModifiedDateTime, String subjectType) {
-        String fromTime = FormatUtil.toISODateString(lastModifiedDateTime);
+        String fromTime = FormatAndParseUtil.toISODateString(lastModifiedDateTime);
         HashMap<String, String> queryParams = new HashMap<>(1);
         queryParams.put("lastModifiedDateTime", fromTime);
         queryParams.put("subjectType", subjectType);

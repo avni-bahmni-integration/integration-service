@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FormatUtil {
+public class FormatAndParseUtil {
     public static String toISODateString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         return String.format("%s%s", dateFormat.format(date), "Z");

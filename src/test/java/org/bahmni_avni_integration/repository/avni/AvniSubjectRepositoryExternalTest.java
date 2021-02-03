@@ -19,5 +19,6 @@ class AvniSubjectRepositoryExternalTest {
         GregorianCalendar calendar = new GregorianCalendar(1900, 0, 1);
         Subject[] subjects = avniSubjectRepository.getSubjects(calendar.getTime(), "Individual");
         assertNotEquals(0, subjects.length);
+        assertNotNull(subjects[0].getLastModifiedDate());
     }
 }
