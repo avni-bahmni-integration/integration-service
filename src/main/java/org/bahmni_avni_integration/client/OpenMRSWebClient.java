@@ -1,9 +1,9 @@
 package org.bahmni_avni_integration.client;
 
 import org.apache.log4j.Logger;
-import org.bahmni.webclients.ConnectionDetails;
-import org.bahmni.webclients.HttpClient;
-import org.bahmni.webclients.openmrs.OpenMRSLoginAuthenticator;
+import org.bahmni_avni_integration.client.bahmni.ConnectionDetails;
+import org.bahmni_avni_integration.client.bahmni.HttpClient;
+import org.bahmni_avni_integration.client.bahmni.openmrs.OpenMRSLoginAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

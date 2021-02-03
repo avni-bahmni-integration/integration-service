@@ -1,9 +1,9 @@
 package org.bahmni_avni_integration.client;
 
 import org.apache.log4j.Logger;
-import org.bahmni.webclients.ClientCookies;
-import org.bahmni.webclients.ConnectionDetails;
-import org.bahmni.webclients.HttpClient;
+import org.bahmni_avni_integration.client.bahmni.ClientCookies;
+import org.bahmni_avni_integration.client.bahmni.ConnectionDetails;
+import org.bahmni_avni_integration.client.bahmni.HttpClient;
 
 import java.io.IOException;
 import java.net.URI;

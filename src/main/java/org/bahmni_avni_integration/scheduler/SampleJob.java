@@ -2,8 +2,8 @@ package org.bahmni_avni_integration.scheduler;
 
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.client.AvniHttpClient;
+import org.bahmni_avni_integration.client.bahmni.ClientCookies;
 import org.bahmni_avni_integration.worker.OpenMrsPatientEventWorker;
-import org.bahmni.webclients.ClientCookies;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.ict4h.atomfeed.client.AtomFeedProperties;
 import org.ict4h.atomfeed.client.repository.AllFailedEvents;
