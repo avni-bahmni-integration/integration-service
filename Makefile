@@ -43,10 +43,6 @@ drop-test-db:
 drop-roles:
 	-psql -h localhost -U $(SU) -d postgres -c 'drop role $(ADMIN_USER)';
 
-clean-db:
-	-psql -h localhost -U $(SU) -d postgres -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$(database)' AND pid <> pg_backend_pid()"
-	-psql -h localhost -U $(SU) -d postgres -c 'drop database $(DB)';
-
 build-server: ## Builds the jar file
 	./gradlew clean build -x test
 
