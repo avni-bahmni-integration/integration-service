@@ -6,11 +6,11 @@ import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.client.OpenMRSWebClient;
-import org.bahmni_avni_integration.util.ObjectJsonMapper;
 
 import java.io.IOException;
 import java.net.URI;
+
+import static org.bahmni_avni_integration.client.bahmni.ObjectMapperRepository.objectMapper;
 
 public class HttpClient {
     private Authenticator authenticator;
@@ -66,7 +66,7 @@ public class HttpClient {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.put("Accept", "application/json");
         String response = get(URI.create(url), httpHeaders);
-        return ObjectJsonMapper.readValue(response, returnType);
+        return objectMapper.readValue(response, returnType);
     }
 
     private void checkSanityOfResponse(HttpResponse httpResponse) {

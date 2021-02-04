@@ -17,7 +17,7 @@ public class ClientCookies extends HashMap<String, String> {
         if (this.size() <= 0) return null;
         String[] cookieEntryAndValues = new String[this.size()];
         int i = 0;
-        for (Entry entry : this.entrySet()) {
+        for (Map.Entry entry : this.entrySet()) {
             cookieEntryAndValues[i] = String.format(" %s=%s ", entry.getKey(), entry.getValue());
             i++;
         }

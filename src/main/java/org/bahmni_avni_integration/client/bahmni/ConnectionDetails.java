@@ -1,7 +1,6 @@
 package org.bahmni_avni_integration.client.bahmni;
 
 import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 public class ConnectionDetails {
     private String authUrl;
@@ -9,7 +8,7 @@ public class ConnectionDetails {
     private String password;
     private int connectionTimeout;
     private int readTimeout;
-    private PoolingHttpClientConnectionManager connectionManager;
+    private ClientConnectionManager connectionManager;
 
     public ConnectionDetails(String authUrl, String userId, String password, int connectionTimeout, int readTimeout) {
         this.authUrl = authUrl;
@@ -19,7 +18,7 @@ public class ConnectionDetails {
         this.readTimeout = readTimeout;
     }
 
-    public ConnectionDetails(String authUrl, String userId, String password, int connectionTimeout, int readTimeout, PoolingHttpClientConnectionManager connectionManager) {
+    public ConnectionDetails(String authUrl, String userId, String password, int connectionTimeout, int readTimeout, ClientConnectionManager connectionManager) {
         this.authUrl = authUrl;
         this.userId = userId;
         this.password = password;
@@ -28,27 +27,28 @@ public class ConnectionDetails {
         this.connectionManager = connectionManager;
     }
 
+
     public String getUserId() {
-        return this.userId;
+        return userId;
     }
 
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     public int getConnectionTimeout() {
-        return this.connectionTimeout;
+        return connectionTimeout;
     }
 
     public int getReadTimeout() {
-        return this.readTimeout;
+        return readTimeout;
     }
 
     public String getAuthUrl() {
-        return this.authUrl;
+        return authUrl;
     }
 
-    public PoolingHttpClientConnectionManager getConnectionManager() {
-        return this.connectionManager;
+    public ClientConnectionManager getConnectionManager() {
+        return connectionManager;
     }
 }
