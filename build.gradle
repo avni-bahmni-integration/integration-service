@@ -40,6 +40,8 @@ dependencies {
     compile "log4j:log4j:1.2.16"
     compile "commons-io:commons-io:2.4"
     compile "commons-lang:commons-lang:2.6"
+
+    compile "org.javatuples:javatuples:1.2"
 }
 
 task migrateTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
@@ -50,7 +52,7 @@ task migrateTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
 
 task unitTest( type: Test ) {
     useJUnitPlatform()
-    exclude ("**/**AcceptanceTest.class")
+    exclude ("**/**ExternalTest.class")
 }
 
 test {

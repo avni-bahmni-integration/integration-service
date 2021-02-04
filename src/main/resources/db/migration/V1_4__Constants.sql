@@ -1,0 +1,6 @@
+CREATE TABLE constants
+(
+  id        SERIAL PRIMARY KEY,
+  key       CHARACTER VARYING(250)  NOT NULL,
+  value      CHARACTER VARYING(250)  NOT NULL
+);

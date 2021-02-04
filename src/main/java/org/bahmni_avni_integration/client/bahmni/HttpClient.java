@@ -5,6 +5,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
 
 import java.io.IOException;
@@ -13,7 +15,7 @@ import java.net.URI;
 public class HttpClient {
     private Authenticator authenticator;
     private HttpClientInternal httpClientInternal;
-
+    private static Logger logger = Logger.getLogger(HttpClient.class);
 
     public HttpClient(ConnectionDetails connectionDetails) {
         this(new HttpClientInternal(connectionDetails.getConnectionTimeout(), connectionDetails.getReadTimeout()));
@@ -55,8 +57,6 @@ public class HttpClient {
 
             checkSanityOfResponse(httpResponse);
             return asString(httpResponse);
-        } catch (IOException e) {
-            throw new WebClientsException(e);
         } finally {
             httpClientInternal.closeConnection();
         }
@@ -78,13 +78,22 @@ public class HttpClient {
         if (entity == null) throw new WebClientsException("Cannot read response");
     }
 
-    private String asString(HttpResponse httpResponse) throws IOException {
-        return EntityUtils.toString(httpResponse.getEntity());
+    private String asString(HttpResponse httpResponse) {
+        try {
+            return EntityUtils.toString(httpResponse.getEntity());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public HttpResponse post(String path, String json) {
+    public void post(String path, String json) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.put("Accept", "application/json");
-        return httpClientInternal.post(authenticator.getRequestDetails(URI.create(path)), httpHeaders, json);
+        logger.info("Posting to: " + path);
+        HttpResponse httpResponse = httpClientInternal.post(authenticator.getRequestDetails(URI.create(path)), httpHeaders, json);
+        if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED) {
+            logger.error(asString(httpResponse));
+            throw new RuntimeException("Post failed");
+        }
     }
 }

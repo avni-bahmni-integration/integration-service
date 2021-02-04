@@ -31,7 +31,7 @@ public class OpenMRSWebClient extends AbstractWebClient {
         return logger;
     }
 
-    public HttpResponse post(String resourcePath, String json) {
-        return httpClient.post(resourcePath, json);
+    public void post(String resourcePath, String json) {
+        httpClient.post(resourcePath, json);
     }
 }

@@ -1,31 +1,39 @@
 package org.bahmni_avni_integration.contract.bahmni;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.bahmni_avni_integration.domain.ObsDataType;
+import org.bahmni_avni_integration.util.FormatAndParseUtil;
 
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OpenMRSSaveObservation {
     private String concept;
-    private Date obsDatetime;
-    private String value;
+    private String obsDatetime;
+    private Object value;
     private String valueCodedName;
 
     public OpenMRSSaveObservation() {
     }
 
-    public static OpenMRSSaveObservation createPrimitiveObs(String concept, Date obsDatetime, String value) {
+    public static OpenMRSSaveObservation createPrimitiveObs(String concept, Object value, ObsDataType dataType) {
         OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
         openMRSSaveObservation.concept = concept;
-        openMRSSaveObservation.obsDatetime = obsDatetime;
-        openMRSSaveObservation.value = value;
+        openMRSSaveObservation.value = getValue(value, dataType);
         return openMRSSaveObservation;
     }
 
-    public static OpenMRSSaveObservation createCodedObs(String concept, Date obsDatetime, String valueCodedName) {
+    private static Object getValue(Object value, ObsDataType dataType) {
+        if (ObsDataType.Date.equals(dataType))
+            return FormatAndParseUtil.fromAvniToOpenMRSDate(value.toString());
+        return value;
+    }
+
+    public static OpenMRSSaveObservation createCodedObs(String concept, String valueCodedName) {
         OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
         openMRSSaveObservation.concept = concept;
-        openMRSSaveObservation.obsDatetime = obsDatetime;
         openMRSSaveObservation.valueCodedName = valueCodedName;
         return openMRSSaveObservation;
     }
@@ -38,19 +46,19 @@ public class OpenMRSSaveObservation {
         this.concept = concept;
     }
 
-    public Date getObsDatetime() {
+    public String getObsDatetime() {
         return obsDatetime;
     }
 
-    public void setObsDatetime(Date obsDatetime) {
+    public void setObsDatetime(String obsDatetime) {
         this.obsDatetime = obsDatetime;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

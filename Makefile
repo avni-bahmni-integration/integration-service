@@ -40,6 +40,8 @@ build-test-db:
 drop-test-db:
 	$(call _drop_db,bahmni_avni_test)
 
+rebuild-test-db: drop-test-db build-test-db
+
 drop-roles:
 	-psql -h localhost -U $(SU) -d postgres -c 'drop role $(ADMIN_USER)';
 

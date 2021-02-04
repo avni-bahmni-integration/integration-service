@@ -30,4 +30,9 @@ public class Subject {
         String lastModifiedAtString = (String) audit.get("Last modified at");
         return FormatAndParseUtil.fromAvniDate(lastModifiedAtString);
     }
+
+    public Object getObservation(String conceptName) {
+        Map<String, Object> observations = (Map<String, Object>) map.get("observations");
+        return observations.get(conceptName);
+    }
 }

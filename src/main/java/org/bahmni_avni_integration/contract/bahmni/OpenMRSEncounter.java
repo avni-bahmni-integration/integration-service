@@ -1,23 +1,25 @@
 package org.bahmni_avni_integration.contract.bahmni;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenMRSEncounter {
-    private Date encounterDatetime;
+    private String encounterDatetime;
     private String patient;
     private String encounterType;
     private String location;
     private List<OpenMRSEncounterProvider> encounterProviders = new ArrayList<>();
+    @JsonProperty("obs")
     private List<OpenMRSSaveObservation> observations = new ArrayList<>();
 
-    public Date getEncounterDatetime() {
+    public String getEncounterDatetime() {
         return encounterDatetime;
     }
 
-    public void setEncounterDatetime(Date encounterDatetime) {
+    public void setEncounterDatetime(String encounterDatetime) {
         this.encounterDatetime = encounterDatetime;
     }
 

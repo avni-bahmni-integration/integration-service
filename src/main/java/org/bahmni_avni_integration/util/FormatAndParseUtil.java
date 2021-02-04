@@ -19,4 +19,8 @@ public class FormatAndParseUtil {
             throw new RuntimeException(e);
         }
     }
+
+    public static String fromAvniToOpenMRSDate(String dateString) {
+        return FormatAndParseUtil.toISODateString(FormatAndParseUtil.fromAvniDate(dateString));
+    }
 }
