@@ -20,7 +20,7 @@ public class SubjectMapper {
 
     public OpenMRSEncounter mapSubjectToEncounter(Subject subject, String patientUuid, String encounterTypeUuid, Constants constants) {
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
-        openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateString(new Date()));
+        openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(new Date()));
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));

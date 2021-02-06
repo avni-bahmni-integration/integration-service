@@ -43,4 +43,9 @@ public abstract class BaseOpenMRSRepository {
         if (searchResults.getResults().size() > 1) throw new MultipleResultsFoundException(String.format("More than one entity found with name: %s", searchParam));
         return searchResults.getResults().get(0);
     }
+
+    protected <T> T pickOne(SearchResults<T> searchResults, String searchParam) {
+        if (searchResults.getResults().size() == 0) return null;
+        return searchResults.getResults().get(0);
+    }
 }

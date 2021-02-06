@@ -32,7 +32,7 @@ public class SubjectWorker {
     @Autowired
     private OpenMRSPatientRepository patientRepository;
 
-    public void processSubjects(Constants constants, Predicate<Subject[]> continuePostPage) {
+    public void processSubjects(Constants constants, Predicate<Subject[]> continueAfterOneRecord) {
         AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
         MappingMetaData patientSubjectMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.Patient_SubjectType);
         MappingMetaData patientIdentifierMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
@@ -41,7 +41,7 @@ public class SubjectWorker {
         while (true) {
             Subject[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), patientSubjectMapping.getAvniValue());
             if (subjects.length == 0) break;
-            Arrays.stream(subjects).forEach(subject -> {
+            for (Subject subject : subjects) {
                 String subjectId = (String) subject.get("ID");
                 String patientIdentifier = constants.getValue(ConstantKey.BahmniIdentifierPrefix) + (String) subject.getObservation(patientIdentifierMapping.getAvniValue());
                 Pair<OpenMRSPatient, OpenMRSEncounter> patientEncounter = openMRSEncounterRepository.getEncounter(patientIdentifier, subjectId);
@@ -55,8 +55,9 @@ public class SubjectWorker {
                         avniEntityStatusRepository.save(status);
                     }
                 }
-            });
-            if (!continuePostPage.test(subjects)) break;
+                if (!continueAfterOneRecord.test(subjects)) break;
+            }
+            
         }
     }
 

@@ -30,6 +30,6 @@ public class OpenMRSPatientRepository extends BaseOpenMRSRepository {
     public OpenMRSPatient getPatientByIdentifier(String identifier) {
         String patientJSON = openMRSWebClient.get(URI.create(String.format("%s?identifier=%s", getResourcePath("patient"), identifier)));
         SearchResults<OpenMRSPatient> searchResults = ObjectJsonMapper.readValue(patientJSON, new TypeReference<SearchResults<OpenMRSPatient>>() {});
-        return pickAndExpectOne(searchResults, identifier);
+        return pickOne(searchResults, identifier);
     }
 }
