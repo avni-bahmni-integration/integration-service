@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Map;
 
 @Component
@@ -33,15 +34,15 @@ public class AvniHttpClient {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("auth-token", fetchAuthToken());
+        headers.add("user-name", AVNI_IMPL_USER);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
         for (var entry : queryParams.entrySet()) {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
 
-        String uriString = builder.toUriString();
-        logger.info("GETting from: " + uriString);
-        return restTemplate.exchange(uriString, HttpMethod.GET, new HttpEntity<String>(headers), returnType);
+        URI uri = builder.build().toUri();
+        return restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<String>(headers), returnType);
     }
 
     private String fetchAuthToken() {
