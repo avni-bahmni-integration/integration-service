@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.client;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.auth.AuthenticationHelper;
 import org.bahmni_avni_integration.web.response.CognitoDetailsResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,30 +27,43 @@ public class AvniHttpClient {
     @Value("${avni.impl.password}")
     private String AVNI_IMPL_PASSWORD;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     private String authToken;
 
     private static Logger logger = Logger.getLogger(AvniHttpClient.class);
 
     public <T> ResponseEntity<T> get(String url, Map<String, String> queryParams, Class<T> returnType) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("auth-token", fetchAuthToken());
-        headers.add("user-name", AVNI_IMPL_USER);
-
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
         for (var entry : queryParams.entrySet()) {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
 
         URI uri = builder.build().toUri();
-        return restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<String>(headers), returnType);
+        return restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<String>(authHeaders()), returnType);
+    }
+
+    public <T, U> ResponseEntity<U> post(String url, T requestBody, Class<U> returnType) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
+        return restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, new HttpEntity<>(requestBody, authHeaders()), returnType);
+    }
+
+    public <T, U> ResponseEntity<U> put(String url, T requestBody, Class<U> returnType) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
+        return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
+    }
+
+    private HttpHeaders authHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("auth-token", fetchAuthToken());
+        return headers;
     }
 
     private String fetchAuthToken() {
         if (authToken != null && !authToken.isEmpty()) {
             return authToken;
         }
-        RestTemplate restTemplate = new RestTemplate();
         logger.info("Getting cognito details");
         ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(apiUrl("/cognito-details"), CognitoDetailsResponse.class);
         CognitoDetailsResponse cognitoDetails = response.getBody();
