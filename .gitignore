@@ -5,3 +5,4 @@ build
 out
 integration-service.iml
 logs
+dump.sql

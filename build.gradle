@@ -19,6 +19,18 @@ repositories {
     }
 }
 
+tasks.withType(JavaCompile).all {
+    options.compilerArgs += ['--enable-preview']
+}
+
+tasks.withType(Test).all {
+    jvmArgs += '--enable-preview'
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -46,6 +58,12 @@ dependencies {
 
 task migrateTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     url = 'jdbc:postgresql://localhost:5432/bahmni_avni_test'
+    user = 'bahmni_avni_admin'
+    password = 'password'
+}
+
+task migrateDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = 'jdbc:postgresql://localhost:5432/bahmni_avni'
     user = 'bahmni_avni_admin'
     password = 'password'
 }

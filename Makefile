@@ -12,6 +12,7 @@ help:
 SU:=$(shell id -un)
 DB=bahmni_avni
 ADMIN_USER=bahmni_avni_admin
+postgres_user := $(shell id -un)
 
 define _build_db
 	-psql -h localhost -U $(SU) -d postgres -c "create user $(ADMIN_USER) with password 'password' createrole";
@@ -29,6 +30,7 @@ endef
 
 build-db:
 	$(call _build_db,bahmni_avni)
+	./gradlew migrateDb
 
 drop-db:
 	$(call _drop_db,bahmni_avni)
@@ -41,6 +43,10 @@ drop-test-db:
 	$(call _drop_db,bahmni_avni_test)
 
 rebuild-test-db: drop-test-db build-test-db
+
+setup-external-test-db: drop-test-db
+	$(call _build_db,bahmni_avni_test)
+	sudo -u ${postgres_user} psql bahmni_avni_test -f dump.sql
 
 drop-roles:
 	-psql -h localhost -U $(SU) -d postgres -c 'drop role $(ADMIN_USER)';

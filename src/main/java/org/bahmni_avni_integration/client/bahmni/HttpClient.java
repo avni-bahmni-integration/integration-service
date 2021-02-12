@@ -86,7 +86,7 @@ public class HttpClient {
         }
     }
 
-    public void post(String path, String json) {
+    public String post(String path, String json) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.put("Accept", "application/json");
         logger.info("Posting to: " + path);
@@ -95,5 +95,6 @@ public class HttpClient {
             logger.error(asString(httpResponse));
             throw new RuntimeException("Post failed");
         }
+        return asString(httpResponse);
     }
 }

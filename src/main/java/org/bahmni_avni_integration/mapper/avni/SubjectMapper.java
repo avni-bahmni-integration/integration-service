@@ -49,6 +49,6 @@ public class SubjectMapper {
 
     private void mapSubjectUuid(Subject subject, OpenMRSEncounter openMRSEncounter) {
         MappingMetaData subjectUuidMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.SubjectUUID_Concept);
-        openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(subjectUuidMapping.getBahmniValue(), (String) subject.get("ID"), ObsDataType.Text));
+        openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(subjectUuidMapping.getBahmniValue(), (String) subject.getUuid(), ObsDataType.Text));
     }
 }

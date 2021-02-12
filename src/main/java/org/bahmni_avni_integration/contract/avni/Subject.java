@@ -20,6 +20,10 @@ public class Subject {
         return map.get(name);
     }
 
+    public String getUuid() {
+        return (String) get("ID");
+    }
+
     public Date getRegistrationDate() {
         String registrationDate = (String) map.get("Registration date");
         return FormatAndParseUtil.fromAvniDate(registrationDate);

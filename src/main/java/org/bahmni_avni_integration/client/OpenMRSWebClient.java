@@ -1,6 +1,5 @@
 package org.bahmni_avni_integration.client;
 
-import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.client.bahmni.ConnectionDetails;
 import org.bahmni_avni_integration.client.bahmni.HttpClient;
@@ -31,7 +30,7 @@ public class OpenMRSWebClient extends AbstractWebClient {
         return logger;
     }
 
-    public void post(String resourcePath, String json) {
-        httpClient.post(resourcePath, json);
+    public String post(String resourcePath, String json) {
+        return httpClient.post(resourcePath, json);
     }
 }

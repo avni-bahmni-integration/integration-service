@@ -18,10 +18,9 @@ class SubjectWorkerExternalTest {
     ConstantsRepository constantsRepository;
 
     @Test
-    @Disabled
     void processSubjects() {
         Constants constants = constantsRepository.findAllConstants();
-        Predicate<Subject[]> processOnlyOnePage = subjects -> false;
+        Predicate<Subject> processOnlyOnePage = subject -> true;
         subjectWorker.processSubjects(constants, processOnlyOnePage);
     }
 }
