@@ -21,7 +21,7 @@ public class OpenMRSPatientRepository extends BaseOpenMRSRepository {
         this.openMRSWebClient = openMRSWebClient;
     }
 
-    public OpenMRSPatient getPatient(Event event) throws JsonProcessingException {
+    public OpenMRSPatient getPatient(Event event) {
         String content = event.getContent();
         String patientJSON = openMRSWebClient.get(URI.create(urlPrefix + content));
         return ObjectJsonMapper.readValue(patientJSON, OpenMRSPatient.class);

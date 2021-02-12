@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.service;
 
+import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.MappingGroup;
 import org.bahmni_avni_integration.domain.MappingMetaData;
@@ -25,5 +26,10 @@ public class MappingMetaDataService {
         String subjectUuidConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.SubjectUUID_Concept);
 
         return new SubjectToPatientMetaData(subjectType, avniIdentifierConcept, encounterTypeUuid, subjectUuidConceptUuid);
+    }
+
+    public PatientToSubjectMetaData getForPatientToSubject() {
+        String patientUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientUUID_Concept);
+        return new PatientToSubjectMetaData(patientUuidConcept);
     }
 }

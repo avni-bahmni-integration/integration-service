@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 @Component
-public class AvniSubjectRepository {
+public class AvniSubjectRepository extends BaseAvniRepository {
     @Autowired
     private AvniHttpClient avniHttpClient;
 
@@ -35,6 +35,10 @@ public class AvniSubjectRepository {
         queryParams.put("concepts", ObjectJsonMapper.writeValueAsString(concepts));
         ResponseEntity<SubjectsResponse> responseEntity = avniHttpClient.get("/api/subjects", queryParams, SubjectsResponse.class);
         return responseEntity.getBody().getContent();
+    }
+
+    public Subject getSubject(Date lastModifiedDateTime, HashMap<String, Object> concepts) {
+        return pickAndExpectOne(getSubjects(lastModifiedDateTime, concepts));
     }
 
 }
