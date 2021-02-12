@@ -6,22 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OpenMRSEncounter {
-    private String encounterDatetime;
+public class OpenMRSEncounter extends OpenMRSBaseEncounter {
     private String patient;
     private String encounterType;
     private String location;
-    private List<OpenMRSEncounterProvider> encounterProviders = new ArrayList<>();
-    @JsonProperty("obs")
-    private List<OpenMRSSaveObservation> observations = new ArrayList<>();
-
-    public String getEncounterDatetime() {
-        return encounterDatetime;
-    }
-
-    public void setEncounterDatetime(String encounterDatetime) {
-        this.encounterDatetime = encounterDatetime;
-    }
 
     public String getPatient() {
         return patient;
@@ -45,22 +33,6 @@ public class OpenMRSEncounter {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public List<OpenMRSEncounterProvider> getEncounterProviders() {
-        return encounterProviders;
-    }
-
-    public void setEncounterProviders(List<OpenMRSEncounterProvider> encounterProviders) {
-        this.encounterProviders = encounterProviders;
-    }
-
-    public List<OpenMRSSaveObservation> getObservations() {
-        return observations;
-    }
-
-    public void setObservations(List<OpenMRSSaveObservation> observations) {
-        this.observations = observations;
     }
 
     public boolean addEncounterProvider(OpenMRSEncounterProvider openMRSEncounterProvider) {

@@ -7,6 +7,8 @@ import org.bahmni_avni_integration.client.bahmni.openmrs.OpenMRSLoginAuthenticat
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+
 @Component
 public class OpenMRSWebClient extends AbstractWebClient {
     private static Logger logger = Logger.getLogger(OpenMRSWebClient.class);
@@ -32,5 +34,10 @@ public class OpenMRSWebClient extends AbstractWebClient {
 
     public String post(String resourcePath, String json) {
         return httpClient.post(resourcePath, json);
+    }
+
+    public void delete(URI uri) {
+        logger.info(String.format("%s %s", "DELETE", uri.toString()));
+        httpClient.delete(uri);
     }
 }

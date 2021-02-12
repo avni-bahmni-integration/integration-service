@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.client.bahmni;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
@@ -10,6 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 
 import java.io.IOException;
+import java.net.URI;
 
 public class HttpClientInternal {
     private int connectTimeout;
@@ -45,7 +47,7 @@ public class HttpClientInternal {
         try {
             return defaultHttpClient.execute(httpGet);
         } catch (IOException e) {
-            throw new WebClientsException("Error executing request", e);
+            throw new WebClientsException(e);
         }
     }
 
@@ -63,7 +65,7 @@ public class HttpClientInternal {
         try {
             return defaultHttpClient.execute(httpPost);
         } catch (IOException e) {
-            throw new WebClientsException("Error executing request", e);
+            throw new WebClientsException(e);
         }
 
     }
@@ -80,5 +82,16 @@ public class HttpClientInternal {
 
     public HttpClientInternal createNew() {
         return new HttpClientInternal(connectTimeout, readTimeout);
+    }
+
+    public void delete(HttpRequestDetails requestDetails, HttpHeaders httpHeaders) {
+        HttpDelete httpDelete = new HttpDelete(requestDetails.getUri());
+        requestDetails.addDetailsTo(httpDelete);
+        httpHeaders.addTo(httpDelete);
+        try {
+            defaultHttpClient.execute(httpDelete);
+        } catch (IOException e) {
+            throw new WebClientsException(e);
+        }
     }
 }

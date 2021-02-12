@@ -1,6 +1,10 @@
 package org.bahmni_avni_integration.contract.bahmni;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenMRSEncounterProvider {
+    private String uuid;
     private String provider;
     private String encounterRole;
 
@@ -26,5 +30,13 @@ public class OpenMRSEncounterProvider {
 
     public void setEncounterRole(String encounterRole) {
         this.encounterRole = encounterRole;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

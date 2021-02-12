@@ -43,16 +43,16 @@ public class SubjectWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processSubject(Constants constants, Predicate<Subject> continueAfterOneRecord, SubjectToPatientMetaData metaData, Subject subject) {
-        Pair<OpenMRSPatient, OpenMRSEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData.avniIdentifierConcept(), metaData.subjectUuidConceptUuid());
+        Pair<OpenMRSPatient, OpenMRSEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
         OpenMRSPatient patient = patientEncounter.getValue0();
         OpenMRSEncounter encounter = patientEncounter.getValue1();
 
         if (encounter != null && patient != null) {
-            patientService.updateSubject(patient, subject, metaData.encounterTypeUuid(), constants);
+            patientService.updateSubject(patient, subject, metaData, constants);
         } else if (encounter != null && patient == null) {
             patientService.processPatientIdChanged(subject);
         } else if (encounter == null && patient != null) {
-            patientService.createSubject(constants, metaData.encounterTypeUuid(), subject, patient);
+            patientService.createSubject(subject, patient, metaData, constants);
         } else if (encounter == null && patient == null) {
             patientService.processPatientNotFound(subject);
         }

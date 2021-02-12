@@ -97,4 +97,9 @@ public class HttpClient {
         }
         return asString(httpResponse);
     }
+
+    public void delete(URI uri) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpClientInternal.delete(authenticator.getRequestDetails(uri), httpHeaders);
+    }
 }

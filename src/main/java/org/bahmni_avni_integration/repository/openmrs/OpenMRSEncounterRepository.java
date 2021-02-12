@@ -1,15 +1,8 @@
 package org.bahmni_avni_integration.repository.openmrs;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSConcept;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.bahmni.SearchResults;
-import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
-import org.bahmni_avni_integration.domain.Constants;
+import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.domain.MappingGroup;
 import org.bahmni_avni_integration.domain.MappingType;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
@@ -51,12 +44,16 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         return pickAndExpectOne(searchResults, String.format("%s-%s", conceptUuid, subjectId));
     }
 
-    public void createEncounter(OpenMRSEncounter encounter) {
+    public OpenMRSPostSaveEncounter createEncounter(OpenMRSEncounter encounter) {
         String json = ObjectJsonMapper.writeValueAsString(encounter);
         String outputJson = openMRSWebClient.post(getResourcePath("encounter"), json);
-        System.out.println(outputJson);
+        return ObjectJsonMapper.readValue(outputJson, OpenMRSPostSaveEncounter.class);
     }
 
     public void updateEncounter(OpenMRSEncounter encounter) {
+    }
+
+    public void deleteEncounter(OpenMRSBaseEncounter encounter) {
+        openMRSWebClient.delete(URI.create(String.format("%s/%s?purge=true", getResourcePath("encounter"), encounter.getUuid())));
     }
 }
