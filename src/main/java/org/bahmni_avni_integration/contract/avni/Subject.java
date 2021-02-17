@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.contract.avni;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.util.FormatAndParseUtil;
 
 import java.util.Date;
@@ -32,11 +33,15 @@ public class Subject {
     public Date getLastModifiedDate() {
         Map<String, Object> audit = (Map<String, Object>) map.get("audit");
         String lastModifiedAtString = (String) audit.get("Last modified at");
-        return FormatAndParseUtil.fromAvniDate(lastModifiedAtString);
+        return FormatAndParseUtil.fromAvniDateTime(lastModifiedAtString);
     }
 
     public Object getObservation(String conceptName) {
         Map<String, Object> observations = (Map<String, Object>) map.get("observations");
         return observations.get(conceptName);
+    }
+
+    public String getId(SubjectToPatientMetaData subjectToPatientMetaData) {
+        return (String) getObservation(subjectToPatientMetaData.avniIdentifierConcept());
     }
 }

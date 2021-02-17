@@ -64,7 +64,9 @@ public class AvniHttpClient {
         if (authToken != null && !authToken.isEmpty()) {
             return authToken;
         }
-        logger.info("Getting cognito details");
+
+        RestTemplate restTemplate = new RestTemplate();
+        logger.debug("Getting cognito details");
         ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(apiUrl("/cognito-details"), CognitoDetailsResponse.class);
         CognitoDetailsResponse cognitoDetails = response.getBody();
         AuthenticationHelper helper = new AuthenticationHelper(cognitoDetails.getPoolId(), cognitoDetails.getClientId(), "");

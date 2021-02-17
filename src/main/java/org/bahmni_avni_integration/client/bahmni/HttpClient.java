@@ -89,7 +89,7 @@ public class HttpClient {
     public String post(String path, String json) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.put("Accept", "application/json");
-        logger.info("Posting to: " + path);
+        logger.debug("Posting to: " + path);
         HttpResponse httpResponse = httpClientInternal.post(authenticator.getRequestDetails(URI.create(path)), httpHeaders, json);
         if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED) {
             logger.error(asString(httpResponse));

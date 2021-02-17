@@ -15,7 +15,7 @@ public abstract class AbstractWebClient {
     private static Logger logger = Logger.getLogger(AbstractWebClient.class);
 
     public String get(URI uri) {
-        logger.info(uri.toString());
+        logger.debug(uri.toString());
         return httpClient.get(uri);
     }
 

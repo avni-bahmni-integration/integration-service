@@ -30,6 +30,9 @@ public class ErrorRecord extends BaseEntity {
     private String encounterExternalId;
 
     @Column
+    private String subjectPatientId;
+
+    @Column
     @Enumerated(EnumType.STRING)
     private ErrorType errorType;
 
@@ -87,5 +90,13 @@ public class ErrorRecord extends BaseEntity {
 
     public void setErrorType(ErrorType errorType) {
         this.errorType = errorType;
+    }
+
+    public String getSubjectPatientId() {
+        return subjectPatientId;
+    }
+
+    public void setSubjectPatientId(String subjectPatientId) {
+        this.subjectPatientId = subjectPatientId;
     }
 }

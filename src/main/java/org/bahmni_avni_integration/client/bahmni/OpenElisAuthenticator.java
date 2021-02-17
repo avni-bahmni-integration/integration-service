@@ -49,7 +49,7 @@ public class OpenElisAuthenticator implements Authenticator {
 
             HttpPost httpPost = new HttpPost(uri);
 
-            logger.info(String.format("Executing request: %s", httpPost.getRequestLine()));
+            logger.debug(String.format("Executing request: %s", httpPost.getRequestLine()));
 
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("loginName", authenticationDetails.getUserId()));

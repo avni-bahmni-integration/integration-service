@@ -46,12 +46,13 @@ public class OpenMrsPatientEventWorker implements EventWorker {
         OpenMRSPatient openMRSPatient = patientRepository.getPatient(event);
         String name = openMRSPatient.getName();
         String uuid = openMRSPatient.getUuid();
-        logger.info(String.format("Patient: name %s || uuid %s", name, uuid));
+        logger.debug(String.format("Patient: name %s || uuid %s", name, uuid));
 
 
         PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
 
         HashMap<String, Object> concepts = new HashMap<>();
+
         concepts.put(metaData.patientUuidConcept(), openMRSPatient.getUuid());
         Encounter encounter = avniEncounterRepository.getEncounter(lastModifiedDateTime(), concepts);
         if(encounter == null) {

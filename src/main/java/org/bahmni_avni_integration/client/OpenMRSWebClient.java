@@ -37,7 +37,7 @@ public class OpenMRSWebClient extends AbstractWebClient {
     }
 
     public void delete(URI uri) {
-        logger.info(String.format("%s %s", "DELETE", uri.toString()));
+        logger.debug(String.format("%s %s", "DELETE", uri.toString()));
         httpClient.delete(uri);
     }
 }

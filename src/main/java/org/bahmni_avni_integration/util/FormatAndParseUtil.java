@@ -25,6 +25,15 @@ public class FormatAndParseUtil {
         }
     }
 
+    public static Date fromAvniDateTime(String dateString) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            return dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static String fromAvniToOpenMRSDate(String dateString) {
         return FormatAndParseUtil.toISODateString(FormatAndParseUtil.fromAvniDate(dateString));
     }

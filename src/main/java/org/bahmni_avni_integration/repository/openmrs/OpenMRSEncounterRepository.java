@@ -29,18 +29,25 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         return ObjectJsonMapper.readValue(json, OpenMRSEncounter.class);
     }
 
-    public Pair<OpenMRSPatient, OpenMRSEncounter> getEncounter(String patientIdentifier, String subjectId, String subjectUuidConceptUuid)  {
-        OpenMRSPatient patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
+    public OpenMRSEncounter getRegistrationEncounterForAvniSubject(OpenMRSPatient patient, String subjectId, String subjectUuidConceptUuid) {
         String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&obsConcept=%s&obsValues=%s", getResourcePath("encounter"), patient.getUuid(), subjectUuidConceptUuid, encode(subjectId))));
-        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {});
-        OpenMRSEncounter encounter = pickAndExpectOne(searchResults, String.format("%s-%s-%s", patientIdentifier, subjectUuidConceptUuid, subjectId));
-        return new Pair<>(patient, encounter);
+        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {
+        });
+        return pickAndExpectOne(searchResults, String.format("%s-%s-%s", patient.getUuid(), subjectUuidConceptUuid, subjectId));
+    }
+
+    public OpenMRSEncounter getRegistrationEncounterForAvniSubject(String subjectId, String subjectUuidConceptUuid) {
+        String json = openMRSWebClient.get(URI.create(String.format("%s?obsConcept=%s&obsValues=%s", getResourcePath("encounter"), subjectUuidConceptUuid, encode(subjectId))));
+        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {
+        });
+        return pickAndExpectOne(searchResults, String.format("%s-%s", subjectUuidConceptUuid, subjectId));
     }
 
     public OpenMRSEncounter getEncounter(String subjectId) {
         String conceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.SubjectUUID_Concept);
         String json = openMRSWebClient.get(URI.create(String.format("%s?obsConcept=%s&obsValues=%s", getResourcePath("encounter"), conceptUuid, encode(subjectId))));
-        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {});
+        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {
+        });
         return pickAndExpectOne(searchResults, String.format("%s-%s", conceptUuid, subjectId));
     }
 

@@ -46,7 +46,7 @@ public class AnonymousAuthenticator implements Authenticator {
 
             HttpGet httpGet = new HttpGet(uri);
 
-            logger.info(String.format("Executing request: %s", httpGet.getRequestLine()));
+            logger.debug(String.format("Executing request: %s", httpGet.getRequestLine()));
 
             ClientCookies clientCookies = new ClientCookies();
             HttpResponse response = httpClient.execute(httpGet, httpContext);

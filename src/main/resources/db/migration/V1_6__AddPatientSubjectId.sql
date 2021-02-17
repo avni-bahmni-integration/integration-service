@@ -1,0 +1,1 @@
+ alter table error_record add column subject_patient_id CHARACTER VARYING(250) NULL;

@@ -19,4 +19,10 @@ public class FormatUtilTest {
         Date date = FormatAndParseUtil.fromAvniDate("2020-05-25");
         assertNotNull(date);
     }
+
+    @Test
+    public void fromAvniDateTime() {
+        Date date = FormatAndParseUtil.fromAvniDateTime("2021-01-14T08:11:29.012Z");
+        assertNotNull(date);
+    }
 }
