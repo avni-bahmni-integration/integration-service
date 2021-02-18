@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.MappingGroup;
 import org.bahmni_avni_integration.domain.MappingMetaData;
+import org.bahmni_avni_integration.domain.MappingMetaDataCollection;
 import org.bahmni_avni_integration.domain.MappingType;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class MappingMetaDataService {
 
     public PatientToSubjectMetaData getForPatientToSubject() {
         String patientUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientUUID_Concept);
-        return new PatientToSubjectMetaData(patientUuidConcept);
+        String avniIdentifierConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
+        String subjectType = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Patient_SubjectType);
+        String patientEncounterType = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Patient_EncounterType);
+        return new PatientToSubjectMetaData(patientUuidConcept, subjectType, avniIdentifierConcept, patientEncounterType);
     }
 }

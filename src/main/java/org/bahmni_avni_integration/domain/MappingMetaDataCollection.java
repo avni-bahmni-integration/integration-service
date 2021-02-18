@@ -18,4 +18,8 @@ public class MappingMetaDataCollection {
     public MappingMetaData getMappingForAvniValue(String avniValue) {
         return list.stream().filter(mappingMetaData -> avniValue.equals(mappingMetaData.getAvniValue())).findAny().orElse(null);
     }
+
+    public MappingMetaData getMappingForBahmniValue(String bahmniValue) {
+        return list.stream().filter(mappingMetaData -> bahmniValue.equals(mappingMetaData.getBahmniValue())).findAny().orElse(null);
+    }
 }

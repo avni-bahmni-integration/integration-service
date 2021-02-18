@@ -1,13 +1,24 @@
 package org.bahmni_avni_integration.worker;
 
+import org.bahmni_avni_integration.client.AvniHttpClient;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.contract.avni.Encounter;
+import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttribute;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttributeType;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
+import org.bahmni_avni_integration.domain.MappingGroup;
+import org.bahmni_avni_integration.domain.MappingMetaData;
+import org.bahmni_avni_integration.domain.MappingMetaDataCollection;
+import org.bahmni_avni_integration.domain.MappingType;
+import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.repository.avni.AvniEncounterRepository;
 import org.bahmni_avni_integration.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSPatientRepository;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
+import org.bahmni_avni_integration.service.SubjectService;
+import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;
@@ -18,9 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.*;
 
 @Component
 public class OpenMrsPatientEventWorker implements EventWorker {
@@ -38,25 +47,35 @@ public class OpenMrsPatientEventWorker implements EventWorker {
     @Autowired
     private MappingMetaDataService mappingMetaDataService;
 
+    @Autowired
+    private MappingMetaDataRepository mappingMetaDataRepository;
+
+    @Autowired
+    private SubjectService subjectService;
+
+
     @Value("${openmrs.uri.prefix}")
     private String urlPrefix;
 
     @Override
     public void process(Event event) {
         OpenMRSPatient openMRSPatient = patientRepository.getPatient(event);
-        String name = openMRSPatient.getName();
-        String uuid = openMRSPatient.getUuid();
-        logger.debug(String.format("Patient: name %s || uuid %s", name, uuid));
-
-
-        PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
-
-        HashMap<String, Object> concepts = new HashMap<>();
-
-        concepts.put(metaData.patientUuidConcept(), openMRSPatient.getUuid());
-        Encounter encounter = avniEncounterRepository.getEncounter(lastModifiedDateTime(), concepts);
+        logger.debug(String.format("Patient: name %s || uuid %s", openMRSPatient.getName(), openMRSPatient.getUuid()));
+        PatientToSubjectMetaData patientToSubjectMetaData = mappingMetaDataService.getForPatientToSubject();
+        LinkedHashMap<String, Object> encounterCriteria = new LinkedHashMap<>();
+        encounterCriteria.put(patientToSubjectMetaData.patientUuidConcept(), openMRSPatient.getUuid());
+        Encounter encounter = avniEncounterRepository.getEncounter(lastModifiedDateTime(), encounterCriteria);
         if(encounter == null) {
-
+            logger.debug("Enc not found");
+            Subject subject = subjectService.findSubject(openMRSPatient, patientToSubjectMetaData);
+            if(subject != null) {
+                Encounter registrationEncounter = subjectService.createRegistrationEncounter(openMRSPatient, subject, patientToSubjectMetaData);
+                logger.debug(String.format("New encounter created %s", registrationEncounter));
+            } else {
+                logger.debug("Subject not found");
+            }
+        } else {
+            logger.debug(String.format("Enc found %s", encounter));
         }
     }
 

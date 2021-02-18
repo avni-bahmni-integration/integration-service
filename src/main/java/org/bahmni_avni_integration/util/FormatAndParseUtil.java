@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class FormatAndParseUtil {
     public static String toISODateStringWithTimezone(Date date) {
@@ -14,6 +15,10 @@ public class FormatAndParseUtil {
     public static String toISODateString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         return String.format("%s%s", dateFormat.format(date), "Z");
+    }
+
+    public static String now() {
+        return toISODateStringWithTimezone(new Date());
     }
 
     public static Date fromAvniDate(String dateString) {
