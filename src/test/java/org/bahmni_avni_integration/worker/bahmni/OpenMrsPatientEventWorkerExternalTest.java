@@ -1,14 +1,11 @@
 package org.bahmni_avni_integration.worker.bahmni;
 
 import org.bahmni_avni_integration.repository.ConstantsRepository;
-import org.bahmni_avni_integration.worker.*;
-
+import org.bahmni_avni_integration.worker.OpenMrsPatientEventWorker;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.function.Predicate;
 
 @SpringBootTest
 class OpenMrsPatientEventWorkerExternalTest {

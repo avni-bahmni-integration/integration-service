@@ -4,7 +4,6 @@ import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.MappingGroup;
 import org.bahmni_avni_integration.domain.MappingMetaData;
-import org.bahmni_avni_integration.domain.MappingMetaDataCollection;
 import org.bahmni_avni_integration.domain.MappingType;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;

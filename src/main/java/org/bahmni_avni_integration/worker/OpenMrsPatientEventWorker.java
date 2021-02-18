@@ -1,25 +1,15 @@
 package org.bahmni_avni_integration.worker;
 
-import org.bahmni_avni_integration.client.AvniHttpClient;
-import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.contract.avni.Encounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttribute;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttributeType;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
-import org.bahmni_avni_integration.domain.MappingGroup;
-import org.bahmni_avni_integration.domain.MappingMetaData;
-import org.bahmni_avni_integration.domain.MappingMetaDataCollection;
-import org.bahmni_avni_integration.domain.MappingType;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.repository.avni.AvniEncounterRepository;
 import org.bahmni_avni_integration.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSPatientRepository;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.SubjectService;
-import org.bahmni_avni_integration.util.FormatAndParseUtil;
-import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;
 import org.slf4j.Logger;
@@ -28,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
 import java.util.*;
 
 @Component
@@ -75,7 +64,8 @@ public class OpenMrsPatientEventWorker implements EventWorker {
                 logger.debug("Subject not found");
             }
         } else {
-            logger.debug(String.format("Enc found %s", encounter));
+            Encounter updatedEncounter = subjectService.updateRegistrationEncounter(encounter, openMRSPatient);
+            logger.debug(String.format("Encounter updated %s", updatedEncounter));
         }
     }
 
