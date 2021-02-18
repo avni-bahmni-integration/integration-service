@@ -5,7 +5,6 @@ import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttribute;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
-import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.MappingGroup;
 import org.bahmni_avni_integration.domain.MappingMetaData;
 import org.bahmni_avni_integration.domain.MappingMetaDataCollection;
@@ -54,9 +53,19 @@ public class SubjectService {
     }
 
     public Encounter createRegistrationEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData) {
-        MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
         Encounter encounterRequest = new Encounter();
+        encounterRequest.set("Subject ID", subject.getUuid());
+        encounterRequest.set("Encounter type", patientToSubjectMetaData.patientEncounterType());
+        encounterRequest.set("Encounter date time", FormatAndParseUtil.now());
+        encounterRequest.set("observations", mapObservations(openMRSPatient, patientToSubjectMetaData));
+        encounterRequest.set("cancelObservations", new HashMap<>());
+        Encounter encounter = avniEncounterRepository.create(encounterRequest);
+        return encounter;
+    }
+
+    private Map<String, Object> mapObservations(OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
         LinkedHashMap<String, Object> observations = new LinkedHashMap<>();
+        MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
         observations.put(patientToSubjectMetaData.patientUuidConcept(), openMRSPatient.getUuid());
         for (OpenMRSPersonAttribute openMRSPersonAttribute : openMRSPatient.getPerson().getAttributes()) {
             String attributeTypeUuid = openMRSPersonAttribute.getAttributeType().getUuid();
@@ -71,13 +80,7 @@ public class SubjectService {
                 observations.put(questionMapping.getAvniValue(), attributeValue);
             }
         }
-        encounterRequest.set("Subject ID", subject.getUuid());
-        encounterRequest.set("Encounter type", patientToSubjectMetaData.patientEncounterType());
-        encounterRequest.set("Encounter date time", FormatAndParseUtil.now());
-        encounterRequest.set("observations", observations);
-        encounterRequest.set("cancelObservations", new HashMap<>());
-        logger.info(String.format("Obs %s", observations.toString()));
-        Encounter encounter = avniEncounterRepository.create(encounterRequest);
-        return encounter;
+        logger.debug(String.format("Obs %s", observations.toString()));
+        return observations;
     }
 }
