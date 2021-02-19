@@ -18,17 +18,11 @@ public class AvniEncounterRepository extends BaseAvniRepository {
     @Autowired
     private AvniHttpClient avniHttpClient;
 
-    public Encounter[] getEncounters(Date lastModifiedDateTime, HashMap<String, Object> concepts) {
-        String fromTime = FormatAndParseUtil.toISODateString(lastModifiedDateTime);
+    public Encounter getEncounter(HashMap<String, Object> concepts) {
         HashMap<String, String> queryParams = new HashMap<>();
-        queryParams.put("lastModifiedDateTime", fromTime);
         queryParams.put("concepts", ObjectJsonMapper.writeValueAsString(concepts));
         ResponseEntity<EncountersResponse> responseEntity = avniHttpClient.get("/api/encounters", queryParams, EncountersResponse.class);
-        return responseEntity.getBody().getContent();
-    }
-
-    public Encounter getEncounter(Date lastModifiedDateTime, HashMap<String, Object> concepts) {
-        return pickAndExpectOne(getEncounters(lastModifiedDateTime, concepts));
+        return pickAndExpectOne(responseEntity.getBody().getContent());
     }
 
     public Encounter create(Encounter encounter) {

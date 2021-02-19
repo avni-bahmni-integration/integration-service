@@ -1,8 +1,10 @@
 package org.bahmni_avni_integration.scheduler;
 
+import org.bahmni_avni_integration.client.OpenERPAtomFeedProperties;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.client.AvniHttpClient;
 import org.bahmni_avni_integration.client.bahmni.ClientCookies;
+import org.bahmni_avni_integration.config.OpenMRSAtomFeedPropertiesFactory;
 import org.bahmni_avni_integration.worker.OpenMrsPatientEventWorker;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.ict4h.atomfeed.client.AtomFeedProperties;
@@ -48,6 +50,9 @@ public class SampleJob implements Job {
     @Autowired
     private SubjectWorker subjectWorker;
 
+    @Autowired
+    private OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory;
+
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("Job ** {} ** fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
@@ -67,14 +72,9 @@ public class SampleJob implements Job {
     }
 
     private void syncDataFromBahmniToAvni() {
-        AtomFeedProperties feedProperties = new AtomFeedProperties();
-        feedProperties.setConnectTimeout(500);
-        feedProperties.setReadTimeout(20000);
-        feedProperties.setMaxFailedEvents(1000);
         ClientCookies cookies = openMRSWebClient.getCookies();
-
+        AtomFeedProperties feedProperties = atomFeedPropertiesFactory.getProperties();
         AllFeeds allFeeds = new AllFeeds(feedProperties, cookies);
-
         AtomFeedSpringTransactionSupport transactionManagerImpl = new AtomFeedSpringTransactionSupport(
                 transactionManager,
                 dataSource

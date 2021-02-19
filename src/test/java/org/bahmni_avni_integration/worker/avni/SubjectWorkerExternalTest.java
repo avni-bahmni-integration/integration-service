@@ -27,7 +27,7 @@ class SubjectWorkerExternalTest {
     @Test
     @Disabled("Useful when giving full run")
     public void processSubjects() {
-        Constants constants = constantsRepository.findAllConstants();
+         Constants constants = constantsRepository.findAllConstants();
         Predicate<Subject> processEverything = subject -> true;
         subjectWorker.processSubjects(constants, processEverything);
     }
