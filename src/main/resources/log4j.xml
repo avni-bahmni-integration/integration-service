@@ -23,8 +23,14 @@
         <appender-ref ref="console"/>
     </logger>
 
+    <logger name="org.ict4h.atomfeed.client.repository.AllFeeds">
+        <level value="INFO"/>
+        <appender-ref ref="fileAppender"/>
+        <appender-ref ref="console"/>
+    </logger>
+
     <root>
-        <priority value="INFO"/>
+        <priority value="DEBUG"/>
         <appender-ref ref="fileAppender"/>
         <appender-ref ref="console"/>
     </root>

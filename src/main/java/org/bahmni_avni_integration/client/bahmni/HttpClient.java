@@ -55,7 +55,7 @@ public class HttpClient {
                 httpResponse = httpClientInternal.get(authenticator.refreshRequestDetails(uri), httpHeaders);
             }
 
-            checkSanityOfResponse(httpResponse);
+            checkSanityOfResponse(httpResponse, uri);
             return asString(httpResponse);
         } finally {
             httpClientInternal.closeConnection();
@@ -69,10 +69,10 @@ public class HttpClient {
         return objectMapper.readValue(response, returnType);
     }
 
-    private void checkSanityOfResponse(HttpResponse httpResponse) {
+    private void checkSanityOfResponse(HttpResponse httpResponse, URI uri) {
         StatusLine statusLine = httpResponse.getStatusLine();
         int statusCode = statusLine.getStatusCode();
-        if (statusCode < 200 || statusCode >= 300) throw new WebClientsException("Bad response code of " + statusCode);
+        if (statusCode < 200 || statusCode >= 300) throw WebClientsException.CustomError(statusCode, "Error reported on call");
 
         HttpEntity entity = httpResponse.getEntity();
         if (entity == null) throw new WebClientsException("Cannot read response");

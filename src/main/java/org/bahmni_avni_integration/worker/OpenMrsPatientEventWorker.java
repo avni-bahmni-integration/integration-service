@@ -26,7 +26,7 @@ public class OpenMrsPatientEventWorker implements EventWorker {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OpenMRSPatientRepository patientRepository;
+    private PatientService patientService;
 
     @Autowired
     private MappingMetaDataService mappingMetaDataService;
@@ -39,7 +39,11 @@ public class OpenMrsPatientEventWorker implements EventWorker {
 
     @Override
     public void process(Event event) {
-        OpenMRSPatient openMRSPatient = patientRepository.getPatient(event);
+        OpenMRSPatient openMRSPatient = patientService.getPatient(event);
+        if (openMRSPatient == null) {
+            logger.warn(String.format("Feed out of sync with the actual data: %s", event.toString()));
+            return;
+        }
         logger.debug(String.format("Patient: name %s || uuid %s", openMRSPatient.getName(), openMRSPatient.getUuid()));
         PatientToSubjectMetaData patientToSubjectMetaData = mappingMetaDataService.getForPatientToSubject();
         Encounter encounter = avniEncounterService.getEncounter(openMRSPatient.getUuid(), patientToSubjectMetaData);

@@ -1,5 +1,7 @@
 package org.bahmni_avni_integration.service;
 
+import org.apache.http.HttpStatus;
+import org.bahmni_avni_integration.client.bahmni.WebClientsException;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSBaseEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
@@ -11,6 +13,7 @@ import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSPatientRepository;
+import org.ict4h.atomfeed.client.domain.Event;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class PatientService {
     private OpenMRSPatientRepository openMRSPatientRepository;
     @Autowired
     private ErrorService errorService;
+    @Autowired
+    private OpenMRSPatientRepository patientRepository;
 
     public void updateSubject(OpenMRSPatient patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
@@ -63,5 +68,16 @@ public class PatientService {
 //    doesn't work
     public void deleteSubject(OpenMRSBaseEncounter encounter) {
         openMRSEncounterRepository.deleteEncounter(encounter);
+    }
+
+    public OpenMRSPatient getPatient(Event event) {
+        try {
+            return patientRepository.getPatient(event);
+        } catch (WebClientsException e) {
+            if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                return null;
+            }
+            throw e;
+        }
     }
 }
