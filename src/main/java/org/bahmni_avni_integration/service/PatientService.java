@@ -3,10 +3,7 @@ package org.bahmni_avni_integration.service;
 import org.apache.http.HttpStatus;
 import org.bahmni_avni_integration.client.bahmni.WebClientsException;
 import org.bahmni_avni_integration.contract.avni.Subject;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSBaseEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPostSaveEncounter;
+import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.*;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
@@ -31,14 +28,14 @@ public class PatientService {
     @Autowired
     private OpenMRSPatientRepository patientRepository;
 
-    public void updateSubject(OpenMRSPatient patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+    public void updateSubject(OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
         openMRSEncounterRepository.updateEncounter(encounter);
 
         errorService.successfullyProcessed(subject);
     }
 
-    public OpenMRSPostSaveEncounter createSubject(Subject subject, OpenMRSPatient patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+    public OpenMRSPostSaveEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
         OpenMRSPostSaveEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
@@ -46,10 +43,10 @@ public class PatientService {
         return savedEncounter;
     }
 
-    public Pair<OpenMRSPatient, OpenMRSEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
+    public Pair<OpenMRSUuidHolder, OpenMRSEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
         String subjectId = subject.getUuid();
         String patientIdentifier = constants.getValue(ConstantKey.BahmniIdentifierPrefix) + subject.getId(subjectToPatientMetaData);
-        OpenMRSPatient patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
+        OpenMRSUuidHolder patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
         if (patient == null) {
             return new Pair<>(null, null);
         }
@@ -65,7 +62,7 @@ public class PatientService {
         errorService.errorOccurred(subject, ErrorType.NoPatientWithId, metaData);
     }
 
-//    doesn't work
+    //    doesn't work
     public void deleteSubject(OpenMRSBaseEncounter encounter) {
         openMRSEncounterRepository.deleteEncounter(encounter);
     }

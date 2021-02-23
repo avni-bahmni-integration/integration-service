@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.domain.AvniEntityType;
@@ -52,8 +53,8 @@ public class SubjectWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processSubject(Constants constants, Predicate<Subject> continueAfterOneRecord, SubjectToPatientMetaData metaData, Subject subject) {
-        Pair<OpenMRSPatient, OpenMRSEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
-        OpenMRSPatient patient = patientEncounter.getValue0();
+        Pair<OpenMRSUuidHolder, OpenMRSEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
+        OpenMRSUuidHolder patient = patientEncounter.getValue0();
         OpenMRSEncounter encounter = patientEncounter.getValue1();
 
         if (encounter != null && patient != null) {

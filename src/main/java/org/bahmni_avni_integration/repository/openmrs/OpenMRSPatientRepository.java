@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.repository.openmrs;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.contract.bahmni.SearchResults;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.ict4h.atomfeed.client.domain.Event;
@@ -26,10 +27,10 @@ public class OpenMRSPatientRepository extends BaseOpenMRSRepository {
         return ObjectJsonMapper.readValue(patientJSON, OpenMRSPatient.class);
     }
 
-    public OpenMRSPatient getPatientByIdentifier(String identifier) {
+    public OpenMRSUuidHolder getPatientByIdentifier(String identifier) {
         String patientJSON = openMRSWebClient.get(URI.create(String.format("%s?identifier=%s", getResourcePath("patient"), identifier)));
-        SearchResults<OpenMRSPatient> searchResults = ObjectJsonMapper.readValue(patientJSON, new TypeReference<SearchResults<OpenMRSPatient>>() {});
+        SearchResults<OpenMRSUuidHolder> searchResults = ObjectJsonMapper.readValue(patientJSON, new TypeReference<SearchResults<OpenMRSUuidHolder>>() {});
         // story-todo do full run after changing it
-        return pickOne(searchResults, identifier);
+        return pickAndExpectOne(searchResults.removeDuplicates(), identifier);
     }
 }

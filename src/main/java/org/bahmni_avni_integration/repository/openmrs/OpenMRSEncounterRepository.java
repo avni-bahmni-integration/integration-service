@@ -29,7 +29,7 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         return ObjectJsonMapper.readValue(json, OpenMRSEncounter.class);
     }
 
-    public OpenMRSEncounter getRegistrationEncounterForAvniSubject(OpenMRSPatient patient, String subjectId, String subjectUuidConceptUuid) {
+    public OpenMRSEncounter getRegistrationEncounterForAvniSubject(OpenMRSUuidHolder patient, String subjectId, String subjectUuidConceptUuid) {
         String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&obsConcept=%s&obsValues=%s", getResourcePath("encounter"), patient.getUuid(), subjectUuidConceptUuid, encode(subjectId))));
         SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {
         });
