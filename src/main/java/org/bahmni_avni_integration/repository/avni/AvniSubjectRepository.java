@@ -1,7 +1,6 @@
 package org.bahmni_avni_integration.repository.avni;
 
 import org.bahmni_avni_integration.client.AvniHttpClient;
-import org.bahmni_avni_integration.contract.avni.EncountersResponse;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.avni.SubjectsResponse;
 import org.bahmni_avni_integration.util.FormatAndParseUtil;

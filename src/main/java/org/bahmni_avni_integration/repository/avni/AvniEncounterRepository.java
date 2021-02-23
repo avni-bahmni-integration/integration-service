@@ -1,16 +1,13 @@
 package org.bahmni_avni_integration.repository.avni;
 
 import org.bahmni_avni_integration.client.AvniHttpClient;
-import org.bahmni_avni_integration.contract.avni.AvniEncounterRequest;
-import org.bahmni_avni_integration.contract.avni.EncountersResponse;
 import org.bahmni_avni_integration.contract.avni.Encounter;
-import org.bahmni_avni_integration.util.FormatAndParseUtil;
+import org.bahmni_avni_integration.contract.avni.EncountersResponse;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.HashMap;
 
 @Component
