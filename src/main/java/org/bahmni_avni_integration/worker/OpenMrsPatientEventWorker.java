@@ -4,9 +4,9 @@ import org.bahmni_avni_integration.contract.avni.Encounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
-import org.bahmni_avni_integration.repository.avni.AvniEncounterRepository;
-import org.bahmni_avni_integration.repository.openmrs.OpenMRSPatientRepository;
-import org.bahmni_avni_integration.service.AvniEncounterService;
+import org.bahmni_avni_integration.domain.Constants;
+import org.bahmni_avni_integration.repository.MultipleResultsFoundException;
+import org.bahmni_avni_integration.service.ErrorService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.PatientService;
 import org.bahmni_avni_integration.service.SubjectService;
@@ -16,10 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashMap;
 
 @Component
 public class OpenMrsPatientEventWorker implements EventWorker {
@@ -33,36 +29,48 @@ public class OpenMrsPatientEventWorker implements EventWorker {
 
     @Autowired
     private SubjectService subjectService;
-
-    @Autowired
-    private AvniEncounterService avniEncounterService;
+    private Constants constants;
 
     @Override
     public void process(Event event) {
-        OpenMRSPatient openMRSPatient = patientService.getPatient(event);
-        if (openMRSPatient == null) {
+        OpenMRSPatient patient = patientService.getPatient(event);
+        if (patient == null) {
             logger.warn(String.format("Feed out of sync with the actual data: %s", event.toString()));
             return;
         }
-        logger.debug(String.format("Patient: name %s || uuid %s", openMRSPatient.getName(), openMRSPatient.getUuid()));
-        PatientToSubjectMetaData patientToSubjectMetaData = mappingMetaDataService.getForPatientToSubject();
-        Encounter encounter = avniEncounterService.getEncounter(openMRSPatient.getUuid(), patientToSubjectMetaData);
-        if (encounter == null) {
-            logger.debug("Enc not found");
-            Subject subject = subjectService.findSubject(openMRSPatient, patientToSubjectMetaData);
-            if (subject != null) {
-                Encounter registrationEncounter = subjectService.createRegistrationEncounter(openMRSPatient, subject, patientToSubjectMetaData);
-                logger.debug(String.format("New encounter created %s", registrationEncounter));
-            } else {
-                logger.debug("Subject not found");
-            }
-        } else {
-            Encounter updatedEncounter = subjectService.updateRegistrationEncounter(encounter, openMRSPatient);
-            logger.debug(String.format("Encounter updated %s", updatedEncounter));
+        if (patientService.shouldFilterPatient(patient, constants)) {
+            logger.warn(String.format("Patient should be filtered out: %s", patient.getPatientId()));
+            return;
+        }
+
+        logger.debug(String.format("Patient: name %s || uuid %s", patient.getName(), patient.getUuid()));
+        PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
+        Encounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
+        Subject subject;
+        try {
+            subject = subjectService.findSubject(patient, metaData, constants);
+        } catch (MultipleResultsFoundException e) {
+            subjectService.processMultipleSubjectsFound(patient, metaData);
+            return;
+        }
+
+        if (patientEncounter != null && subject != null) {
+            subjectService.updateRegistrationEncounter(patientEncounter, patient);
+        } else if (patientEncounter != null && subject == null) {
+            subjectService.processSubjectIdChanged(patient, metaData);
+        } else if (patientEncounter == null && subject != null) {
+            subjectService.createRegistrationEncounter(patient, subject, metaData);
+        } else if (patientEncounter == null && subject == null) {
+            subjectService.processSubjectNotFound(patient, metaData);
         }
     }
 
     @Override
     public void cleanUp(Event event) {
+    }
+
+//    avoid loading of constants for every event
+    public void setConstants(Constants constants) {
+        this.constants = constants;
     }
 }

@@ -33,6 +33,7 @@ public class MappingMetaDataService {
         String avniIdentifierConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
         String subjectType = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Patient_SubjectType);
         String patientEncounterType = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Patient_EncounterType);
-        return new PatientToSubjectMetaData(patientUuidConcept, subjectType, avniIdentifierConcept, patientEncounterType);
+        String patientIdentifierName = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
+        return new PatientToSubjectMetaData(patientUuidConcept, subjectType, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
     }
 }

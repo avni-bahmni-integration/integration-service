@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.worker.bahmni;
 
+import org.bahmni_avni_integration.repository.ConstantsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,9 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class PatientWorkerExternalTest {
     @Autowired
     private PatientWorker patientWorker;
+    @Autowired
+    private ConstantsRepository constantsRepository;
 
     @Test
     public void processPatients() {
-        patientWorker.processPatients();
+        patientWorker.processPatients(constantsRepository.findAllConstants());
     }
 }

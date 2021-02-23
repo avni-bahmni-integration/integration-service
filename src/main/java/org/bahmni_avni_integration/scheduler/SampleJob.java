@@ -1,5 +1,8 @@
 package org.bahmni_avni_integration.scheduler;
 
+import org.bahmni_avni_integration.domain.Constants;
+import org.bahmni_avni_integration.repository.ConstantsRepository;
+import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.bahmni_avni_integration.worker.bahmni.PatientWorker;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -14,12 +17,17 @@ public class SampleJob implements Job {
 
     @Autowired
     private PatientWorker patientWorker;
+    @Autowired
+    private SubjectWorker subjectWorker;
+    @Autowired
+    private ConstantsRepository constantsRepository;
 
     public void execute(JobExecutionContext context) {
         logger.info("Job ** {} ** fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
         try {
-//        subjectWorker.processSubjects();
-            patientWorker.processPatients();
+            Constants allConstants = constantsRepository.findAllConstants();
+            subjectWorker.processSubjects(allConstants);
+            patientWorker.processPatients(allConstants);
         } catch (Exception e) {
             logger.error("Error calling API", e);
         }

@@ -7,6 +7,7 @@ import org.bahmni_avni_integration.contract.avni.Encounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
+import org.bahmni_avni_integration.domain.Constants;
 import org.bahmni_avni_integration.worker.OpenMrsPatientEventWorker;
 import org.ict4h.atomfeed.client.AtomFeedProperties;
 import org.ict4h.atomfeed.client.domain.Event;
@@ -48,8 +49,9 @@ public class PatientWorker {
         allFailedEvents = new AllFailedEventsJdbcImpl(transactionManagerImpl);
     }
 
-    public void processPatients() {
+    public void processPatients(Constants constants) {
         try {
+            eventWorker.setConstants(constants);
             URI uri = new URI(patientFeedLink);
             ClientCookies cookies = openMRSWebClient.getCookies();
             AllFeeds allFeeds = new AllFeeds(feedProperties, cookies);

@@ -5,13 +5,14 @@ import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
-import org.bahmni_avni_integration.domain.*;
+import org.bahmni_avni_integration.domain.AvniEntityStatus;
+import org.bahmni_avni_integration.domain.AvniEntityType;
+import org.bahmni_avni_integration.domain.Constants;
 import org.bahmni_avni_integration.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.EntityStatusService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.PatientService;
-import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,7 @@ public class SubjectWorker {
     @Autowired
     private EntityStatusService entityStatusService;
 
-    private static Logger logger = Logger.getLogger(SubjectWorker.class);
+    private static final Logger logger = Logger.getLogger(SubjectWorker.class);
 
     public void processSubjects(Constants constants, Predicate<Subject> continueAfterOneRecord) {
         SubjectToPatientMetaData metaData = mappingMetaDataService.getForSubjectToPatient();
@@ -58,7 +59,7 @@ public class SubjectWorker {
         if (encounter != null && patient != null) {
             patientService.updateSubject(patient, subject, metaData, constants);
         } else if (encounter != null && patient == null) {
-            // todo: openmrs doesn't support the ability to find encounter without providing the patient hence this condition will never be reached
+            // product-roadmap-todo: openmrs doesn't support the ability to find encounter without providing the patient hence this condition will never be reached
             patientService.processPatientIdChanged(subject, metaData);
         } else if (encounter == null && patient != null) {
             patientService.createSubject(subject, patient, metaData, constants);
@@ -67,8 +68,7 @@ public class SubjectWorker {
         }
         entityStatusService.saveEntityStatus(subject);
 
-        if (!continueAfterOneRecord.test(subject)) return true;
-        return false;
+        return !continueAfterOneRecord.test(subject);
     }
 
     public void processSubjects(Constants constants) {

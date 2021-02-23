@@ -67,4 +67,9 @@ public class OpenMRSPatient {
     public void setDisplay(String display) {
         this.display = display;
     }
+
+    public String getPatientId() {
+        OpenMRSPatientIdentifier openMRSPatientIdentifier = this.getIdentifiers().stream().filter(OpenMRSPatientIdentifier::isPreferred).findFirst().orElse(null);
+        return openMRSPatientIdentifier.getIdentifier();
+    }
 }

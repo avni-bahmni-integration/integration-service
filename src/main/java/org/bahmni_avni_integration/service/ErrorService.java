@@ -1,7 +1,10 @@
 package org.bahmni_avni_integration.service;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.BahmniEntityType;
 import org.bahmni_avni_integration.contract.avni.Subject;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
+import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.AvniEntityType;
 import org.bahmni_avni_integration.domain.ErrorRecord;
@@ -31,6 +34,18 @@ public class ErrorService {
         errorRecord.setAvniEntityType(AvniEntityType.Subject);
         errorRecord.setSubjectPatientExternalId(subject.getUuid());
         errorRecord.setSubjectPatientId(id);
+        errorRecord.setErrorType(errorType);
+        errorRecordRepository.save(errorRecord);
+    }
+
+    public void errorOccurred(OpenMRSPatient patient, ErrorType errorType, PatientToSubjectMetaData metaData) {
+        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndSubjectPatientExternalIdAndErrorType(BahmniEntityType.Patient, patient.getUuid(), errorType);
+        if (errorRecord != null) return;
+
+        errorRecord = new ErrorRecord();
+        errorRecord.setBahmniEntityType(BahmniEntityType.Patient);
+        errorRecord.setSubjectPatientExternalId(patient.getUuid());
+        errorRecord.setSubjectPatientId(patient.getPatientId());
         errorRecord.setErrorType(errorType);
         errorRecordRepository.save(errorRecord);
     }

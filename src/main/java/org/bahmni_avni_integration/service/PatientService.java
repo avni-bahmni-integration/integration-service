@@ -80,4 +80,9 @@ public class PatientService {
             throw e;
         }
     }
+
+    public boolean shouldFilterPatient(OpenMRSPatient patient, Constants constants) {
+        String patientId = patient.getPatientId();
+        return !patientId.startsWith(constants.getValue(ConstantKey.BahmniIdentifierPrefix));
+    }
 }
