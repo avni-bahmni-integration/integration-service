@@ -1,0 +1,1787 @@
+{
+  "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+  "display": "Consultation 04/17/2016",
+  "encounterDatetime": "2016-04-17T12:00:19.000+0530",
+  "patient": {
+    "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+    "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+      }
+    ]
+  },
+  "location": {
+    "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+    "display": "OPD",
+    "name": "OPD",
+    "description": null,
+    "address1": null,
+    "address2": null,
+    "cityVillage": null,
+    "stateProvince": null,
+    "country": null,
+    "postalCode": null,
+    "latitude": null,
+    "longitude": null,
+    "countyDistrict": null,
+    "address3": null,
+    "address4": null,
+    "address5": null,
+    "address6": null,
+    "tags": [
+      {
+        "uuid": "b8bbf83e-645f-451f-8efe-a0db56f09676",
+        "display": "Login Location",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/locationtag/b8bbf83e-645f-451f-8efe-a0db56f09676"
+          }
+        ]
+      },
+      {
+        "uuid": "8542904c-4fb3-11e8-9b90-3ca82a4c07d8",
+        "display": "Appointment Location",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/locationtag/8542904c-4fb3-11e8-9b90-3ca82a4c07d8"
+          }
+        ]
+      }
+    ],
+    "parentLocation": {
+      "uuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
+      "display": "Registration Desk",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c5854fd7-3f12-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "childLocations": [],
+    "retired": false,
+    "attributes": [],
+    "address7": null,
+    "address8": null,
+    "address9": null,
+    "address10": null,
+    "address11": null,
+    "address12": null,
+    "address13": null,
+    "address14": null,
+    "address15": null,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75?v=full"
+      }
+    ],
+    "resourceVersion": "2.0"
+  },
+  "form": null,
+  "encounterType": {
+    "uuid": "81852aee-3f10-11e4-adec-0800271c1b75",
+    "display": "Consultation",
+    "name": "Consultation",
+    "description": "Consultation encounter",
+    "retired": false,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/81852aee-3f10-11e4-adec-0800271c1b75"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/81852aee-3f10-11e4-adec-0800271c1b75?v=full"
+      }
+    ],
+    "resourceVersion": "1.8"
+  },
+  "obs": [
+    {
+      "uuid": "0f79f43c-2f13-422a-bb2a-ddffc7e5592e",
+      "display": "Vitals: false, 130.0, 90.0, true, 62.0",
+      "concept": {
+        "uuid": "c36a7537-3f10-11e4-adec-0800271c1b75",
+        "display": "Vitals",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c36a7537-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "person": {
+        "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+        "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+          }
+        ]
+      },
+      "obsDatetime": "2016-04-17T12:00:20.000+0530",
+      "accessionNumber": null,
+      "obsGroup": null,
+      "valueCodedName": null,
+      "groupMembers": [
+        {
+          "uuid": "93762bce-6b04-4fa7-b93d-703dfe451e74",
+          "display": "Blood Pressure: false, 130.0, 90.0, true",
+          "concept": {
+            "uuid": "c36d22e6-3f10-11e4-adec-0800271c1b75",
+            "display": "Blood Pressure",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c36d22e6-3f10-11e4-adec-0800271c1b75"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+            "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-17T12:00:20.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "0f79f43c-2f13-422a-bb2a-ddffc7e5592e",
+            "display": "Vitals: false, 130.0, 90.0, true, 62.0",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0f79f43c-2f13-422a-bb2a-ddffc7e5592e"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "ba633449-a6d7-4799-9373-5241fa5d9cf0",
+              "display": "Systolic Data: false, 130.0",
+              "concept": {
+                "uuid": "c36ddb6d-3f10-11e4-adec-0800271c1b75",
+                "display": "Systolic Data",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c36ddb6d-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-17T12:00:20.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "93762bce-6b04-4fa7-b93d-703dfe451e74",
+                "display": "Blood Pressure: false, 130.0, 90.0, true",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93762bce-6b04-4fa7-b93d-703dfe451e74"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": [
+                {
+                  "uuid": "6a96ea5b-31f0-4bc3-8cd1-98759339ef92",
+                  "display": "Systolic Abnormal: false",
+                  "concept": {
+                    "uuid": "c36f5a8b-3f10-11e4-adec-0800271c1b75",
+                    "display": "Systolic Abnormal",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c36f5a8b-3f10-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                    "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-17T12:00:20.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "ba633449-a6d7-4799-9373-5241fa5d9cf0",
+                    "display": "Systolic Data: false, 130.0",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/ba633449-a6d7-4799-9373-5241fa5d9cf0"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": {
+                    "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                    "display": "OPD",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "order": null,
+                  "encounter": {
+                    "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                    "display": "Consultation 04/17/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": {
+                    "uuid": "f9f633a5-1544-4c44-9394-a7f746a12dff",
+                    "display": "False",
+                    "name": {
+                      "display": "False",
+                      "uuid": "4f56b876-7073-4508-aaaf-9a25e2b756df",
+                      "name": "False",
+                      "locale": "en",
+                      "localePreferred": true,
+                      "conceptNameType": "FULLY_SPECIFIED",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff/name/4f56b876-7073-4508-aaaf-9a25e2b756df"
+                        },
+                        {
+                          "rel": "full",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff/name/4f56b876-7073-4508-aaaf-9a25e2b756df?v=full"
+                        }
+                      ],
+                      "resourceVersion": "1.9"
+                    },
+                    "datatype": {
+                      "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "N/A",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "conceptClass": {
+                      "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "Misc",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "set": false,
+                    "version": null,
+                    "retired": false,
+                    "names": [
+                      {
+                        "uuid": "4f56b876-7073-4508-aaaf-9a25e2b756df",
+                        "display": "False",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff/name/4f56b876-7073-4508-aaaf-9a25e2b756df"
+                          }
+                        ]
+                      },
+                      {
+                        "uuid": "657ff5a3-ce32-4a7f-9e66-cbf4675f2ac5",
+                        "display": "No",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff/name/657ff5a3-ce32-4a7f-9e66-cbf4675f2ac5"
+                          }
+                        ]
+                      }
+                    ],
+                    "descriptions": [],
+                    "mappings": [],
+                    "answers": [],
+                    "setMembers": [],
+                    "attributes": [],
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff"
+                      },
+                      {
+                        "rel": "full",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff?v=full"
+                      }
+                    ],
+                    "resourceVersion": "2.0"
+                  },
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/6a96ea5b-31f0-4bc3-8cd1-98759339ef92"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/6a96ea5b-31f0-4bc3-8cd1-98759339ef92?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                },
+                {
+                  "uuid": "54b1b403-01b7-45cb-ae8e-3dd29854a204",
+                  "display": "Systolic: 130.0",
+                  "concept": {
+                    "uuid": "c36e9c8b-3f10-11e4-adec-0800271c1b75",
+                    "display": "Systolic",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c36e9c8b-3f10-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                    "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-17T12:00:20.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "ba633449-a6d7-4799-9373-5241fa5d9cf0",
+                    "display": "Systolic Data: false, 130.0",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/ba633449-a6d7-4799-9373-5241fa5d9cf0"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": {
+                    "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                    "display": "OPD",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "order": null,
+                  "encounter": {
+                    "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                    "display": "Consultation 04/17/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": 130.0,
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/54b1b403-01b7-45cb-ae8e-3dd29854a204"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/54b1b403-01b7-45cb-ae8e-3dd29854a204?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                }
+              ],
+              "comment": null,
+              "location": {
+                "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                "display": "OPD",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "order": null,
+              "encounter": {
+                "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                "display": "Consultation 04/17/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": null,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/ba633449-a6d7-4799-9373-5241fa5d9cf0"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/ba633449-a6d7-4799-9373-5241fa5d9cf0?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            },
+            {
+              "uuid": "4edcd92e-c0dd-4fcd-a17b-440fa854ce87",
+              "display": "Diastolic Data: 90.0, true",
+              "concept": {
+                "uuid": "c378f635-3f10-11e4-adec-0800271c1b75",
+                "display": "Diastolic Data",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c378f635-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-17T12:00:20.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "93762bce-6b04-4fa7-b93d-703dfe451e74",
+                "display": "Blood Pressure: false, 130.0, 90.0, true",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93762bce-6b04-4fa7-b93d-703dfe451e74"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": [
+                {
+                  "uuid": "cb877c04-bd87-4faf-844b-6df6a7a6873b",
+                  "display": "Diastolic: 90.0",
+                  "concept": {
+                    "uuid": "c379aa1d-3f10-11e4-adec-0800271c1b75",
+                    "display": "Diastolic",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c379aa1d-3f10-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                    "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-17T12:00:20.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "4edcd92e-c0dd-4fcd-a17b-440fa854ce87",
+                    "display": "Diastolic Data: 90.0, true",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/4edcd92e-c0dd-4fcd-a17b-440fa854ce87"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": {
+                    "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                    "display": "OPD",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "order": null,
+                  "encounter": {
+                    "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                    "display": "Consultation 04/17/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": 90.0,
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/cb877c04-bd87-4faf-844b-6df6a7a6873b"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/cb877c04-bd87-4faf-844b-6df6a7a6873b?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                },
+                {
+                  "uuid": "e533ae46-72b3-4ec5-96d6-414f0f0991e6",
+                  "display": "Diastolic Abnormal: true",
+                  "concept": {
+                    "uuid": "c37a5735-3f10-11e4-adec-0800271c1b75",
+                    "display": "Diastolic Abnormal",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c37a5735-3f10-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                    "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-17T12:00:20.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "4edcd92e-c0dd-4fcd-a17b-440fa854ce87",
+                    "display": "Diastolic Data: 90.0, true",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/4edcd92e-c0dd-4fcd-a17b-440fa854ce87"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": {
+                    "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                    "display": "OPD",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "order": null,
+                  "encounter": {
+                    "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                    "display": "Consultation 04/17/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": {
+                    "uuid": "78763e68-104e-465d-8ce3-35f9edfb083d",
+                    "display": "True",
+                    "name": {
+                      "display": "True",
+                      "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                      "name": "True",
+                      "locale": "en",
+                      "localePreferred": true,
+                      "conceptNameType": "FULLY_SPECIFIED",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                        },
+                        {
+                          "rel": "full",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39?v=full"
+                        }
+                      ],
+                      "resourceVersion": "1.9"
+                    },
+                    "datatype": {
+                      "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "N/A",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "conceptClass": {
+                      "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "Misc",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "set": false,
+                    "version": null,
+                    "retired": false,
+                    "names": [
+                      {
+                        "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                        "display": "True",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                          }
+                        ]
+                      },
+                      {
+                        "uuid": "03eacf79-cfe9-4f82-9267-0e0c0a694a44",
+                        "display": "Yes",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/03eacf79-cfe9-4f82-9267-0e0c0a694a44"
+                          }
+                        ]
+                      }
+                    ],
+                    "descriptions": [],
+                    "mappings": [],
+                    "answers": [],
+                    "setMembers": [],
+                    "attributes": [],
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d"
+                      },
+                      {
+                        "rel": "full",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d?v=full"
+                      }
+                    ],
+                    "resourceVersion": "2.0"
+                  },
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/e533ae46-72b3-4ec5-96d6-414f0f0991e6"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/e533ae46-72b3-4ec5-96d6-414f0f0991e6?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                }
+              ],
+              "comment": null,
+              "location": {
+                "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                "display": "OPD",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "order": null,
+              "encounter": {
+                "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                "display": "Consultation 04/17/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": null,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/4edcd92e-c0dd-4fcd-a17b-440fa854ce87"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/4edcd92e-c0dd-4fcd-a17b-440fa854ce87?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": {
+            "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+            "display": "OPD",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+              }
+            ]
+          },
+          "order": null,
+          "encounter": {
+            "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+            "display": "Consultation 04/17/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93762bce-6b04-4fa7-b93d-703dfe451e74"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93762bce-6b04-4fa7-b93d-703dfe451e74?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        },
+        {
+          "uuid": "0349fb3d-01e7-4d21-ad10-228940bfa374",
+          "display": "Nutritional Values: 62.0",
+          "concept": {
+            "uuid": "84f626d0-3f10-11e4-adec-0800271c1b75",
+            "display": "Nutritional Values",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/84f626d0-3f10-11e4-adec-0800271c1b75"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+            "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-17T12:00:20.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "0f79f43c-2f13-422a-bb2a-ddffc7e5592e",
+            "display": "Vitals: false, 130.0, 90.0, true, 62.0",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0f79f43c-2f13-422a-bb2a-ddffc7e5592e"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "a535649a-5282-4795-be35-22aa811e88d9",
+              "display": "Weight: 62.0",
+              "concept": {
+                "uuid": "c3674f85-3f10-11e4-adec-0800271c1b75",
+                "display": "Weight",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c3674f85-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-17T12:00:20.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "0349fb3d-01e7-4d21-ad10-228940bfa374",
+                "display": "Nutritional Values: 62.0",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0349fb3d-01e7-4d21-ad10-228940bfa374"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": {
+                "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                "display": "OPD",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "order": null,
+              "encounter": {
+                "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                "display": "Consultation 04/17/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": 62.0,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a535649a-5282-4795-be35-22aa811e88d9"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a535649a-5282-4795-be35-22aa811e88d9?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": {
+            "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+            "display": "OPD",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+              }
+            ]
+          },
+          "order": null,
+          "encounter": {
+            "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+            "display": "Consultation 04/17/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0349fb3d-01e7-4d21-ad10-228940bfa374"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0349fb3d-01e7-4d21-ad10-228940bfa374?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        }
+      ],
+      "comment": null,
+      "location": {
+        "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+        "display": "OPD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "order": null,
+      "encounter": {
+        "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+        "display": "Consultation 04/17/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+          }
+        ]
+      },
+      "voided": false,
+      "value": null,
+      "valueModifier": null,
+      "formFieldPath": null,
+      "formFieldNamespace": "c36a7537-3f10-11e4-adec-0800271c1b75",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0f79f43c-2f13-422a-bb2a-ddffc7e5592e"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0f79f43c-2f13-422a-bb2a-ddffc7e5592e?v=full"
+        }
+      ],
+      "resourceVersion": "1.11"
+    },
+    {
+      "uuid": "924fdf20-5caf-4e4d-a648-7f14c41b8633",
+      "display": "History and Examination: Hypertension, 525600.0, epigastric pain, false",
+      "concept": {
+        "uuid": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+        "display": "History and Examination",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c393fd1d-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "person": {
+        "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+        "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+          }
+        ]
+      },
+      "obsDatetime": "2016-04-17T12:00:19.000+0530",
+      "accessionNumber": null,
+      "obsGroup": null,
+      "valueCodedName": null,
+      "groupMembers": [
+        {
+          "uuid": "cde8896e-86a2-40c6-9b78-ca4e9fad6b3f",
+          "display": "Past History: Hypertension",
+          "concept": {
+            "uuid": "b4a3a0a1-f3ae-4116-8b60-ec61ef90d2ef",
+            "display": "Past History",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/b4a3a0a1-f3ae-4116-8b60-ec61ef90d2ef"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+            "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-17T12:00:19.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "924fdf20-5caf-4e4d-a648-7f14c41b8633",
+            "display": "History and Examination: Hypertension, 525600.0, epigastric pain, false",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/924fdf20-5caf-4e4d-a648-7f14c41b8633"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": null,
+          "comment": null,
+          "location": {
+            "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+            "display": "OPD",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+              }
+            ]
+          },
+          "order": null,
+          "encounter": {
+            "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+            "display": "Consultation 04/17/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+              }
+            ]
+          },
+          "voided": false,
+          "value": {
+            "uuid": "8961717d-b30d-46b1-b917-ff5a463fcb51",
+            "display": "Hypertension",
+            "name": {
+              "display": "Hypertension",
+              "uuid": "4f940bcd-53dc-4fbc-82a5-c16d046cf112",
+              "name": "Hypertension",
+              "locale": "en",
+              "localePreferred": true,
+              "conceptNameType": "FULLY_SPECIFIED",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8961717d-b30d-46b1-b917-ff5a463fcb51/name/4f940bcd-53dc-4fbc-82a5-c16d046cf112"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8961717d-b30d-46b1-b917-ff5a463fcb51/name/4f940bcd-53dc-4fbc-82a5-c16d046cf112?v=full"
+                }
+              ],
+              "resourceVersion": "1.9"
+            },
+            "datatype": {
+              "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+              "display": "N/A",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                }
+              ]
+            },
+            "conceptClass": {
+              "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+              "display": "Misc",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                }
+              ]
+            },
+            "set": false,
+            "version": null,
+            "retired": false,
+            "names": [
+              {
+                "uuid": "4f940bcd-53dc-4fbc-82a5-c16d046cf112",
+                "display": "Hypertension",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8961717d-b30d-46b1-b917-ff5a463fcb51/name/4f940bcd-53dc-4fbc-82a5-c16d046cf112"
+                  }
+                ]
+              }
+            ],
+            "descriptions": [],
+            "mappings": [],
+            "answers": [],
+            "setMembers": [],
+            "attributes": [],
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8961717d-b30d-46b1-b917-ff5a463fcb51"
+              },
+              {
+                "rel": "full",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8961717d-b30d-46b1-b917-ff5a463fcb51?v=full"
+              }
+            ],
+            "resourceVersion": "2.0"
+          },
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/cde8896e-86a2-40c6-9b78-ca4e9fad6b3f"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/cde8896e-86a2-40c6-9b78-ca4e9fad6b3f?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        },
+        {
+          "uuid": "1da5e72e-0c09-41d2-be91-c60a48fd2c63",
+          "display": "Chief Complaint Data: 525600.0, epigastric pain",
+          "concept": {
+            "uuid": "c3949eb6-3f10-11e4-adec-0800271c1b75",
+            "display": "Chief Complaint Data",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c3949eb6-3f10-11e4-adec-0800271c1b75"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+            "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-17T12:00:19.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "924fdf20-5caf-4e4d-a648-7f14c41b8633",
+            "display": "History and Examination: Hypertension, 525600.0, epigastric pain, false",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/924fdf20-5caf-4e4d-a648-7f14c41b8633"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "2f3dc42e-d6f2-4e2b-ae99-468141277698",
+              "display": "Chief Complaint Duration: 525600.0",
+              "concept": {
+                "uuid": "c3975851-3f10-11e4-adec-0800271c1b75",
+                "display": "Chief Complaint Duration",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c3975851-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-17T12:00:19.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "1da5e72e-0c09-41d2-be91-c60a48fd2c63",
+                "display": "Chief Complaint Data: 525600.0, epigastric pain",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/1da5e72e-0c09-41d2-be91-c60a48fd2c63"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": {
+                "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                "display": "OPD",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "order": null,
+              "encounter": {
+                "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                "display": "Consultation 04/17/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": 525600.0,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/2f3dc42e-d6f2-4e2b-ae99-468141277698"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/2f3dc42e-d6f2-4e2b-ae99-468141277698?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            },
+            {
+              "uuid": "6695ddd3-92a3-4135-8a8c-7f68fd489674",
+              "display": "Non-Coded Chief Complaint: epigastric pain",
+              "concept": {
+                "uuid": "c3966752-3f10-11e4-adec-0800271c1b75",
+                "display": "Non-Coded Chief Complaint",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c3966752-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+                "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-17T12:00:19.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "1da5e72e-0c09-41d2-be91-c60a48fd2c63",
+                "display": "Chief Complaint Data: 525600.0, epigastric pain",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/1da5e72e-0c09-41d2-be91-c60a48fd2c63"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": {
+                "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+                "display": "OPD",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "order": null,
+              "encounter": {
+                "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+                "display": "Consultation 04/17/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": "epigastric pain",
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/6695ddd3-92a3-4135-8a8c-7f68fd489674"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/6695ddd3-92a3-4135-8a8c-7f68fd489674?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": {
+            "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+            "display": "OPD",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+              }
+            ]
+          },
+          "order": null,
+          "encounter": {
+            "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+            "display": "Consultation 04/17/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/1da5e72e-0c09-41d2-be91-c60a48fd2c63"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/1da5e72e-0c09-41d2-be91-c60a48fd2c63?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        },
+        {
+          "uuid": "18172fe9-124c-4abb-a970-c8c21b5a00b4",
+          "display": "Smoking History: false",
+          "concept": {
+            "uuid": "c2a43174-c9db-4e54-8516-17372c83537f",
+            "display": "Smoking History",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c2a43174-c9db-4e54-8516-17372c83537f"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+            "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-17T12:00:19.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "924fdf20-5caf-4e4d-a648-7f14c41b8633",
+            "display": "History and Examination: Hypertension, 525600.0, epigastric pain, false",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/924fdf20-5caf-4e4d-a648-7f14c41b8633"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": null,
+          "comment": null,
+          "location": {
+            "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+            "display": "OPD",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+              }
+            ]
+          },
+          "order": null,
+          "encounter": {
+            "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+            "display": "Consultation 04/17/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+              }
+            ]
+          },
+          "voided": false,
+          "value": {
+            "uuid": "f9f633a5-1544-4c44-9394-a7f746a12dff",
+            "display": "False",
+            "name": {
+              "display": "False",
+              "uuid": "4f56b876-7073-4508-aaaf-9a25e2b756df",
+              "name": "False",
+              "locale": "en",
+              "localePreferred": true,
+              "conceptNameType": "FULLY_SPECIFIED",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff/name/4f56b876-7073-4508-aaaf-9a25e2b756df"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff/name/4f56b876-7073-4508-aaaf-9a25e2b756df?v=full"
+                }
+              ],
+              "resourceVersion": "1.9"
+            },
+            "datatype": {
+              "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+              "display": "N/A",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                }
+              ]
+            },
+            "conceptClass": {
+              "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+              "display": "Misc",
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                }
+              ]
+            },
+            "set": false,
+            "version": null,
+            "retired": false,
+            "names": [
+              {
+                "uuid": "4f56b876-7073-4508-aaaf-9a25e2b756df",
+                "display": "False",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff/name/4f56b876-7073-4508-aaaf-9a25e2b756df"
+                  }
+                ]
+              },
+              {
+                "uuid": "657ff5a3-ce32-4a7f-9e66-cbf4675f2ac5",
+                "display": "No",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff/name/657ff5a3-ce32-4a7f-9e66-cbf4675f2ac5"
+                  }
+                ]
+              }
+            ],
+            "descriptions": [],
+            "mappings": [],
+            "answers": [],
+            "setMembers": [],
+            "attributes": [],
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff"
+              },
+              {
+                "rel": "full",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f9f633a5-1544-4c44-9394-a7f746a12dff?v=full"
+              }
+            ],
+            "resourceVersion": "2.0"
+          },
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/18172fe9-124c-4abb-a970-c8c21b5a00b4"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/18172fe9-124c-4abb-a970-c8c21b5a00b4?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        }
+      ],
+      "comment": null,
+      "location": {
+        "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+        "display": "OPD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "order": null,
+      "encounter": {
+        "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+        "display": "Consultation 04/17/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+          }
+        ]
+      },
+      "voided": false,
+      "value": null,
+      "valueModifier": null,
+      "formFieldPath": null,
+      "formFieldNamespace": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/924fdf20-5caf-4e4d-a648-7f14c41b8633"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/924fdf20-5caf-4e4d-a648-7f14c41b8633?v=full"
+        }
+      ],
+      "resourceVersion": "1.11"
+    }
+  ],
+  "orders": [],
+  "voided": false,
+  "auditInfo": {
+    "creator": {
+      "uuid": "138b8719-5cdc-4663-a57b-5e5bc1f14bd5",
+      "display": "royson",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/user/138b8719-5cdc-4663-a57b-5e5bc1f14bd5"
+        }
+      ]
+    },
+    "dateCreated": "2016-04-17T12:00:19.000+0530",
+    "changedBy": null,
+    "dateChanged": null
+  },
+  "visit": {
+    "uuid": "d98568c3-c2d9-47a7-a2e4-5c93924632f7",
+    "display": "OPD @ Registration Desk - 04/17/2016 11:37 AM",
+    "patient": {
+      "uuid": "945e9825-99da-41f5-a16e-dc698fb4976b",
+      "display": "TRI11391001 - AABCCDDEE FFGGHHII",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/945e9825-99da-41f5-a16e-dc698fb4976b"
+        }
+      ]
+    },
+    "visitType": {
+      "uuid": "c22a5000-3f10-11e4-adec-0800271c1b75",
+      "display": "OPD",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visittype/c22a5000-3f10-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "indication": null,
+    "location": {
+      "uuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
+      "display": "Registration Desk",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c5854fd7-3f12-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "startDatetime": "2016-04-17T11:37:09.000+0530",
+    "stopDatetime": "2016-04-17T12:16:27.000+0530",
+    "encounters": [
+      {
+        "uuid": "2eec0968-d898-4b09-96d1-9a8324d260f1",
+        "display": "Consultation 04/17/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/2eec0968-d898-4b09-96d1-9a8324d260f1"
+          }
+        ]
+      },
+      {
+        "uuid": "fff58db7-1ef0-4a23-aed8-7023960ad44a",
+        "display": "Consultation 04/17/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+          }
+        ]
+      },
+      {
+        "uuid": "9b4e4987-f7d8-441d-9163-718092a47846",
+        "display": "REG 04/17/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/9b4e4987-f7d8-441d-9163-718092a47846"
+          }
+        ]
+      }
+    ],
+    "attributes": [
+      {
+        "uuid": "05e17954-9004-4e8d-a8d1-04767499bc7b",
+        "display": "Visit Status: OPD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/d98568c3-c2d9-47a7-a2e4-5c93924632f7/attribute/05e17954-9004-4e8d-a8d1-04767499bc7b"
+          }
+        ]
+      }
+    ],
+    "voided": false,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/d98568c3-c2d9-47a7-a2e4-5c93924632f7"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/d98568c3-c2d9-47a7-a2e4-5c93924632f7?v=full"
+      }
+    ],
+    "resourceVersion": "1.9"
+  },
+  "encounterProviders": [
+    {
+      "uuid": "a36e548e-3fce-46bf-b3b2-5ef0e0dd5410",
+      "provider": {
+        "uuid": "7c8ec528-05da-4956-9976-0eca854a0082",
+        "display": "Dr. Royson Dsouza MBBS - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/7c8ec528-05da-4956-9976-0eca854a0082"
+          }
+        ]
+      },
+      "encounterRole": {
+        "uuid": "a0b03050-c99b-11e0-9572-0800200c9a66",
+        "display": "Unknown",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounterrole/a0b03050-c99b-11e0-9572-0800200c9a66"
+          }
+        ]
+      },
+      "voided": false,
+      "links": [
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a/encounterprovider/a36e548e-3fce-46bf-b3b2-5ef0e0dd5410?v=full"
+        }
+      ],
+      "resourceVersion": "1.9"
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/fff58db7-1ef0-4a23-aed8-7023960ad44a"
+    }
+  ],
+  "resourceVersion": "1.9"
+}

@@ -3,8 +3,7 @@ package org.bahmni_avni_integration.service;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPostSaveEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.*;
@@ -47,11 +46,11 @@ public class EnrolmentService {
         errorService.errorOccurred(subject, ErrorType.NoPatientWithId, metaData);
     }
 
-    public OpenMRSPostSaveEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
+    public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
         MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
         String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
         OpenMRSEncounter encounter = subjectMapper.mapEnrolmentToEncounter(enrolment, openMRSPatient.getUuid(), encounterTypeUuid, constants);
-        OpenMRSPostSaveEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
+        OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
         errorService.successfullyProcessed(enrolment);
         return savedEncounter;

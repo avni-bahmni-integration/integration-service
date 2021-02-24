@@ -69,7 +69,7 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
     }
 
     public OpenMRSFullEncounter getEncounter(Event event) {
-        String patientJson = getUnderlyingResourceJson(event);
-        return ObjectJsonMapper.readValue(patientJson, OpenMRSFullEncounter.class);
+        String json = getUnderlyingResourceJson(event);
+        return ObjectJsonMapper.readValue(json, OpenMRSFullEncounter.class);
     }
 }

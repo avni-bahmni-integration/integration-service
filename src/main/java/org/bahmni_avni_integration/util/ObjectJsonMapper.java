@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 
 public class ObjectJsonMapper {
@@ -24,6 +25,15 @@ public class ObjectJsonMapper {
             return objectMapper.readValue(json, klass);
         } catch (JsonProcessingException e) {
             logger.error(json);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T readValue(File jsonFile, Class<T> klass) {
+        try {
+            return objectMapper.readValue(jsonFile, klass);
+        } catch (Exception e) {
+            logger.error(jsonFile);
             throw new RuntimeException(e);
         }
     }
