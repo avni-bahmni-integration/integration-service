@@ -21,46 +21,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Component
-public class PatientWorker {
-    private final AtomFeedProperties feedProperties;
-    private final AllMarkersJdbcImpl allMarkers;
-    private final AllFailedEventsJdbcImpl allFailedEvents;
-    private final AtomFeedSpringTransactionSupport transactionManagerImpl;
-    private OpenMRSWebClient openMRSWebClient;
+public class PatientWorker extends BaseBahmniWorker {
     @Value("${bahmni.feed.patient}")
     private String patientFeedLink;
-    @Autowired
-    private OpenMrsPatientEventWorker eventWorker;
+    private final OpenMrsPatientEventWorker eventWorker;
 
     @Autowired
-    public PatientWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory) {
-        this.openMRSWebClient = openMRSWebClient;
-        feedProperties = atomFeedPropertiesFactory.getProperties();
-        transactionManagerImpl = new AtomFeedSpringTransactionSupport(
-                transactionManager,
-                dataSource
-        );
-        allMarkers = new AllMarkersJdbcImpl(transactionManagerImpl);
-        allFailedEvents = new AllFailedEventsJdbcImpl(transactionManagerImpl);
+    public PatientWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory, OpenMrsPatientEventWorker eventWorker) {
+        super(transactionManager, dataSource, openMRSWebClient, atomFeedPropertiesFactory);
+        this.eventWorker = eventWorker;
     }
 
     public void processPatients(Constants constants) {
-        try {
-            eventWorker.setConstants(constants);
-            URI uri = new URI(patientFeedLink);
-            ClientCookies cookies = openMRSWebClient.getCookies();
-            AllFeeds allFeeds = new AllFeeds(feedProperties, cookies);
-            AtomFeedClient atomFeedClient = new AtomFeedClient(
-                    allFeeds,
-                    allMarkers,
-                    allFailedEvents,
-                    feedProperties,
-                    transactionManagerImpl,
-                    uri,
-                    eventWorker);
-            atomFeedClient.processEvents();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("error for uri:" + patientFeedLink, e);
-        }
+        process(constants, patientFeedLink, eventWorker);
     }
 }
