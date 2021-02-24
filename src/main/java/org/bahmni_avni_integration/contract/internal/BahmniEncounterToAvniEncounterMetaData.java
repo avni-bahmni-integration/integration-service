@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaData {
     private Map<String, String> encounterTypes = new HashMap<>();
-    private String patientUuidConcept;
+    private String bahmniEntityUuidConcept;
 
     public String getAvniEncounterTypeName(String openmrsEncounterTypeUuid) {
         return encounterTypes.get(openmrsEncounterTypeUuid);
@@ -19,11 +19,11 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
         return encounterTypes.containsKey(openmrsEncounterTypeUuid);
     }
 
-    public void setPatientUuidConcept(String patientUuidConcept) {
-        this.patientUuidConcept = patientUuidConcept;
+    public void setBahmniEntityUuidConcept(String bahmniEntityUuidConcept) {
+        this.bahmniEntityUuidConcept = bahmniEntityUuidConcept;
     }
 
-    public String getPatientUuidConcept() {
-        return patientUuidConcept;
+    public String getBahmniEntityUuidConcept() {
+        return bahmniEntityUuidConcept;
     }
 }

@@ -32,20 +32,21 @@ public class MappingMetaDataService {
     }
 
     public PatientToSubjectMetaData getForPatientToSubject() {
-        String patientUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientUUID_Concept);
+        String bahmniEntityUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
         String avniIdentifierConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
         String subjectType = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Patient_SubjectType);
         String patientEncounterType = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Patient_EncounterType);
         String patientIdentifierName = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
-        return new PatientToSubjectMetaData(patientUuidConcept, subjectType, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
+        return new PatientToSubjectMetaData(bahmniEntityUuidConcept, subjectType, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
     }
 
     public BahmniEncounterToAvniEncounterMetaData getForBahmniEncounterToAvni() {
         List<MappingMetaData> mappings = mappingMetaDataRepository.findAllByMappingGroupAndMappingType(MappingGroup.GeneralEncounter, MappingType.EncounterType);
         BahmniEncounterToAvniEncounterMetaData metaData = new BahmniEncounterToAvniEncounterMetaData();
         mappings.forEach(x -> metaData.addEncounterType(x.getBahmniValue(), x.getAvniValue()));
-        String patientUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientUUID_Concept);
-        metaData.setPatientUuidConcept(patientUuidConcept);
+        String patientUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
+        metaData.setBahmniEntityUuidConcept(patientUuidConcept);
+//        mappingMetaDataRepository.findBy
         return metaData;
     }
 }

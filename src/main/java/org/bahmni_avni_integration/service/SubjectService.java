@@ -46,7 +46,7 @@ public class SubjectService {
 
     public Encounter createRegistrationEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData) {
         Map<String, Object> observations = mapObservations(openMRSPatient);
-        observations.put(patientToSubjectMetaData.patientUuidConcept(), openMRSPatient.getUuid());
+        observations.put(patientToSubjectMetaData.bahmniEntityUuidConcept(), openMRSPatient.getUuid());
 
         Encounter encounterRequest = new Encounter();
         encounterRequest.set("Subject ID", subject.getUuid());
@@ -84,7 +84,7 @@ public class SubjectService {
 
     public Encounter findPatient(BahmniToAvniMetaData metaData, String externalId) {
         LinkedHashMap<String, Object> encounterCriteria = new LinkedHashMap<>();
-        encounterCriteria.put(metaData.getPatientUuidConcept(), externalId);
+        encounterCriteria.put(metaData.getBahmniEntityUuidConcept(), externalId);
         return avniEncounterRepository.getEncounter(encounterCriteria);
     }
 

@@ -74,4 +74,8 @@ public class OpenMRSFullEncounter {
             leafObservations.add(openMRSObservation);
         }
     }
+
+    public String getUuid() {
+        return uuid;
+    }
 }

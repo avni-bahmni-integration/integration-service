@@ -7,7 +7,7 @@ public enum MappingType {
     Patient_EncounterType,
     Concept,
     SubjectUUID_Concept,
-    PatientUUID_Concept,
+    BahmniUUID_Concept,
     PersonAttributeConcept,
     EncounterType,
     EnrolmentUUID_Concept,

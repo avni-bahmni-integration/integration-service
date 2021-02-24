@@ -3,8 +3,6 @@ package org.bahmni_avni_integration.worker.bahmni;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.client.bahmni.ClientCookies;
 import org.bahmni_avni_integration.config.OpenMRSAtomFeedPropertiesFactory;
-import org.bahmni_avni_integration.domain.Constants;
-import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.OpenMrsPatientEventWorker;
 import org.ict4h.atomfeed.client.AtomFeedProperties;
 import org.ict4h.atomfeed.client.repository.AllFeeds;
 import org.ict4h.atomfeed.client.repository.jdbc.AllFailedEventsJdbcImpl;
@@ -36,7 +34,7 @@ public abstract class BaseBahmniWorker {
         allFailedEvents = new AllFailedEventsJdbcImpl(transactionManagerImpl);
     }
 
-    protected void process(Constants constants, String feedLink, EventWorker eventWorker) {
+    protected void process(String feedLink, EventWorker eventWorker) {
         try {
             URI uri = new URI(feedLink);
             ClientCookies cookies = openMRSWebClient.getCookies();
