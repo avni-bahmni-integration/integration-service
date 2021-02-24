@@ -41,4 +41,9 @@ public class AvniSubjectRepository extends BaseAvniRepository {
         return pickAndExpectOne(getSubjects(lastModifiedDateTime, subjectType, concepts));
     }
 
+    public Subject getSubject(String id) {
+        ResponseEntity<Subject> responseEntity = avniHttpClient.get(String.format("/api/subject/%s", id), Subject.class);
+        return responseEntity.getBody();
+    }
+
 }

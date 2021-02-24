@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.mapper.avni;
 
+import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounterProvider;
@@ -27,16 +28,33 @@ public class SubjectMapper {
 
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
 
-        mapObservations(subject, openMRSEncounter);
+        mapObservations((LinkedHashMap<String, Object>) subject.get("observations"), openMRSEncounter);
         mapSubjectUuid(subject, openMRSEncounter);
 //        story-todo - map audit observations
         LinkedHashMap<String, Object> avniAuditObservations = (LinkedHashMap<String, Object>) subject.get("audit");
         return openMRSEncounter;
     }
 
-    private void mapObservations(Subject subject, OpenMRSEncounter openMRSEncounter) {
+    public OpenMRSEncounter mapEnrolmentToEncounter(Enrolment enrolment, String patientUuid, String encounterTypeUuid, Constants constants) {
+        OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
+        openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(new Date()));
+        openMRSEncounter.setPatient(patientUuid);
+        openMRSEncounter.setEncounterType(encounterTypeUuid);
+        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
+        openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
+
+        mapEnrolmentUuid(enrolment, openMRSEncounter);
+        mapObservations((LinkedHashMap<String, Object>) enrolment.get("observations"), openMRSEncounter);
+        return openMRSEncounter;
+    }
+
+    private void mapEnrolmentUuid(Enrolment enrolment, OpenMRSEncounter openMRSEncounter) {
+        MappingMetaData enrolmentUuidConcept = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.ProgramEnrolment, MappingType.EnrolmentUUID_Concept);
+        openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(enrolmentUuidConcept.getBahmniValue(), enrolment.getUuid(), ObsDataType.Text));
+    }
+
+    private void mapObservations(LinkedHashMap<String, Object> avniObservations, OpenMRSEncounter openMRSEncounter) {
         MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.Concept);
-        LinkedHashMap<String, Object> avniObservations = (LinkedHashMap<String, Object>) subject.get("observations");
         avniObservations.forEach((key, value) -> {
             MappingMetaData mapping = conceptMappings.getMappingForAvniValue(key);
             if (mapping != null && ObsDataType.Coded.equals(mapping.getDataTypeHint()))

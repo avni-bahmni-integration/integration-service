@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.service;
 
+import org.bahmni_avni_integration.contract.avni.AvniBaseContract;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.domain.AvniEntityStatus;
@@ -14,14 +15,16 @@ public class EntityStatusService {
     private AvniEntityStatusRepository avniEntityStatusRepository;
 
     public void saveEntityStatus(Subject subject) {
-        AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
-        status.setReadUpto(subject.getLastModifiedDate());
-        avniEntityStatusRepository.save(status);
+        saveEntityStatus(AvniEntityType.Subject, subject);
     }
 
     public void saveEntityStatus(Enrolment enrolment) {
-        AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
-        status.setReadUpto(enrolment.getLastModifiedDate());
+        saveEntityStatus(AvniEntityType.Enrolment, enrolment);
+    }
+
+    private void saveEntityStatus(AvniEntityType avniEntityType, AvniBaseContract avniBaseContract) {
+        AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(avniEntityType);
+        status.setReadUpto(avniBaseContract.getLastModifiedDate());
         avniEntityStatusRepository.save(status);
     }
 }

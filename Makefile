@@ -60,7 +60,7 @@ run-server: build-db build-server
 test-server: drop-test-db build-test-db build-server
 	./gradlew unitTest
 
-test-server-all: drop-test-db build-test-db
+test-server-all: drop-test-db setup-external-test-db
 	./gradlew clean build
 
 open-unit-test-results: ## To be used when test-server is run

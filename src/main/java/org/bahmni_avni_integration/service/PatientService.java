@@ -44,13 +44,18 @@ public class PatientService {
 
     public Pair<OpenMRSUuidHolder, OpenMRSEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
         String subjectId = subject.getUuid();
-        String patientIdentifier = constants.getValue(ConstantKey.BahmniIdentifierPrefix) + subject.getId(subjectToPatientMetaData);
-        OpenMRSUuidHolder patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
+        OpenMRSUuidHolder patient = findPatient(subject, constants, subjectToPatientMetaData);
         if (patient == null) {
             return new Pair<>(null, null);
         }
         OpenMRSEncounter encounter = openMRSEncounterRepository.getRegistrationEncounterForAvniSubject(patient, subjectId, subjectToPatientMetaData.subjectUuidConceptUuid());
         return new Pair<>(patient, encounter);
+    }
+
+    public OpenMRSUuidHolder findPatient(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
+        String patientIdentifier = constants.getValue(ConstantKey.BahmniIdentifierPrefix) + subject.getId(subjectToPatientMetaData);
+        OpenMRSUuidHolder patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
+        return patient;
     }
 
     public void processPatientIdChanged(Subject subject, SubjectToPatientMetaData metaData) {

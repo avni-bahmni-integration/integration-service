@@ -20,15 +20,15 @@ class SubjectWorkerExternalTest {
     @Test
     void processOneSubject() {
         Constants constants = constantsRepository.findAllConstants();
-        Predicate<Subject> processOnlyOneRecord = subject -> false;
-        subjectWorker.processSubjects(constants, processOnlyOneRecord);
+        Predicate<Subject> continueAfterOneRecord = subject -> false;
+        subjectWorker.processSubjects(constants, continueAfterOneRecord);
     }
 
     @Test
     @Disabled("Useful when giving full run")
     public void processSubjects() {
-         Constants constants = constantsRepository.findAllConstants();
-        Predicate<Subject> processEverything = subject -> true;
-        subjectWorker.processSubjects(constants, processEverything);
+        Constants constants = constantsRepository.findAllConstants();
+        Predicate<Subject> continueAfterOneRecord = subject -> true;
+        subjectWorker.processSubjects(constants, continueAfterOneRecord);
     }
 }

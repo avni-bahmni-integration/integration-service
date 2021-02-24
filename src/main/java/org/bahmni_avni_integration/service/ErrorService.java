@@ -2,6 +2,7 @@ package org.bahmni_avni_integration.service;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.BahmniEntityType;
+import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
@@ -28,7 +29,7 @@ public class ErrorService {
         if (errorRecord != null) return;
 
         String id = subject.getId(metaData);
-        logger.warn(String.format("Patient subject id %s not found found", id));
+        logger.warn(String.format("Patient subject id %s not found", id));
 
         errorRecord = new ErrorRecord();
         errorRecord.setAvniEntityType(AvniEntityType.Subject);
@@ -52,6 +53,11 @@ public class ErrorService {
 
     public void successfullyProcessed(Subject subject) {
         List<ErrorRecord> errorRecords = errorRecordRepository.findAllByAvniEntityTypeAndSubjectPatientExternalId(AvniEntityType.Subject, subject.getUuid());
+        errorRecordRepository.deleteAll(errorRecords);
+    }
+
+    public void successfullyProcessed(Enrolment enrolment) {
+        List<ErrorRecord> errorRecords = errorRecordRepository.findAllByAvniEntityTypeAndEnrolmentExternalId(AvniEntityType.Enrolment, enrolment.getUuid());
         errorRecordRepository.deleteAll(errorRecords);
     }
 }

@@ -30,10 +30,14 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
     }
 
     public OpenMRSEncounter getRegistrationEncounterForAvniSubject(OpenMRSUuidHolder patient, String subjectId, String subjectUuidConceptUuid) {
-        String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&obsConcept=%s&obsValues=%s", getResourcePath("encounter"), patient.getUuid(), subjectUuidConceptUuid, encode(subjectId))));
+        return getEncounterByPatientAndObservation(patient.getUuid(), subjectUuidConceptUuid, subjectId);
+    }
+
+    public OpenMRSEncounter getEncounterByPatientAndObservation(String patientUuid, String conceptUuid, String value) {
+        String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&obsConcept=%s&obsValues=%s", getResourcePath("encounter"), patientUuid, conceptUuid, encode(value))));
         SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {
         });
-        return pickAndExpectOne(searchResults, String.format("%s-%s-%s", patient.getUuid(), subjectUuidConceptUuid, subjectId));
+        return pickAndExpectOne(searchResults, String.format("%s-%s-%s", patientUuid, conceptUuid, value));
     }
 
     public OpenMRSEncounter getRegistrationEncounterForAvniSubject(String subjectId, String subjectUuidConceptUuid) {

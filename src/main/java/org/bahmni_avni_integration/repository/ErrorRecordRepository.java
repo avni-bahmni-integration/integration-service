@@ -14,4 +14,6 @@ public interface ErrorRecordRepository extends CrudRepository<ErrorRecord, Integ
     List<ErrorRecord> findAllByAvniEntityTypeAndSubjectPatientExternalId(AvniEntityType avniEntityType, String subjectPatientExternalId);
     ErrorRecord findByAvniEntityTypeAndSubjectPatientExternalIdAndErrorType(AvniEntityType avniEntityType, String subjectPatientExternalId, ErrorType errorType);
     ErrorRecord findByBahmniEntityTypeAndSubjectPatientExternalIdAndErrorType(BahmniEntityType bahmniEntityType, String subjectPatientExternalId, ErrorType errorType);
+
+    List<ErrorRecord> findAllByAvniEntityTypeAndEnrolmentExternalId(AvniEntityType avniEntityType, String enrolmentExternalId);
 }

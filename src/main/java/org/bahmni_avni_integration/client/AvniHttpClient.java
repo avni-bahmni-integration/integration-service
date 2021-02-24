@@ -2,6 +2,7 @@ package org.bahmni_avni_integration.client;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.auth.AuthenticationHelper;
+import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.web.response.CognitoDetailsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -42,6 +44,10 @@ public class AvniHttpClient {
 
         URI uri = builder.build().toUri();
         return restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<String>(authHeaders()), returnType);
+    }
+
+    public <T> ResponseEntity<T> get(String url, Class<T> returnType) {
+        return get(url, new HashMap<>(), returnType);
     }
 
     public <T, U> ResponseEntity<U> post(String url, T requestBody, Class<U> returnType) {
