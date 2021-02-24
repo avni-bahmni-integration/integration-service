@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.contract.avni.Encounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttribute;
+import org.bahmni_avni_integration.contract.internal.BahmniToAvniMetaData;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.domain.*;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
@@ -18,7 +19,7 @@ import java.util.*;
 
 @Service
 public class SubjectService {
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private final AvniEncounterRepository avniEncounterRepository;
     private final AvniSubjectRepository avniSubjectRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;
@@ -81,9 +82,9 @@ public class SubjectService {
         return avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);
     }
 
-    public Encounter findPatient(PatientToSubjectMetaData metaData, String externalId) {
+    public Encounter findPatient(BahmniToAvniMetaData metaData, String externalId) {
         LinkedHashMap<String, Object> encounterCriteria = new LinkedHashMap<>();
-        encounterCriteria.put(metaData.patientUuidConcept(), externalId);
+        encounterCriteria.put(metaData.getPatientUuidConcept(), externalId);
         return avniEncounterRepository.getEncounter(encounterCriteria);
     }
 

@@ -1,4 +1,4 @@
-package org.bahmni_avni_integration.worker;
+package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 
 import org.bahmni_avni_integration.contract.avni.Encounter;
 import org.bahmni_avni_integration.contract.avni.Subject;

@@ -21,7 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Component
-public class PatientWorker {
+public class BahmniEncounterWorker {
     private final AtomFeedProperties feedProperties;
     private final AllMarkersJdbcImpl allMarkers;
     private final AllFailedEventsJdbcImpl allFailedEvents;
@@ -33,7 +33,7 @@ public class PatientWorker {
     private OpenMrsPatientEventWorker eventWorker;
 
     @Autowired
-    public PatientWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory) {
+    public BahmniEncounterWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory) {
         this.openMRSWebClient = openMRSWebClient;
         feedProperties = atomFeedPropertiesFactory.getProperties();
         transactionManagerImpl = new AtomFeedSpringTransactionSupport(
@@ -44,7 +44,7 @@ public class PatientWorker {
         allFailedEvents = new AllFailedEventsJdbcImpl(transactionManagerImpl);
     }
 
-    public void processPatients(Constants constants) {
+    public void processEncounters(Constants constants) {
         try {
             eventWorker.setConstants(constants);
             URI uri = new URI(patientFeedLink);

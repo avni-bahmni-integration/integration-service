@@ -7,7 +7,7 @@ import org.bahmni_avni_integration.domain.MappingGroup;
 import org.bahmni_avni_integration.domain.MappingType;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
-import org.javatuples.Pair;
+import org.ict4h.atomfeed.client.domain.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +15,14 @@ import java.net.URI;
 
 @Component
 public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
-    @Autowired
-    private OpenMRSPatientRepository openMRSPatientRepository;
-    @Autowired
-    private OpenMRSConceptRepository openMRSConceptRepository;
-    @Autowired
     private OpenMRSWebClient openMRSWebClient;
-    @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
+
+    @Autowired
+    public OpenMRSEncounterRepository(OpenMRSWebClient openMRSWebClient, MappingMetaDataRepository mappingMetaDataRepository) {
+        super(openMRSWebClient);
+        this.mappingMetaDataRepository = mappingMetaDataRepository;
+    }
 
     public OpenMRSEncounter getEncounterByUuid(String uuid) {
         String json = openMRSWebClient.get(getSingleResourcePath("encounter", uuid));
@@ -51,10 +51,10 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         return pickAndExpectOne(searchResults, String.format("%s-%s", conceptUuid, subjectId));
     }
 
-    public OpenMRSPostSaveEncounter createEncounter(OpenMRSEncounter encounter) {
+    public OpenMRSFullEncounter createEncounter(OpenMRSEncounter encounter) {
         String json = ObjectJsonMapper.writeValueAsString(encounter);
         String outputJson = openMRSWebClient.post(getResourcePath("encounter"), json);
-        return ObjectJsonMapper.readValue(outputJson, OpenMRSPostSaveEncounter.class);
+        return ObjectJsonMapper.readValue(outputJson, OpenMRSFullEncounter.class);
     }
 
     public void updateEncounter(OpenMRSEncounter encounter) {
@@ -62,5 +62,10 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
 
     public void deleteEncounter(OpenMRSBaseEncounter encounter) {
         openMRSWebClient.delete(URI.create(String.format("%s/%s?purge=true", getResourcePath("encounter"), encounter.getUuid())));
+    }
+
+    public OpenMRSFullEncounter getEncounter(Event event) {
+        String patientJson = getUnderlyingResourceJson(event);
+        return ObjectJsonMapper.readValue(patientJson, OpenMRSFullEncounter.class);
     }
 }

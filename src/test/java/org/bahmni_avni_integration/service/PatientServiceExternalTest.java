@@ -3,8 +3,7 @@ package org.bahmni_avni_integration.service;
 import org.bahmni_avni_integration.BaseExternalTest;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPostSaveEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.repository.avni.AvniSubjectRepository;
@@ -34,7 +33,7 @@ public class PatientServiceExternalTest extends BaseExternalTest {
         Pair<OpenMRSUuidHolder, OpenMRSEncounter> patientEncounter = patientService.findSubject(individuals[0], getConstants(), metaData);
         assertNotNull(patientEncounter.getValue0());
         assertNull(patientEncounter.getValue1());
-        OpenMRSPostSaveEncounter subjectEncounter = patientService.createSubject(individuals[0], patientEncounter.getValue0(), metaData, getConstants());
+        OpenMRSFullEncounter subjectEncounter = patientService.createSubject(individuals[0], patientEncounter.getValue0(), metaData, getConstants());
         assertNotNull(subjectEncounter);
         patientService.updateSubject(patientEncounter.getValue0(), individuals[0], metaData, getConstants());
     }

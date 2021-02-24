@@ -3,7 +3,7 @@ package org.bahmni_avni_integration.contract.bahmni;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OpenMRSPostSaveEncounter extends OpenMRSBaseEncounter {
+public class OpenMRSFullEncounter extends OpenMRSBaseEncounter {
     private OpenMRSUuidHolder patient;
     private OpenMRSUuidHolder encounterType;
     private OpenMRSUuidHolder location;

@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OpenMRSConceptRepository extends BaseOpenMRSRepository {
-    @Autowired
     private OpenMRSWebClient openMRSWebClient;
+
+    @Autowired
+    public OpenMRSConceptRepository(OpenMRSWebClient openMRSWebClient) {
+        super(openMRSWebClient);
+    }
 
     public OpenMRSConcept getConceptByName(String name) {
         String json = openMRSWebClient.get(getFullPath(String.format("concept?q=%s", encode(name))));

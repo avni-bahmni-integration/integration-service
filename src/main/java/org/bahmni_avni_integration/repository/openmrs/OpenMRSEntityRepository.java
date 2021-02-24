@@ -8,8 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OpenMRSEntityRepository extends BaseOpenMRSRepository {
-    @Autowired
     private OpenMRSWebClient openMRSWebClient;
+
+    @Autowired
+    public OpenMRSEntityRepository(OpenMRSWebClient openMRSWebClient) {
+        super(openMRSWebClient);
+    }
 
     public OpenMRSEntity get(String resource, String uuid) {
         String json = openMRSWebClient.get(getSingleResourcePath(resource, uuid));

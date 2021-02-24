@@ -14,16 +14,13 @@ import java.net.URI;
 
 @Component
 public class OpenMRSPatientRepository extends BaseOpenMRSRepository {
-    private OpenMRSWebClient openMRSWebClient;
-
     @Autowired
     public OpenMRSPatientRepository(OpenMRSWebClient openMRSWebClient) {
-        this.openMRSWebClient = openMRSWebClient;
+        super(openMRSWebClient);
     }
 
     public OpenMRSPatient getPatient(Event event) {
-        String content = event.getContent();
-        String patientJSON = openMRSWebClient.get(URI.create(urlPrefix + content));
+        String patientJSON = getUnderlyingResourceJson(event);
         return ObjectJsonMapper.readValue(patientJSON, OpenMRSPatient.class);
     }
 

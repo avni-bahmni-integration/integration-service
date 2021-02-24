@@ -7,7 +7,6 @@ import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.*;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
-import org.bahmni_avni_integration.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSPatientRepository;
 import org.ict4h.atomfeed.client.domain.Event;
@@ -35,9 +34,9 @@ public class PatientService {
         errorService.successfullyProcessed(subject);
     }
 
-    public OpenMRSPostSaveEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+    public OpenMRSFullEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
-        OpenMRSPostSaveEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
+        OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
         errorService.successfullyProcessed(subject);
         return savedEncounter;

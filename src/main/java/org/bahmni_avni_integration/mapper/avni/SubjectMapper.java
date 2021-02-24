@@ -27,10 +27,9 @@ public class SubjectMapper {
 
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
 
-        MappingMetaDataCollection auditConceptMappings = mappingMetaDataRepository.findAll(MappingGroup.Audit, MappingType.Concept);
-
         mapObservations(subject, openMRSEncounter);
         mapSubjectUuid(subject, openMRSEncounter);
+//        story-todo - map audit observations
         LinkedHashMap<String, Object> avniAuditObservations = (LinkedHashMap<String, Object>) subject.get("audit");
         return openMRSEncounter;
     }
