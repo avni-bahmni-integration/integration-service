@@ -1,12 +1,11 @@
 package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 
-import org.bahmni_avni_integration.contract.avni.Encounter;
+import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.domain.Constants;
 import org.bahmni_avni_integration.repository.MultipleResultsFoundException;
-import org.bahmni_avni_integration.service.ErrorService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.PatientService;
 import org.bahmni_avni_integration.service.SubjectService;
@@ -45,23 +44,23 @@ public class OpenMrsPatientEventWorker implements EventWorker {
 
         logger.debug(String.format("Patient: name %s || uuid %s", patient.getName(), patient.getUuid()));
         PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
-        Encounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
+        GeneralEncounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
         Subject subject;
         try {
             subject = subjectService.findSubject(patient, metaData, constants);
         } catch (MultipleResultsFoundException e) {
-            subjectService.processMultipleSubjectsFound(patient, metaData);
+            subjectService.processMultipleSubjectsFound(patient);
             return;
         }
 
         if (patientEncounter != null && subject != null) {
-            subjectService.updateRegistrationEncounter(patientEncounter, patient);
+            subjectService.updateRegistrationEncounter(patientEncounter, patient, metaData);
         } else if (patientEncounter != null && subject == null) {
-            subjectService.processSubjectIdChanged(patient, metaData);
+            subjectService.processSubjectIdChanged(patient);
         } else if (patientEncounter == null && subject != null) {
             subjectService.createRegistrationEncounter(patient, subject, metaData);
         } else if (patientEncounter == null && subject == null) {
-            subjectService.processSubjectNotFound(patient, metaData);
+            subjectService.processSubjectNotFound(patient);
         }
     }
 

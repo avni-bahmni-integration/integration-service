@@ -13,8 +13,12 @@ public class FormatAndParseUtil {
     }
 
     public static String toISODateString(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        DateFormat dateFormat = getIsoDateFormat();
         return String.format("%s%s", dateFormat.format(date), "Z");
+    }
+
+    private static DateFormat getIsoDateFormat() {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     }
 
     public static String now() {
@@ -34,6 +38,15 @@ public class FormatAndParseUtil {
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
             return dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Date fromIsoDateString(String date) {
+        try {
+            DateFormat dateFormat = getIsoDateFormat();
+            return dateFormat.parse(date);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

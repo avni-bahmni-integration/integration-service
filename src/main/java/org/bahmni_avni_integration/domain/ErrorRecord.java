@@ -36,6 +36,9 @@ public class ErrorRecord extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ErrorType errorType;
 
+    public ErrorRecord() {
+    }
+
     public AvniEntityType getAvniEntityType() {
         return avniEntityType;
     }

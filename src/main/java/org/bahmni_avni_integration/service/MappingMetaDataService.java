@@ -40,7 +40,7 @@ public class MappingMetaDataService {
         return new PatientToSubjectMetaData(bahmniEntityUuidConcept, subjectType, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
     }
 
-    public BahmniEncounterToAvniEncounterMetaData getForBahmniEncounterToAvni() {
+    public BahmniEncounterToAvniEncounterMetaData getForBahmniEncounterToAvniEncounter() {
         List<MappingMetaData> mappings = mappingMetaDataRepository.findAllByMappingGroupAndMappingType(MappingGroup.GeneralEncounter, MappingType.EncounterType);
         BahmniEncounterToAvniEncounterMetaData metaData = new BahmniEncounterToAvniEncounterMetaData();
         mappings.forEach(x -> metaData.addEncounterType(x.getBahmniValue(), x.getAvniValue()));

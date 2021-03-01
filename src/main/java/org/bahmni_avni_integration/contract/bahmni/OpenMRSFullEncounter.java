@@ -78,4 +78,8 @@ public class OpenMRSFullEncounter {
     public String getUuid() {
         return uuid;
     }
+
+    public String getEncounterDatetime() {
+        return encounterDatetime;
+    }
 }

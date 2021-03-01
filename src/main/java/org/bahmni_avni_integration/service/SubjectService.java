@@ -1,16 +1,15 @@
 package org.bahmni_avni_integration.service;
 
-import org.bahmni_avni_integration.contract.avni.Encounter;
+import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttribute;
 import org.bahmni_avni_integration.contract.internal.BahmniToAvniMetaData;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.domain.*;
+import org.bahmni_avni_integration.mapper.bahmni.OpenMRSPatientMapper;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.repository.avni.AvniEncounterRepository;
 import org.bahmni_avni_integration.repository.avni.AvniSubjectRepository;
-import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,59 +43,34 @@ public class SubjectService {
         );
     }
 
-    public Encounter createRegistrationEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData) {
-        Map<String, Object> observations = mapObservations(openMRSPatient);
-        observations.put(patientToSubjectMetaData.bahmniEntityUuidConcept(), openMRSPatient.getUuid());
-
-        Encounter encounterRequest = new Encounter();
-        encounterRequest.set("Subject ID", subject.getUuid());
-        encounterRequest.set("Encounter type", patientToSubjectMetaData.patientEncounterType());
-        encounterRequest.set("Encounter date time", FormatAndParseUtil.now());
-        encounterRequest.set("observations", observations);
-        encounterRequest.set("cancelObservations", new HashMap<>());
+    public GeneralEncounter createRegistrationEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData) {
+        MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
+        GeneralEncounter encounterRequest = OpenMRSPatientMapper.mapToAvniEncounter(openMRSPatient, subject, patientToSubjectMetaData, conceptMetaData);
         return avniEncounterRepository.create(encounterRequest);
     }
 
-    private Map<String, Object> mapObservations(OpenMRSPatient openMRSPatient) {
-        LinkedHashMap<String, Object> observations = new LinkedHashMap<>();
+    public GeneralEncounter updateRegistrationEncounter(GeneralEncounter encounterRequest, OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
         MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
-        for (OpenMRSPersonAttribute openMRSPersonAttribute : openMRSPatient.getPerson().getAttributes()) {
-            String attributeTypeUuid = openMRSPersonAttribute.getAttributeType().getUuid();
-            MappingMetaData questionMapping = conceptMetaData.getMappingForBahmniValue(attributeTypeUuid);
-            Object attributeValue = openMRSPersonAttribute.getValue();
-            if (attributeValue instanceof Map) {
-                Map<String, String> attributeValueMap = (Map<String, String>) attributeValue;
-                String attributeUuid = attributeValueMap.get("uuid");
-                MappingMetaData answerMapping = conceptMetaData.getMappingForBahmniValue(attributeUuid);
-                observations.put(questionMapping.getAvniValue(), answerMapping.getAvniValue());
-            } else {
-                observations.put(questionMapping.getAvniValue(), attributeValue);
-            }
-        }
-        logger.debug(String.format("Obs %s", observations.toString()));
-        return observations;
-    }
-
-    public Encounter updateRegistrationEncounter(Encounter encounterRequest, OpenMRSPatient openMRSPatient) {
-        encounterRequest.set("observations", mapObservations(openMRSPatient));
+        encounterRequest.set("observations", OpenMRSPatientMapper.mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData));
         return avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);
     }
 
-    public Encounter findPatient(BahmniToAvniMetaData metaData, String externalId) {
+    // Patient from OpenMRS/Bahmni is saved as Encounter in Avni
+    public GeneralEncounter findPatient(BahmniToAvniMetaData metaData, String externalId) {
         LinkedHashMap<String, Object> encounterCriteria = new LinkedHashMap<>();
         encounterCriteria.put(metaData.getBahmniEntityUuidConcept(), externalId);
         return avniEncounterRepository.getEncounter(encounterCriteria);
     }
 
-    public void processSubjectIdChanged(OpenMRSPatient patient, PatientToSubjectMetaData metaData) {
-        errorService.errorOccurred(patient, ErrorType.SubjectIdChanged, metaData);
+    public void processSubjectIdChanged(OpenMRSPatient patient) {
+        errorService.errorOccurred(patient, ErrorType.SubjectIdChanged);
     }
 
-    public void processSubjectNotFound(OpenMRSPatient patient, PatientToSubjectMetaData metaData) {
-        errorService.errorOccurred(patient, ErrorType.NoSubjectWithId, metaData);
+    public void processSubjectNotFound(OpenMRSPatient patient) {
+        errorService.errorOccurred(patient, ErrorType.NoSubjectWithId);
     }
 
-    public void processMultipleSubjectsFound(OpenMRSPatient patient, PatientToSubjectMetaData metaData) {
-        errorService.errorOccurred(patient, ErrorType.MultipleSubjectsWithId, metaData);
+    public void processMultipleSubjectsFound(OpenMRSPatient patient) {
+        errorService.errorOccurred(patient, ErrorType.MultipleSubjectsWithId);
     }
 }

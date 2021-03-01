@@ -1,6 +1,6 @@
 package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 
-import org.bahmni_avni_integration.contract.avni.Encounter;
+import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.bahmni_avni_integration.domain.Constants;
@@ -41,13 +41,13 @@ public class OpenMrsEncounterEventWorker implements EventWorker {
             return;
         }
 
-        Encounter existingEncounter = avniEncounterService.getEncounter(openMRSEncounter, metaData);
-        Encounter patient = subjectService.findPatient(metaData, openMRSEncounter.getPatient().getUuid());
-        if (existingEncounter != null && patient != null) {
-            avniEncounterService.update(openMRSEncounter);
-        } else if (existingEncounter != null && patient == null) {
-            avniEncounterService.processSubjectIdChanged();
-        } else if (existingEncounter == null && patient != null) {
+        GeneralEncounter existingEncounter = avniEncounterService.getGeneralEncounter(openMRSEncounter, metaData);
+        GeneralEncounter avniPatient = subjectService.findPatient(metaData, openMRSEncounter.getPatient().getUuid());
+        if (existingEncounter != null && avniPatient != null) {
+            avniEncounterService.update(openMRSEncounter, existingEncounter, metaData, avniPatient);
+        } else if (existingEncounter != null && avniPatient == null) {
+            avniEncounterService.processSubjectIdChanged(existingEncounter, metaData);
+        } else if (existingEncounter == null && avniPatient != null) {
             avniEncounterService.create(openMRSEncounter);
         } else {
             avniEncounterService.processSubjectIdNotFound();

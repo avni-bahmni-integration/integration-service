@@ -12,7 +12,11 @@ import java.util.List;
 @Repository
 public interface MappingMetaDataRepository extends PagingAndSortingRepository<MappingMetaData, Integer> {
     MappingMetaData findByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
+
+    MappingMetaData findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue);
+
     List<MappingMetaData> findAllByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
+
     List<MappingMetaData> findAllByMappingGroupAndMappingTypeIn(MappingGroup mappingGroup, List<MappingType> mappingTypes);
 
     default MappingMetaDataCollection findAll(MappingGroup mappingGroup, List<MappingType> mappingTypes) {
@@ -25,6 +29,10 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
 
     default String getAvniValue(MappingGroup mappingGroup, MappingType mappingType) {
         MappingMetaData mapping = findByMappingGroupAndMappingType(mappingGroup, mappingType);
+        return getAvniValue(mapping);
+    }
+
+    private String getAvniValue(MappingMetaData mapping) {
         if (mapping == null) return null;
         return mapping.getAvniValue();
     }
@@ -33,5 +41,12 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
         MappingMetaData mapping = findByMappingGroupAndMappingType(mappingGroup, mappingType);
         if (mapping == null) return null;
         return mapping.getBahmniValue();
+    }
+
+    default MappingMetaData getConceptMappingByOpenMRSConcept(String openMRSConceptUuid) {
+        MappingMetaData mappingMetaData = findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, openMRSConceptUuid);
+        if (mappingMetaData == null)
+            throw new RuntimeException(String.format("No mapping found for openmrs concept with uuid = %s", openMRSConceptUuid));
+        return mappingMetaData;
     }
 }

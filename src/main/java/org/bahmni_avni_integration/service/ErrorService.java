@@ -3,8 +3,10 @@ package org.bahmni_avni_integration.service;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.BahmniEntityType;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
+import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
+import org.bahmni_avni_integration.contract.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.AvniEntityType;
@@ -39,7 +41,7 @@ public class ErrorService {
         errorRecordRepository.save(errorRecord);
     }
 
-    public void errorOccurred(OpenMRSPatient patient, ErrorType errorType, PatientToSubjectMetaData metaData) {
+    public void errorOccurred(OpenMRSPatient patient, ErrorType errorType) {
         ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndSubjectPatientExternalIdAndErrorType(BahmniEntityType.Patient, patient.getUuid(), errorType);
         if (errorRecord != null) return;
 
@@ -47,6 +49,18 @@ public class ErrorService {
         errorRecord.setBahmniEntityType(BahmniEntityType.Patient);
         errorRecord.setSubjectPatientExternalId(patient.getUuid());
         errorRecord.setSubjectPatientId(patient.getPatientId());
+        errorRecord.setErrorType(errorType);
+        errorRecordRepository.save(errorRecord);
+    }
+
+    public void errorOccurred(GeneralEncounter existingEncounter, ErrorType errorType) {
+        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEncounterExternalIdAndErrorType(BahmniEntityType.Encounter, existingEncounter.getUuid(), errorType);
+        if (errorRecord != null) return;
+
+        errorRecord = new ErrorRecord();
+        errorRecord.setBahmniEntityType(BahmniEntityType.Encounter);
+        errorRecord.setSubjectPatientExternalId(existingEncounter.getSubjectExternalId());
+        errorRecord.setEncounterExternalId(existingEncounter.getUuid());
         errorRecord.setErrorType(errorType);
         errorRecordRepository.save(errorRecord);
     }
