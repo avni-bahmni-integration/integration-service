@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OpenMrsEncounterEventWorker implements EventWorker {
+public class PatientEncounterEventWorker implements EventWorker {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
