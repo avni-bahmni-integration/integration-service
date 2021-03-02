@@ -56,7 +56,10 @@ public class EnrolmentService {
         return savedEncounter;
     }
 
-    public void updateCommunityEnrolment(OpenMRSEncounter encounter, Enrolment enrolment, OpenMRSUuidHolder patient, Constants constants) {
-
+    public void updateCommunityEnrolment(OpenMRSEncounter existingEncounter, Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
+        MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
+        String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
+        subjectMapper.mapEnrolmentToExistingEncounter(existingEncounter, enrolment, openMRSPatient.getUuid(), encounterTypeUuid, constants);
+//        openMRSEncounterRepository.updateEncounter(existingEncounter);
     }
 }

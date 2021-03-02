@@ -31,10 +31,10 @@ public class OpenMRSSaveObservation {
         return value;
     }
 
-    public static OpenMRSSaveObservation createCodedObs(String concept, String valueCodedName) {
+    public static OpenMRSSaveObservation createCodedObs(String concept, String valueUuid) {
         OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
         openMRSSaveObservation.concept = concept;
-        openMRSSaveObservation.valueCodedName = valueCodedName;
+        openMRSSaveObservation.value = valueUuid;
         return openMRSSaveObservation;
     }
 

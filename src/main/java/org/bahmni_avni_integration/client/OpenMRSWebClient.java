@@ -13,7 +13,7 @@ import java.net.URI;
 public class OpenMRSWebClient extends AbstractWebClient {
     private static Logger logger = Logger.getLogger(OpenMRSWebClient.class);
 
-    public OpenMRSWebClient(@Autowired OpenERPAtomFeedProperties properties) {
+    public OpenMRSWebClient(OpenERPAtomFeedProperties properties) {
         connectionDetails = connectionDetails(properties);
         httpClient = new HttpClient(connectionDetails, new OpenMRSLoginAuthenticator(connectionDetails));
     }

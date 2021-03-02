@@ -59,9 +59,9 @@ public class EnrolmentWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processEnrolment(Constants constants, Predicate<Enrolment> continueAfterOneRecord, SubjectToPatientMetaData metaData, Enrolment enrolment) {
-        logger.debug(String.format("Processing avni enrolment %s", enrolment));
+        logger.debug(String.format("Processing avni enrolment %s", enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
-        logger.debug(String.format("Found avni subject %s", subject));
+        logger.debug(String.format("Found avni subject %s", subject.getUuid()));
         Pair<OpenMRSUuidHolder, OpenMRSEncounter> patientEncounter = enrolmentService.findCommunityEnrolment(enrolment, subject, constants, metaData);
         OpenMRSUuidHolder patient = patientEncounter.getValue0();
         OpenMRSEncounter encounter = patientEncounter.getValue1();
@@ -69,6 +69,7 @@ public class EnrolmentWorker {
         if (patient != null && encounter == null) {
             enrolmentService.createCommunityEnrolment(enrolment, patient, constants);
         } else if (patient != null && encounter != null) {
+            logger.debug(String.format("Updating existing encounter %s", encounter.getUuid()));
             enrolmentService.updateCommunityEnrolment(encounter, enrolment, patient, constants);
         } else if (patient == null && encounter == null) {
             enrolmentService.processPatientNotFound(subject, metaData);

@@ -15,7 +15,6 @@ import java.net.URI;
 
 @Component
 public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
-    private OpenMRSWebClient openMRSWebClient;
     private MappingMetaDataRepository mappingMetaDataRepository;
 
     @Autowired
@@ -61,7 +60,10 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         return ObjectJsonMapper.readValue(outputJson, OpenMRSFullEncounter.class);
     }
 
-    public void updateEncounter(OpenMRSEncounter encounter) {
+    public OpenMRSFullEncounter updateEncounter(OpenMRSEncounter encounter) {
+        String json = ObjectJsonMapper.writeValueAsString(encounter);
+        String outputJson = openMRSWebClient.post(getResourcePath(String.format("encounter/%s", encounter.getUuid())), json);
+        return ObjectJsonMapper.readValue(outputJson, OpenMRSFullEncounter.class);
     }
 
     public void deleteEncounter(OpenMRSBaseEncounter encounter) {

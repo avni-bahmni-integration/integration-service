@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Component
 public class SubjectMapper {
@@ -48,19 +49,45 @@ public class SubjectMapper {
         return openMRSEncounter;
     }
 
+    public OpenMRSEncounter mapEnrolmentToExistingEncounter(OpenMRSEncounter openMRSEncounter, Enrolment enrolment, String patientUuid, String encounterTypeUuid, Constants constants) {
+
+//        LinkedHashMap<String, Object> avniObservations = (LinkedHashMap<String, Object>) enrolment.get("observations");
+//        MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.Concept);
+//        avniObservations.forEach((key, value) -> {
+//            MappingMetaData mapping = conceptMappings.getMappingForAvniValue(key);
+//            if (mapping != null && ObsDataType.Coded.equals(mapping.getDataTypeHint()))
+//                openMRSEncounter.addObservation(OpenMRSSaveObservation.createCodedObs(mapping.getBahmniValue(), (String) value));
+//            else if (mapping != null)
+//                openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(mapping.getBahmniValue(), value, mapping.getDataTypeHint()));
+//        });
+        return openMRSEncounter;
+    }
+
     private void mapEnrolmentUuid(Enrolment enrolment, OpenMRSEncounter openMRSEncounter) {
         MappingMetaData enrolmentUuidConcept = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.ProgramEnrolment, MappingType.EnrolmentUUID_Concept);
         openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(enrolmentUuidConcept.getBahmniValue(), enrolment.getUuid(), ObsDataType.Text));
     }
 
     private void mapObservations(LinkedHashMap<String, Object> avniObservations, OpenMRSEncounter openMRSEncounter) {
-        MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.Concept);
+        MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
         avniObservations.forEach((key, value) -> {
-            MappingMetaData mapping = conceptMappings.getMappingForAvniValue(key);
-            if (mapping != null && ObsDataType.Coded.equals(mapping.getDataTypeHint()))
-                openMRSEncounter.addObservation(OpenMRSSaveObservation.createCodedObs(mapping.getBahmniValue(), (String) value));
-            else if (mapping != null)
-                openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(mapping.getBahmniValue(), value, mapping.getDataTypeHint()));
+            MappingMetaData questionMapping = conceptMappings.getMappingForAvniValue(key);
+            if (questionMapping != null) {
+                if (ObsDataType.Coded.equals(questionMapping.getDataTypeHint())) {
+                    if (value instanceof String) {
+                        MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue((String) value);
+                        openMRSEncounter.addObservation(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+                    } else if (value instanceof List<?>) {
+                        List<String> valueList = (List<String>) value;
+                        valueList.forEach(s -> {
+                            MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue(s);
+                            openMRSEncounter.addObservation(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+                        });
+                    }
+                } else {
+                    openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(questionMapping.getBahmniValue(), value, questionMapping.getDataTypeHint()));
+                }
+            }
         });
     }
 
