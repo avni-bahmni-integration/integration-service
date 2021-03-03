@@ -30,14 +30,14 @@ public class EnrolmentService {
         this.errorService = errorService;
     }
 
-    public Pair<OpenMRSUuidHolder, OpenMRSEncounter> findCommunityEnrolment(Enrolment enrolment, Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
+    public Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> findCommunityEnrolment(Enrolment enrolment, Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
         OpenMRSUuidHolder patient = patientService.findPatient(subject, constants, subjectToPatientMetaData);
         if (patient == null) {
             return new Pair<>(null, null);
         }
         String enrolmentConceptUuid = mappingMetaDataRepository
                 .getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.EnrolmentUUID_Concept);
-        OpenMRSEncounter encounter = openMRSEncounterRepository
+        OpenMRSFullEncounter encounter = openMRSEncounterRepository
                 .getEncounterByPatientAndObservation(patient.getUuid(), enrolmentConceptUuid, enrolment.getUuid());
         return new Pair<>(patient, encounter);
     }
@@ -56,10 +56,11 @@ public class EnrolmentService {
         return savedEncounter;
     }
 
-    public void updateCommunityEnrolment(OpenMRSEncounter existingEncounter, Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
+    public void updateCommunityEnrolment(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
         MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
         String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
-        subjectMapper.mapEnrolmentToExistingEncounter(existingEncounter, enrolment, openMRSPatient.getUuid(), encounterTypeUuid, constants);
+        subjectMapper.mapEnrolmentToExistingEncounter(existingEncounter, enrolment);
 //        openMRSEncounterRepository.updateEncounter(existingEncounter);
+//        errorService.successfullyProcessed(enrolment);
     }
 }

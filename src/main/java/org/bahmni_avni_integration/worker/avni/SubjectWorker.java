@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.worker.avni;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.AvniEntityStatus;
@@ -39,22 +40,23 @@ public class SubjectWorker {
     public void processSubjects(Constants constants, Predicate<Subject> continueAfterOneRecord) {
         SubjectToPatientMetaData metaData = mappingMetaDataService.getForSubjectToPatient();
 
+        mainLoop:
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
             Subject[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), metaData.subjectType());
             logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUpto()));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {
-                if (processSubject(constants, continueAfterOneRecord, metaData, subject)) break;
+                if (processSubject(constants, continueAfterOneRecord, metaData, subject)) break mainLoop;
             }
         }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processSubject(Constants constants, Predicate<Subject> continueAfterOneRecord, SubjectToPatientMetaData metaData, Subject subject) {
-        Pair<OpenMRSUuidHolder, OpenMRSEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
+        Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
         OpenMRSUuidHolder patient = patientEncounter.getValue0();
-        OpenMRSEncounter encounter = patientEncounter.getValue1();
+        OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 
         if (encounter != null && patient != null) {
             patientService.updateSubject(patient, subject, metaData, constants);

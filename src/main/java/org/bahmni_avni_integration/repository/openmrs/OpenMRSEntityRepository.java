@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OpenMRSEntityRepository extends BaseOpenMRSRepository {
-    private OpenMRSWebClient openMRSWebClient;
 
     @Autowired
     public OpenMRSEntityRepository(OpenMRSWebClient openMRSWebClient) {

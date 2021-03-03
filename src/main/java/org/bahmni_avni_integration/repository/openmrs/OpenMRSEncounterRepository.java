@@ -23,27 +23,17 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
     }
 
-    public OpenMRSEncounter getEncounterByUuid(String uuid) {
-        String json = openMRSWebClient.get(getSingleResourcePath("encounter", uuid));
-        return ObjectJsonMapper.readValue(json, OpenMRSEncounter.class);
+    public OpenMRSFullEncounter getEncounterByUuid(String uuid) {
+        String json = openMRSWebClient.get(String.format("%s?v=full", getSingleResourcePath("encounter", uuid)));
+        return ObjectJsonMapper.readValue(json, OpenMRSFullEncounter.class);
     }
 
-    public OpenMRSEncounter getRegistrationEncounterForAvniSubject(OpenMRSUuidHolder patient, String subjectId, String subjectUuidConceptUuid) {
-        return getEncounterByPatientAndObservation(patient.getUuid(), subjectUuidConceptUuid, subjectId);
-    }
-
-    public OpenMRSEncounter getEncounterByPatientAndObservation(String patientUuid, String conceptUuid, String value) {
+    public OpenMRSFullEncounter getEncounterByPatientAndObservation(String patientUuid, String conceptUuid, String value) {
         String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&obsConcept=%s&obsValues=%s", getResourcePath("encounter"), patientUuid, conceptUuid, encode(value))));
-        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {
+        SearchResults<OpenMRSUuidHolder> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSUuidHolder>>() {
         });
-        return pickAndExpectOne(searchResults, String.format("%s-%s-%s", patientUuid, conceptUuid, value));
-    }
-
-    public OpenMRSEncounter getRegistrationEncounterForAvniSubject(String subjectId, String subjectUuidConceptUuid) {
-        String json = openMRSWebClient.get(URI.create(String.format("%s?obsConcept=%s&obsValues=%s", getResourcePath("encounter"), subjectUuidConceptUuid, encode(subjectId))));
-        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {
-        });
-        return pickAndExpectOne(searchResults, String.format("%s-%s", subjectUuidConceptUuid, subjectId));
+        OpenMRSUuidHolder encounterReference = pickAndExpectOne(searchResults, String.format("%s-%s-%s", patientUuid, conceptUuid, value));
+        return encounterReference == null ? null : getEncounterByUuid(encounterReference.getUuid());
     }
 
     public OpenMRSEncounter getEncounter(String subjectId) {

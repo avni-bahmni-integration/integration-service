@@ -28,10 +28,10 @@ public class PatientService {
     private OpenMRSPatientRepository patientRepository;
 
     public void updateSubject(OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
-        OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
-        openMRSEncounterRepository.updateEncounter(encounter);
+//        OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
+//        openMRSEncounterRepository.updateEncounter(encounter);
 
-        errorService.successfullyProcessed(subject);
+//        errorService.successfullyProcessed(subject);
     }
 
     public OpenMRSFullEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
@@ -42,13 +42,13 @@ public class PatientService {
         return savedEncounter;
     }
 
-    public Pair<OpenMRSUuidHolder, OpenMRSEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
+    public Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
         String subjectId = subject.getUuid();
         OpenMRSUuidHolder patient = findPatient(subject, constants, subjectToPatientMetaData);
         if (patient == null) {
             return new Pair<>(null, null);
         }
-        OpenMRSEncounter encounter = openMRSEncounterRepository.getRegistrationEncounterForAvniSubject(patient, subjectId, subjectToPatientMetaData.subjectUuidConceptUuid());
+        OpenMRSFullEncounter encounter = openMRSEncounterRepository.getEncounterByPatientAndObservation(patient.getUuid(), subjectToPatientMetaData.subjectUuidConceptUuid(), subjectId);
         return new Pair<>(patient, encounter);
     }
 

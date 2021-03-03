@@ -15,6 +15,12 @@ public class MappingMetaDataCollection {
         return mapping.getBahmniValue();
     }
 
+    public String getAvniValueForBahmniValue(String bahmniValue) {
+        MappingMetaData mapping = getMappingForBahmniValue(bahmniValue);
+        if (mapping == null) return null;
+        return mapping.getAvniValue();
+    }
+
     public MappingMetaData getMappingForAvniValue(String avniValue) {
         return list.stream().filter(mappingMetaData -> avniValue.equals(mappingMetaData.getAvniValue())).findAny().orElse(null);
     }

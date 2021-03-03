@@ -64,11 +64,12 @@ public class OpenMRSFullEncounter {
         } else {
             Map<String, Object> conceptNode = (Map<String, Object>) observation.get("concept");
             OpenMRSObservation openMRSObservation = new OpenMRSObservation();
+            openMRSObservation.setObsUuid((String) observation.get("uuid"));
             openMRSObservation.setConcept((String) conceptNode.get("uuid"));
 
             Object value = observation.get("value");
-            if (value instanceof LinkedHashMap) {
-                value = ((LinkedHashMap)value).get("uuid");
+            if (value instanceof Map) {
+                value = ((Map)value).get("uuid");
             }
             openMRSObservation.setValue(value);
             leafObservations.add(openMRSObservation);

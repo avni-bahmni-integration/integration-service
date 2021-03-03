@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounterProvider;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveObservation;
 import org.bahmni_avni_integration.domain.*;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
@@ -11,9 +12,9 @@ import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
+
+import static org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveObservation.*;
 
 @Component
 public class SubjectMapper {
@@ -49,18 +50,35 @@ public class SubjectMapper {
         return openMRSEncounter;
     }
 
-    public OpenMRSEncounter mapEnrolmentToExistingEncounter(OpenMRSEncounter openMRSEncounter, Enrolment enrolment, String patientUuid, String encounterTypeUuid, Constants constants) {
+    public List<OpenMRSSaveObservation> mapEnrolmentToExistingEncounter(OpenMRSFullEncounter openMRSEncounter, Enrolment enrolment) {
+        Map<String, Object> updateEncounter = new LinkedHashMap<>();
+        List<OpenMRSSaveObservation> updateObservations = new ArrayList<>();
+        Map<String, Object> avniObservations = (LinkedHashMap<String, Object>) enrolment.get("observations");
+        MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
+        updateObservations.addAll(voidedObservations(openMRSEncounter, avniObservations, conceptMappings));
+        return updateObservations;
+    }
 
-//        LinkedHashMap<String, Object> avniObservations = (LinkedHashMap<String, Object>) enrolment.get("observations");
-//        MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.Concept);
-//        avniObservations.forEach((key, value) -> {
-//            MappingMetaData mapping = conceptMappings.getMappingForAvniValue(key);
-//            if (mapping != null && ObsDataType.Coded.equals(mapping.getDataTypeHint()))
-//                openMRSEncounter.addObservation(OpenMRSSaveObservation.createCodedObs(mapping.getBahmniValue(), (String) value));
-//            else if (mapping != null)
-//                openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(mapping.getBahmniValue(), value, mapping.getDataTypeHint()));
-//        });
-        return openMRSEncounter;
+    private List<OpenMRSSaveObservation> voidedObservations(OpenMRSFullEncounter openMRSEncounter, Map<String, Object> avniObservations, MappingMetaDataCollection conceptMappings) {
+        List<OpenMRSSaveObservation> voidedObservations = new ArrayList<>();
+        openMRSEncounter.getLeafObservations().forEach(openMRSObservation -> {
+            String conceptUuid = openMRSObservation.getUuid();
+            String avniConceptName = conceptMappings.getAvniValueForBahmniValue(conceptUuid);
+            Object avniObsValue = avniObservations.get(avniConceptName);
+
+            if (avniObsValue == null) {
+                voidedObservations.add(createVoidedObs(openMRSObservation.getObsUuid()));
+            } else {
+                if (avniObsValue instanceof List<?>) {
+                    List<String> valueList = (List<String>) avniObsValue;
+                    String avniAnswerName = conceptMappings.getAvniValueForBahmniValue((String) openMRSObservation.getValue());
+                    if (!valueList.contains(avniAnswerName)) {
+                        voidedObservations.add(createVoidedObs(openMRSObservation.getObsUuid()));
+                    }
+                }
+            }
+        });
+        return voidedObservations;
     }
 
     private void mapEnrolmentUuid(Enrolment enrolment, OpenMRSEncounter openMRSEncounter) {

@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.contract.bahmni;
 public class OpenMRSObservation {
     private String uuid;
     private Object value;
+    private String obsUuid;
 
     public void setConcept(String uuid) {
         this.uuid = uuid;
@@ -18,5 +19,13 @@ public class OpenMRSObservation {
 
     public Object getValue() {
         return value;
+    }
+
+    public String getObsUuid() {
+        return obsUuid;
+    }
+
+    public void setObsUuid(String obsUuid) {
+        this.obsUuid = obsUuid;
     }
 }

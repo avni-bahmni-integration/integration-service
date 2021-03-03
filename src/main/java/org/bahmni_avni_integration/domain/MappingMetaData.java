@@ -70,6 +70,10 @@ public class MappingMetaData extends BaseEntity {
         return dataTypeHint;
     }
 
+    public boolean isCoded() {
+        return ObsDataType.Coded.equals(getDataTypeHint());
+    }
+
     public void setDataTypeHint(ObsDataType dataTypeHint) {
         this.dataTypeHint = dataTypeHint;
     }

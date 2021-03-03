@@ -14,8 +14,17 @@ public class OpenMRSSaveObservation {
     private String obsDatetime;
     private Object value;
     private String valueCodedName;
+    private String uuid;
+    private boolean voided;
 
     public OpenMRSSaveObservation() {
+    }
+
+    public static OpenMRSSaveObservation createVoidedObs(String uuid) {
+        OpenMRSSaveObservation observation = new OpenMRSSaveObservation();
+        observation.setUuid(uuid);
+        observation.setVoided(true);
+        return observation;
     }
 
     public static OpenMRSSaveObservation createPrimitiveObs(String concept, Object value, ObsDataType dataType) {
@@ -68,5 +77,21 @@ public class OpenMRSSaveObservation {
 
     public void setValueCodedName(String valueCodedName) {
         this.valueCodedName = valueCodedName;
+    }
+
+    public boolean isVoided() {
+        return voided;
+    }
+
+    public void setVoided(boolean voided) {
+        this.voided = voided;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

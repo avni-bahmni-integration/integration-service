@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.AvniEntityStatus;
@@ -62,11 +63,12 @@ public class EnrolmentWorker {
         logger.debug(String.format("Processing avni enrolment %s", enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
-        Pair<OpenMRSUuidHolder, OpenMRSEncounter> patientEncounter = enrolmentService.findCommunityEnrolment(enrolment, subject, constants, metaData);
+        Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter = enrolmentService.findCommunityEnrolment(enrolment, subject, constants, metaData);
         OpenMRSUuidHolder patient = patientEncounter.getValue0();
-        OpenMRSEncounter encounter = patientEncounter.getValue1();
+        OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 
         if (patient != null && encounter == null) {
+            logger.debug(String.format("Creating new encounter for enrolment %s", enrolment.getUuid()));
             enrolmentService.createCommunityEnrolment(enrolment, patient, constants);
         } else if (patient != null && encounter != null) {
             logger.debug(String.format("Updating existing encounter %s", encounter.getUuid()));
