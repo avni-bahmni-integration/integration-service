@@ -33,7 +33,16 @@ public class ObservationMapper {
                 if (ObsDataType.Coded.equals(questionMapping.getDataTypeHint())) {
                     if (answer instanceof String) {
                         MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue((String) answer);
-                        updatedObservations.add(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+                        OpenMRSObservation openMRSObservation = openMRSObservations.stream()
+                                .filter(o -> o.getConceptUuid().equals(conceptMappings.getBahmniValueForAvniValue(question)) &&
+                                        o.getValue().equals(conceptMappings.getBahmniValueForAvniValue((String) answer)))
+                                .findFirst()
+                                .orElse(null);
+                        if (openMRSObservation != null) {
+                            updatedObservations.add(OpenMRSSaveObservation.createCodedObs(openMRSObservation.getObsUuid(), questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+                        } else {
+                            updatedObservations.add(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+                        }
                     } else if (answer instanceof List<?>) {
                         List<String> valueList = (List<String>) answer;
                         valueList.forEach(s -> {

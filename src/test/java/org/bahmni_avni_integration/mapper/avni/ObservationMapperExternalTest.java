@@ -136,7 +136,7 @@ public class ObservationMapperExternalTest {
     }
 
     @Test
-    public void checkAddingOfCodedObservations() {
+    public void checkAddingOfMultiSelectCodedObservations() {
         MappingMetaDataCollection metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         Map<String, Object> obsHistoryNoProblem = createCodedObservation(
@@ -190,6 +190,45 @@ public class ObservationMapperExternalTest {
         assertNull(stillBirthResult.getValue());
         assertNull(newObs.getUuid());
     }
+
+    @Test
+    public void checkAddingOfSingleSelectCodedObservations() {
+        MappingMetaDataCollection metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
+        OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
+        Map<String, Object> obsHistoryNoProblem = createCodedObservation(
+                UUID.randomUUID(),
+                metaData.getBahmniValueForAvniValue("Obstetrics history"),
+                metaData.getBahmniValueForAvniValue("No problem")
+        );
+        Map<String, Object> abdominalProblemsNoProblem = createCodedObservation(
+                UUID.randomUUID(),
+                metaData.getBahmniValueForAvniValue("Any abdominal problems"),
+                metaData.getBahmniValueForAvniValue("No problem")
+        );
+        openMRSFullEncounter.setAny("obs", List.of(abdominalProblemsNoProblem, obsHistoryNoProblem));
+
+        Enrolment enrolment = new Enrolment();
+        Map<String, Object> avniObservations = new LinkedHashMap<>();
+        avniObservations.put("Obstetrics history", "No problem");
+        avniObservations.put("Any abdominal problems", List.of("No problem"));
+        enrolment.set("observations", avniObservations);
+
+        var updateObservations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
+                openMRSFullEncounter.getLeafObservations(),
+                (Map<String, Object>) enrolment.get("observations"));
+        assertEquals(2, updateObservations.size());
+        OpenMRSSaveObservation absProblemResult = updateObservations.stream()
+                .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue("Any abdominal problems"))).findFirst().orElse(null);
+        assertFalse(absProblemResult.isVoided());
+        assertEquals(abdominalProblemsNoProblem.get("uuid"), absProblemResult.getUuid());
+
+        OpenMRSSaveObservation obsHistoryNoProblemResult = updateObservations.stream()
+                .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue("Obstetrics history"))).findFirst().orElse(null);
+
+        assertFalse(obsHistoryNoProblemResult.isVoided());
+        assertEquals(obsHistoryNoProblem.get("uuid"), obsHistoryNoProblemResult.getUuid());
+    }
+
 
     private Map<String, Object> createCodedObservation(UUID uuid, String conceptUuid, String answerUuid) {
         Map<String, Object> observation = Map.of(
