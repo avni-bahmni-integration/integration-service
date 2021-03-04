@@ -28,10 +28,10 @@ public class PatientService {
     private OpenMRSPatientRepository patientRepository;
 
     public void updateSubject(OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
-//        OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
-//        openMRSEncounterRepository.updateEncounter(encounter);
+        OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
+        openMRSEncounterRepository.updateEncounter(encounter);
 
-//        errorService.successfullyProcessed(subject);
+        errorService.successfullyProcessed(subject);
     }
 
     public OpenMRSFullEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {

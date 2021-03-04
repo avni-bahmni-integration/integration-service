@@ -65,7 +65,7 @@ public class OpenMRSFullEncounter {
             Map<String, Object> conceptNode = (Map<String, Object>) observation.get("concept");
             OpenMRSObservation openMRSObservation = new OpenMRSObservation();
             openMRSObservation.setObsUuid((String) observation.get("uuid"));
-            openMRSObservation.setConcept((String) conceptNode.get("uuid"));
+            openMRSObservation.setConceptUuid((String) conceptNode.get("uuid"));
 
             Object value = observation.get("value");
             if (value instanceof Map) {

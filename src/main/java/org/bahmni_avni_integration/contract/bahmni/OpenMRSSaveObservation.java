@@ -20,11 +20,12 @@ public class OpenMRSSaveObservation {
     public OpenMRSSaveObservation() {
     }
 
-    public static OpenMRSSaveObservation createVoidedObs(String uuid) {
-        OpenMRSSaveObservation observation = new OpenMRSSaveObservation();
-        observation.setUuid(uuid);
-        observation.setVoided(true);
-        return observation;
+    public static OpenMRSSaveObservation createVoidedObs(String uuid, String concept) {
+        OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
+        openMRSSaveObservation.setUuid(uuid);
+        openMRSSaveObservation.concept = concept;
+        openMRSSaveObservation.setVoided(true);
+        return openMRSSaveObservation;
     }
 
     public static OpenMRSSaveObservation createPrimitiveObs(String concept, Object value, ObsDataType dataType) {
@@ -34,14 +35,30 @@ public class OpenMRSSaveObservation {
         return openMRSSaveObservation;
     }
 
+    public static OpenMRSSaveObservation createPrimitiveObs(String obsUuid, String concept, Object value, ObsDataType dataType) {
+        OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
+        openMRSSaveObservation.uuid = obsUuid;
+        openMRSSaveObservation.concept = concept;
+        openMRSSaveObservation.value = getValue(value, dataType);
+        return openMRSSaveObservation;
+    }
+
     private static Object getValue(Object value, ObsDataType dataType) {
-        if (ObsDataType.Date.equals(dataType))
-            return FormatAndParseUtil.fromAvniToOpenMRSDate(value.toString());
-        return value;
+        return ObsDataType.Date.equals(dataType)
+                ? FormatAndParseUtil.fromAvniToOpenMRSDate(value.toString())
+                : value;
     }
 
     public static OpenMRSSaveObservation createCodedObs(String concept, String valueUuid) {
         OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
+        openMRSSaveObservation.concept = concept;
+        openMRSSaveObservation.value = valueUuid;
+        return openMRSSaveObservation;
+    }
+
+    public static OpenMRSSaveObservation createCodedObs(String obsUuid, String concept, String valueUuid) {
+        OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
+        openMRSSaveObservation.uuid = obsUuid;
         openMRSSaveObservation.concept = concept;
         openMRSSaveObservation.value = valueUuid;
         return openMRSSaveObservation;

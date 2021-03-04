@@ -21,9 +21,9 @@ public class OpenMRSEncounterMapper {
         encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getAvniEncounterTypeName(openMRSPatientEncounter.getEncounterType().getUuid()));
         encounter.setSubjectId(avniPatient.getSubjectExternalId());
         openMRSPatientEncounter.getLeafObservations().forEach(openMRSObservation -> {
-            MappingMetaData conceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getUuid());
+            MappingMetaData conceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid());
             if (ObsDataType.Coded.equals(conceptMapping.getDataTypeHint())) {
-                mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getUuid());
+                mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid());
                 MappingMetaData answerConceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept((String) openMRSObservation.getValue());
                 encounter.set(conceptMapping.getAvniValue(), answerConceptMapping.getAvniValue());
             } else {
