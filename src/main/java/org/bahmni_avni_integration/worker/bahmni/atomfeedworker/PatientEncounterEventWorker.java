@@ -18,16 +18,11 @@ public class PatientEncounterEventWorker implements EventWorker {
 
     @Autowired
     private BahmniEncounterService encounterService;
-
-    @Autowired
-    private MappingMetaDataService mappingMetaDataService;
-
     @Autowired
     private AvniEncounterService avniEncounterService;
     @Autowired
     private SubjectService subjectService;
 
-    private Constants constants;
     private BahmniEncounterToAvniEncounterMetaData metaData;
 
     @Override
@@ -48,9 +43,9 @@ public class PatientEncounterEventWorker implements EventWorker {
         } else if (existingEncounter != null && avniPatient == null) {
             avniEncounterService.processSubjectIdChanged(existingEncounter, metaData);
         } else if (existingEncounter == null && avniPatient != null) {
-            avniEncounterService.create(openMRSEncounter);
-        } else {
-            avniEncounterService.processSubjectIdNotFound();
+            avniEncounterService.create(openMRSEncounter, metaData, avniPatient);
+        } else if (existingEncounter == null && avniPatient == null) {
+            avniEncounterService.processSubjectIdNotFound(openMRSEncounter);
         }
     }
 
@@ -58,12 +53,11 @@ public class PatientEncounterEventWorker implements EventWorker {
     public void cleanUp(Event event) {
     }
 
-    //    avoid loading of constants for every event
-    public void setConstants(Constants constants) {
-        this.constants = constants;
-    }
-
+    //    to avoid loading for every event
     public void setMetaData(BahmniEncounterToAvniEncounterMetaData metaData) {
         this.metaData = metaData;
+    }
+
+    public void setConstants(Constants constants) {
     }
 }

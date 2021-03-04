@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OpenMrsPatientEventWorker implements EventWorker {
+public class PatientEventWorker implements EventWorker {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -42,7 +42,7 @@ public class OpenMrsPatientEventWorker implements EventWorker {
             return;
         }
 
-        logger.debug(String.format("Patient: name %s || uuid %s", patient.getName(), patient.getUuid()));
+        logger.debug(String.format("Processing patient: name %s || uuid %s", patient.getName(), patient.getUuid()));
         PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
         GeneralEncounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
         Subject subject;

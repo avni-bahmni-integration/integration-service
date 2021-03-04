@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.client;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.auth.AuthenticationHelper;
 import org.bahmni_avni_integration.contract.avni.Subject;
+import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.bahmni_avni_integration.web.response.CognitoDetailsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,12 +51,15 @@ public class AvniHttpClient {
         return get(url, new HashMap<>(), returnType);
     }
 
-    public <T, U> ResponseEntity<U> post(String url, T requestBody, Class<U> returnType) {
+    public <T, U> ResponseEntity<U> post(String url, T t, Class<U> returnType) {
+        logger.info(String.format("POST: %s", url));
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
-        return restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, new HttpEntity<>(requestBody, authHeaders()), returnType);
+        String json = ObjectJsonMapper.writeValueAsString(t);
+        return restTemplate.exchange(builder.build().toUri(), HttpMethod.POST, new HttpEntity<>(json, authHeaders()), returnType);
     }
 
     public <T, U> ResponseEntity<U> put(String url, T requestBody, Class<U> returnType) {
+        logger.info(String.format("PUT: %s", url));
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
         return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
     }

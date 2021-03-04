@@ -19,6 +19,6 @@ public class BahmniEncounterService {
     }
 
     public boolean doFilterEncounter(OpenMRSFullEncounter openMRSEncounter, BahmniEncounterToAvniEncounterMetaData metaData) {
-        return metaData.hasBahmniEncounterType(openMRSEncounter.getEncounterType().getUuid());
+        return !metaData.hasBahmniEncounterType(openMRSEncounter.getEncounterType().getUuid());
     }
 }

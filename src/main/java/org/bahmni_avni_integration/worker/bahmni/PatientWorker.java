@@ -3,7 +3,7 @@ package org.bahmni_avni_integration.worker.bahmni;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.config.OpenMRSAtomFeedPropertiesFactory;
 import org.bahmni_avni_integration.domain.Constants;
-import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.OpenMrsPatientEventWorker;
+import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEventWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,10 +15,10 @@ import javax.sql.DataSource;
 public class PatientWorker extends BaseBahmniWorker {
     @Value("${bahmni.feed.patient}")
     private String patientFeedLink;
-    private final OpenMrsPatientEventWorker eventWorker;
+    private final PatientEventWorker eventWorker;
 
     @Autowired
-    public PatientWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory, OpenMrsPatientEventWorker eventWorker) {
+    public PatientWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory, PatientEventWorker eventWorker) {
         super(transactionManager, dataSource, openMRSWebClient, atomFeedPropertiesFactory);
         this.eventWorker = eventWorker;
     }

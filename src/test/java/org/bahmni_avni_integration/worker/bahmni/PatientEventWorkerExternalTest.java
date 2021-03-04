@@ -2,16 +2,18 @@ package org.bahmni_avni_integration.worker.bahmni;
 
 import org.bahmni_avni_integration.domain.Constants;
 import org.bahmni_avni_integration.repository.ConstantsRepository;
-import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.OpenMrsPatientEventWorker;
+import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEventWorker;
 import org.ict4h.atomfeed.client.domain.Event;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OpenMrsPatientEventWorkerExternalTest {
+@Disabled
+class PatientEventWorkerExternalTest {
     @Autowired
-    private OpenMrsPatientEventWorker openMrsPatientEventWorker;
+    private PatientEventWorker openMrsPatientEventWorker;
     @Autowired
     ConstantsRepository constantsRepository;
 

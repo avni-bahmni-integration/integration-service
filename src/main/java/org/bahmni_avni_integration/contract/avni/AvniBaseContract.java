@@ -48,4 +48,12 @@ public class AvniBaseContract {
     public String toString() {
         return map.toString();
     }
+
+    public void addObservation(String conceptName, Object value) {
+        Object observations = get("observations");
+        if (observations == null) set("observations", new HashMap<String, Object>());
+
+        Map<String, Object> map = (Map<String, Object>) get("observations");
+        map.put(conceptName, value);
+    }
 }

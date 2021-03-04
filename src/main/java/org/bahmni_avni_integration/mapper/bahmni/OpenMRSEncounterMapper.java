@@ -23,11 +23,10 @@ public class OpenMRSEncounterMapper {
         openMRSPatientEncounter.getLeafObservations().forEach(openMRSObservation -> {
             MappingMetaData conceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid());
             if (ObsDataType.Coded.equals(conceptMapping.getDataTypeHint())) {
-                mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid());
                 MappingMetaData answerConceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept((String) openMRSObservation.getValue());
-                encounter.set(conceptMapping.getAvniValue(), answerConceptMapping.getAvniValue());
+                encounter.addObservation(conceptMapping.getAvniValue(), answerConceptMapping.getAvniValue());
             } else {
-                encounter.set(conceptMapping.getAvniValue(), openMRSObservation.getValue());
+                encounter.addObservation(conceptMapping.getAvniValue(), openMRSObservation.getValue());
             }
         });
         return encounter;
