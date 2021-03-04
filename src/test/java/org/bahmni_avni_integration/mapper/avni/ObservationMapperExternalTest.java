@@ -7,7 +7,6 @@ import org.bahmni_avni_integration.domain.MappingGroup;
 import org.bahmni_avni_integration.domain.MappingMetaDataCollection;
 import org.bahmni_avni_integration.domain.MappingType;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
-import org.bahmni_avni_integration.util.TestUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,9 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class SubjectMapperExternalTest {
+public class ObservationMapperExternalTest {
     @Autowired
-    private SubjectMapper subjectMapper;
+    private ObservationMapper observationMapper;
 
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
@@ -46,7 +45,9 @@ public class SubjectMapperExternalTest {
         Map<String, Object> avniObservations = new LinkedHashMap<>();
         avniObservations.put("Obstetrics history", List.of("No problem"));
         enrolment.set("observations", avniObservations);
-        var observations = subjectMapper.mapEnrolmentToExistingEncounter(openMRSFullEncounter, enrolment);
+        var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
+                openMRSFullEncounter.getLeafObservations(),
+                (Map<String, Object>) enrolment.get("observations"));
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(reducedLiquor.get("uuid"))).findFirst().orElse(null);
 
@@ -69,7 +70,9 @@ public class SubjectMapperExternalTest {
 
         Enrolment enrolment = new Enrolment();
         enrolment.set("observations", new LinkedHashMap<String, Object>());
-        var observations = subjectMapper.mapEnrolmentToExistingEncounter(openMRSFullEncounter, enrolment);
+        var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
+                openMRSFullEncounter.getLeafObservations(),
+                (Map<String, Object>) enrolment.get("observations"));
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(numberOfBabies.get("uuid"))).findFirst().orElse(null);
 
@@ -96,7 +99,9 @@ public class SubjectMapperExternalTest {
         avniObservations.put("Number of babies", 4);
         enrolment.set("observations", avniObservations);
 
-        var observations = subjectMapper.mapEnrolmentToExistingEncounter(openMRSFullEncounter, enrolment);
+        var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
+                openMRSFullEncounter.getLeafObservations(),
+                (Map<String, Object>) enrolment.get("observations"));
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(numberOfBabies.get("uuid"))).findFirst().orElse(null);
 

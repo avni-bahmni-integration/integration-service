@@ -7,6 +7,7 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.*;
+import org.bahmni_avni_integration.mapper.avni.EnrolmentMapper;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSEncounterRepository;
@@ -19,14 +20,14 @@ public class EnrolmentService {
     private final PatientService patientService;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final OpenMRSEncounterRepository openMRSEncounterRepository;
-    private SubjectMapper subjectMapper;
-    private ErrorService errorService;
+    private final EnrolmentMapper enrolmentMapper;
+    private final ErrorService errorService;
 
-    public EnrolmentService(PatientService patientService, MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, SubjectMapper subjectMapper, ErrorService errorService) {
+    public EnrolmentService(PatientService patientService, MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, EnrolmentMapper enrolmentMapper, ErrorService errorService) {
         this.patientService = patientService;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.openMRSEncounterRepository = openMRSEncounterRepository;
-        this.subjectMapper = subjectMapper;
+        this.enrolmentMapper = enrolmentMapper;
         this.errorService = errorService;
     }
 
@@ -49,7 +50,7 @@ public class EnrolmentService {
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
         MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
         String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
-        OpenMRSEncounter encounter = subjectMapper.mapEnrolmentToEncounter(enrolment, openMRSPatient.getUuid(), encounterTypeUuid, constants);
+        OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToEncounter(enrolment, openMRSPatient.getUuid(), encounterTypeUuid, constants);
         OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
         errorService.successfullyProcessed(enrolment);
@@ -59,7 +60,7 @@ public class EnrolmentService {
     public void updateCommunityEnrolment(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
         MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
         String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
-        subjectMapper.mapEnrolmentToExistingEncounter(existingEncounter, enrolment);
+        OpenMRSEncounter openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEncounter(existingEncounter, enrolment);
 //        openMRSEncounterRepository.updateEncounter(existingEncounter);
 //        errorService.successfullyProcessed(enrolment);
     }
