@@ -20,10 +20,10 @@ public class PatientEncounterEventWorkerExternalTest extends BaseExternalTest {
     @Test
     public void processEncounter() {
         patientEventWorker.setConstants(getConstants());
-        patientEventWorker.process(patientEvent("b789f855-7bc5-4ac1-af84-523d79e103fe"));
+        patientEventWorker.process(patientEvent("ec19b096-5c20-4f67-97f8-c16a215b097a"));
 
         patientEncounterEventWorker.setConstants(getConstants());
         patientEncounterEventWorker.setMetaData(mappingMetaDataService.getForBahmniEncounterToAvniEncounter());
-        patientEncounterEventWorker.process(encounterEvent("00a48800-113f-40e3-adc1-07cd4e5a68d8"));
+        patientEncounterEventWorker.process(encounterEvent("49a677be-53e4-4017-aff2-55900e84e69e"));
     }
 }

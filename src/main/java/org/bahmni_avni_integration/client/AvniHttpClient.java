@@ -67,6 +67,7 @@ public class AvniHttpClient {
     private HttpHeaders authHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("auth-token", fetchAuthToken());
+        headers.add("content-type", "application/json");
         return headers;
     }
 

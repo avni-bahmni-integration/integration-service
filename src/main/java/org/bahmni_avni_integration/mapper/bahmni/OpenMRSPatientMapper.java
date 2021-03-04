@@ -32,6 +32,9 @@ public class OpenMRSPatientMapper {
             String attributeTypeUuid = openMRSPersonAttribute.getAttributeType().getUuid();
             MappingMetaData questionMapping = conceptMetaData.getMappingForBahmniValue(attributeTypeUuid);
             Object attributeValue = openMRSPersonAttribute.getValue();
+            if (attributeValue == null)
+                continue;
+
             if (attributeValue instanceof Map) {
                 Map<String, String> attributeValueMap = (Map<String, String>) attributeValue;
                 String attributeUuid = attributeValueMap.get("uuid");
