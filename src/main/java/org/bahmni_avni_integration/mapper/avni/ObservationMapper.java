@@ -17,10 +17,10 @@ public class ObservationMapper {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
     }
 
-    public List<OpenMRSSaveObservation> updateOpenMRSObservationsFromAvniObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations) {
+    public List<OpenMRSSaveObservation> updateOpenMRSObservationsFromAvniObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, List<String> exclude) {
         List<OpenMRSSaveObservation> updateObservations = new ArrayList<>();
         MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
-        updateObservations.addAll(voidedObservations(openMRSObservations, avniObservations, conceptMappings));
+        updateObservations.addAll(voidedObservations(openMRSObservations, avniObservations, conceptMappings, exclude));
         updateObservations.addAll(updatedObservations(openMRSObservations, avniObservations, conceptMappings));
         return updateObservations;
     }
@@ -76,9 +76,9 @@ public class ObservationMapper {
 
     }
 
-    private List<OpenMRSSaveObservation> voidedObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, MappingMetaDataCollection conceptMappings) {
+    private List<OpenMRSSaveObservation> voidedObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, MappingMetaDataCollection conceptMappings, List<String> exclude) {
         List<OpenMRSSaveObservation> voidedObservations = new ArrayList<>();
-        openMRSObservations.forEach(openMRSObservation -> {
+        openMRSObservations.stream().filter(o -> !exclude.contains(o.getConceptUuid())).forEach(openMRSObservation -> {
             String avniConceptName = conceptMappings.getAvniValueForBahmniValue(openMRSObservation.getConceptUuid());
             Object avniObsValue = avniObservations.get(avniConceptName);
 

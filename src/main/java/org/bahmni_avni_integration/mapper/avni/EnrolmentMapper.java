@@ -10,9 +10,7 @@ import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class EnrolmentMapper {
@@ -38,12 +36,23 @@ public class EnrolmentMapper {
         return openMRSEncounter;
     }
 
-    public OpenMRSEncounter mapEnrolmentToExistingEncounter(OpenMRSFullEncounter existingEncounter, Enrolment enrolment) {
+    public OpenMRSEncounter mapEnrolmentToExistingEncounter(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
+        MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
+        String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
+
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setUuid(existingEncounter.getUuid());
+        openMRSEncounter.setEncounterDatetime(existingEncounter.getEncounterDatetime());
+        openMRSEncounter.setPatient(existingEncounter.getPatient().getUuid());
+        openMRSEncounter.setEncounterType(encounterTypeUuid);
+        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
+        openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
+
+        MappingMetaData enrolmentUuidConcept = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.ProgramEnrolment, MappingType.EnrolmentUUID_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"));
+                (Map<String, Object>) enrolment.get("observations"),
+                List.of(enrolmentUuidConcept.getBahmniValue()));
         openMRSEncounter.setObservations(observations);
         return openMRSEncounter;
     }

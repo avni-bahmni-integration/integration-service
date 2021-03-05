@@ -89,9 +89,10 @@ public class HttpClient {
     public String post(String path, String json) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.put("Accept", "application/json");
-        logger.debug("Posting to: " + path);
+        logger.debug(String.format("Posting to: %s Data: %s", path, json));
         HttpResponse httpResponse = httpClientInternal.post(authenticator.getRequestDetails(URI.create(path)), httpHeaders, json);
-        if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED) {
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_OK) {
             logger.error(asString(httpResponse));
             throw new RuntimeException("Post failed");
         }

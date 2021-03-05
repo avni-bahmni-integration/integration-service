@@ -3,7 +3,6 @@ package org.bahmni_avni_integration.worker.avni;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
@@ -72,7 +71,7 @@ public class EnrolmentWorker {
             enrolmentService.createCommunityEnrolment(enrolment, patient, constants);
         } else if (patient != null && encounter != null) {
             logger.debug(String.format("Updating existing encounter %s", encounter.getUuid()));
-            enrolmentService.updateCommunityEnrolment(encounter, enrolment, patient, constants);
+            enrolmentService.updateCommunityEnrolment(encounter, enrolment, constants);
         } else if (patient == null && encounter == null) {
             enrolmentService.processPatientNotFound(subject, metaData);
         }

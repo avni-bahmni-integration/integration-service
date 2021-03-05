@@ -50,7 +50,7 @@ public class ObservationMapperExternalTest {
         enrolment.set("observations", avniObservations);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"));
+                (Map<String, Object>) enrolment.get("observations"), List.of());
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(reducedLiquor.get("uuid"))).findFirst().orElse(null);
 
@@ -75,7 +75,7 @@ public class ObservationMapperExternalTest {
         enrolment.set("observations", new LinkedHashMap<String, Object>());
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"));
+                (Map<String, Object>) enrolment.get("observations"), List.of());
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(numberOfBabies.get("uuid"))).findFirst().orElse(null);
 
@@ -103,7 +103,7 @@ public class ObservationMapperExternalTest {
 
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"));
+                (Map<String, Object>) enrolment.get("observations"), List.of());
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(numberOfBabies.get("uuid"))).findFirst().orElse(null);
 
@@ -125,7 +125,7 @@ public class ObservationMapperExternalTest {
 
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"));
+                (Map<String, Object>) enrolment.get("observations"), List.of());
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue("Number of babies"))).findFirst().orElse(null);
 
@@ -164,7 +164,7 @@ public class ObservationMapperExternalTest {
 
         var updateObservations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"));
+                (Map<String, Object>) enrolment.get("observations"), List.of());
         assertEquals(4, updateObservations.size());
         OpenMRSSaveObservation absProblemResult = updateObservations.stream()
                 .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue("Any abdominal problems"))).findFirst().orElse(null);
@@ -215,7 +215,7 @@ public class ObservationMapperExternalTest {
 
         var updateObservations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"));
+                (Map<String, Object>) enrolment.get("observations"), List.of());
         assertEquals(2, updateObservations.size());
         OpenMRSSaveObservation absProblemResult = updateObservations.stream()
                 .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue("Any abdominal problems"))).findFirst().orElse(null);
