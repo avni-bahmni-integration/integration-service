@@ -1,5 +1,7 @@
 package org.bahmni_avni_integration.contract.avni;
 
+import org.bahmni_avni_integration.util.Empty;
+
 import java.util.Date;
 
 public class GeneralEncounter extends AvniBaseContract {
@@ -17,5 +19,9 @@ public class GeneralEncounter extends AvniBaseContract {
 
     public String getSubjectExternalId() {
         return (String) map.get("Subject ID");
+    }
+
+    public void setEmptyCancelObservations() {
+        map.put("cancelObservations", new Empty());
     }
 }

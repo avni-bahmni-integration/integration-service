@@ -17,4 +17,12 @@ public class OpenMRSFullEncounterTest {
         List<OpenMRSObservation> leafObservations = openMRSFullEncounter.getLeafObservations();
         assertNotEquals(0, leafObservations.size());
     }
+
+    @Test
+    public void getEncounter2() throws URISyntaxException {
+        OpenMRSFullEncounter openMRSFullEncounter = TestUtils.readResource("fullEncounter2.json", OpenMRSFullEncounter.class);
+        assertNotNull(openMRSFullEncounter);
+        List<OpenMRSObservation> leafObservations = openMRSFullEncounter.getLeafObservations();
+        assertNotEquals(0, leafObservations.size());
+    }
 }

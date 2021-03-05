@@ -29,6 +29,7 @@ public class OpenMRSEncounterMapper {
                 encounter.addObservation(conceptMapping.getAvniValue(), openMRSObservation.getValue());
             }
         });
+        encounter.setEmptyCancelObservations();
         return encounter;
     }
 }

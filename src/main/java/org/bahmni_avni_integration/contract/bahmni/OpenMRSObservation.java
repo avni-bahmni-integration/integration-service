@@ -28,4 +28,12 @@ public class OpenMRSObservation {
     public void setObsUuid(String obsUuid) {
         this.obsUuid = obsUuid;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "conceptUuid='" + conceptUuid + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }
