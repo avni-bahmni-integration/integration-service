@@ -28,7 +28,7 @@ public class ObservationMapperExternalTest {
     private MappingMetaDataRepository mappingMetaDataRepository;
 
     @Test
-    public void checkVoidingOfCodedAnswers() {
+    public void checkVoidingOfMultiSelectCodedObservations() {
         MappingMetaDataCollection metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
 
         Map<String, Object> noProblem = createCodedObservation(
@@ -55,7 +55,41 @@ public class ObservationMapperExternalTest {
                 .filter(o -> o.getUuid().equals(reducedLiquor.get("uuid"))).findFirst().orElse(null);
 
         assertNotNull(observation);
+        assertNotNull(observation.getUuid());
         assertTrue(observation.isVoided());
+    }
+
+    @Test
+    public void checkVoidingOfSingleSelectCodedObservations() {
+        MappingMetaDataCollection metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
+
+        Map<String, Object> ancRegisteredYes = createCodedObservation(
+                UUID.randomUUID(),
+                metaData.getBahmniValueForAvniValue("ANC registered"),
+                metaData.getBahmniValueForAvniValue("Yes")
+        );
+        OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
+        openMRSFullEncounter.setAny("obs", List.of(ancRegisteredYes));
+
+        Enrolment enrolment = new Enrolment();
+        Map<String, Object> avniObservations = new LinkedHashMap<>();
+        avniObservations.put("ANC registered", "No");
+        enrolment.set("observations", avniObservations);
+        var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
+                openMRSFullEncounter.getLeafObservations(),
+                (Map<String, Object>) enrolment.get("observations"), List.of());
+        OpenMRSSaveObservation existingObs = observations.stream()
+                .filter(o -> o.getUuid() != null && o.getUuid().equals(ancRegisteredYes.get("uuid"))).findFirst().orElse(null);
+        OpenMRSSaveObservation newObs = observations.stream()
+                .filter(o -> o.getValue() != null && o.getValue().equals(metaData.getBahmniValueForAvniValue("No"))).findFirst().orElse(null);
+
+        assertNotNull(existingObs);
+        assertNotNull(existingObs.getUuid());
+        assertTrue(existingObs.isVoided());
+
+        assertNotNull(newObs);
+        assertNull(newObs.getUuid());
+        assertFalse(newObs.isVoided());
     }
 
     @Test

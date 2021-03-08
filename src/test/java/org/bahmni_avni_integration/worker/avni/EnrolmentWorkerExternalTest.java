@@ -2,8 +2,11 @@ package org.bahmni_avni_integration.worker.avni;
 
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
+import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.domain.Constants;
 import org.bahmni_avni_integration.repository.ConstantsRepository;
+import org.bahmni_avni_integration.repository.avni.AvniEnrolmentRepository;
+import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +17,31 @@ import java.util.function.Predicate;
 @SpringBootTest
 class EnrolmentWorkerExternalTest {
     @Autowired
-    private EnrolmentWorker enrolmentWorker;
+    EnrolmentWorker enrolmentWorker;
+
     @Autowired
     ConstantsRepository constantsRepository;
 
+    @Autowired
+    MappingMetaDataService mappingMetaDataService;
+
+    @Autowired
+    AvniEnrolmentRepository avniEnrolmentRepository;
+
     @Test
-    void processOneEnrolment() {
+    void processAllEnrolments() {
         Constants constants = constantsRepository.findAllConstants();
         Predicate<Enrolment> continueAfterOneRecord = enrolment -> false;
         enrolmentWorker.processEnrolments(constants, continueAfterOneRecord);
+    }
+
+    //Useful when testing things like update
+    @Test
+    void processSpecificEnrolment() {
+        Constants constants = constantsRepository.findAllConstants();
+        Predicate<Enrolment> continueAfterOneRecord = enrolment -> false;
+        SubjectToPatientMetaData subjectToPatientMetaData = mappingMetaDataService.getForSubjectToPatient();
+        Enrolment enrolment = avniEnrolmentRepository.getEnrolment("400fb6d9-bd21-465f-bcef-0b216b55363f");
+        enrolmentWorker.processEnrolment(constants, continueAfterOneRecord, subjectToPatientMetaData, enrolment);
     }
 }

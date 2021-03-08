@@ -79,16 +79,23 @@ public class ObservationMapper {
     private List<OpenMRSSaveObservation> voidedObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, MappingMetaDataCollection conceptMappings, List<String> exclude) {
         List<OpenMRSSaveObservation> voidedObservations = new ArrayList<>();
         openMRSObservations.stream().filter(o -> !exclude.contains(o.getConceptUuid())).forEach(openMRSObservation -> {
-            String avniConceptName = conceptMappings.getAvniValueForBahmniValue(openMRSObservation.getConceptUuid());
+            MappingMetaData questionMapping = conceptMappings.getMappingForBahmniValue(openMRSObservation.getConceptUuid());
+            String avniConceptName = questionMapping.getAvniValue();
             Object avniObsValue = avniObservations.get(avniConceptName);
 
             if (avniObsValue == null) {
                 voidedObservations.add(createVoidedObs(openMRSObservation.getObsUuid(), openMRSObservation.getConceptUuid()));
-            } else {
+            } else if (ObsDataType.Coded.equals(questionMapping.getDataTypeHint())) {
                 if (avniObsValue instanceof List<?>) {
-                    List<String> valueList = (List<String>) avniObsValue;
-                    String avniAnswerName = conceptMappings.getAvniValueForBahmniValue((String) openMRSObservation.getValue());
-                    if (!valueList.contains(avniAnswerName)) {
+                    List<String> avniObsValueList = (List<String>) avniObsValue;
+                    String openMRSAnswerName = conceptMappings.getAvniValueForBahmniValue((String) openMRSObservation.getValue());
+                    if (!avniObsValueList.contains(openMRSAnswerName)) {
+                        voidedObservations.add(createVoidedObs(openMRSObservation.getObsUuid(), openMRSObservation.getConceptUuid()));
+                    }
+                } else if (avniObsValue instanceof String) {
+                    String avniObsValueString = (String) avniObsValue;
+                    String openMRSAnswerName = conceptMappings.getAvniValueForBahmniValue((String) openMRSObservation.getValue());
+                    if (!avniObsValueString.equals(openMRSAnswerName)) {
                         voidedObservations.add(createVoidedObs(openMRSObservation.getObsUuid(), openMRSObservation.getConceptUuid()));
                     }
                 }
