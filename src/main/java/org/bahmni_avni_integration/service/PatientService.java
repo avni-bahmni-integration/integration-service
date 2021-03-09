@@ -27,8 +27,8 @@ public class PatientService {
     @Autowired
     private OpenMRSPatientRepository patientRepository;
 
-    public void updateSubject(OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
-        OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
+    public void updateSubject(OpenMRSFullEncounter existingEncounter, OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+        OpenMRSEncounter encounter = subjectMapper.mapSubjectToExistingEncounter(existingEncounter, subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
         openMRSEncounterRepository.updateEncounter(encounter);
 
         errorService.successfullyProcessed(subject);

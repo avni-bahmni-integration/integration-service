@@ -59,11 +59,13 @@ public class SubjectWorker {
         OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 
         if (encounter != null && patient != null) {
-            patientService.updateSubject(patient, subject, metaData, constants);
+            logger.debug(String.format("Updating existing encounter %s for subject %s", encounter.getUuid(), subject.getUuid()));
+            patientService.updateSubject(encounter, patient, subject, metaData, constants);
         } else if (encounter != null && patient == null) {
             // product-roadmap-todo: openmrs doesn't support the ability to find encounter without providing the patient hence this condition will never be reached
             patientService.processPatientIdChanged(subject, metaData);
         } else if (encounter == null && patient != null) {
+            logger.debug(String.format("Creating new encounter for subject %s", subject.getUuid()));
             patientService.createSubject(subject, patient, metaData, constants);
         } else if (encounter == null && patient == null) {
             patientService.processPatientNotFound(subject, metaData);

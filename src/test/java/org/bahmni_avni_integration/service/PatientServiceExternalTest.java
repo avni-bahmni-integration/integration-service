@@ -27,7 +27,7 @@ public class PatientServiceExternalTest extends BaseExternalTest {
     private MappingMetaDataService mappingMetaDataService;
 
     @Test
-    @Disabled("Disabling for now it needs more thinking on how to test this correctly")
+    @Disabled("Disabling for now as it needs more thinking on how to test this correctly")
     public void createAndUpdatePatient() {
         GregorianCalendar gregorianCalendar = new GregorianCalendar(1980, Calendar.JANUARY, 1);
         Subject[] individuals = avniSubjectRepository.getSubjects(gregorianCalendar.getTime(), "Individual");
@@ -37,6 +37,6 @@ public class PatientServiceExternalTest extends BaseExternalTest {
         assertNull(patientEncounter.getValue1());
         OpenMRSFullEncounter subjectEncounter = patientService.createSubject(individuals[0], patientEncounter.getValue0(), metaData, getConstants());
         assertNotNull(subjectEncounter);
-        patientService.updateSubject(patientEncounter.getValue0(), individuals[0], metaData, getConstants());
+        patientService.updateSubject(subjectEncounter, patientEncounter.getValue0(), individuals[0], metaData, getConstants());
     }
 }
