@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 @Component
 public class OpenERPAtomFeedProperties implements OpenERPProperties {
-
+//todo - delete all openerp name
     private static Logger logger = Logger.getLogger(OpenERPAtomFeedProperties.class);
 
 
