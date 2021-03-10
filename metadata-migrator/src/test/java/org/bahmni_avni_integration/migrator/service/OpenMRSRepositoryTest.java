@@ -21,7 +21,6 @@ class OpenMRSRepositoryTest {
     private ImplementationConfigurationRepository implementationConfigurationRepository;
 
     @Test
-    @Disabled
     public void populateForms() throws SQLException {
         List<OpenMRSForm> forms = implementationConfigurationRepository.getForms("bahmni-forms.json");
         openMRSRepository.populateForms(forms);
