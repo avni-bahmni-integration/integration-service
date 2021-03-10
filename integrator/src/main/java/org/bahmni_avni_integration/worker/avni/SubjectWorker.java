@@ -67,7 +67,8 @@ public class SubjectWorker {
             logger.debug(String.format("Creating new encounter for subject %s", subject.getUuid()));
             patientService.createSubject(subject, patient, metaData, constants);
         } else if (encounter == null && patient == null) {
-            patientService.processPatientNotFound(subject, metaData);
+            logger.debug(String.format("Creating new patient for subject %s", subject.getUuid()));
+            patientService.createPatient(subject, metaData, constants);
         }
         entityStatusService.saveEntityStatus(subject);
 

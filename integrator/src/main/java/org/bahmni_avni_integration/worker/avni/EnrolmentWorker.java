@@ -15,6 +15,7 @@ import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectR
 import org.bahmni_avni_integration.service.EnrolmentService;
 import org.bahmni_avni_integration.service.EntityStatusService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
+import org.bahmni_avni_integration.service.PatientService;
 import org.javatuples.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,17 +29,19 @@ public class EnrolmentWorker {
     private final AvniEnrolmentRepository avniEnrolmentRepository;
     private final EntityStatusService entityStatusService;
     private final EnrolmentService enrolmentService;
+    private final PatientService patientService;
 
     private static Logger logger = Logger.getLogger(EnrolmentWorker.class);
     private final AvniSubjectRepository avniSubjectRepository;
     private final MappingMetaDataService mappingMetaDataService;
 
-    public EnrolmentWorker(AvniEntityStatusRepository avniEntityStatusRepository, MappingMetaDataService mappingMetaDataService, AvniEnrolmentRepository avniEnrolmentRepository, EntityStatusService entityStatusService, EnrolmentService enrolmentService, AvniSubjectRepository avniSubjectRepository) {
+    public EnrolmentWorker(AvniEntityStatusRepository avniEntityStatusRepository, MappingMetaDataService mappingMetaDataService, AvniEnrolmentRepository avniEnrolmentRepository, EntityStatusService entityStatusService, EnrolmentService enrolmentService, PatientService patientService, AvniSubjectRepository avniSubjectRepository) {
         this.avniEntityStatusRepository = avniEntityStatusRepository;
         this.mappingMetaDataService = mappingMetaDataService;
         this.avniEnrolmentRepository = avniEnrolmentRepository;
         this.entityStatusService = entityStatusService;
         this.enrolmentService = enrolmentService;
+        this.patientService = patientService;
         this.avniSubjectRepository = avniSubjectRepository;
     }
 
@@ -67,13 +70,14 @@ public class EnrolmentWorker {
         OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 
         if (patient != null && encounter == null) {
-            logger.debug(String.format("Creating new encounter for enrolment %s", enrolment.getUuid()));
+            logger.debug(String.format("Creating new Bahhmni Enrolment for Avni enrolment %s", enrolment.getUuid()));
             enrolmentService.createCommunityEnrolment(enrolment, patient, constants);
         } else if (patient != null && encounter != null) {
-            logger.debug(String.format("Updating existing encounter %s", encounter.getUuid()));
+            logger.debug(String.format("Updating existing Bahmni encounter %s", encounter.getUuid()));
             enrolmentService.updateCommunityEnrolment(encounter, enrolment, constants);
         } else if (patient == null && encounter == null) {
-            enrolmentService.processPatientNotFound(subject, metaData);
+            logger.debug(String.format("Creating new patient for Avni subject %s", subject.getUuid()));
+            patientService.createPatient(subject, metaData, constants);
         }
 
         entityStatusService.saveEntityStatus(enrolment);

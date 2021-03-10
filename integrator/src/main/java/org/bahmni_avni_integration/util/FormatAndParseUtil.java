@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 public class FormatAndParseUtil {
     public static String toISODateStringWithTimezone(Date date) {
@@ -54,5 +55,12 @@ public class FormatAndParseUtil {
 
     public static String fromAvniToOpenMRSDate(String dateString) {
         return FormatAndParseUtil.toISODateString(FormatAndParseUtil.fromAvniDate(dateString));
+    }
+
+    public static String fromAvniToOpenMRSGender(String gender) {
+        if (Objects.equals(gender, "Male")) return "M";
+        if (Objects.equals(gender, "Female")) return "F";
+        if (Objects.equals(gender, "Other")) return "U";
+        return null;
     }
 }

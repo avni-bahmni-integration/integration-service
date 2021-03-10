@@ -9,10 +9,14 @@ import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSPatientRepository;
+import org.bahmni_avni_integration.repository.openmrs.OpenMRSPersonRepository;
+import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PatientService {
@@ -25,7 +29,7 @@ public class PatientService {
     @Autowired
     private ErrorService errorService;
     @Autowired
-    private OpenMRSPatientRepository patientRepository;
+    private OpenMRSPersonRepository openMRSPersonRepository;
 
     public void updateSubject(OpenMRSFullEncounter existingEncounter, OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToExistingEncounter(existingEncounter, subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
@@ -66,6 +70,26 @@ public class PatientService {
         errorService.errorOccurred(subject, ErrorType.NoPatientWithId, metaData);
     }
 
+    public void createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
+        OpenMRSSavePerson person = new OpenMRSSavePerson();
+        person.setNames(List.of(new OpenMRSSaveName(
+                (String) subject.getObservation("First name"),
+                (String) subject.getObservation("Last name"),
+                true
+        )));
+        person.setGender(FormatAndParseUtil.fromAvniToOpenMRSGender((String) subject.getObservation("Gender")));
+        OpenMRSUuidHolder uuidHolder = openMRSPersonRepository.createPerson(person);
+        OpenMRSSavePatient patient = new OpenMRSSavePatient();
+        patient.setPerson(uuidHolder.getUuid());
+        patient.setIdentifiers(List.of(new OpenMRSSavePatientIdentifier(
+                String.format("%s%s", constants.getValue(ConstantKey.BahmniIdentifierPrefix), subject.getId(metaData)),
+                constants.getValue(ConstantKey.IntegrationBahmniIdentifierType),
+                constants.getValue(ConstantKey.IntegrationBahmniLocation),
+                true
+        )));
+        openMRSPatientRepository.createPatient(patient);
+    }
+
     //    doesn't work
     public void deleteSubject(OpenMRSBaseEncounter encounter) {
         openMRSEncounterRepository.deleteEncounter(encounter);
@@ -73,7 +97,7 @@ public class PatientService {
 
     public OpenMRSPatient getPatient(Event event) {
         try {
-            return patientRepository.getPatient(event);
+            return openMRSPatientRepository.getPatient(event);
         } catch (WebClientsException e) {
             if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                 return null;
