@@ -1,12 +1,12 @@
 package org.bahmni_avni_integration.service;
 
-import org.bahmni_avni_integration.contract.internal.BahmniEncounterToAvniEncounterMetaData;
-import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
-import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
-import org.bahmni_avni_integration.domain.MappingGroup;
-import org.bahmni_avni_integration.domain.MappingMetaData;
-import org.bahmni_avni_integration.domain.MappingType;
-import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
+import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
+import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
+import org.bahmni_avni_integration.integration_data.domain.MappingType;
+import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

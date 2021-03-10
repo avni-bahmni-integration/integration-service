@@ -1,7 +1,7 @@
 package org.bahmni_avni_integration.scheduler;
 
-import org.bahmni_avni_integration.domain.Constants;
-import org.bahmni_avni_integration.repository.ConstantsRepository;
+import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.bahmni_avni_integration.worker.bahmni.PatientWorker;
 import org.quartz.Job;

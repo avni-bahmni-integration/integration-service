@@ -17,19 +17,24 @@ public class OpenMRSRepository {
     @Autowired
     private ConnectionFactory connectionFactory;
 
-    public void addConceptsToForms(List<OpenMRSForm> formList) throws SQLException {
-        try (Connection mySQLConnection = connectionFactory.getMySqlConnection()) {
-            PreparedStatement preparedStatement = mySQLConnection.prepareStatement(FileUtil.readFile("form-elements.sql"));
+    public void populateForms(List<OpenMRSForm> formList) throws SQLException {
+        try (Connection connection = connectionFactory.getMySqlConnection()) {
+            PreparedStatement formUuidPS = connection.prepareStatement("select uuid from concept where concept_id = ?");
+            PreparedStatement formConceptPS = connection.prepareStatement(FileUtil.readFile("form-elements.sql"));
             for (OpenMRSForm form : formList) {
-                preparedStatement.setInt(1, form.getFormId());
-                preparedStatement.setInt(2, form.getFormId());
-                preparedStatement.setInt(3, form.getFormId());
-                preparedStatement.setInt(4, form.getFormId());
+                formConceptPS.setInt(1, form.getFormId());
+                formConceptPS.setInt(2, form.getFormId());
+                formConceptPS.setInt(3, form.getFormId());
+                formConceptPS.setInt(4, form.getFormId());
 
-                ResultSet resultSet = preparedStatement.executeQuery();
+                ResultSet resultSet = formConceptPS.executeQuery();
                 while (resultSet.next()) {
                     form.addConcept(resultSet.getString(1), resultSet.getString(2));
                 }
+
+                resultSet = formUuidPS.executeQuery();
+                resultSet.next();
+                form.setUuid(resultSet.getString(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();

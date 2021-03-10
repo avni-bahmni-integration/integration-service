@@ -2,11 +2,10 @@ package org.bahmni_avni_integration.service;
 
 import org.bahmni_avni_integration.BaseExternalTest;
 import org.bahmni_avni_integration.contract.avni.Subject;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
-import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
-import org.bahmni_avni_integration.repository.avni.AvniSubjectRepository;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
+import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

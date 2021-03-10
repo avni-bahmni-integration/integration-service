@@ -6,24 +6,35 @@ plugins {
 
 group 'org.bahmni_avni_integration'
 version '0.0.1-SNAPSHOT'
+sourceCompatibility = '15'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
 }
 
-//bootJar {
-//    enabled = false
-//}
+tasks.withType(JavaCompile).all {
+    options.compilerArgs += ['--enable-preview']
+}
 
-jar {
-    enabled = true
+tasks.withType(Test).all {
+    jvmArgs += '--enable-preview'
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
 }
 
 dependencies {
+    implementation project(':integration-data')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     compile group: 'org.json', name: 'json', version: '20201115'
     compile "log4j:log4j:1.2.16"
@@ -40,10 +51,10 @@ dependencies {
 
 task unitTest( type: Test ) {
     useJUnitPlatform()
+    include ("**/**Test.class")
     exclude ("**/**ExternalTest.class")
 }
 
 test {
     useJUnitPlatform()
-    include ("**/**ExternalTest.class")
 }

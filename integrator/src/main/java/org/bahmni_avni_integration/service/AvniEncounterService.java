@@ -1,15 +1,14 @@
 package org.bahmni_avni_integration.service;
 
-import org.bahmni_avni_integration.BahmniEntityType;
+import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
-import org.bahmni_avni_integration.contract.internal.BahmniEncounterToAvniEncounterMetaData;
-import org.bahmni_avni_integration.domain.AvniEntityType;
-import org.bahmni_avni_integration.domain.ErrorRecord;
-import org.bahmni_avni_integration.domain.ErrorType;
+import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
+import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.mapper.bahmni.OpenMRSEncounterMapper;
-import org.bahmni_avni_integration.repository.ErrorRecordRepository;
-import org.bahmni_avni_integration.repository.avni.AvniEncounterRepository;
+import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
+import org.bahmni_avni_integration.integration_data.repository.avni.AvniEncounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

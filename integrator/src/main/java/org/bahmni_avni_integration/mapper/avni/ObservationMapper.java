@@ -1,8 +1,8 @@
 package org.bahmni_avni_integration.mapper.avni;
 
 import org.bahmni_avni_integration.contract.bahmni.*;
-import org.bahmni_avni_integration.domain.*;
-import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.domain.*;
+import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

@@ -5,8 +5,8 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounterProvider;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveObservation;
-import org.bahmni_avni_integration.domain.*;
-import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.domain.*;
+import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 

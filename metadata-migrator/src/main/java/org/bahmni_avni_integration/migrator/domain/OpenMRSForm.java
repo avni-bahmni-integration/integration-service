@@ -1,9 +1,12 @@
 package org.bahmni_avni_integration.migrator.domain;
 
+import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class OpenMRSForm {
+    private String uuid;
     private int formId;
     private String formName;
     private String type;
@@ -50,5 +53,19 @@ public class OpenMRSForm {
 
     public String getProgram() {
         return program;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public MappingGroup getMappingGroup() {
+        if (type.equals("Encounter")) return MappingGroup.GeneralEncounter;
+        else if (type.equals("ProgramEncounter")) return MappingGroup.ProgramEncounter;
+        throw new RuntimeException("Invalid form type");
     }
 }

@@ -5,11 +5,11 @@ import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
-import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
-import org.bahmni_avni_integration.domain.*;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
+import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.mapper.avni.EnrolmentMapper;
-import org.bahmni_avni_integration.repository.MappingMetaDataRepository;
-import org.bahmni_avni_integration.repository.openmrs.OpenMRSEncounterRepository;
+import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.javatuples.Pair;
 import org.springframework.stereotype.Service;
 

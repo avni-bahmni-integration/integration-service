@@ -1,13 +1,11 @@
 package org.bahmni_avni_integration.worker.avni;
 
 import org.bahmni_avni_integration.contract.avni.Enrolment;
-import org.bahmni_avni_integration.contract.avni.Subject;
-import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
-import org.bahmni_avni_integration.domain.Constants;
-import org.bahmni_avni_integration.repository.ConstantsRepository;
-import org.bahmni_avni_integration.repository.avni.AvniEnrolmentRepository;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
+import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
+import org.bahmni_avni_integration.integration_data.repository.avni.AvniEnrolmentRepository;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

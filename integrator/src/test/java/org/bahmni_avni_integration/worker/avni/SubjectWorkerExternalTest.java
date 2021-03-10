@@ -1,9 +1,9 @@
 package org.bahmni_avni_integration.worker.avni;
 
 import org.bahmni_avni_integration.contract.avni.Subject;
-import org.bahmni_avni_integration.domain.Constants;
-import org.bahmni_avni_integration.repository.ConstantsRepository;
-import org.bahmni_avni_integration.repository.avni.AvniSubjectRepository;
+import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
+import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

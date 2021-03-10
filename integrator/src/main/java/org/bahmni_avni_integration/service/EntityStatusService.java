@@ -3,9 +3,9 @@ package org.bahmni_avni_integration.service;
 import org.bahmni_avni_integration.contract.avni.AvniBaseContract;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
-import org.bahmni_avni_integration.domain.AvniEntityStatus;
-import org.bahmni_avni_integration.domain.AvniEntityType;
-import org.bahmni_avni_integration.repository.AvniEntityStatusRepository;
+import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
+import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
+import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

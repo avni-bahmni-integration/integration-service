@@ -2,8 +2,8 @@ package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
-import org.bahmni_avni_integration.contract.internal.BahmniEncounterToAvniEncounterMetaData;
-import org.bahmni_avni_integration.domain.Constants;
+import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.service.*;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;

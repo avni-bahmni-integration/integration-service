@@ -1,19 +1,16 @@
 package org.bahmni_avni_integration.service;
 
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.BahmniEntityType;
+import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.internal.BahmniEncounterToAvniEncounterMetaData;
-import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
-import org.bahmni_avni_integration.contract.internal.SubjectToPatientMetaData;
-import org.bahmni_avni_integration.domain.AvniEntityType;
-import org.bahmni_avni_integration.domain.ErrorRecord;
-import org.bahmni_avni_integration.domain.ErrorType;
-import org.bahmni_avni_integration.repository.ErrorRecordRepository;
-import org.bahmni_avni_integration.worker.avni.SubjectWorker;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
+import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
+import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
+import org.bahmni_avni_integration.integration_data.domain.ErrorType;
+import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

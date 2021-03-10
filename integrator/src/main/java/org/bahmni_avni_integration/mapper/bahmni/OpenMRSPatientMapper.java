@@ -4,9 +4,9 @@ import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttribute;
-import org.bahmni_avni_integration.contract.internal.PatientToSubjectMetaData;
-import org.bahmni_avni_integration.domain.MappingMetaData;
-import org.bahmni_avni_integration.domain.MappingMetaDataCollection;
+import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
+import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
+import org.bahmni_avni_integration.integration_data.domain.MappingMetaDataCollection;
 import org.bahmni_avni_integration.util.FormatAndParseUtil;
 
 import java.util.HashMap;

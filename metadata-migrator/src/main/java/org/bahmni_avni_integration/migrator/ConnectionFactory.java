@@ -4,7 +4,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import org.bahmni_avni_integration.migrator.config.AvniConfig;
 import org.bahmni_avni_integration.migrator.config.BahmniConfig;
-import org.bahmni_avni_integration.migrator.config.IntegrationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +18,6 @@ public class ConnectionFactory {
 
     @Autowired
     private AvniConfig avniConfig;
-
-    @Autowired
-    private IntegrationConfig integrationConfig;
 
     public Connection getMySqlConnection() {
         try {
@@ -53,18 +49,6 @@ public class ConnectionFactory {
             statement.execute("set role bahmni_ashwini_integration");
             statement.close();
             return connection;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Connection getIntegrationDbConnection() {
-        try {
-            String driver = "org.postgresql.Driver";
-            String url = "jdbc:postgresql://localhost:5432/";
-
-            Class.forName(driver);
-            return DriverManager.getConnection(url + integrationConfig.getDbName(), integrationConfig.getDbUser(), integrationConfig.getDbPassword());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
