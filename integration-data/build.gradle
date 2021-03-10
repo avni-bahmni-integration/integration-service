@@ -1,0 +1,61 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.1'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id "org.flywaydb.flyway" version "7.1.1"
+}
+
+group = 'org.bahmni_avni_integration'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '15'
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+task migrateTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = 'jdbc:postgresql://localhost:5432/bahmni_avni_test'
+    user = 'bahmni_avni_admin'
+    password = 'password'
+}
+
+task migrateDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = 'jdbc:postgresql://localhost:5432/bahmni_avni'
+    user = 'bahmni_avni_admin'
+    password = 'password'
+}
+
+tasks.withType(JavaCompile).all {
+    options.compilerArgs += ['--enable-preview']
+}
+
+tasks.withType(Test).all {
+    jvmArgs += '--enable-preview'
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.flywaydb:flyway-core'
+    runtimeOnly 'org.postgresql:postgresql'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compile "log4j:log4j:1.2.16"
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -28,6 +28,8 @@ define _run_server
 	java -jar build/libs/bahmni_avni_integration-0.0.1-SNAPSHOT.jar --cron.main="0/3 * * * * ?" --avni.api.url=https://staging.avniproject.org/ --avni.impl.username=test-user@bahmni_ashwini --avni.impl.password=password
 endef
 
+rebuild-db: drop-db build-db
+
 build-db:
 	$(call _build_db,bahmni_avni)
 	./gradlew migrateDb
