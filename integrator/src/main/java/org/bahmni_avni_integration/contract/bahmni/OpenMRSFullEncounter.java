@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenMRSFullEncounter {
@@ -57,6 +58,15 @@ public class OpenMRSFullEncounter {
         return leafObservations;
     }
 
+    public List<OpenMRSObservation> getLeafObservations(String form) {
+        List<Map<String, Object>> observations = (List<Map<String, Object>>) map.get("obs");
+        Map<String, Object> formObservationNode = findForm(form);
+
+        List<OpenMRSObservation> leafObservations = new ArrayList<>();
+        addLeafObservation(leafObservations, formObservationNode);
+        return leafObservations;
+    }
+
     private void addLeafObservation(List<OpenMRSObservation> leafObservations, Map<String, Object> observation) {
         List<Map<String, Object>> groupMembers = (List<Map<String, Object>>) observation.get("groupMembers");
         if (groupMembers != null) {
@@ -82,5 +92,21 @@ public class OpenMRSFullEncounter {
 
     public String getEncounterDatetime() {
         return encounterDatetime;
+    }
+
+    private Map<String, Object> findForm(String uuid) {
+        List<Map<String, Object>> observations = (List<Map<String, Object>>) map.get("obs");
+        return observations.stream().filter(stringObjectMap -> {
+            Map<String, Object> conceptObj = (Map<String, Object>) stringObjectMap.get("concept");
+            return conceptObj.get("uuid").equals(uuid);
+        }).findFirst().orElse(null);
+    }
+
+    public List<String> getForms() {
+        List<Map<String, Object>> observations = (List<Map<String, Object>>) map.get("obs");
+        return observations.stream().map(stringObjectMap -> {
+            Map<String, Object> conceptObj = (Map<String, Object>) stringObjectMap.get("concept");
+            return (String) conceptObj.get("uuid");
+        }).collect(Collectors.toList());
     }
 }
