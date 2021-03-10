@@ -8,7 +8,7 @@ import java.util.Date;
 public class AvniEntityStatus extends BaseEntity {
     @Column(name = "read_upto", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date readUpto;
+    private Date readUpto;
 
     @Column(name = "entity_type")
     @Enumerated(EnumType.STRING)

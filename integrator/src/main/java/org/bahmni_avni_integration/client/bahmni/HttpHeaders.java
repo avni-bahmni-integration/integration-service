@@ -11,7 +11,7 @@ import java.util.Map;
 public class HttpHeaders extends HashMap<String, String> {
 
     public void addTo(HttpMessage httpMessage) {
-        for (Map.Entry<String, String> entry : this.entrySet()) {
+        for (Entry<String, String> entry : this.entrySet()) {
             httpMessage.addHeader(new BasicHeader(entry.getKey(), entry.getValue()));
         }
     }

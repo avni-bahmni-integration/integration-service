@@ -278,7 +278,7 @@ public class AuthenticationHelper {
             mac.init(signingKey);
             mac.update(userName.getBytes(StandardCharsets.UTF_8));
             byte[] rawHmac = mac.doFinal(userPoolClientId.getBytes(StandardCharsets.UTF_8));
-            return java.util.Base64.getEncoder().encodeToString(rawHmac);
+            return Base64.encodeAsString(rawHmac);
         } catch (Exception e) {
             throw new RuntimeException("Error while calculating ");
         }
