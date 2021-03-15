@@ -65,6 +65,7 @@ public class OpenMRSForm {
 
     public MappingGroup getMappingGroup() {
         if (type.equals("Encounter")) return MappingGroup.GeneralEncounter;
+        else if (type.equals("ProgramEnrolment")) return MappingGroup.ProgramEnrolment;
         else if (type.equals("ProgramEncounter")) return MappingGroup.ProgramEncounter;
         throw new RuntimeException("Invalid form type");
     }

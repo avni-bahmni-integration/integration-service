@@ -8,4 +8,8 @@ public class Enrolment extends AvniBaseContract {
     public String getProgram() {
         return (String) get("Program");
     }
+
+    public void setSubjectId(String uuid) {
+        map.put("Subject ID", uuid);
+    }
 }

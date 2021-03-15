@@ -41,12 +41,11 @@ public class MappingMetaDataService {
     }
 
     public BahmniEncounterToAvniEncounterMetaData getForBahmniEncounterToAvniEncounter() {
-        List<MappingMetaData> mappings = mappingMetaDataRepository.findAllByMappingGroupAndMappingType(MappingGroup.GeneralEncounter, MappingType.EncounterType);
+        List<MappingMetaData> mappings = mappingMetaDataRepository.findAllByMappingType(MappingType.EncounterType);
         BahmniEncounterToAvniEncounterMetaData metaData = new BahmniEncounterToAvniEncounterMetaData();
-        mappings.forEach(x -> metaData.addEncounterType(x.getBahmniValue(), x.getAvniValue()));
+        metaData.addEncounterMappings(mappings);
         String patientUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
         metaData.setBahmniEntityUuidConcept(patientUuidConcept);
-//        mappingMetaDataRepository.findBy
         return metaData;
     }
 }

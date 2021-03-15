@@ -1,22 +1,25 @@
 package org.bahmni_avni_integration.integration_data.internal;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
+
+import java.util.List;
 
 public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaData {
-    private Map<String, String> encounterTypes = new HashMap<>();
     private String bahmniEntityUuidConcept;
+    private List<MappingMetaData> encounterTypeMappings;
 
     public String getAvniEncounterTypeName(String openmrsEncounterTypeUuid) {
-        return encounterTypes.get(openmrsEncounterTypeUuid);
+        MappingMetaData mapping = getMappingMetaData(openmrsEncounterTypeUuid);
+        if (mapping != null) return mapping.getAvniValue();
+        return null;
     }
 
-    public void addEncounterType(String openmrsEncounterTypeUuid, String avniEncounterTypeName) {
-        encounterTypes.put(openmrsEncounterTypeUuid, avniEncounterTypeName);
+    private MappingMetaData getMappingMetaData(String openmrsEncounterTypeUuid) {
+        return encounterTypeMappings.stream().filter(mappingMetaData -> mappingMetaData.getBahmniValue().equals(openmrsEncounterTypeUuid)).findFirst().orElse(null);
     }
 
-    public boolean hasBahmniEncounterType(String openmrsEncounterTypeUuid) {
-        return encounterTypes.containsKey(openmrsEncounterTypeUuid);
+    public boolean hasBahmniConceptSet(String openmrsEncounterTypeUuid) {
+        return getMappingMetaData(openmrsEncounterTypeUuid) != null;
     }
 
     public void setBahmniEntityUuidConcept(String bahmniEntityUuidConcept) {
@@ -25,5 +28,13 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
 
     public String getBahmniEntityUuidConcept() {
         return bahmniEntityUuidConcept;
+    }
+
+    public void addEncounterMappings(List<MappingMetaData> encounterTypeMappings) {
+        this.encounterTypeMappings = encounterTypeMappings;
+    }
+
+    public MappingMetaData getEncounterMappingFor(String openMRSEncounterUuid) {
+        return encounterTypeMappings.stream().filter(x -> x.getBahmniValue().equals(openMRSEncounterUuid)).findFirst().orElse(null);
     }
 }

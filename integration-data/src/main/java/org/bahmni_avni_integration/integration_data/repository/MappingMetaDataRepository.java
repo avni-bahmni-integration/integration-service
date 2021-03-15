@@ -19,6 +19,8 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
 
     List<MappingMetaData> findAllByMappingGroupAndMappingTypeIn(MappingGroup mappingGroup, List<MappingType> mappingTypes);
 
+    List<MappingMetaData> findAllByMappingType(MappingType mappingType);
+
     default MappingMetaDataCollection findAll(MappingGroup mappingGroup, List<MappingType> mappingTypes) {
         return new MappingMetaDataCollection(findAllByMappingGroupAndMappingTypeIn(mappingGroup, mappingTypes));
     }
