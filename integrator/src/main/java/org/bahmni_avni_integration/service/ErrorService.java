@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.service;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
@@ -11,6 +12,7 @@ import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
+import org.bahmni_avni_integration.integration_data.repository.bahmni.BahmniSplitEncounter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,14 +52,14 @@ public class ErrorService {
         errorRecordRepository.save(errorRecord);
     }
 
-    public void errorOccurred(GeneralEncounter existingEncounter, ErrorType errorType) {
-        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEncounterExternalIdAndErrorType(BahmniEntityType.Encounter, existingEncounter.getUuid(), errorType);
+    public void errorOccurred(BahmniSplitEncounter bahmniSplitEncounter, ErrorType errorType) {
+        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEncounterExternalIdAndErrorType(BahmniEntityType.Encounter, bahmniSplitEncounter.getOpenMRSEncounterUuid(), errorType);
         if (errorRecord != null) return;
 
         errorRecord = new ErrorRecord();
         errorRecord.setBahmniEntityType(BahmniEntityType.Encounter);
-        errorRecord.setSubjectPatientExternalId(existingEncounter.getSubjectExternalId());
-        errorRecord.setEncounterExternalId(existingEncounter.getUuid());
+        errorRecord.setSubjectPatientExternalId(bahmniSplitEncounter.getPatientUuid());
+        errorRecord.setEncounterExternalId(bahmniSplitEncounter.getOpenMRSEncounterUuid());
         errorRecord.setErrorType(errorType);
         errorRecordRepository.save(errorRecord);
     }

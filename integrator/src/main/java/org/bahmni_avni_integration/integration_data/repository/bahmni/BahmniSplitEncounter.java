@@ -7,14 +7,16 @@ import java.util.List;
 public class BahmniSplitEncounter {
     private String formConceptSetUuid;
     private String openMRSEncounterUuid;
-    private String getOpenMRSEncounterDateTime;
+    private String openMRSEncounterDateTime;
     private List<OpenMRSObservation> observations;
+    private String patientUuid;
 
-    public BahmniSplitEncounter(String formConceptSetUuid, String openMRSEncounterUuid, String getOpenMRSEncounterDateTime, List<OpenMRSObservation> observations) {
+    public BahmniSplitEncounter(String formConceptSetUuid, String openMRSEncounterUuid, String openMRSEncounterDateTime, List<OpenMRSObservation> observations, String patientUuid) {
         this.formConceptSetUuid = formConceptSetUuid;
         this.openMRSEncounterUuid = openMRSEncounterUuid;
-        this.getOpenMRSEncounterDateTime = getOpenMRSEncounterDateTime;
+        this.openMRSEncounterDateTime = openMRSEncounterDateTime;
         this.observations = observations;
+        this.patientUuid = patientUuid;
     }
 
     public String getFormConceptSetUuid() {
@@ -25,11 +27,15 @@ public class BahmniSplitEncounter {
         return openMRSEncounterUuid;
     }
 
-    public String getGetOpenMRSEncounterDateTime() {
-        return getOpenMRSEncounterDateTime;
+    public String getOpenMRSEncounterDateTime() {
+        return openMRSEncounterDateTime;
     }
 
     public List<OpenMRSObservation> getObservations() {
         return observations;
+    }
+
+    public String getPatientUuid() {
+        return patientUuid;
     }
 }

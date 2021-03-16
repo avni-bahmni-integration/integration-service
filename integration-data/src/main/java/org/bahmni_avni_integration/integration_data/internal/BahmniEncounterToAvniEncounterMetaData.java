@@ -8,7 +8,7 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
     private String bahmniEntityUuidConcept;
     private List<MappingMetaData> encounterTypeMappings;
 
-    public String getAvniEncounterTypeName(String openmrsEncounterTypeUuid) {
+    public String getAvniMappedName(String openmrsEncounterTypeUuid) {
         MappingMetaData mapping = getMappingMetaData(openmrsEncounterTypeUuid);
         if (mapping != null) return mapping.getAvniValue();
         return null;

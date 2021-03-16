@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class AvniEncounterRepository extends BaseAvniRepository {
@@ -18,6 +19,14 @@ public class AvniEncounterRepository extends BaseAvniRepository {
     public GeneralEncounter getEncounter(HashMap<String, Object> concepts) {
         HashMap<String, String> queryParams = new HashMap<>();
         queryParams.put("concepts", ObjectJsonMapper.writeValueAsString(concepts));
+        ResponseEntity<EncountersResponse> responseEntity = avniHttpClient.get("/api/encounters", queryParams, EncountersResponse.class);
+        return pickAndExpectOne(responseEntity.getBody().getContent());
+    }
+
+    public GeneralEncounter getEncounter(String encounterType, Map<String, Object> concepts) {
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("concepts", ObjectJsonMapper.writeValueAsString(concepts));
+        queryParams.put("encounterType", encounterType);
         ResponseEntity<EncountersResponse> responseEntity = avniHttpClient.get("/api/encounters", queryParams, EncountersResponse.class);
         return pickAndExpectOne(responseEntity.getBody().getContent());
     }
