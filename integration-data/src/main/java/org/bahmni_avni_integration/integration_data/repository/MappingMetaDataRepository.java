@@ -1,9 +1,6 @@
 package org.bahmni_avni_integration.integration_data.repository;
 
-import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
-import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
-import org.bahmni_avni_integration.integration_data.domain.MappingMetaDataCollection;
-import org.bahmni_avni_integration.integration_data.domain.MappingType;
+import org.bahmni_avni_integration.integration_data.domain.*;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -52,12 +49,13 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
         return mappingMetaData;
     }
 
-    default MappingMetaData saveMapping(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue) {
+    default MappingMetaData saveMapping(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, ObsDataType obsDataType) {
         MappingMetaData mappingMetaData = new MappingMetaData();
         mappingMetaData.setMappingGroup(mappingGroup);
         mappingMetaData.setMappingType(mappingType);
         mappingMetaData.setBahmniValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
+        mappingMetaData.setDataTypeHint(obsDataType);
         return save(mappingMetaData);
     }
 }

@@ -31,7 +31,7 @@ public class BahmniToAvniService {
         openMRSRepository.populateForms(forms);
         avniRepository.createForms(forms);
         for (OpenMRSForm form : forms) {
-            mappingMetaDataRepository.saveMapping(form.getMappingGroup(), MappingType.EncounterType, form.getUuid(), form.getFormName());
+            mappingMetaDataRepository.saveMapping(form.getMappingGroup(), MappingType.EncounterType, form.getUuid(), form.getFormName(), null);
         }
     }
 }
