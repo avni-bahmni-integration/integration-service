@@ -77,6 +77,7 @@ public class EnrolmentWorker {
             enrolmentService.updateCommunityEnrolment(encounter, enrolment, constants);
         } else if (patient == null && encounter == null) {
             logger.debug(String.format("Creating new patient for Avni subject %s", subject.getUuid()));
+            //TODO: Remove createPatient call and log an error so this enrolment can be retried once patient is created manually
             patientService.createPatient(subject, metaData, constants);
         }
 

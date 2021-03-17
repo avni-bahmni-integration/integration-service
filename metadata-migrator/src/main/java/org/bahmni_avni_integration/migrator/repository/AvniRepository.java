@@ -2,21 +2,26 @@ package org.bahmni_avni_integration.migrator.repository;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSConcept;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
+import org.bahmni_avni_integration.migrator.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class AvniRepository {
-    @Autowired
-    private ConnectionFactory connectionFactory;
+    private final ConnectionFactory connectionFactory;
     private static final Logger logger = Logger.getLogger(AvniRepository.class);
+
+    public AvniRepository(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
 
     public void createForms(List<OpenMRSForm> forms) throws SQLException {
         Connection connection = connectionFactory.getAvniConnection();
@@ -89,5 +94,96 @@ public class AvniRepository {
             connection.setAutoCommit(true);
             connection.close();
         }
+    }
+
+    public List<AvniForm> getForms() throws SQLException {
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            return fetchForms(connection);
+        }
+    }
+
+    private List<AvniForm> fetchForms(Connection connection) throws SQLException {
+        String formSelect = "select id, name from form where organisation_id in (select id from organisation) and is_voided = false order by id";
+        List<AvniForm> forms = new ArrayList<>();
+        try (PreparedStatement formPS = connection.prepareStatement(formSelect)) {
+            ResultSet formResult = formPS.executeQuery();
+            while (formResult.next()) {
+                AvniForm form = new AvniForm();
+                form.setId(formResult.getLong("id"));
+                form.setName(formResult.getString("name"));
+                form.setFormElementGroups(fetchFormElementGroups(connection, form.getId()));
+                forms.add(form);
+            }
+        }
+        return forms;
+    }
+
+    private List<AvniFormElementGroup> fetchFormElementGroups(Connection connection, long formId) throws SQLException {
+        String fegSelect = "select id, name from form_element_group where form_id = ? and is_voided = false order by display_order";
+        List<AvniFormElementGroup> formElementGroups = new ArrayList<>();
+        try (PreparedStatement fegPS = connection.prepareStatement(fegSelect)) {
+            fegPS.setLong(1, formId);
+            ResultSet fegResult = fegPS.executeQuery();
+            while (fegResult.next()) {
+                AvniFormElementGroup formElementGroup = new AvniFormElementGroup();
+                formElementGroup.setId(fegResult.getLong("id"));
+                formElementGroup.setName(fegResult.getString("name"));
+                formElementGroup.setAvniFormElements(fetchFormElements(connection, formElementGroup.getId()));
+                formElementGroups.add(formElementGroup);
+            }
+        }
+        return formElementGroups;
+    }
+
+    private List<AvniFormElement> fetchFormElements(Connection connection, long fegId) throws SQLException {
+        String feSelect = "select id, name, concept_id from form_element where form_element_group_id = ? and is_voided = false order by display_order";
+        List<AvniFormElement> formElements = new ArrayList<>();
+        try (PreparedStatement fePS = connection.prepareStatement(feSelect)) {
+            fePS.setLong(1, fegId);
+            ResultSet feResult = fePS.executeQuery();
+            while (feResult.next()) {
+                AvniFormElement formElement = new AvniFormElement();
+                formElement.setId(feResult.getLong("id"));
+                formElement.setConcept(fetchConcept(connection, feResult.getLong("concept_id")));
+                formElements.add(formElement);
+            }
+        }
+        return formElements;
+    }
+
+    private AvniConcept fetchConcept(Connection connection, long conceptId) throws SQLException {
+        AvniConcept concept = new AvniConcept();
+        String conceptSelect = "select id, name, data_type from concept where id = ? and is_voided = false";
+
+        try (PreparedStatement conceptPS = connection.prepareStatement(conceptSelect)) {
+            conceptPS.setLong(1, conceptId);
+            ResultSet conceptResult = conceptPS.executeQuery();
+            conceptResult.next();
+            concept.setId(conceptResult.getLong("id"));
+            concept.setName(conceptResult.getString("name"));
+            concept.setDataType(conceptResult.getString("data_type"));
+        }
+
+        if (Objects.equals(concept.getDataType(), "Coded")) {
+            concept.setAnswerConcepts(fetchAnswerConcepts(connection, conceptId));
+        }
+
+        return concept;
+    }
+
+    private List<AvniConcept> fetchAnswerConcepts(Connection connection, long conceptId) throws SQLException {
+        List<AvniConcept> answerConcepts = new ArrayList<>();
+        String answersSelect = "select answer.id, answer.name from concept_answer ca join concept answer on answer.id=ca.answer_concept_id where ca.concept_id = ? and ca.is_voided = false and answer.is_voided=false";
+        try (PreparedStatement answersPS = connection.prepareStatement(answersSelect)) {
+            answersPS.setLong(1, conceptId);
+            ResultSet answersResult = answersPS.executeQuery();
+            while (answersResult.next()) {
+                AvniConcept answerConcept = new AvniConcept();
+                answerConcept.setId(answersResult.getLong("id"));
+                answerConcept.setName(answersResult.getString("name"));
+                answerConcepts.add(answerConcept);
+            }
+        }
+        return answerConcepts;
     }
 }
