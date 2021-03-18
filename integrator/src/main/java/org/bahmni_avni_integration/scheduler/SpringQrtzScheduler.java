@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 @EnableAutoConfiguration
 public class SpringQrtzScheduler {
     private Logger logger = LoggerFactory.getLogger(getClass());
-    @Value("${cron.main}")
+    @Value("${app.cron.main}")
     private String cronExpression;
 
     @Autowired

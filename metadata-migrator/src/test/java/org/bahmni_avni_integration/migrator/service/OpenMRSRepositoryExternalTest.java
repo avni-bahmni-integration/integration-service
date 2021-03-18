@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class OpenMRSRepositoryTest {
+class OpenMRSRepositoryExternalTest {
     @Autowired
     private OpenMRSRepository openMRSRepository;
     @Autowired
@@ -22,7 +22,7 @@ class OpenMRSRepositoryTest {
 
     @Test
     public void populateForms() {
-        List<OpenMRSForm> forms = implementationConfigurationRepository.getForms("bahmni-forms.json");
+        List<OpenMRSForm> forms = implementationConfigurationRepository.getForms();
         openMRSRepository.populateForms(forms);
         assertNotEquals(0, forms.get(0).getConcepts().size());
     }

@@ -5,6 +5,7 @@ import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.CreateConceptResult;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
 import org.bahmni_avni_integration.migrator.util.FileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -16,18 +17,20 @@ import java.util.UUID;
 
 @Component
 public class OpenMRSRepository {
-    private final ConnectionFactory connectionFactory;
+    @Autowired
+    private ConnectionFactory connectionFactory;
+    @Autowired
+    private FileUtil fileUtil;
     private static Logger logger = Logger.getLogger(OpenMRSRepository.class);
 
     public OpenMRSRepository(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
-
     public void populateForms(List<OpenMRSForm> formList) {
         try (Connection connection = connectionFactory.getMySqlConnection()) {
             PreparedStatement formUuidPS = connection.prepareStatement("select uuid from concept where concept_id = ?");
-            PreparedStatement formConceptPS = connection.prepareStatement(FileUtil.readFile("form-elements.sql"));
+            PreparedStatement formConceptPS = connection.prepareStatement(fileUtil.readFile("form-elements.sql"));
             for (OpenMRSForm form : formList) {
                 addConcept(formConceptPS, form);
                 addFormUuid(formUuidPS, form);

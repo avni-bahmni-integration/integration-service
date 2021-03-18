@@ -27,7 +27,7 @@ public class BahmniToAvniService {
     private MappingMetaDataRepository mappingMetaDataRepository;
 
     public void migrateForms() throws SQLException {
-        List<OpenMRSForm> forms = implementationConfigurationRepository.getForms("bahmni-forms.json");
+        List<OpenMRSForm> forms = implementationConfigurationRepository.getForms();
         openMRSRepository.populateForms(forms);
         avniRepository.createForms(forms);
         for (OpenMRSForm form : forms) {
