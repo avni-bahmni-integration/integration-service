@@ -2,6 +2,7 @@ package org.bahmni_avni_integration.migrator.service;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
+import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
@@ -9,6 +10,7 @@ import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.AvniConcept;
 import org.bahmni_avni_integration.migrator.domain.AvniForm;
 import org.bahmni_avni_integration.migrator.domain.AvniFormElement;
+import org.bahmni_avni_integration.migrator.domain.CreateConceptResult;
 import org.bahmni_avni_integration.migrator.repository.AvniRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,7 @@ public class AvniToBahmniService {
         try (var connection = connectionFactory.getMySqlConnection()) {
             connection.setAutoCommit(false);
             createForms(forms, connection);
-            connection.rollback();
+            connection.commit();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
@@ -47,7 +49,9 @@ public class AvniToBahmniService {
 
     private void createForms(List<AvniForm> forms, Connection connection) throws SQLException {
         for (var form : forms) {
-            int formConceptId = openMRSRepository.createConcept(connection, UUID.randomUUID().toString(), form.getName(), form.getName(), "N/A", "Misc", true);
+            CreateConceptResult conceptResult = openMRSRepository.createConcept(connection,
+                    UUID.randomUUID().toString(), form.getName(), form.getName(), "N/A", "Misc", true);
+            int formConceptId = conceptResult.conceptId();
             logger.debug("Form: %s Concept Id: %d".formatted(form.getName(), formConceptId));
             createGroups(connection, form, formConceptId);
         }
@@ -57,7 +61,9 @@ public class AvniToBahmniService {
         var formElementGroups = form.getFormElementGroups();
         for (int i = 0; i < formElementGroups.size(); i++) {
             var formElementGroup = formElementGroups.get(i);
-            int groupConceptId = openMRSRepository.createConcept(connection, UUID.randomUUID().toString(), formElementGroup.getName(), formElementGroup.getName(), "N/A", "Misc", true);
+            CreateConceptResult conceptResult = openMRSRepository.createConcept(connection,
+                    UUID.randomUUID().toString(), formElementGroup.getName(), formElementGroup.getName(), "N/A", "Misc", true);
+            int groupConceptId = conceptResult.conceptId();
             openMRSRepository.createConceptSet(connection, groupConceptId, formConceptId, i);
             createQuestions(connection, formElementGroup, groupConceptId);
         }
@@ -69,19 +75,29 @@ public class AvniToBahmniService {
             AvniFormElement formElement = formElements.get(i);
             AvniConcept concept = formElement.getConcept();
             String bahmniQuestionConceptUuid = UUID.randomUUID().toString();
-            int questionConceptId = openMRSRepository.createConcept(connection, bahmniQuestionConceptUuid, concept.getName(), concept.getName(), concept.getDataType(), "Misc", false);
+            CreateConceptResult conceptResult = openMRSRepository.createConcept(connection,
+                    bahmniQuestionConceptUuid, concept.getName(), concept.getName(), concept.getDataType(), "Misc", false);
+            int questionConceptId = conceptResult.conceptId();
             openMRSRepository.createConceptSet(connection, questionConceptId, groupConceptId, i);
-            mappingMetaDataRepository.saveMapping(
-                    MappingGroup.Observation,
-                    MappingType.Concept,
-                    bahmniQuestionConceptUuid,
-                    concept.getName(),
-                    ObsDataType.parseAvniDataType(concept.getDataType())
-            );
+            saveMapping(concept, bahmniQuestionConceptUuid, ObsDataType.parseAvniDataType(concept.getDataType()));
 
             if (Objects.equals("Coded", formElement.getConcept().getDataType())) {
                 createAnswers(connection, concept, questionConceptId);
             }
+        }
+    }
+
+    private void saveMapping(AvniConcept concept, String bahmniQuestionConceptUuid, ObsDataType obsDataType) {
+        String avniConceptName = concept.getName();
+        MappingMetaData existingMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndAvniValue(MappingGroup.Observation,
+                MappingType.Concept, avniConceptName);
+        if(existingMapping == null) {
+            mappingMetaDataRepository.saveMapping(MappingGroup.Observation,
+                    MappingType.Concept,
+                    bahmniQuestionConceptUuid,
+                    concept.getName(),
+                    obsDataType
+            );
         }
     }
 
@@ -90,9 +106,10 @@ public class AvniToBahmniService {
         for (int i = 0; i < answerConcepts.size(); i++) {
             AvniConcept answerConcept = answerConcepts.get(i);
             String bahmniAnswerConceptUuid = UUID.randomUUID().toString();
-            int answerConceptId = openMRSRepository.createConcept(connection, bahmniAnswerConceptUuid, answerConcept.getName(), answerConcept.getName(), "N/A", "Misc", false);
+            CreateConceptResult conceptResult = openMRSRepository.createConcept(connection, bahmniAnswerConceptUuid, answerConcept.getName(), answerConcept.getName(), "N/A", "Misc", false);
+            int answerConceptId = conceptResult.conceptId();
             openMRSRepository.createConceptAnswer(connection, questionConceptId, answerConceptId, i);
-            mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, bahmniAnswerConceptUuid, answerConcept.getName(), null);
+            saveMapping(answerConcept, bahmniAnswerConceptUuid, null);
         }
     }
 }

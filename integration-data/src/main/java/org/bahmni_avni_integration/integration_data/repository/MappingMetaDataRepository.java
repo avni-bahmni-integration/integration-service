@@ -11,6 +11,7 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     MappingMetaData findByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
 
     MappingMetaData findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue);
+    MappingMetaData findByMappingGroupAndMappingTypeAndAvniValue(MappingGroup mappingGroup, MappingType mappingType, String avniValue);
 
     List<MappingMetaData> findAllByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
 

@@ -2,6 +2,7 @@ package org.bahmni_avni_integration.migrator.repository;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
+import org.bahmni_avni_integration.migrator.domain.CreateConceptResult;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
 import org.bahmni_avni_integration.migrator.util.FileUtil;
 import org.springframework.stereotype.Component;
@@ -37,71 +38,78 @@ public class OpenMRSRepository {
         }
     }
 
-    public int createConcept(Connection connection, String conceptUuid, String conceptFullName, String conceptShortName, String dataTypeName, String className, boolean isSet) throws SQLException {
-        try {
-            String conceptFullNameWithAvniSuffix = String.format("%s [Avni]", conceptFullName);
-            int existingConceptId = getConceptId(connection, conceptFullNameWithAvniSuffix);
-            if (existingConceptId != -1)
-                return existingConceptId;
+    public CreateConceptResult createConcept(Connection connection, String conceptUuid, String conceptFullName, String conceptShortName, String dataTypeName, String className, boolean isSet) throws SQLException {
+        String conceptFullNameWithAvniSuffix = String.format("%s [Avni]", conceptFullName);
+        int existingConceptId = getConceptId(connection, conceptFullNameWithAvniSuffix);
+        if (existingConceptId != -1)
+            return new CreateConceptResult(existingConceptId, true);
 
-            var insertConceptPS = connection.prepareStatement("select add_concept_abi_func(?, ?, ?, ?, ?, ?)");
-            insertConceptPS.setString(1, conceptFullNameWithAvniSuffix);
-            insertConceptPS.setString(2, conceptShortName);
-            insertConceptPS.setString(3, dataTypeName);
-            insertConceptPS.setString(4, className);
-            insertConceptPS.setBoolean(5, isSet);
-            insertConceptPS.setString(6, conceptUuid);
-            ResultSet resultSet = insertConceptPS.executeQuery();
-            resultSet.next();
-            return resultSet.getInt(1);
-        } catch (SQLException sqlException) {
-            throw sqlException;
-        }
+        var insertConceptPS = connection.prepareStatement("select add_concept_abi_func(?, ?, ?, ?, ?, ?)");
+        insertConceptPS.setString(1, conceptNameWithAvniSuffix(conceptFullName));
+        insertConceptPS.setString(2, conceptShortName);
+        insertConceptPS.setString(3, dataTypeName);
+        insertConceptPS.setString(4, className);
+        insertConceptPS.setBoolean(5, isSet);
+        insertConceptPS.setString(6, conceptUuid);
+        ResultSet resultSet = insertConceptPS.executeQuery();
+        resultSet.next();
+        return new CreateConceptResult(resultSet.getInt(1), false);
     }
 
     public void createConceptSet(Connection connection, int conceptId, int conceptSetId, double sortWeight) throws SQLException {
-        try {
+        if(!conceptSetExists(connection, conceptId, conceptSetId)) {
             var insertConceptSetPS = connection.prepareStatement("insert into concept_set(concept_id, concept_set, sort_weight, creator, date_created, uuid) values (?, ?, ?, 1, now(), ?)");
             insertConceptSetPS.setInt(1, conceptId);
             insertConceptSetPS.setInt(2, conceptSetId);
             insertConceptSetPS.setDouble(3, sortWeight);
             insertConceptSetPS.setString(4, UUID.randomUUID().toString());
             insertConceptSetPS.executeUpdate();
-        } catch (SQLException sqlException) {
-            throw sqlException;
         }
     }
 
+    private boolean conceptSetExists(Connection connection, int conceptId, int conceptSetId) throws SQLException {
+        var conceptSetSelectPS = connection.prepareStatement("select * from concept_set where concept_id = ? and concept_set = ?");
+        conceptSetSelectPS.setInt(1, conceptId);
+        conceptSetSelectPS.setInt(2, conceptSetId);
+        ResultSet resultSet = conceptSetSelectPS.executeQuery();
+        return resultSet.next();
+    }
+
     public void createConceptAnswer(Connection connection, int conceptId, int answerConceptId, double sortWeight) throws SQLException {
-        try {
+        if(!conceptAnswerExists(connection, conceptId, answerConceptId)) {
             var insertConceptAnswerPS = connection.prepareStatement("insert into concept_answer(concept_id, answer_concept, sort_weight, creator, date_created, uuid) values (?, ?, ?, 1, now(), ?)");
             insertConceptAnswerPS.setInt(1, conceptId);
             insertConceptAnswerPS.setInt(2, answerConceptId);
             insertConceptAnswerPS.setDouble(3, sortWeight);
             insertConceptAnswerPS.setString(4, UUID.randomUUID().toString());
-            int i = insertConceptAnswerPS.executeUpdate();
-            logger.debug("Insert concept_answer status: %d".formatted(i));
-        } catch (SQLException sqlException) {
-            throw sqlException;
+            insertConceptAnswerPS.executeUpdate();
         }
     }
 
-    private int getConceptId(Connection connection, String conceptFullName) throws SQLException {
-        try {
-            var getConceptPS = connection.prepareStatement("SELECT concept_id from concept_name where name = BINARY ? and concept_name_type='FULLY_SPECIFIED'");
-            getConceptPS.setString(1, conceptFullName);
-            var resultSet = getConceptPS.executeQuery();
-            boolean conceptExists = resultSet.next();
-            if (!conceptExists)
-                return -1;
+    private boolean conceptAnswerExists(Connection connection, int conceptId, int answerConceptId) throws SQLException {
+        var conceptAnswerSelectPS = connection.prepareStatement("select * from concept_answer where concept_id = ? and answer_concept = ?");
+        conceptAnswerSelectPS.setInt(1, conceptId);
+        conceptAnswerSelectPS.setInt(2, answerConceptId);
+        ResultSet resultSet = conceptAnswerSelectPS.executeQuery();
+        return resultSet.next();
+    }
 
-            int concept_id = resultSet.getInt("concept_id");
-            if (resultSet.next())
-                throw new RuntimeException("Did not expect to find multiple concepts by full name %s".formatted(conceptFullName));
-            return concept_id;
-        } catch (SQLException sqlException) {
-            throw sqlException;
-        }
+    private String conceptNameWithAvniSuffix(String conceptName) {
+        return String.format("%s [Avni]", conceptName);
+    }
+
+    private int getConceptId(Connection connection, String conceptFullName) throws SQLException {
+        var getConceptPS = connection.prepareStatement("SELECT concept_id from concept_name where name = BINARY ? and concept_name_type='FULLY_SPECIFIED'");
+        getConceptPS.setString(1, conceptFullName);
+        var resultSet = getConceptPS.executeQuery();
+        boolean conceptExists = resultSet.next();
+        if (!conceptExists)
+            return -1;
+
+        int concept_id = resultSet.getInt("concept_id");
+        if (resultSet.next())
+            throw new RuntimeException("Did not expect to find multiple concepts by full name %s".formatted(conceptFullName));
+        return concept_id;
     }
 
     private void addFormUuid(PreparedStatement formUuidPS, OpenMRSForm form) throws SQLException {
