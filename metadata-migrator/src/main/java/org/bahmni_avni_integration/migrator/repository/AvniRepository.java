@@ -85,7 +85,6 @@ public class AvniRepository {
             formElementPS.close();
             encounterFormMappingPS.close();
         } catch (Exception e) {
-            connection.rollback();
             throw new RuntimeException(e);
         } finally {
             connection.close();
