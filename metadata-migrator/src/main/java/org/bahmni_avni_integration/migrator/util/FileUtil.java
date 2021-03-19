@@ -36,7 +36,7 @@ public class FileUtil {
                 Path path = Path.of(configLocation, fileName);
                 return Files.readString(path);
             }
-            return readFile(fileName);
+            return readFile(String.format("/%s", fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
