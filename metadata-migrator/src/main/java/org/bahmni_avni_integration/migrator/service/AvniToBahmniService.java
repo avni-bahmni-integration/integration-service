@@ -39,11 +39,9 @@ public class AvniToBahmniService {
     public void migrateForms() throws SQLException {
         List<AvniForm> forms = avniRepository.getForms();
         try (var connection = connectionFactory.getMySqlConnection()) {
-            connection.setAutoCommit(false);
             createForms(forms, connection);
-            connection.commit();
         } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
+            logger.error("Could not migrate forms", sqlException);
         }
     }
 
