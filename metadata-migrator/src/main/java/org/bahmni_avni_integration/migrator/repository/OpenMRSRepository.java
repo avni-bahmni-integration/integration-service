@@ -1,19 +1,22 @@
 package org.bahmni_avni_integration.migrator.repository;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.CreateConceptResult;
+import org.bahmni_avni_integration.migrator.domain.OpenMRSConcept;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
+import org.bahmni_avni_integration.migrator.domain.OpenMRSPersonAttribute;
 import org.bahmni_avni_integration.migrator.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class OpenMRSRepository {
@@ -27,17 +30,103 @@ public class OpenMRSRepository {
         this.connectionFactory = connectionFactory;
     }
 
-    public void populateForms(List<OpenMRSForm> formList) {
-        try (Connection connection = connectionFactory.getMySqlConnection()) {
+    public void populateForms(List<OpenMRSForm> formList) throws SQLException {
+        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             PreparedStatement formUuidPS = connection.prepareStatement("select uuid from concept where concept_id = ?");
             PreparedStatement formConceptPS = connection.prepareStatement(fileUtil.readFile("/form-elements.sql"));
             for (OpenMRSForm form : formList) {
                 addConcept(formConceptPS, form);
                 addFormUuid(formUuidPS, form);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+        }
+    }
+
+    public List<OpenMRSPersonAttribute> getPersonAttributes() throws SQLException {
+        List<OpenMRSPersonAttribute> attributes = new ArrayList<>();
+        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("select COALESCE(pt.description, pt.name), pt.uuid  from person_attribute_type pat where pat.format!='org.openmrs.Concept' and pat.retired=false and pt.name not in ('familyNameLocal', 'middleNameLocal', 'primaryContact')");
+            while (resultSet.next()) {
+                attributes.add(OpenMRSPersonAttribute.createPrimitive(resultSet.getString(2), resultSet.getString(1)));
+            }
+
+            PreparedStatement codedAnswerPS = connection.prepareStatement("""
+                    select answer_name.name, answer.uuid, COALESCE(pt.description, pt.name)
+                    from concept_answer mapping
+                             join concept question on question.concept_id = mapping.concept_id
+                             join concept answer on answer.concept_id = mapping.answer_concept
+                             join concept_name answer_name on answer_name.concept_id = answer.concept_id
+                             join concept_name question_name on question_name.concept_id = question.concept_id
+                             join person_attribute_type pt on pt.foreign_key=question.concept_id
+                    where pt.format='org.openmrs.Concept'
+                      and pt.retired=false
+                      and answer_name.concept_name_type = 'FULLY_SPECIFIED'
+                      and question_name.concept_name_type = 'FULLY_SPECIFIED'
+                      and COALESCE(pt.description, pt.name) = ?""");
+            resultSet = statement.executeQuery("""
+                    select COALESCE(pt.description, pt.name), pt.uuid
+                    from person_attribute_type pt
+                             join concept question on pt.foreign_key=question.concept_id
+                             join concept_name question_name on question_name.concept_id = question.concept_id
+                    where pt.format='org.openmrs.Concept'
+                      and pt.retired=false
+                      and question_name.concept_name_type = 'FULLY_SPECIFIED'""");
+            while (resultSet.next()) {
+                OpenMRSPersonAttribute codedAttribute = OpenMRSPersonAttribute.createCoded(resultSet.getString(2), resultSet.getString(1));
+                attributes.add(codedAttribute);
+                codedAnswerPS.setString(1, codedAttribute.getName());
+                ResultSet codedAnswers = codedAnswerPS.executeQuery();
+                while (codedAnswers.next()) {
+                    codedAttribute.addAnswer(new OpenMRSConcept(codedAnswers.getString(2), codedAnswers.getString(1)));
+                }
+            }
+        }
+        return attributes;
+    }
+
+    public List<OpenMRSConcept> getConcepts() throws SQLException {
+        String sql = """
+                select c.uuid, cn.name, cdt.name, cn.concept_name_type
+                                 from concept c
+                                        join concept_name cn on cn.concept_id = c.concept_id
+                                        join concept_datatype cdt on cdt.concept_datatype_id = c.datatype_id
+                                        join concept_class cc on cc.concept_class_id = c.class_id
+                                        left outer join concept_attribute ca on c.concept_id = ca.concept_id
+                                        left outer join concept_attribute_type cat on ca.attribute_type_id = cat.concept_attribute_type_id
+                                 where c.is_set = false
+                                   and cdt.name not in ('Rule', 'Document', 'Complex')
+                                   and cn.concept_name_type = 'SHORT'
+                                   and cc.name not in ('LabTest', 'Concept Attribute', 'Drug', 'Image', 'URL', 'Video')
+                                   and cn.name <> '' and (cat.name <> 'Avni' or cat.name is null)""";
+        List<OpenMRSConcept> concepts = new ArrayList<>();
+        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                OpenMRSConcept openMRSConcept = new OpenMRSConcept(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4));
+                concepts.add(openMRSConcept);
+            }
+
+            List<OpenMRSConcept> conceptsWithoutDuplicates = concepts.stream().distinct().collect(Collectors.toList());
+            List<OpenMRSConcept> codedConcepts = conceptsWithoutDuplicates.stream().filter(openMRSConcept -> openMRSConcept.getDataType().equals(ObsDataType.Coded.toString())).collect(Collectors.toList());
+
+            String answerSql = """
+                    select ac.uuid, acn.name
+                    from concept c
+                           join concept_answer ca on c.concept_id = ca.concept_id
+                           join concept ac on ca.answer_concept = ac.concept_id
+                           join concept_name acn on acn.concept_id = ac.concept_id
+                    where c.uuid = ?""";
+            PreparedStatement answerPS = connection.prepareStatement(answerSql);
+            for (OpenMRSConcept c : codedConcepts) {
+                answerPS.setString(1, c.getUuid());
+                ResultSet answers = answerPS.executeQuery();
+                while (answers.next()) {
+                    c.addAnswer(new OpenMRSConcept(answers.getString(1), answers.getString(2)));
+                }
+            }
+
+            return conceptsWithoutDuplicates;
         }
     }
 
@@ -60,7 +149,7 @@ public class OpenMRSRepository {
     }
 
     public void createConceptSet(Connection connection, int conceptId, int conceptSetId, double sortWeight) throws SQLException {
-        if(!conceptSetExists(connection, conceptId, conceptSetId)) {
+        if (!conceptSetExists(connection, conceptId, conceptSetId)) {
             var insertConceptSetPS = connection.prepareStatement("insert into concept_set(concept_id, concept_set, sort_weight, creator, date_created, uuid) values (?, ?, ?, 1, now(), ?)");
             insertConceptSetPS.setInt(1, conceptId);
             insertConceptSetPS.setInt(2, conceptSetId);
@@ -79,7 +168,7 @@ public class OpenMRSRepository {
     }
 
     public void createConceptAnswer(Connection connection, int conceptId, int answerConceptId, double sortWeight) throws SQLException {
-        if(!conceptAnswerExists(connection, conceptId, answerConceptId)) {
+        if (!conceptAnswerExists(connection, conceptId, answerConceptId)) {
             var insertConceptAnswerPS = connection.prepareStatement("insert into concept_answer(concept_id, answer_concept, sort_weight, creator, date_created, uuid) values (?, ?, ?, 1, now(), ?)");
             insertConceptAnswerPS.setInt(1, conceptId);
             insertConceptAnswerPS.setInt(2, answerConceptId);

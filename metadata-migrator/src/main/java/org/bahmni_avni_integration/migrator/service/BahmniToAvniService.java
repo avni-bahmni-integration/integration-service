@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.migrator.service;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
+import org.bahmni_avni_integration.migrator.domain.OpenMRSPersonAttribute;
 import org.bahmni_avni_integration.migrator.repository.AvniRepository;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
@@ -39,5 +40,9 @@ public class BahmniToAvniService {
             logger.info(String.format("Creating mapping for form: %s", form.getFormName()));
             mappingMetaDataRepository.saveMapping(form.getMappingGroup(), MappingType.EncounterType, form.getUuid(), form.getFormName(), null);
         }
+    }
+
+    public void migratePatientAttributes() throws SQLException {
+        List<OpenMRSPersonAttribute> personAttributes = openMRSRepository.getPersonAttributes();
     }
 }

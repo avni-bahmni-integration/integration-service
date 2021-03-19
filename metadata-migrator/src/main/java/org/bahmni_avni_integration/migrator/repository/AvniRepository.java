@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -23,9 +24,37 @@ public class AvniRepository {
         this.connectionFactory = connectionFactory;
     }
 
+    @Value("${avni.cutoff_date}")
+    private String cutoffDate;
+
+    public void cleanup() throws SQLException {
+        String deleteFormsMappings = "delete from form_mapping e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+        String deleteForms = "delete from form e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+        String deleteFormElementGroups = "delete from form_element_group e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+        String deleteFormElements = "delete from form_element e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+        String deleteOperationalEncounterTypes = "delete from operational_encounter_type e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+        String deleteEncounterTypes = "delete from encounter_type e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            delete(deleteFormsMappings, connection, "Form Mapping");
+            delete(deleteForms, connection, "Form");
+            delete(deleteFormElementGroups, connection, "Form Element Group");
+            delete(deleteFormElements, connection, "Form Element");
+            delete(deleteOperationalEncounterTypes, connection, "Operational Encounter Type");
+            delete(deleteEncounterTypes, connection, "Encounter Type");
+        }
+    }
+
+    private void delete(String sql, Connection connection, String entityType) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        int deletedRowCount = preparedStatement.executeUpdate();
+        logger.info(String.format("Deleted %d row of %s", deletedRowCount, entityType));
+        preparedStatement.close();
+    }
+
     public void createForms(List<OpenMRSForm> forms) throws SQLException {
-        Connection connection = connectionFactory.getAvniConnection();
-        try {
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            String operationalEncounterTypeInsert = "insert into operational_encounter_type (uuid, organisation_id, encounter_type_id, version, audit_id, name) values (uuid_generate_v4(), (select id from organisation), (select id from encounter_type where name = ?), 0, create_audit(), ?)";
             String encounterTypeInsert = "insert into encounter_type (name, uuid, version, audit_id, organisation_id) values (?, uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
             String formInsert = "insert into form (name, form_type, uuid, version, audit_id, organisation_id) values (?, ?, uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
             String formElementGroupInsert = "insert into form_element_group (name, form_id, uuid, version, audit_id, organisation_id) values (?, (select id from form where name = ?), uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
@@ -33,6 +62,7 @@ public class AvniRepository {
             String encounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(), (select id from organisation))";
             String programEncounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id, entity_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(), (select id from organisation), (select id from program where name = ?))";
 
+            PreparedStatement operationalEncounterTypePS = connection.prepareStatement(operationalEncounterTypeInsert);
             PreparedStatement encounterTypePS = connection.prepareStatement(encounterTypeInsert);
             PreparedStatement formInsertPS = connection.prepareStatement(formInsert);
             PreparedStatement formElementGroupPS = connection.prepareStatement(formElementGroupInsert);
@@ -44,6 +74,11 @@ public class AvniRepository {
                 encounterTypePS.setString(1, form.getFormName());
                 encounterTypePS.executeUpdate();
                 logger.info("Created encounter type: " + form.getFormName());
+
+                operationalEncounterTypePS.setString(1, form.getFormName());
+                operationalEncounterTypePS.setString(2, form.getFormName());
+                operationalEncounterTypePS.executeUpdate();
+                logger.info("Created operational encounter type: " + form.getFormName());
 
                 formInsertPS.setString(1, form.getFormName());
                 formInsertPS.setString(2, form.getType());
@@ -79,15 +114,12 @@ public class AvniRepository {
                     logger.info("Created program encounter form mapping for form: " + form.getFormName());
                 }
             }
+            operationalEncounterTypePS.close();
             encounterTypePS.close();
             formInsertPS.close();
             formElementGroupPS.close();
             formElementPS.close();
             encounterFormMappingPS.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            connection.close();
         }
     }
 

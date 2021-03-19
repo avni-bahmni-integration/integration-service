@@ -26,7 +26,9 @@ public class Migrator implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (args.length == 0) return;
-        if (args[0].equals("run"))
+        if (args[0].equals("run")) {
+            bahmniToAvniService.migratePatientAttributes();
             bahmniToAvniService.migrateForms();
+        }
     }
 }

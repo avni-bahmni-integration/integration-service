@@ -24,7 +24,7 @@ public class ConnectionFactory {
     @Value("${app.tx.rollback}")
     private boolean txRollback;
 
-    public Connection getMySqlConnection() {
+    public Connection getOpenMRSDbConnection() {
         try {
             JSch jsch = new JSch();
             jsch.addIdentity(bahmniConfig.getSshPrivateKey());

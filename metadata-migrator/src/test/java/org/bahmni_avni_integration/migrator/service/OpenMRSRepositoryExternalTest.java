@@ -21,7 +21,7 @@ class OpenMRSRepositoryExternalTest {
     private ImplementationConfigurationRepository implementationConfigurationRepository;
 
     @Test
-    public void populateForms() {
+    public void populateForms() throws SQLException {
         List<OpenMRSForm> forms = implementationConfigurationRepository.getForms();
         openMRSRepository.populateForms(forms);
         assertNotEquals(0, forms.get(0).getConcepts().size());

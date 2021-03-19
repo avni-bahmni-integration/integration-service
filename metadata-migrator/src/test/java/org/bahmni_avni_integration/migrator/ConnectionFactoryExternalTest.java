@@ -1,6 +1,5 @@
 package org.bahmni_avni_integration.migrator;
 
-import com.jcraft.jsch.JSchException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +14,7 @@ class ConnectionFactoryExternalTest {
 
     @Test
     public void connectToOpenMRSDb() throws SQLException {
-        Connection mySQLConnection = connectionFactory.getMySqlConnection();
+        Connection mySQLConnection = connectionFactory.getOpenMRSDbConnection();
         mySQLConnection.close();
     }
 
