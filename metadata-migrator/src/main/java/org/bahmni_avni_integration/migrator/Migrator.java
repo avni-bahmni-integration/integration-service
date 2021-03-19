@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +20,13 @@ public class Migrator implements CommandLineRunner {
     private BahmniToAvniService bahmniToAvniService;
 
     public static void main(String[] args) throws SQLException {
-        SpringApplication.run(Migrator.class, args);
+        SpringApplication.run(Migrator.class, args).close();
     }
 
     @Override
     public void run(String... args) throws Exception {
         if (args.length == 0) return;
-        bahmniToAvniService.migrateForms();
+        if (args[0].equals("run"))
+            bahmniToAvniService.migrateForms();
     }
 }

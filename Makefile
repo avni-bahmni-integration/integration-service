@@ -30,7 +30,7 @@ endef
 
 define _run_migrator
     . ./conf/local-test.conf
-	java -jar --enable-preview metadata-migrator/build/libs/metadata-migrator-0.0.1-SNAPSHOT.jar
+	java -jar --enable-preview metadata-migrator/build/libs/metadata-migrator-0.0.1-SNAPSHOT.jar run
 endef
 
 rebuild-db: drop-db build-db

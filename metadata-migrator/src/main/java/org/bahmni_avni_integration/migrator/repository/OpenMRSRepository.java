@@ -30,7 +30,7 @@ public class OpenMRSRepository {
     public void populateForms(List<OpenMRSForm> formList) {
         try (Connection connection = connectionFactory.getMySqlConnection()) {
             PreparedStatement formUuidPS = connection.prepareStatement("select uuid from concept where concept_id = ?");
-            PreparedStatement formConceptPS = connection.prepareStatement(fileUtil.readFile("form-elements.sql"));
+            PreparedStatement formConceptPS = connection.prepareStatement(fileUtil.readFile("/form-elements.sql"));
             for (OpenMRSForm form : formList) {
                 addConcept(formConceptPS, form);
                 addFormUuid(formUuidPS, form);

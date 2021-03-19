@@ -25,7 +25,6 @@ public class AvniRepository {
 
     public void createForms(List<OpenMRSForm> forms) throws SQLException {
         Connection connection = connectionFactory.getAvniConnection();
-        connection.setAutoCommit(false);
         try {
             String encounterTypeInsert = "insert into encounter_type (name, uuid, version, audit_id, organisation_id) values (?, uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
             String formInsert = "insert into form (name, form_type, uuid, version, audit_id, organisation_id) values (?, ?, uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
@@ -85,13 +84,10 @@ public class AvniRepository {
             formElementGroupPS.close();
             formElementPS.close();
             encounterFormMappingPS.close();
-
-            connection.rollback();
         } catch (Exception e) {
             connection.rollback();
             throw new RuntimeException(e);
         } finally {
-            connection.setAutoCommit(true);
             connection.close();
         }
     }

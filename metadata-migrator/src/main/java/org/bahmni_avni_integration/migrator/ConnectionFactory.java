@@ -4,7 +4,9 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import org.bahmni_avni_integration.migrator.config.AvniConfig;
 import org.bahmni_avni_integration.migrator.config.BahmniConfig;
+import org.bahmni_avni_integration.migrator.util.TxConfigurableConnection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -19,6 +21,9 @@ public class ConnectionFactory {
     @Autowired
     private AvniConfig avniConfig;
 
+    @Value("${app.tx.rollback}")
+    private boolean txRollback;
+
     public Connection getMySqlConnection() {
         try {
             JSch jsch = new JSch();
@@ -32,7 +37,8 @@ public class ConnectionFactory {
             String url = "jdbc:mysql://" + bahmniConfig.getOpenMrsMySqlServerFromSSHHost() + ":" + bahmniConfig.getLocalPort() + "/";
 
             Class.forName(driver);
-            return DriverManager.getConnection(url + bahmniConfig.getOpenMrsMySqlDatabase(), bahmniConfig.getOpenMrsMySqlUser(), bahmniConfig.getOpenMrsMySqlPassword());
+            Connection connection = DriverManager.getConnection(url + bahmniConfig.getOpenMrsMySqlDatabase(), bahmniConfig.getOpenMrsMySqlUser(), bahmniConfig.getOpenMrsMySqlPassword());
+            return new TxConfigurableConnection(connection, txRollback);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -48,7 +54,7 @@ public class ConnectionFactory {
             Statement statement = connection.createStatement();
             statement.execute("set role bahmni_ashwini_integration");
             statement.close();
-            return connection;
+            return new TxConfigurableConnection(connection, txRollback);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

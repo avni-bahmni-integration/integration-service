@@ -3,8 +3,7 @@ package org.bahmni_avni_integration.migrator.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -17,10 +16,14 @@ public class FileUtil {
 
     public String readFile(String fileName) {
         try {
-            ClassLoader classLoader = FileUtil.class.getClassLoader();
-            URL resource = classLoader.getResource(fileName);
-            File file = new File(resource.getFile());
-            return Files.readString(Path.of(file.getAbsolutePath()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    this.getClass().getResourceAsStream(fileName)));
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append(System.getProperty("line.separator"));
+            }
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
