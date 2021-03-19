@@ -10,6 +10,6 @@ public enum MappingType {
     BahmniUUID_Concept,
     PersonAttributeConcept,
     EncounterType,
-    EnrolmentUUID_Concept,
-    Community_Enrolment_EncounterType
+    Community_Enrolment_EncounterType,
+    AvniUUID_Concept
 }

@@ -35,15 +35,15 @@ public class EnrolmentService {
         if (patient == null) {
             return new Pair<>(null, null);
         }
-        String enrolmentConceptUuid = mappingMetaDataRepository
-                .getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.EnrolmentUUID_Concept);
+        String avniUuidConcept = mappingMetaDataRepository
+                .getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.AvniUUID_Concept);
         OpenMRSFullEncounter encounter = openMRSEncounterRepository
-                .getEncounterByPatientAndObservation(patient.getUuid(), enrolmentConceptUuid, enrolment.getUuid());
+                .getEncounterByPatientAndObservation(patient.getUuid(), avniUuidConcept, enrolment.getUuid());
         return new Pair<>(patient, encounter);
     }
 
-    public void processPatientNotFound(Subject subject, SubjectToPatientMetaData metaData) {
-        errorService.errorOccurred(subject, ErrorType.NoPatientWithId, metaData);
+    public void processPatientNotFound(Enrolment enrolment, Subject subject, SubjectToPatientMetaData metaData) {
+        errorService.errorOccurred(enrolment, ErrorType.NoPatientWithId, subject, metaData);
     }
 
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {

@@ -5,6 +5,7 @@ import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
+import org.bahmni_avni_integration.integration_data.internal.AvniToBahmniEnrolmentMetaData;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
@@ -62,6 +63,7 @@ public class EnrolmentWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processEnrolment(Constants constants, Predicate<Enrolment> continueAfterOneRecord, SubjectToPatientMetaData metaData, Enrolment enrolment) {
+        AvniToBahmniEnrolmentMetaData enrolmentMetaData = mappingMetaDataService.getForAvniToBahmniEnrolment();
         logger.debug(String.format("Processing avni enrolment %s", enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
@@ -70,15 +72,14 @@ public class EnrolmentWorker {
         OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 
         if (patient != null && encounter == null) {
-            logger.debug(String.format("Creating new Bahhmni Enrolment for Avni enrolment %s", enrolment.getUuid()));
+            logger.debug(String.format("Creating new Bahmni Enrolment for Avni enrolment %s", enrolment.getUuid()));
             enrolmentService.createCommunityEnrolment(enrolment, patient, constants);
         } else if (patient != null && encounter != null) {
             logger.debug(String.format("Updating existing Bahmni encounter %s", encounter.getUuid()));
             enrolmentService.updateCommunityEnrolment(encounter, enrolment, constants);
         } else if (patient == null && encounter == null) {
-            logger.debug(String.format("Creating new patient for Avni subject %s", subject.getUuid()));
-            //TODO: Remove createPatient call and log an error so this enrolment can be retried once patient is created manually
-            patientService.createPatient(subject, metaData, constants);
+            logger.debug(String.format("Patient with identifier %s not found", subject.getId(metaData)));
+            enrolmentService.processPatientNotFound(enrolment, subject, metaData);
         }
 
         entityStatusService.saveEntityStatus(enrolment);

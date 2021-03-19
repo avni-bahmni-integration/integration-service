@@ -7,6 +7,7 @@ import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
+import org.bahmni_avni_integration.integration_data.internal.AvniToBahmniMetaData;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
@@ -36,6 +37,19 @@ public class ErrorService {
         errorRecord.setAvniEntityType(AvniEntityType.Subject);
         errorRecord.setSubjectPatientExternalId(subject.getUuid());
         errorRecord.setSubjectPatientId(id);
+        errorRecord.setErrorType(errorType);
+        errorRecordRepository.save(errorRecord);
+    }
+
+    public void errorOccurred(Enrolment enrolment, ErrorType errorType, Subject subject, SubjectToPatientMetaData metaData) {
+        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEnrolmentExternalIdAndErrorType(AvniEntityType.Enrolment, enrolment.getUuid(), errorType);
+        if (errorRecord != null) return;
+
+        errorRecord = new ErrorRecord();
+        errorRecord.setAvniEntityType(AvniEntityType.Enrolment);
+        errorRecord.setEnrolmentExternalId(enrolment.getUuid());
+        errorRecord.setSubjectPatientExternalId(subject.getUuid());
+        errorRecord.setSubjectPatientId(subject.getId(metaData));
         errorRecord.setErrorType(errorType);
         errorRecordRepository.save(errorRecord);
     }

@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.service;
 
+import org.bahmni_avni_integration.integration_data.internal.AvniToBahmniEnrolmentMetaData;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
@@ -46,6 +47,13 @@ public class MappingMetaDataService {
         metaData.addEncounterMappings(mappings);
         String patientUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
         metaData.setBahmniEntityUuidConcept(patientUuidConcept);
+        return metaData;
+    }
+
+    public AvniToBahmniEnrolmentMetaData getForAvniToBahmniEnrolment() {
+        AvniToBahmniEnrolmentMetaData metaData = new AvniToBahmniEnrolmentMetaData();
+        String avniUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.AvniUUID_Concept);
+        metaData.setAvniEntityUuidConcept(avniUuidConcept);
         return metaData;
     }
 }
