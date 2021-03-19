@@ -5,11 +5,10 @@ import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
-import org.bahmni_avni_integration.integration_data.internal.AvniToBahmniEnrolmentMetaData;
-import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniEnrolmentRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
@@ -63,7 +62,6 @@ public class EnrolmentWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processEnrolment(Constants constants, Predicate<Enrolment> continueAfterOneRecord, SubjectToPatientMetaData metaData, Enrolment enrolment) {
-        AvniToBahmniEnrolmentMetaData enrolmentMetaData = mappingMetaDataService.getForAvniToBahmniEnrolment();
         logger.debug(String.format("Processing avni enrolment %s", enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));

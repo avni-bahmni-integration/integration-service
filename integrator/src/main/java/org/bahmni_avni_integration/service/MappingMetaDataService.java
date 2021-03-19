@@ -1,12 +1,11 @@
 package org.bahmni_avni_integration.service;
 
-import org.bahmni_avni_integration.integration_data.internal.AvniToBahmniEnrolmentMetaData;
-import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
-import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
-import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
+import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,10 +49,4 @@ public class MappingMetaDataService {
         return metaData;
     }
 
-    public AvniToBahmniEnrolmentMetaData getForAvniToBahmniEnrolment() {
-        AvniToBahmniEnrolmentMetaData metaData = new AvniToBahmniEnrolmentMetaData();
-        String avniUuidConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.AvniUUID_Concept);
-        metaData.setAvniEntityUuidConcept(avniUuidConcept);
-        return metaData;
-    }
 }

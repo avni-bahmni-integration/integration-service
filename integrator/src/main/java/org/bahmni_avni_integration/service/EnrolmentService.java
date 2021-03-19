@@ -35,10 +35,9 @@ public class EnrolmentService {
         if (patient == null) {
             return new Pair<>(null, null);
         }
-        String avniUuidConcept = mappingMetaDataRepository
-                .getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.AvniUUID_Concept);
+        String bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
         OpenMRSFullEncounter encounter = openMRSEncounterRepository
-                .getEncounterByPatientAndObservation(patient.getUuid(), avniUuidConcept, enrolment.getUuid());
+                .getEncounterByPatientAndObservation(patient.getUuid(), bahmniValueForAvniUuidConcept, enrolment.getUuid());
         return new Pair<>(patient, encounter);
     }
 

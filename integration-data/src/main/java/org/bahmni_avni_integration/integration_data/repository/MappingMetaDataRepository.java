@@ -59,4 +59,8 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
         mappingMetaData.setDataTypeHint(obsDataType);
         return save(mappingMetaData);
     }
+
+    default String getBahmniValueForAvniUuidConcept() {
+        return getBahmniValue(MappingGroup.Common, MappingType.AvniUUID_Concept);
+    }
 }
