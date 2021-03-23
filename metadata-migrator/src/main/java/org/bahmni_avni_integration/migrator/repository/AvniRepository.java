@@ -1,9 +1,10 @@
 package org.bahmni_avni_integration.migrator.repository;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.bahmni_avni_integration.migrator.repository.avni.AvniConceptRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -212,5 +214,38 @@ public class AvniRepository {
             }
         }
         return answerConcepts;
+    }
+
+    public void savePersonAttributes(List<OpenMRSPersonAttribute> personAttributes) throws SQLException {
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            AvniConceptRepository avniConceptRepository = new AvniConceptRepository(connection);
+            for (OpenMRSPersonAttribute personAttribute : personAttributes) {
+                avniConceptRepository.addConcept(personAttribute.getAvniDataType(), personAttribute.getAvniName());
+
+                if (personAttribute.getAttributeType() == OpenMRSPersonAttribute.AttributeType.Coded) {
+                    int i = 1;
+                    for (OpenMRSConcept answerConcept : personAttribute.getAnswers()) {
+                        avniConceptRepository.addConcept(answerConcept.getDataType(), answerConcept.getAvniConceptName());
+                        avniConceptRepository.addConceptAnswer(personAttribute.getAvniName(), answerConcept.getAvniConceptName(), i++);
+                    }
+                }
+            }
+        }
+    }
+
+    public void saveConcepts(List<OpenMRSConcept> concepts) throws SQLException {
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            AvniConceptRepository avniConceptRepository = new AvniConceptRepository(connection);
+            for (OpenMRSConcept concept : concepts) {
+                avniConceptRepository.addConcept(concept.getDataType(), concept.getAvniConceptName());
+                if (concept.getDataType().equals(ObsDataType.Coded.name())) {
+                    int i = 1;
+                    for (OpenMRSConcept answerConcept : concept.getAnswers()) {
+                        avniConceptRepository.addConcept(answerConcept.getDataType(), answerConcept.getAvniConceptName());
+                        avniConceptRepository.addConceptAnswer(concept.getAvniConceptName(), answerConcept.getAvniConceptName(), i++);
+                    }
+                }
+            }
+        }
     }
 }

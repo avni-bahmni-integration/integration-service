@@ -28,6 +28,7 @@ public class Migrator implements CommandLineRunner {
         if (args.length == 0) return;
         if (args[0].equals("run")) {
             bahmniToAvniService.migratePatientAttributes();
+            bahmniToAvniService.migrateConcepts();
             bahmniToAvniService.migrateForms();
         }
     }

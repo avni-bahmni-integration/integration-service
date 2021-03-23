@@ -51,12 +51,22 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     }
 
     default MappingMetaData saveMapping(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, ObsDataType obsDataType) {
+        MappingMetaData mappingMetaData = createMappingMetaData(mappingGroup, mappingType, bahmniValue, avniValue);
+        mappingMetaData.setDataTypeHint(obsDataType);
+        return save(mappingMetaData);
+    }
+
+    private MappingMetaData createMappingMetaData(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue) {
         MappingMetaData mappingMetaData = new MappingMetaData();
         mappingMetaData.setMappingGroup(mappingGroup);
         mappingMetaData.setMappingType(mappingType);
         mappingMetaData.setBahmniValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
-        mappingMetaData.setDataTypeHint(obsDataType);
+        return mappingMetaData;
+    }
+
+    default MappingMetaData saveMapping(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue) {
+        MappingMetaData mappingMetaData = createMappingMetaData(mappingGroup, mappingType, bahmniValue, avniValue);
         return save(mappingMetaData);
     }
 

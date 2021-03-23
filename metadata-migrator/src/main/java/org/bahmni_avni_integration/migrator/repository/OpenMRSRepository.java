@@ -15,7 +15,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -51,13 +50,14 @@ public class OpenMRSRepository {
             }
 
             PreparedStatement codedAnswerPS = connection.prepareStatement("""
-                    select answer_name.name, answer.uuid, COALESCE(pt.description, pt.name)
+                    select answer.uuid, answer_name.name, cd.name
                     from concept_answer mapping
                              join concept question on question.concept_id = mapping.concept_id
                              join concept answer on answer.concept_id = mapping.answer_concept
                              join concept_name answer_name on answer_name.concept_id = answer.concept_id
                              join concept_name question_name on question_name.concept_id = question.concept_id
                              join person_attribute_type pt on pt.foreign_key=question.concept_id
+                             join concept_datatype cd on answer.datatype_id = cd.concept_datatype_id
                     where pt.format='org.openmrs.Concept'
                       and pt.retired=false
                       and answer_name.concept_name_type = 'FULLY_SPECIFIED'
@@ -77,7 +77,7 @@ public class OpenMRSRepository {
                 codedAnswerPS.setString(1, codedAttribute.getName());
                 ResultSet codedAnswers = codedAnswerPS.executeQuery();
                 while (codedAnswers.next()) {
-                    codedAttribute.addAnswer(new OpenMRSConcept(codedAnswers.getString(2), codedAnswers.getString(1)));
+                    codedAttribute.addAnswer(OpenMRSConcept.forPersonConceptAndExtract(codedAnswers.getString(1), codedAnswers.getString(2), codedAnswers.getString(3)));
                 }
             }
         }
@@ -103,7 +103,7 @@ public class OpenMRSRepository {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                OpenMRSConcept openMRSConcept = new OpenMRSConcept(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4));
+                OpenMRSConcept openMRSConcept = OpenMRSConcept.forConceptExtract(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4));
                 concepts.add(openMRSConcept);
             }
 
@@ -111,18 +111,19 @@ public class OpenMRSRepository {
             List<OpenMRSConcept> codedConcepts = conceptsWithoutDuplicates.stream().filter(openMRSConcept -> openMRSConcept.getDataType().equals(ObsDataType.Coded.toString())).collect(Collectors.toList());
 
             String answerSql = """
-                    select ac.uuid, acn.name
+                    select ac.uuid, acn.name, cd.name
                     from concept c
-                           join concept_answer ca on c.concept_id = ca.concept_id
-                           join concept ac on ca.answer_concept = ac.concept_id
-                           join concept_name acn on acn.concept_id = ac.concept_id
+                             join concept_answer ca on c.concept_id = ca.concept_id
+                             join concept ac on ca.answer_concept = ac.concept_id
+                             join concept_name acn on acn.concept_id = ac.concept_id
+                             join concept_datatype cd on ac.datatype_id = cd.concept_datatype_id
                     where c.uuid = ?""";
             PreparedStatement answerPS = connection.prepareStatement(answerSql);
             for (OpenMRSConcept c : codedConcepts) {
                 answerPS.setString(1, c.getUuid());
                 ResultSet answers = answerPS.executeQuery();
                 while (answers.next()) {
-                    c.addAnswer(new OpenMRSConcept(answers.getString(1), answers.getString(2)));
+                    c.addAnswer(OpenMRSConcept.forPersonConceptAndExtract(answers.getString(1), answers.getString(2), answers.getString(3)));
                 }
             }
 

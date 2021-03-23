@@ -1,5 +1,7 @@
 package org.bahmni_avni_integration.migrator.domain;
 
+import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,11 @@ public class OpenMRSPersonAttribute {
         answers.add(openMRSConcept);
     }
 
-    enum AttributeType {
+    public String getAvniName() {
+        return NameMapping.fromBahmniToAvni(name);
+    }
+
+    public enum AttributeType {
         Primitive, Coded
     }
 
@@ -41,6 +47,12 @@ public class OpenMRSPersonAttribute {
 
     public AttributeType getAttributeType() {
         return attributeType;
+    }
+
+    public String getAvniDataType() {
+        if (attributeType.equals(AttributeType.Primitive)) return ObsDataType.Text.toString();
+        if (attributeType.equals(AttributeType.Coded)) return ObsDataType.Coded.toString();
+        throw new RuntimeException(String.format("OpenMRS attribute type: %s not mapped to Avni data type", attributeType.name()));
     }
 
     public List<OpenMRSConcept> getAnswers() {

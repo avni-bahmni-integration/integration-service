@@ -31,7 +31,7 @@ public class OpenMRSForm {
     }
 
     public void addConcept(String uuid, String name) {
-        OpenMRSConcept openMRSConcept = new OpenMRSConcept(uuid, name);
+        OpenMRSConcept openMRSConcept = OpenMRSConcept.forFormExtract(uuid, name);
         concepts.add(openMRSConcept);
     }
 
