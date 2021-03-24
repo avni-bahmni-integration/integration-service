@@ -119,7 +119,7 @@ public class AvniRepository {
     }
 
     private List<AvniForm> fetchForms(Connection connection) throws SQLException {
-        String formSelect = "select id, name from form where organisation_id in (select id from organisation) and is_voided = false order by id";
+        String formSelect = "select id, name from form where organisation_id in (select id from organisation) and name not ilike '% (Hospital)' and is_voided = false order by id";
         List<AvniForm> forms = new ArrayList<>();
         try (PreparedStatement formPS = connection.prepareStatement(formSelect)) {
             ResultSet formResult = formPS.executeQuery();

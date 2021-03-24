@@ -6,6 +6,8 @@ import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.domain.*;
+import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
+import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSVisitRepository;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSPatientRepository;
@@ -16,20 +18,26 @@ import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class PatientService {
-    @Autowired
-    private SubjectMapper subjectMapper;
-    @Autowired
-    private OpenMRSEncounterRepository openMRSEncounterRepository;
-    @Autowired
-    private OpenMRSPatientRepository openMRSPatientRepository;
-    @Autowired
-    private ErrorService errorService;
-    @Autowired
-    private OpenMRSPersonRepository openMRSPersonRepository;
+    private final SubjectMapper subjectMapper;
+    private final OpenMRSEncounterRepository openMRSEncounterRepository;
+    private final OpenMRSPatientRepository openMRSPatientRepository;
+    private final ErrorService errorService;
+    private final OpenMRSPersonRepository openMRSPersonRepository;
+    private final VisitService visitService;
+
+    public PatientService(SubjectMapper subjectMapper, OpenMRSEncounterRepository openMRSEncounterRepository, OpenMRSPatientRepository openMRSPatientRepository, ErrorService errorService, OpenMRSPersonRepository openMRSPersonRepository, VisitService visitService) {
+        this.subjectMapper = subjectMapper;
+        this.openMRSEncounterRepository = openMRSEncounterRepository;
+        this.openMRSPatientRepository = openMRSPatientRepository;
+        this.errorService = errorService;
+        this.openMRSPersonRepository = openMRSPersonRepository;
+        this.visitService = visitService;
+    }
 
     public void updateSubject(OpenMRSFullEncounter existingEncounter, OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToExistingEncounter(existingEncounter, subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
@@ -39,7 +47,12 @@ public class PatientService {
     }
 
     public OpenMRSFullEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+        OpenMRSUuidHolder visit = visitService.getVisit(patient.getUuid());
+        if (visit == null) {
+            visit = visitService.createVisit(patient.getUuid());
+        }
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
+        encounter.setVisit(visit.getUuid());
         OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
         errorService.successfullyProcessed(subject);
