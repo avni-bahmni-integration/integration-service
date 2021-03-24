@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @SpringBootTest
-class ConnectionFactoryExternalTest {
+public class ConnectionFactoryExternalTest {
     @Autowired
     private ConnectionFactory connectionFactory;
 

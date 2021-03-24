@@ -35,4 +35,9 @@ public class IntegrationDataService {
             mappingMetaDataRepository.saveMapping(MappingGroup.valueOf(keyValues.get("MappingGroup")), MappingType.valueOf(keyValues.get("MappingType")), keyValues.get("Bahmni Value"), keyValues.get("Avni Value"));
         });
     }
+
+    public void cleanup() {
+        mappingMetaDataRepository.deleteAll();
+        constantsRepository.deleteAll();
+    }
 }

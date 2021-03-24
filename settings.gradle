@@ -2,4 +2,3 @@ rootProject.name = 'bahmni_avni_integration'
 include 'metadata-migrator'
 include 'integrator'
 include 'integration-data'
-

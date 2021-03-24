@@ -41,7 +41,7 @@ public class OpenMRSRepository {
         OpenMRSPersonAttributes attributes = new OpenMRSPersonAttributes();
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select COALESCE(pt.description, pt.name), pt.uuid  from person_attribute_type pat where pat.format!='org.openmrs.Concept' and pat.retired=false and pt.name not in ('familyNameLocal', 'middleNameLocal', 'primaryContact')");
+            ResultSet resultSet = statement.executeQuery("select COALESCE(pat.description, pat.name), pat.uuid  from person_attribute_type pat where pat.format!='org.openmrs.Concept' and pat.retired=false and pat.name not in ('familyNameLocal', 'middleNameLocal', 'primaryContact')");
             while (resultSet.next()) {
                 attributes.add(OpenMRSPersonAttribute.createPrimitive(resultSet.getString(2), resultSet.getString(1)));
             }
@@ -53,20 +53,20 @@ public class OpenMRSRepository {
                              join concept answer on answer.concept_id = mapping.answer_concept
                              join concept_name answer_name on answer_name.concept_id = answer.concept_id
                              join concept_name question_name on question_name.concept_id = question.concept_id
-                             join person_attribute_type pt on pt.foreign_key=question.concept_id
+                             join person_attribute_type pat on pat.foreign_key=question.concept_id
                              join concept_datatype cd on answer.datatype_id = cd.concept_datatype_id
-                    where pt.format='org.openmrs.Concept'
-                      and pt.retired=false
+                    where pat.format='org.openmrs.Concept'
+                      and pat.retired=false
                       and answer_name.concept_name_type = 'FULLY_SPECIFIED'
                       and question_name.concept_name_type = 'FULLY_SPECIFIED'
-                      and COALESCE(pt.description, pt.name) = ?""");
+                      and COALESCE(pat.description, pat.name) = ?""");
             resultSet = statement.executeQuery("""
-                    select COALESCE(pt.description, pt.name), pt.uuid
-                    from person_attribute_type pt
-                             join concept question on pt.foreign_key=question.concept_id
+                    select COALESCE(pat.description, pat.name), pat.uuid
+                    from person_attribute_type pat
+                             join concept question on pat.foreign_key=question.concept_id
                              join concept_name question_name on question_name.concept_id = question.concept_id
-                    where pt.format='org.openmrs.Concept'
-                      and pt.retired=false
+                    where pat.format='org.openmrs.Concept'
+                      and pat.retired=false
                       and question_name.concept_name_type = 'FULLY_SPECIFIED'""");
             while (resultSet.next()) {
                 OpenMRSPersonAttribute codedAttribute = OpenMRSPersonAttribute.createCoded(resultSet.getString(2), resultSet.getString(1));

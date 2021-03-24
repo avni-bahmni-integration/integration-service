@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class OpenMRSPersonAttributes extends ArrayList<OpenMRSPersonAttribute> implements Jsonify {
+    private static Logger logger = Logger.getLogger(OpenMRSPersonAttributes.class);
 
     public String getGivenLocalName() {
         for (OpenMRSPersonAttribute attribute : this) {
@@ -51,7 +52,6 @@ public class OpenMRSPersonAttributes extends ArrayList<OpenMRSPersonAttribute> i
                 }
             }
              catch (ClassCastException e){
-                 Logger logger = Logger.getLogger(OpenMRSPersonAttributes.class);
                  logger.error("Unable to convert personAttributes"+ openMRSPersonAttribute.getValue().getClass() + "to json string. " + e.getMessage());
              }
 

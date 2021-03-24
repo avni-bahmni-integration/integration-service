@@ -1,7 +1,5 @@
 package org.bahmni_avni_integration.migrator;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
 import org.bahmni_avni_integration.migrator.config.AvniConfig;
 import org.bahmni_avni_integration.migrator.config.BahmniConfig;
 import org.bahmni_avni_integration.migrator.util.TxConfigurableConnection;
@@ -26,15 +24,8 @@ public class ConnectionFactory {
 
     public Connection getOpenMRSDbConnection() {
         try {
-            JSch jsch = new JSch();
-            jsch.addIdentity(bahmniConfig.getSshPrivateKey());
-            Session session = jsch.getSession(bahmniConfig.getSshUser(), bahmniConfig.getSshHost(), bahmniConfig.getSshPort());
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.connect();
-            session.setPortForwardingL(bahmniConfig.getLocalPort(), bahmniConfig.getOpenMrsMySqlServerFromSSHHost(), bahmniConfig.getOpenMrsMySqlPort());
-
             String driver = "com.mysql.jdbc.Driver";
-            String url = "jdbc:mysql://" + bahmniConfig.getOpenMrsMySqlServerFromSSHHost() + ":" + bahmniConfig.getLocalPort() + "/";
+            String url = "jdbc:mysql://localhost:" + bahmniConfig.getOpenMrsMySqlPort() + "/";
 
             Class.forName(driver);
             Connection connection = DriverManager.getConnection(url + bahmniConfig.getOpenMrsMySqlDatabase(), bahmniConfig.getOpenMrsMySqlUser(), bahmniConfig.getOpenMrsMySqlPassword());
@@ -47,12 +38,12 @@ public class ConnectionFactory {
     public Connection getAvniConnection() {
         try {
             String driver = "org.postgresql.Driver";
-            String url = "jdbc:postgresql://localhost:" + avniConfig.getLocalPort() + "/";
+            String url = "jdbc:postgresql://localhost:" + avniConfig.getDbPort() + "/";
 
             Class.forName(driver);
             Connection connection = DriverManager.getConnection(url + avniConfig.getAvniPostgresDatabase(), avniConfig.getAvniPostgresUser(), avniConfig.getAvniPostgresPassword());
             Statement statement = connection.createStatement();
-            statement.execute("set role bahmni_ashwini_integration");
+            statement.execute(String.format("set role %s", avniConfig.getImplementationOrgDbUser()));
             statement.close();
             return new TxConfigurableConnection(connection, txRollback);
         } catch (Exception e) {

@@ -9,10 +9,7 @@ import org.bahmni_avni_integration.migrator.repository.avni.AvniEncounterTypeRep
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,19 +34,24 @@ public class AvniRepository {
         String deleteFormElements = "delete from form_element e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
         String deleteOperationalEncounterTypes = "delete from operational_encounter_type e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
         String deleteEncounterTypes = "delete from encounter_type e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+        String deleteConceptAnswers = "delete from concept_answer e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+        String deleteConcepts = "delete from concept e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
 
         try (Connection connection = connectionFactory.getAvniConnection()) {
             delete(deleteFormsMappings, connection, "Form Mapping");
-            delete(deleteForms, connection, "Form");
-            delete(deleteFormElementGroups, connection, "Form Element Group");
             delete(deleteFormElements, connection, "Form Element");
+            delete(deleteFormElementGroups, connection, "Form Element Group");
+            delete(deleteForms, connection, "Form");
             delete(deleteOperationalEncounterTypes, connection, "Operational Encounter Type");
             delete(deleteEncounterTypes, connection, "Encounter Type");
+            delete(deleteConceptAnswers, connection, "Concept Answer");
+            delete(deleteConcepts, connection, "Concept");
         }
     }
 
     private void delete(String sql, Connection connection, String entityType) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setDate(1, Date.valueOf(cutoffDate));
         int deletedRowCount = preparedStatement.executeUpdate();
         logger.info(String.format("Deleted %d row of %s", deletedRowCount, entityType));
         preparedStatement.close();

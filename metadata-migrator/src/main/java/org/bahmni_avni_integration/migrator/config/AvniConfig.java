@@ -5,17 +5,20 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AvniConfig {
-    @Value("${avni.postgres.user}")
+    @Value("${avni.db.user}")
     private String avniPostgresUser;
 
-    @Value("${avni.postgres.password}")
+    @Value("${avni.db.password}")
     private String avniPostgresPassword;
 
-    @Value("${avni.postgres.database}")
+    @Value("${avni.db.name}")
     private String avniPostgresDatabase;
 
-    @Value("${avni.server.ssh.local.port}")
-    private int localPort;
+    @Value("${avni.db.port}")
+    private int dbPort;
+
+    @Value("${avni.impl_org.db.user}")
+    private String implementationOrgDbUser;
 
     public String getAvniPostgresUser() {
         return avniPostgresUser;
@@ -29,7 +32,11 @@ public class AvniConfig {
         return avniPostgresDatabase;
     }
 
-    public int getLocalPort() {
-        return localPort;
+    public int getDbPort() {
+        return dbPort;
+    }
+
+    public String getImplementationOrgDbUser() {
+        return implementationOrgDbUser;
     }
 }
