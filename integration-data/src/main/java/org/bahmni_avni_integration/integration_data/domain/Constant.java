@@ -12,6 +12,14 @@ public class Constant extends BaseEntity {
     @Column
     private String value;
 
+    public Constant() {
+    }
+
+    public Constant(ConstantKey key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
     public ConstantKey getKey() {
         return key;
     }

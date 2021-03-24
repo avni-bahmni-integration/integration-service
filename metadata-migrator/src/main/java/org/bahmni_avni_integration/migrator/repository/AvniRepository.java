@@ -5,6 +5,7 @@ import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.repository.avni.AvniConceptRepository;
+import org.bahmni_avni_integration.migrator.repository.avni.AvniEncounterTypeRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -56,31 +57,21 @@ public class AvniRepository {
 
     public void createForms(List<OpenMRSForm> forms) throws SQLException {
         try (Connection connection = connectionFactory.getAvniConnection()) {
-            String operationalEncounterTypeInsert = "insert into operational_encounter_type (uuid, organisation_id, encounter_type_id, version, audit_id, name) values (uuid_generate_v4(), (select id from organisation), (select id from encounter_type where name = ?), 0, create_audit(), ?)";
-            String encounterTypeInsert = "insert into encounter_type (name, uuid, version, audit_id, organisation_id) values (?, uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
             String formInsert = "insert into form (name, form_type, uuid, version, audit_id, organisation_id) values (?, ?, uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
             String formElementGroupInsert = "insert into form_element_group (name, form_id, uuid, version, audit_id, organisation_id) values (?, (select id from form where name = ?), uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
             String formElementInsert = "insert into form_element (name, display_order, concept_id, form_element_group_id, uuid, version, audit_id, organisation_id)  values (?, ?, (select id from concept where name = ?), (select id from form_element_group where name = ?), uuid_generate_v4(), 0, create_audit(), (select id from organisation))";
             String encounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(), (select id from organisation))";
             String programEncounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id, entity_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(), (select id from organisation), (select id from program where name = ?))";
 
-            PreparedStatement operationalEncounterTypePS = connection.prepareStatement(operationalEncounterTypeInsert);
-            PreparedStatement encounterTypePS = connection.prepareStatement(encounterTypeInsert);
             PreparedStatement formInsertPS = connection.prepareStatement(formInsert);
             PreparedStatement formElementGroupPS = connection.prepareStatement(formElementGroupInsert);
             PreparedStatement formElementPS = connection.prepareStatement(formElementInsert);
             PreparedStatement encounterFormMappingPS = connection.prepareStatement(encounterFormMappingInsert);
             PreparedStatement programEncounterFormMappingPS = connection.prepareStatement(programEncounterFormMappingInsert);
 
+            AvniEncounterTypeRepository avniEncounterTypeRepository = new AvniEncounterTypeRepository(connection);
             for (OpenMRSForm form : forms) {
-                encounterTypePS.setString(1, form.getFormName());
-                encounterTypePS.executeUpdate();
-                logger.info("Created encounter type: " + form.getFormName());
-
-                operationalEncounterTypePS.setString(1, form.getFormName());
-                operationalEncounterTypePS.setString(2, form.getFormName());
-                operationalEncounterTypePS.executeUpdate();
-                logger.info("Created operational encounter type: " + form.getFormName());
+                avniEncounterTypeRepository.create(form.getFormName());
 
                 formInsertPS.setString(1, form.getFormName());
                 formInsertPS.setString(2, form.getType());
@@ -116,12 +107,6 @@ public class AvniRepository {
                     logger.info("Created program encounter form mapping for form: " + form.getFormName());
                 }
             }
-            operationalEncounterTypePS.close();
-            encounterTypePS.close();
-            formInsertPS.close();
-            formElementGroupPS.close();
-            formElementPS.close();
-            encounterFormMappingPS.close();
         }
     }
 
@@ -246,6 +231,13 @@ public class AvniRepository {
                     }
                 }
             }
+        }
+    }
+
+    public void createConcept(ObsDataType dataType, String name) throws SQLException {
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            AvniConceptRepository avniConceptRepository = new AvniConceptRepository(connection);
+            avniConceptRepository.addConcept(dataType.toString(), name);
         }
     }
 }

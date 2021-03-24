@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ImplementationConfigurationRepository {
@@ -16,7 +17,14 @@ public class ImplementationConfigurationRepository {
     private FileUtil fileUtil;
 
     public List<OpenMRSForm> getForms() {
-        String bahmniFormFile = "bahmni/bahmni-forms.json";
-        return ObjectJsonMapper.readValue(fileUtil.readConfigFile(bahmniFormFile),  new TypeReference<List<OpenMRSForm>>(){});
+        return ObjectJsonMapper.readValue(fileUtil.readConfigFile("bahmni/bahmni-forms.json"),  new TypeReference<List<OpenMRSForm>>(){});
+    }
+
+    public Map<String, String> getConstants() {
+        return ObjectJsonMapper.readValue(fileUtil.readConfigFile("integration/constants.json"),  new TypeReference<Map<String, String>>(){});
+    }
+
+    public List<Map<String, String>> getStandardMappings() {
+        return ObjectJsonMapper.readValue(fileUtil.readConfigFile("integration/standard-mappings.json"),  new TypeReference<List<Map<String, String>>>(){});
     }
 }

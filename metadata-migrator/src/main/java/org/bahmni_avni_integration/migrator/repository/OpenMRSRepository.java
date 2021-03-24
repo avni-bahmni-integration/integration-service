@@ -3,10 +3,7 @@ package org.bahmni_avni_integration.migrator.repository;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
-import org.bahmni_avni_integration.migrator.domain.CreateConceptResult;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSConcept;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSPersonAttribute;
+import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,8 +37,8 @@ public class OpenMRSRepository {
         }
     }
 
-    public List<OpenMRSPersonAttribute> getPersonAttributes() throws SQLException {
-        List<OpenMRSPersonAttribute> attributes = new ArrayList<>();
+    public OpenMRSPersonAttributes getPersonAttributes() throws SQLException {
+        OpenMRSPersonAttributes attributes = new OpenMRSPersonAttributes();
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("select COALESCE(pt.description, pt.name), pt.uuid  from person_attribute_type pat where pat.format!='org.openmrs.Concept' and pat.retired=false and pt.name not in ('familyNameLocal', 'middleNameLocal', 'primaryContact')");

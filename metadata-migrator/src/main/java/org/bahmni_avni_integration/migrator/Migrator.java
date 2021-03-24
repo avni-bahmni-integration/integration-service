@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.migrator;
 
 import org.bahmni_avni_integration.migrator.service.BahmniToAvniService;
+import org.bahmni_avni_integration.migrator.service.IntegrationDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +19,8 @@ import java.sql.SQLException;
 public class Migrator implements CommandLineRunner {
     @Autowired
     private BahmniToAvniService bahmniToAvniService;
+    @Autowired
+    private IntegrationDataService integrationDataService;
 
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(Migrator.class, args).close();
@@ -25,11 +28,16 @@ public class Migrator implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (args.length == 0) return;
+        if (args.length <= 2) return;
         if (args[0].equals("run")) {
+            bahmniToAvniService.cleanup();
+            bahmniToAvniService.createStandardMetadata();
             bahmniToAvniService.migratePatientAttributes();
             bahmniToAvniService.migrateConcepts();
             bahmniToAvniService.migrateForms();
+
+            integrationDataService.createConstants();
+            integrationDataService.createStandardMappings();
         }
     }
 }

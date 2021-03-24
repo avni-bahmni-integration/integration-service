@@ -1,0 +1,8 @@
+[
+  {
+    "MappingGroup": "PatientSubject",
+    "MappingType": "PatientIdentifier_Concept",
+    "Bahmni Value": "Patient Identifier",
+    "Avni Value": "Sangam Number"
+  }
+]

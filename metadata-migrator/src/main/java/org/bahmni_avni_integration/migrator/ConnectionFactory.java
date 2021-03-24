@@ -21,7 +21,7 @@ public class ConnectionFactory {
     @Autowired
     private AvniConfig avniConfig;
 
-    @Value("${app.tx.rollback}")
+    @Value("${app.config.tx.rollback}")
     private boolean txRollback;
 
     public Connection getOpenMRSDbConnection() {
