@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,6 +45,7 @@ public class BahmniToAvniService {
             logger.info(String.format("Creating mapping for form: %s", form.getFormName()));
             mappingMetaDataRepository.saveMapping(form.getMappingGroup(), MappingType.EncounterType, form.getUuid(), form.getFormName(), null);
         }
+        logger.info("Bahmni forms created in Avni");
     }
 
     public void migratePatientAttributes() throws SQLException {
@@ -56,19 +56,22 @@ public class BahmniToAvniService {
         for (OpenMRSPersonAttribute openMRSPersonAttribute : personAttributes) {
             mappingMetaDataRepository.saveMapping(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept, openMRSPersonAttribute.getUuid(), openMRSPersonAttribute.getAvniName());
         }
+        logger.info("Patient attributes mapping to Avni completed");
+        logger.info("Patient attributes migration completed");
     }
 
     public void migrateConcepts() throws SQLException {
         List<OpenMRSConcept> concepts = openMRSRepository.getConcepts();
-        List<OpenMRSConcept> workingConcepts = OpenMRSConcept.getFullyQualifiedConceptsWherePresent(concepts);
-        avniRepository.saveConcepts(workingConcepts);
-        for (OpenMRSConcept openMRSConcept : workingConcepts) {
-            mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniConceptName());
+        avniRepository.saveConcepts(concepts);
+        for (OpenMRSConcept openMRSConcept : concepts) {
+            mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName());
         }
+        logger.info("Saved mapping for concepts");
     }
 
     public void createStandardMetadata() throws SQLException {
         avniRepository.createConcept(ObsDataType.Text, Names.BahmniEntityUuid);
+        logger.info("Standard Metadata created");
     }
 
     public void cleanup() throws SQLException {

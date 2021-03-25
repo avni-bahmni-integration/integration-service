@@ -5,7 +5,7 @@ import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenMRSPersonAttribute {
+public class OpenMRSPersonAttribute implements OpenMRSTerminology {
     private String uuid;
     private String name;
     private AttributeType attributeType;
@@ -30,7 +30,7 @@ public class OpenMRSPersonAttribute {
     }
 
     public String getAvniName() {
-        return NameMapping.fromBahmniToAvni(name);
+        return NameMapping.fromBahmniPersonAttributeToAvni(name);
     }
 
     public enum AttributeType {

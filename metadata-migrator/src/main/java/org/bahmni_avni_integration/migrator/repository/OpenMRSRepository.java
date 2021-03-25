@@ -92,7 +92,7 @@ public class OpenMRSRepository {
                                         left outer join concept_attribute_type cat on ca.attribute_type_id = cat.concept_attribute_type_id
                                  where c.is_set = false
                                    and cdt.name not in ('Rule', 'Document', 'Complex')
-                                   and cn.concept_name_type = 'SHORT'
+                                   and cn.concept_name_type = 'FULLY_SPECIFIED'
                                    and cc.name not in ('LabTest', 'Concept Attribute', 'Drug', 'Image', 'URL', 'Video')
                                    and cn.name <> '' and (cat.name <> 'Avni' or cat.name is null)""";
         List<OpenMRSConcept> concepts = new ArrayList<>();
@@ -104,8 +104,7 @@ public class OpenMRSRepository {
                 concepts.add(openMRSConcept);
             }
 
-            List<OpenMRSConcept> conceptsWithoutDuplicates = concepts.stream().distinct().collect(Collectors.toList());
-            List<OpenMRSConcept> codedConcepts = conceptsWithoutDuplicates.stream().filter(openMRSConcept -> openMRSConcept.getDataType().equals(ObsDataType.Coded.toString())).collect(Collectors.toList());
+            List<OpenMRSConcept> codedConcepts = concepts.stream().filter(openMRSConcept -> openMRSConcept.getDataType().equals(ObsDataType.Coded.toString())).collect(Collectors.toList());
 
             String answerSql = """
                     select ac.uuid, acn.name, cd.name
@@ -114,7 +113,7 @@ public class OpenMRSRepository {
                              join concept ac on ca.answer_concept = ac.concept_id
                              join concept_name acn on acn.concept_id = ac.concept_id
                              join concept_datatype cd on ac.datatype_id = cd.concept_datatype_id
-                    where c.uuid = ?""";
+                    where c.uuid = ? and acn.concept_name_type = 'FULLY_SPECIFIED'""";
             PreparedStatement answerPS = connection.prepareStatement(answerSql);
             for (OpenMRSConcept c : codedConcepts) {
                 answerPS.setString(1, c.getUuid());
@@ -124,7 +123,7 @@ public class OpenMRSRepository {
                 }
             }
 
-            return conceptsWithoutDuplicates;
+            return concepts;
         }
     }
 
@@ -217,7 +216,7 @@ public class OpenMRSRepository {
 
         ResultSet resultSet = formConceptPS.executeQuery();
         while (resultSet.next()) {
-            form.addConcept(resultSet.getString(1), resultSet.getString(2));
+            form.addTerm(OpenMRSConcept.forFormExtract(resultSet.getString(1), resultSet.getString(2)));
         }
     }
 }

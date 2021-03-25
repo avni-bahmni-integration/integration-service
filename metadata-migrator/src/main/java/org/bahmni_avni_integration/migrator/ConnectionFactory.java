@@ -37,6 +37,9 @@ public class ConnectionFactory {
 
     public Connection getAvniConnection() {
         try {
+            if (avniConfig.getImplementationOrgDbUser() == null || avniConfig.getImplementationOrgDbUser().isEmpty() || avniConfig.getImplementationOrgDbUser().equals("dummy"))
+                throw new RuntimeException("Please set avni.impl_org.db.user property");
+
             String driver = "org.postgresql.Driver";
             String url = "jdbc:postgresql://localhost:" + avniConfig.getDbPort() + "/";
 

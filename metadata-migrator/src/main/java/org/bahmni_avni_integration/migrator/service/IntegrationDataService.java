@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.migrator.service;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.Constant;
 import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
@@ -23,10 +24,13 @@ public class IntegrationDataService {
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
 
+    private static Logger logger = Logger.getLogger(IntegrationDataService.class);
+
     public void createConstants() {
         Map<String, String> constants = implementationConfigurationRepository.getConstants();
         List<Constant> list = constants.keySet().stream().map(key -> new Constant(ConstantKey.valueOf(key), constants.get(key))).collect(Collectors.toList());
         constantsRepository.saveAll(list);
+        logger.info("Created constants");
     }
 
     public void createStandardMappings() {
@@ -34,10 +38,12 @@ public class IntegrationDataService {
         standardMappings.forEach(keyValues -> {
             mappingMetaDataRepository.saveMapping(MappingGroup.valueOf(keyValues.get("MappingGroup")), MappingType.valueOf(keyValues.get("MappingType")), keyValues.get("Bahmni Value"), keyValues.get("Avni Value"));
         });
+        logger.info("Standard mappings created in integration database");
     }
 
     public void cleanup() {
         mappingMetaDataRepository.deleteAll();
         constantsRepository.deleteAll();
+        logger.info("Integration metadata cleaned up");
     }
 }

@@ -9,10 +9,7 @@ public class OpenMRSPersonAttributes extends ArrayList<OpenMRSPersonAttribute> {
         OpenMRSForm openMRSForm = new OpenMRSForm();
         openMRSForm.setFormName(Names.AvniPatientRegistrationEncounter);
         openMRSForm.setType("Encounter");
-        this.stream().forEach(openMRSPersonAttribute -> {
-            openMRSForm.addConcept(openMRSPersonAttribute.getUuid(), openMRSPersonAttribute.getName());
-        });
-
+        this.forEach(openMRSForm::addTerm);
         return openMRSForm;
     }
 }

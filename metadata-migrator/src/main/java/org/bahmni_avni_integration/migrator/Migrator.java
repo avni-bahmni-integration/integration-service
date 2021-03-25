@@ -33,14 +33,15 @@ public class Migrator implements CommandLineRunner {
 
         try {
             bahmniToAvniService.cleanup();
-            bahmniToAvniService.createStandardMetadata();
-            bahmniToAvniService.migratePatientAttributes();
-            bahmniToAvniService.migrateConcepts();
-            bahmniToAvniService.migrateForms();
-
             integrationDataService.cleanup();
-            integrationDataService.createConstants();
-            integrationDataService.createStandardMappings();
+
+//            bahmniToAvniService.createStandardMetadata();
+//            bahmniToAvniService.migratePatientAttributes();
+//            bahmniToAvniService.migrateConcepts();
+//            bahmniToAvniService.migrateForms();
+//
+//            integrationDataService.createConstants();
+//            integrationDataService.createStandardMappings();
         } catch (Exception e) {
             logger.error("Migrator failed", e);
             System.exit(1);

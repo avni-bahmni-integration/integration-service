@@ -3,7 +3,6 @@ package org.bahmni_avni_integration.migrator.service;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +23,6 @@ class OpenMRSRepositoryExternalTest {
     public void populateForms() throws SQLException {
         List<OpenMRSForm> forms = implementationConfigurationRepository.getForms();
         openMRSRepository.populateForms(forms);
-        assertNotEquals(0, forms.get(0).getConcepts().size());
+        assertNotEquals(0, forms.get(0).getOpenMRSTerminologies().size());
     }
 }

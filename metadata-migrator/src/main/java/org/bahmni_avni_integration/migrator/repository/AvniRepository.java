@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -24,18 +23,19 @@ public class AvniRepository {
         this.connectionFactory = connectionFactory;
     }
 
-    @Value("${avni.cutoff_date}")
-    private String cutoffDate;
+    @Value("${avni.impl.user.id}")
+    private int implementationUserId;
 
     public void cleanup() throws SQLException {
-        String deleteFormsMappings = "delete from form_mapping e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
-        String deleteForms = "delete from form e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
-        String deleteFormElementGroups = "delete from form_element_group e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
-        String deleteFormElements = "delete from form_element e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
-        String deleteOperationalEncounterTypes = "delete from operational_encounter_type e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
-        String deleteEncounterTypes = "delete from encounter_type e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
-        String deleteConceptAnswers = "delete from concept_answer e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
-        String deleteConcepts = "delete from concept e using audit where e.audit_id = audit.id and audit.created_date_time >= ?";
+        String deleteFormsMappings = "delete from form_mapping e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+        String deleteForms = "delete from form e using audit where e.audit_id = audit.id and audit.created_by_id = ?"; 
+        String deleteFormElementGroups = "delete from form_element_group e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+        String deleteFormElements = "delete from form_element e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+        String deleteOperationalEncounterTypes = "delete from operational_encounter_type e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+        String deleteEncounterTypes = "delete from encounter_type e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+        String deleteConceptAnswers = "delete from concept_answer e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+        String deleteConcepts = "delete from concept e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+        String deleteAudits = "delete from audit where created_by_id = ?";
 
         try (Connection connection = connectionFactory.getAvniConnection()) {
             delete(deleteFormsMappings, connection, "Form Mapping");
@@ -46,14 +46,23 @@ public class AvniRepository {
             delete(deleteEncounterTypes, connection, "Encounter Type");
             delete(deleteConceptAnswers, connection, "Concept Answer");
             delete(deleteConcepts, connection, "Concept");
+            deleteAudits(deleteAudits, connection);
         }
+    }
+
+    private void deleteAudits(String auditDeleteSql, Connection connection) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(auditDeleteSql);
+        preparedStatement.setInt(1, implementationUserId);
+        int deletedRowCount = preparedStatement.executeUpdate();
+        logger.info(String.format("Deleted %d rows of audit", deletedRowCount));
+        preparedStatement.close();
     }
 
     private void delete(String sql, Connection connection, String entityType) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setDate(1, Date.valueOf(cutoffDate));
+        preparedStatement.setInt(1, implementationUserId);
         int deletedRowCount = preparedStatement.executeUpdate();
-        logger.info(String.format("Deleted %d row of %s", deletedRowCount, entityType));
+        logger.info(String.format("Deleted %d rows of %s", deletedRowCount, entityType));
         preparedStatement.close();
     }
 
@@ -85,16 +94,7 @@ public class AvniRepository {
                 formElementGroupPS.executeUpdate();
                 logger.info("Created form element group: " + form.getFormName());
 
-                int i = 1;
-                for (OpenMRSConcept openMRSConcept : form.getConcepts()) {
-                    formElementPS.setString(1, openMRSConcept.getName());
-                    formElementPS.setInt(2, i++);
-                    formElementPS.setString(3, openMRSConcept.getAvniConceptName());
-                    formElementPS.setString(4, form.getFormName());
-
-                    formElementPS.executeUpdate();
-                }
-                logger.info("Created form elements for form: " + form.getFormName());
+                createFormElement(formElementPS, form);
 
                 if (form.getProgram() == null) {
                     encounterFormMappingPS.setString(1, form.getFormName());
@@ -110,6 +110,24 @@ public class AvniRepository {
                 }
             }
         }
+    }
+
+    private void createFormElement(PreparedStatement formElementPS, OpenMRSForm form) throws SQLException {
+        int i = 1;
+        for (OpenMRSTerminology openMRSTerm : form.getOpenMRSTerminologies()) {
+            try {
+                formElementPS.setString(1, openMRSTerm.getAvniName());
+                formElementPS.setInt(2, i++);
+                formElementPS.setString(3, openMRSTerm.getAvniName());
+                formElementPS.setString(4, form.getFormName());
+
+                formElementPS.executeUpdate();
+            } catch (SQLException sqlException) {
+                logger.error(String.format("Could not create form element for: %s", openMRSTerm.getAvniName()));
+                throw sqlException;
+            }
+        }
+        logger.info("Created form elements for form: " + form.getFormName());
     }
 
     public List<AvniForm> getForms() throws SQLException {
@@ -212,28 +230,30 @@ public class AvniRepository {
                 if (personAttribute.getAttributeType() == OpenMRSPersonAttribute.AttributeType.Coded) {
                     int i = 1;
                     for (OpenMRSConcept answerConcept : personAttribute.getAnswers()) {
-                        avniConceptRepository.addConcept(answerConcept.getDataType(), answerConcept.getAvniConceptName());
-                        avniConceptRepository.addConceptAnswer(personAttribute.getAvniName(), answerConcept.getAvniConceptName(), i++);
+                        avniConceptRepository.addConcept(answerConcept.getDataType(), answerConcept.getAvniName());
+                        avniConceptRepository.addConceptAnswer(personAttribute.getAvniName(), answerConcept.getAvniName(), i++);
                     }
                 }
             }
         }
+        logger.info("Saved person attributes as concepts to Avni");
     }
 
     public void saveConcepts(List<OpenMRSConcept> concepts) throws SQLException {
         try (Connection connection = connectionFactory.getAvniConnection()) {
             AvniConceptRepository avniConceptRepository = new AvniConceptRepository(connection);
             for (OpenMRSConcept concept : concepts) {
-                avniConceptRepository.addConcept(concept.getDataType(), concept.getAvniConceptName());
+                avniConceptRepository.addConcept(concept.getDataType(), concept.getAvniName());
                 if (concept.getDataType().equals(ObsDataType.Coded.name())) {
                     int i = 1;
                     for (OpenMRSConcept answerConcept : concept.getAnswers()) {
-                        avniConceptRepository.addConcept(answerConcept.getDataType(), answerConcept.getAvniConceptName());
-                        avniConceptRepository.addConceptAnswer(concept.getAvniConceptName(), answerConcept.getAvniConceptName(), i++);
+                        avniConceptRepository.addConcept(answerConcept.getDataType(), answerConcept.getAvniName());
+                        avniConceptRepository.addConceptAnswer(concept.getAvniName(), answerConcept.getAvniName(), i++);
                     }
                 }
             }
         }
+        logger.info("Created concepts in Avni");
     }
 
     public void createConcept(ObsDataType dataType, String name) throws SQLException {

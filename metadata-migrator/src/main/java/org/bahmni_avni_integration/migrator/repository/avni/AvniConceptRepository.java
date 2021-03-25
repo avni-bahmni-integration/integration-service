@@ -37,9 +37,14 @@ public class AvniConceptRepository {
     }
 
     public void addConceptAnswer(String parentName, String childName, int order) throws SQLException {
-        psConceptAnswerInsert.setString(1, parentName);
-        psConceptAnswerInsert.setString(2, childName);
-        psConceptAnswerInsert.setInt(3, order);
-        psConceptAnswerInsert.executeUpdate();
+        try {
+            psConceptAnswerInsert.setString(1, parentName);
+            psConceptAnswerInsert.setString(2, childName);
+            psConceptAnswerInsert.setInt(3, order);
+            psConceptAnswerInsert.executeUpdate();
+        } catch (SQLException sqlException) {
+            logger.error(String.format("Error when adding answer: %s for concept: %s", childName, parentName));
+            throw sqlException;
+        }
     }
 }

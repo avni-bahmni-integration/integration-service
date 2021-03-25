@@ -12,7 +12,7 @@ public class OpenMRSForm {
     private String type;
     private String program;
 
-    private List<OpenMRSConcept> concepts = new ArrayList<>();
+    private List<OpenMRSTerminology> openMRSTerminologies = new ArrayList<>();
 
     public int getFormId() {
         return formId;
@@ -30,13 +30,12 @@ public class OpenMRSForm {
         this.formName = formName;
     }
 
-    public void addConcept(String uuid, String name) {
-        OpenMRSConcept openMRSConcept = OpenMRSConcept.forFormExtract(uuid, name);
-        concepts.add(openMRSConcept);
+    public void addTerm(OpenMRSTerminology openMRSTerminology) {
+        openMRSTerminologies.add(openMRSTerminology);
     }
 
-    public List<OpenMRSConcept> getConcepts() {
-        return concepts;
+    public List<OpenMRSTerminology> getOpenMRSTerminologies() {
+        return openMRSTerminologies;
     }
 
     public String getType() {

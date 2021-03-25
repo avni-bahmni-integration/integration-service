@@ -2,15 +2,15 @@ package org.bahmni_avni_integration.migrator.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-public class OpenMRSConcept {
+public class OpenMRSConcept implements OpenMRSTerminology {
     private String uuid;
     private String name;
     private String dataType;
     private String nameType;
     private List<OpenMRSConcept> answers = new ArrayList<>();
+
+    public static final String FULLY_SPECIFIED = "FULLY_SPECIFIED";
 
     private OpenMRSConcept() {}
 
@@ -50,8 +50,8 @@ public class OpenMRSConcept {
         return name;
     }
 
-    public String getAvniConceptName() {
-        return NameMapping.fromBahmniToAvni(getName());
+    public String getAvniName() {
+        return NameMapping.fromBahmniConceptToAvni(getName());
     }
 
     public void setName(String name) {
@@ -92,18 +92,10 @@ public class OpenMRSConcept {
         return nameType;
     }
 
-    public static List<OpenMRSConcept> getFullyQualifiedConceptsWherePresent(List<OpenMRSConcept> concepts) {
-        Map<String, List<OpenMRSConcept>> groupedConcepts = concepts.stream().collect(Collectors.groupingBy(OpenMRSConcept::getUuid));
-        ArrayList<OpenMRSConcept> uniqueConcepts = new ArrayList<>();
-        for (String conceptUuid : groupedConcepts.keySet()) {
-            List<OpenMRSConcept> conceptsWithSameUuid = groupedConcepts.get(conceptUuid);
-            OpenMRSConcept concept;
-            if (conceptsWithSameUuid.size() > 1)
-                concept = concepts.stream().filter(openMRSConcept -> openMRSConcept.getNameType().equals("FULLY_QUALIFIED")).findFirst().orElse(concepts.stream().findFirst().orElse(null));
-            else
-                concept = concepts.get(0);
-            uniqueConcepts.add(concept);
-        }
-        return uniqueConcepts;
+    @Override
+    public String toString() {
+        return "{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }
