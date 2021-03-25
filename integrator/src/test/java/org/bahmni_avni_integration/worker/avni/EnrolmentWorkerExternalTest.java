@@ -39,7 +39,7 @@ class EnrolmentWorkerExternalTest {
         Constants constants = constantsRepository.findAllConstants();
         Predicate<Enrolment> continueAfterOneRecord = enrolment -> false;
         SubjectToPatientMetaData subjectToPatientMetaData = mappingMetaDataService.getForSubjectToPatient();
-        Enrolment enrolment = avniEnrolmentRepository.getEnrolment("400fb6d9-bd21-465f-bcef-0b216b55363f");
+        Enrolment enrolment = avniEnrolmentRepository.getEnrolment("ef2aa636-4e8b-4c15-97e6-8e028cbbe4b7");
         enrolmentWorker.processEnrolment(constants, continueAfterOneRecord, subjectToPatientMetaData, enrolment);
     }
 }

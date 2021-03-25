@@ -88,8 +88,8 @@ public class PatientService {
     public void createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
         OpenMRSSavePerson person = new OpenMRSSavePerson();
         person.setNames(List.of(new OpenMRSSaveName(
-                (String) subject.getObservation("First name"),
-                (String) subject.getObservation("Last name"),
+                subject.getFirstName(),
+                subject.getLastName(),
                 true
         )));
         person.setGender(FormatAndParseUtil.fromAvniToOpenMRSGender((String) subject.getObservation("Gender")));

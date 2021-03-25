@@ -7,4 +7,12 @@ public class Subject extends AvniBaseContract {
     public String getId(SubjectToPatientMetaData subjectToPatientMetaData) {
         return (String) getObservation(subjectToPatientMetaData.avniIdentifierConcept());
     }
+
+    public String getFirstName() {
+        return (String) getObservation("First name");
+    }
+
+    public String getLastName() {
+        return (String) getObservation("Last name");
+    }
 }

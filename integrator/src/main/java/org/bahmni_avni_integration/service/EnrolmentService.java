@@ -21,13 +21,15 @@ public class EnrolmentService {
     private final OpenMRSEncounterRepository openMRSEncounterRepository;
     private final EnrolmentMapper enrolmentMapper;
     private final ErrorService errorService;
+    private final VisitService visitService;
 
-    public EnrolmentService(PatientService patientService, MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, EnrolmentMapper enrolmentMapper, ErrorService errorService) {
+    public EnrolmentService(PatientService patientService, MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, EnrolmentMapper enrolmentMapper, ErrorService errorService, VisitService visitService) {
         this.patientService = patientService;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.openMRSEncounterRepository = openMRSEncounterRepository;
         this.enrolmentMapper = enrolmentMapper;
         this.errorService = errorService;
+        this.visitService = visitService;
     }
 
     public Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> findCommunityEnrolment(Enrolment enrolment, Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
@@ -46,9 +48,14 @@ public class EnrolmentService {
     }
 
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
+        OpenMRSUuidHolder visit = visitService.getVisit(openMRSPatient.getUuid());
+        if (visit == null) {
+            visit = visitService.createVisit(openMRSPatient.getUuid());
+        }
         MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
         String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
         OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToEncounter(enrolment, openMRSPatient.getUuid(), encounterTypeUuid, constants);
+        encounter.setVisit(visit.getUuid());
         OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
         errorService.successfullyProcessed(enrolment);

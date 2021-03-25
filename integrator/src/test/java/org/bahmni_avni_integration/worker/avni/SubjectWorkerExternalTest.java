@@ -44,7 +44,7 @@ class SubjectWorkerExternalTest {
         Constants constants = constantsRepository.findAllConstants();
         Predicate<Subject> continueAfterOneRecord = subject -> false;
         var subjectToPatientMetaData = mappingMetaDataService.getForSubjectToPatient();
-        var subject = avniSubjectRepository.getSubject("8cd1330b-02f2-45e0-818a-fa8a1e238867");
+        var subject = avniSubjectRepository.getSubject("b04d4edf-46cb-422b-be58-8df0bff11666");
         subjectWorker.processSubject(constants, continueAfterOneRecord, subjectToPatientMetaData, subject);
     }
 }
