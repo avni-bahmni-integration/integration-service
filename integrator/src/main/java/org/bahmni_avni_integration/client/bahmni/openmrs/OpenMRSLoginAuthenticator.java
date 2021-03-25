@@ -28,12 +28,15 @@ public class OpenMRSLoginAuthenticator implements Authenticator {
     private static Logger logger = Logger.getLogger(OpenMRSLoginAuthenticator.class);
     private final String SESSION_ID_KEY = "JSESSIONID";
 
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
 
     private ConnectionDetails authenticationDetails;
     private HttpRequestDetails previousSuccessfulRequest;
 
     public OpenMRSLoginAuthenticator(ConnectionDetails authenticationDetails) {
         this.authenticationDetails = authenticationDetails;
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @Override
@@ -69,8 +72,6 @@ public class OpenMRSLoginAuthenticator implements Authenticator {
             }
             logger.info(String.format("Authentication response: %s", responseText));
             EntityUtils.consume(entity);
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             OpenMRSAuthenticationResponse openMRSResponse = objectMapper.readValue(responseText, OpenMRSAuthenticationResponse.class);
             confirmAuthenticated(openMRSResponse);
 

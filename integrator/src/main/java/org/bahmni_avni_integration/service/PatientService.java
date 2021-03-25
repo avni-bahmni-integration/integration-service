@@ -4,21 +4,20 @@ import org.apache.http.HttpStatus;
 import org.bahmni_avni_integration.client.bahmni.WebClientsException;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.*;
+import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
+import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
-import org.bahmni_avni_integration.integration_data.domain.*;
-import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
-import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSVisitRepository;
-import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSPatientRepository;
+import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSPersonRepository;
 import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.javatuples.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,6 +28,9 @@ public class PatientService {
     private final ErrorService errorService;
     private final OpenMRSPersonRepository openMRSPersonRepository;
     private final VisitService visitService;
+
+    @Value("${bahmni.avni.database}")
+    private String db;
 
     public PatientService(SubjectMapper subjectMapper, OpenMRSEncounterRepository openMRSEncounterRepository, OpenMRSPatientRepository openMRSPatientRepository, ErrorService errorService, OpenMRSPersonRepository openMRSPersonRepository, VisitService visitService) {
         this.subjectMapper = subjectMapper;

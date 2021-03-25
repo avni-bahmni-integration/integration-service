@@ -102,7 +102,7 @@ public class OpenMRSRepository {
                 concepts.add(openMRSConcept);
             }
 
-            List<OpenMRSConcept> codedConcepts = concepts.stream().filter(openMRSConcept -> openMRSConcept.getDataType().equals(ObsDataType.Coded.toString())).collect(Collectors.toList());
+            List<OpenMRSConcept> codedConcepts = concepts.stream().filter(openMRSConcept -> openMRSConcept.getAvniDataType().equals(ObsDataType.Coded.toString())).collect(Collectors.toList());
 
             String answerSql = """
                     select ac.uuid, acn.name, cd.name

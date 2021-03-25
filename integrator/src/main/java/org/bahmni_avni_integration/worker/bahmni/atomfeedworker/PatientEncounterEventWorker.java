@@ -50,7 +50,7 @@ public class PatientEncounterEventWorker implements EventWorker {
 
         List<BahmniSplitEncounter> splitEncounters = bahmniEncounter.getSplitEncounters();
         splitEncounters.forEach((splitEncounter) -> {
-            MappingMetaData mapping = metaData.getEncounterMappingFor(splitEncounter.getOpenMRSEncounterUuid());
+            MappingMetaData mapping = metaData.getEncounterMappingFor(splitEncounter.getFormConceptSetUuid());
             switch (mapping.getMappingGroup()) {
                 case GeneralEncounter -> processGeneralEncounter(splitEncounter, metaData, avniPatient);
                 case ProgramEnrolment -> processProgramEnrolment(splitEncounter, metaData, avniPatient);

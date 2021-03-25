@@ -1,5 +1,7 @@
 package org.bahmni_avni_integration.migrator.domain;
 
+import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +60,8 @@ public class OpenMRSConcept implements OpenMRSTerminology {
         this.name = name;
     }
 
-    public String getDataType() {
+    public String getAvniDataType() {
+        if (dataType.equals(ObsDataType.Boolean.name())) return ObsDataType.Coded.name();
         return dataType;
     }
 

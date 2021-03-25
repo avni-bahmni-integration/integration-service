@@ -64,7 +64,8 @@ public class BahmniToAvniService {
         List<OpenMRSConcept> concepts = openMRSRepository.getConcepts();
         avniRepository.saveConcepts(concepts);
         for (OpenMRSConcept openMRSConcept : concepts) {
-            mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName());
+            ObsDataType dataTypeHint = openMRSConcept.getAvniDataType().equals(ObsDataType.Coded.name()) ? ObsDataType.Coded : null;
+            mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);
         }
         logger.info("Saved mapping for concepts");
     }

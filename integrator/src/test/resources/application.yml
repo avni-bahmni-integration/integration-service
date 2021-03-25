@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/bahmni_avni_test
+    url: jdbc:postgresql://localhost:5432/${BAHMNI_AVNI_DB:bahmni_avni_test}
     driverClassName: org.postgresql.Driver
     username: bahmni_avni_admin
     password: password

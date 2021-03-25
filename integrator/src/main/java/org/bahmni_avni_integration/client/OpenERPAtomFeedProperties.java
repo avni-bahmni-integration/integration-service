@@ -12,8 +12,6 @@ public class OpenERPAtomFeedProperties implements OpenERPProperties {
 //todo - delete all openerp name
     private static Logger logger = Logger.getLogger(OpenERPAtomFeedProperties.class);
 
-
-
     @Value("${openerp.connectionTimeoutInMilliseconds}")
     private String openErpConTimeOut;
 

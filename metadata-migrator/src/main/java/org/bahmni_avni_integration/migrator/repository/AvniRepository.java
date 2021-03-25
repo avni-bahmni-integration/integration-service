@@ -8,7 +8,6 @@ import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.repository.avni.AvniConceptRepository;
 import org.bahmni_avni_integration.migrator.repository.avni.AvniEncounterTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -237,7 +236,7 @@ public class AvniRepository {
                 if (personAttribute.getAttributeType() == OpenMRSPersonAttribute.AttributeType.Coded) {
                     int i = 1;
                     for (OpenMRSConcept answerConcept : personAttribute.getAnswers()) {
-                        avniConceptRepository.addConcept(answerConcept.getDataType(), answerConcept.getAvniName(), avniConfig.getImplementationUserId());
+                        avniConceptRepository.addConcept(answerConcept.getAvniDataType(), answerConcept.getAvniName(), avniConfig.getImplementationUserId());
                         avniConceptRepository.addConceptAnswer(personAttribute.getAvniName(), answerConcept.getAvniName(), i++, avniConfig.getImplementationUserId());
                     }
                 }
@@ -250,11 +249,11 @@ public class AvniRepository {
         try (Connection connection = connectionFactory.getAvniConnection()) {
             AvniConceptRepository avniConceptRepository = new AvniConceptRepository(connection);
             for (OpenMRSConcept concept : concepts) {
-                avniConceptRepository.addConcept(concept.getDataType(), concept.getAvniName(), avniConfig.getImplementationUserId());
-                if (concept.getDataType().equals(ObsDataType.Coded.name())) {
+                avniConceptRepository.addConcept(concept.getAvniDataType(), concept.getAvniName(), avniConfig.getImplementationUserId());
+                if (concept.getAvniDataType().equals(ObsDataType.Coded.name())) {
                     int i = 1;
                     for (OpenMRSConcept answerConcept : concept.getAnswers()) {
-                        avniConceptRepository.addConcept(answerConcept.getDataType(), answerConcept.getAvniName(), avniConfig.getImplementationUserId());
+                        avniConceptRepository.addConcept(answerConcept.getAvniDataType(), answerConcept.getAvniName(), avniConfig.getImplementationUserId());
                         avniConceptRepository.addConceptAnswer(concept.getAvniName(), answerConcept.getAvniName(), i++, avniConfig.getImplementationUserId());
                     }
                 }
