@@ -1,5 +1,7 @@
 package org.bahmni_avni_integration.migrator.util;
 
+import org.apache.log4j.Logger;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -8,6 +10,8 @@ import java.util.concurrent.Executor;
 public class TxConfigurableConnection implements Connection {
     private Connection connection;
     private boolean mandatoryRollback;
+
+    private static Logger logger = Logger.getLogger(TxConfigurableConnection.class);
 
     public TxConfigurableConnection(Connection connection, boolean mandatoryRollback) throws SQLException {
         this.connection = connection;
@@ -62,6 +66,7 @@ public class TxConfigurableConnection implements Connection {
     public void close() throws SQLException {
         if (mandatoryRollback) {
             connection.rollback();
+            logger.info("Rolled back transaction");
             connection.setAutoCommit(true);
         }
         connection.close();

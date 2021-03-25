@@ -84,17 +84,15 @@ public class OpenMRSRepository {
     public List<OpenMRSConcept> getConcepts() throws SQLException {
         String sql = """
                 select c.uuid, cn.name, cdt.name, cn.concept_name_type
-                                 from concept c
-                                        join concept_name cn on cn.concept_id = c.concept_id
-                                        join concept_datatype cdt on cdt.concept_datatype_id = c.datatype_id
-                                        join concept_class cc on cc.concept_class_id = c.class_id
-                                        left outer join concept_attribute ca on c.concept_id = ca.concept_id
-                                        left outer join concept_attribute_type cat on ca.attribute_type_id = cat.concept_attribute_type_id
-                                 where c.is_set = false
-                                   and cdt.name not in ('Rule', 'Document', 'Complex')
-                                   and cn.concept_name_type = 'FULLY_SPECIFIED'
-                                   and cc.name not in ('LabTest', 'Concept Attribute', 'Drug', 'Image', 'URL', 'Video')
-                                   and cn.name <> '' and (cat.name <> 'Avni' or cat.name is null)""";
+                        from concept c
+                               join concept_name cn on cn.concept_id = c.concept_id
+                               join concept_datatype cdt on cdt.concept_datatype_id = c.datatype_id
+                               join concept_class cc on cc.concept_class_id = c.class_id
+                        where c.is_set = false
+                          and cdt.name not in ('Rule', 'Document', 'Complex')
+                          and cn.concept_name_type = 'FULLY_SPECIFIED'
+                          and cc.name not in ('LabTest', 'Concept Attribute', 'Drug', 'Image', 'URL', 'Video')
+                          and cn.name not like '%[Avni]'""";
         List<OpenMRSConcept> concepts = new ArrayList<>();
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             Statement statement = connection.createStatement();

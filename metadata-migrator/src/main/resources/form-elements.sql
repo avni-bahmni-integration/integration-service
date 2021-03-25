@@ -1,6 +1,7 @@
 select c.uuid, cn.name, foo.concept_set form_id
 from concept c
        join concept_datatype cd on cd.concept_datatype_id = c.datatype_id
+       join concept_class cc on cc.concept_class_id = c.class_id
        join (select cs_1.concept_id, cs_1.concept_set concept_set from concept_set cs_1 where cs_1.concept_set = ?
 
              union all
@@ -28,4 +29,6 @@ from concept c
              where cs_1.concept_set = ?) foo on c.concept_id = foo.concept_id
        left outer join concept_name cn on cn.concept_id = c.concept_id
 where c.is_set = 0
-  and cn.concept_name_type = 'SHORT'
+  and cn.concept_name_type = 'FULLY_SPECIFIED'
+  and cd.name not in ('Rule', 'Document', 'Complex')
+  and cc.name not in ('LabTest', 'Concept Attribute', 'Drug', 'Image', 'URL', 'Video')

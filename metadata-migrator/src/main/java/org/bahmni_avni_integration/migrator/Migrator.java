@@ -32,13 +32,13 @@ public class Migrator implements CommandLineRunner {
         if (args.length == 0) return;
 
         try {
-            bahmniToAvniService.cleanup();
-            integrationDataService.cleanup();
-
+//            bahmniToAvniService.cleanup();
+//            integrationDataService.cleanup();
+//
 //            bahmniToAvniService.createStandardMetadata();
 //            bahmniToAvniService.migratePatientAttributes();
 //            bahmniToAvniService.migrateConcepts();
-//            bahmniToAvniService.migrateForms();
+            bahmniToAvniService.migrateForms();
 //
 //            integrationDataService.createConstants();
 //            integrationDataService.createStandardMappings();

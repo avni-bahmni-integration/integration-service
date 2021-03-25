@@ -20,6 +20,9 @@ public class AvniConfig {
     @Value("${avni.impl_org.db.user}")
     private String implementationOrgDbUser;
 
+    @Value("${avni.impl.user.id}")
+    private int implementationUserId;
+
     public String getAvniPostgresUser() {
         return avniPostgresUser;
     }
@@ -38,5 +41,9 @@ public class AvniConfig {
 
     public String getImplementationOrgDbUser() {
         return implementationOrgDbUser;
+    }
+
+    public int getImplementationUserId() {
+        return implementationUserId;
     }
 }
