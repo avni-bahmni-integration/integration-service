@@ -3,6 +3,8 @@ package org.bahmni_avni_integration.worker.bahmni;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.config.OpenMRSAtomFeedPropertiesFactory;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.bahmni_avni_integration.integration_data.internal.BahmniToAvniMetaData;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,12 @@ public class PatientEncounterWorker extends BaseBahmniWorker {
         this.mappingMetaDataService = mappingMetaDataService;
     }
 
-    public void processEncounters(Constants constants) {
-        eventWorker.setConstants(constants);
-        eventWorker.setMetaData(mappingMetaDataService.getForBahmniEncounterToAvniEncounter());
+    public void processEncounters() {
         process(patientFeedLink, eventWorker);
+    }
+
+    public void setCache(Constants constants, BahmniEncounterToAvniEncounterMetaData metaData) {
+        eventWorker.setConstants(constants);
+        eventWorker.setMetaData(metaData);
     }
 }

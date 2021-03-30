@@ -268,4 +268,11 @@ public class AvniRepository {
             avniConceptRepository.addConcept(dataType.toString(), name, avniConfig.getImplementationUserId());
         }
     }
+
+    public void createEncounterType(String avniValue, int auditUserId) throws SQLException {
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            AvniEncounterTypeRepository avniEncounterTypeRepository = new AvniEncounterTypeRepository(connection);
+            avniEncounterTypeRepository.create(avniValue, auditUserId);
+        }
+    }
 }

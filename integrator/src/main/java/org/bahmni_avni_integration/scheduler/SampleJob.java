@@ -27,7 +27,8 @@ public class SampleJob implements Job {
         try {
             Constants allConstants = constantsRepository.findAllConstants();
             subjectWorker.processSubjects(allConstants);
-            patientWorker.processPatients(allConstants);
+            patientWorker.setConstants(allConstants);
+            patientWorker.processPatients();
         } catch (Exception e) {
             logger.error("Error calling API", e);
         }

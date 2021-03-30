@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
@@ -47,16 +48,19 @@ public class PatientEncounterEventWorker implements EventWorker {
         }
 
         GeneralEncounter avniPatient = subjectService.findPatient(metaData, bahmniEncounter.getOpenMRSEncounter().getPatient().getUuid());
-
-        List<BahmniSplitEncounter> splitEncounters = bahmniEncounter.getSplitEncounters();
-        splitEncounters.forEach((splitEncounter) -> {
-            MappingMetaData mapping = metaData.getEncounterMappingFor(splitEncounter.getFormConceptSetUuid());
-            switch (mapping.getMappingGroup()) {
-                case GeneralEncounter -> processGeneralEncounter(splitEncounter, metaData, avniPatient);
-                case ProgramEnrolment -> processProgramEnrolment(splitEncounter, metaData, avniPatient);
-                case ProgramEncounter -> processProgramEncounter(splitEncounter, metaData, avniPatient);
-            }
-        });
+        if (bahmniEncounter.getEncounterTypeUuid().equals(metaData.getLabMapping().getBahmniValue())) {
+            processLabEncounter(bahmniEncounter.getOpenMRSEncounter(), metaData, avniPatient);
+        } else {
+            List<BahmniSplitEncounter> splitEncounters = bahmniEncounter.getSplitEncounters();
+            splitEncounters.forEach((splitEncounter) -> {
+                MappingMetaData mapping = metaData.getEncounterMappingFor(splitEncounter.getFormConceptSetUuid());
+                switch (mapping.getMappingGroup()) {
+                    case GeneralEncounter -> processGeneralEncounter(splitEncounter, metaData, avniPatient);
+                    case ProgramEnrolment -> processProgramEnrolment(splitEncounter, metaData, avniPatient);
+                    case ProgramEncounter -> processProgramEncounter(splitEncounter, metaData, avniPatient);
+                }
+            });
+        }
     }
 
     private void processProgramEncounter(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
@@ -96,6 +100,19 @@ public class PatientEncounterEventWorker implements EventWorker {
             avniEncounterService.create(splitEncounter, metaData, avniPatient);
         } else if (existingAvniEncounter == null && avniPatient == null) {
             errorService.errorOccurred(splitEncounter, ErrorType.NoSubjectWithId);
+        }
+    }
+
+    private void processLabEncounter(OpenMRSFullEncounter openMRSEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+        GeneralEncounter existingAvniEncounter = avniEncounterService.getGeneralEncounter(openMRSEncounter, metaData.getLabMapping().getAvniValue(), metaData);
+        if (existingAvniEncounter != null && avniPatient != null) {
+            avniEncounterService.updateLabEncounter(openMRSEncounter, existingAvniEncounter, metaData, avniPatient);
+        } else if (existingAvniEncounter != null && avniPatient == null) {
+            errorService.errorOccurred(openMRSEncounter, ErrorType.SubjectIdChanged);
+        } else if (existingAvniEncounter == null && avniPatient != null) {
+            avniEncounterService.createLabEncounter(openMRSEncounter, metaData, avniPatient);
+        } else if (existingAvniEncounter == null && avniPatient == null) {
+            errorService.errorOccurred(openMRSEncounter, ErrorType.NoSubjectWithId);
         }
     }
 

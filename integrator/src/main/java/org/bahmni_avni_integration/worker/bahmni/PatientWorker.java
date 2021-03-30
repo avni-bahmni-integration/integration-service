@@ -16,6 +16,7 @@ public class PatientWorker extends BaseBahmniWorker {
     @Value("${bahmni.feed.patient}")
     private String patientFeedLink;
     private final PatientEventWorker eventWorker;
+    private Constants allConstants;
 
     @Autowired
     public PatientWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory, PatientEventWorker eventWorker) {
@@ -23,7 +24,11 @@ public class PatientWorker extends BaseBahmniWorker {
         this.eventWorker = eventWorker;
     }
 
-    public void processPatients(Constants constants) {
+    public void processPatients() {
         process(patientFeedLink, eventWorker);
+    }
+
+    public void setConstants(Constants allConstants) {
+        eventWorker.setConstants(allConstants);
     }
 }

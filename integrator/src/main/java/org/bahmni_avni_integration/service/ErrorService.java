@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.service;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
@@ -71,6 +72,18 @@ public class ErrorService {
         errorRecord.setBahmniEntityType(BahmniEntityType.Encounter);
         errorRecord.setSubjectPatientExternalId(bahmniSplitEncounter.getPatientUuid());
         errorRecord.setEncounterExternalId(bahmniSplitEncounter.getOpenMRSEncounterUuid());
+        errorRecord.setErrorType(errorType);
+        errorRecordRepository.save(errorRecord);
+    }
+
+    public void errorOccurred(OpenMRSFullEncounter openMRSFullEncounter, ErrorType errorType) {
+        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEncounterExternalIdAndErrorType(BahmniEntityType.Encounter, openMRSFullEncounter.getUuid(), errorType);
+        if (errorRecord != null) return;
+
+        errorRecord = new ErrorRecord();
+        errorRecord.setBahmniEntityType(BahmniEntityType.Encounter);
+        errorRecord.setSubjectPatientExternalId(openMRSFullEncounter.getPatient().getUuid());
+        errorRecord.setEncounterExternalId(openMRSFullEncounter.getUuid());
         errorRecord.setErrorType(errorType);
         errorRecordRepository.save(errorRecord);
     }

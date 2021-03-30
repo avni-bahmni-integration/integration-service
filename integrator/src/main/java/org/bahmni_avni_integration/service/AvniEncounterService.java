@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.service;
 
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
@@ -26,14 +27,29 @@ public class AvniEncounterService {
         avniEncounterRepository.update(existingAvniEncounter.getUuid(), encounter);
     }
 
+    public void updateLabEncounter(OpenMRSFullEncounter fullEncounter, GeneralEncounter existingAvniEncounter, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, GeneralEncounter avniPatient) {
+        GeneralEncounter encounter = openMRSEncounterMapper.mapToAvniEncounter(fullEncounter, bahmniEncounterToAvniEncounterMetaData, avniPatient);
+        avniEncounterRepository.update(existingAvniEncounter.getUuid(), encounter);
+    }
+
     public GeneralEncounter getGeneralEncounter(BahmniSplitEncounter bahmniSplitEncounter, BahmniEncounterToAvniEncounterMetaData metaData) {
         Map<String, Object> obsCriteria = Map.of(metaData.getBahmniEntityUuidConcept(), bahmniSplitEncounter.getOpenMRSEncounterUuid());
         // OpenMRS encounter uuid will be shared by multiple entities in Avni, hence encounter type is required
         return avniEncounterRepository.getEncounter(metaData.getAvniMappedName(bahmniSplitEncounter.getFormConceptSetUuid()), obsCriteria);
     }
 
+    public GeneralEncounter getGeneralEncounter(OpenMRSFullEncounter openMRSFullEncounter, String avniEncounterName, BahmniEncounterToAvniEncounterMetaData metaData) {
+        Map<String, Object> obsCriteria = Map.of(metaData.getBahmniEntityUuidConcept(), openMRSFullEncounter.getUuid());
+        return avniEncounterRepository.getEncounter(avniEncounterName, obsCriteria);
+    }
+
     public void create(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
         GeneralEncounter encounter = openMRSEncounterMapper.mapToAvniEncounter(splitEncounter, metaData, avniPatient);
+        avniEncounterRepository.create(encounter);
+    }
+
+    public void createLabEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+        GeneralEncounter encounter = openMRSEncounterMapper.mapToAvniEncounter(openMRSFullEncounter, metaData, avniPatient);
         avniEncounterRepository.create(encounter);
     }
 }

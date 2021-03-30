@@ -1,10 +1,8 @@
 package org.bahmni_avni_integration.migrator.service;
 
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
-import org.bahmni_avni_integration.integration_data.domain.MappingType;
-import org.bahmni_avni_integration.integration_data.domain.Names;
-import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
+import org.bahmni_avni_integration.integration_data.domain.*;
+import org.bahmni_avni_integration.migrator.config.AvniConfig;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSConcept;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSPersonAttribute;
@@ -13,12 +11,14 @@ import org.bahmni_avni_integration.migrator.repository.AvniRepository;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.migrator.repository.avni.AvniEncounterTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BahmniToAvniService {
@@ -34,6 +34,9 @@ public class BahmniToAvniService {
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
 
+    @Autowired
+    private AvniConfig avniConfig;
+
     private static Logger logger = Logger.getLogger(BahmniToAvniService.class);
 
     public void migrateForms() throws SQLException {
@@ -46,6 +49,10 @@ public class BahmniToAvniService {
             mappingMetaDataRepository.saveMapping(form.getMappingGroup(), MappingType.EncounterType, form.getUuid(), form.getFormName(), null);
         }
         logger.info("Bahmni forms created in Avni");
+
+        OpenMRSForm labForm = openMRSRepository.getLabForm();
+        avniRepository.createForms(Collections.singletonList(labForm));
+        logger.info("Lab form created in Avni");
     }
 
     public void migratePatientAttributes() throws SQLException {
@@ -72,6 +79,12 @@ public class BahmniToAvniService {
 
     public void createStandardMetadata() throws SQLException {
         avniRepository.createConcept(ObsDataType.Text, Names.BahmniEntityUuid);
+
+        List<Map<String, String>> standardMappings = implementationConfigurationRepository.getStandardMappings();
+        Map<String, String> labMappingType = standardMappings.stream().filter(stringStringMap -> stringStringMap.get("MappingType").equals(MappingType.LabEncounterType.name())).findFirst().orElse(null);
+        if (labMappingType != null) {
+            avniRepository.createEncounterType(labMappingType.get("Avni Value"), avniConfig.getImplementationUserId());
+        }
         logger.info("Standard Metadata created");
     }
 

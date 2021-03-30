@@ -4,5 +4,11 @@
     "MappingType": "PatientIdentifier_Concept",
     "Bahmni Value": "Patient Identifier",
     "Avni Value": "Sangam Number"
+  },
+  {
+    "MappingGroup": "GeneralEncounter",
+    "MappingType": "LabEncounterType",
+    "Bahmni Value": "82024e00-3f10-11e4-adec-0800271c1b75",
+    "Avni Value": "Lab Results"
   }
 ]

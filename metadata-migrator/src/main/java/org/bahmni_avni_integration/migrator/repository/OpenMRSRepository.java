@@ -81,6 +81,28 @@ public class OpenMRSRepository {
         return attributes;
     }
 
+//    todo what happens to observations for concepts of type N/A being direct observation
+    public OpenMRSForm getLabForm() throws SQLException {
+        String sql = """
+                select distinct cn.name from concept
+                join concept_name cn on concept.concept_id = cn.concept_id
+                join concept_class cc on concept.class_id = cc.concept_class_id
+                join concept_datatype cd on concept.datatype_id = cd.concept_datatype_id
+                where cc.name = 'LabTest' and concept.is_set = false and cd.name != 'N/A' and cn.concept_name_type = 'FULLY_SPECIFIED' and cn.name not like '%[Avni]'
+                """;
+        OpenMRSForm openMRSForm = new OpenMRSForm();
+        openMRSForm.setFormName("Lab Results");
+        openMRSForm.setType("Encounter");
+        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                openMRSForm.addTerm(new ConceptName(resultSet.getString(1)));
+            }
+        }
+        return openMRSForm;
+    }
+
     public List<OpenMRSConcept> getConcepts() throws SQLException {
         String sql = """
                 select c.uuid, cn.name, cdt.name, cn.concept_name_type
@@ -91,7 +113,7 @@ public class OpenMRSRepository {
                         where c.is_set = false
                           and cdt.name not in ('Rule', 'Document', 'Complex')
                           and cn.concept_name_type = 'FULLY_SPECIFIED'
-                          and cc.name not in ('LabTest', 'Concept Attribute', 'Drug', 'Image', 'URL', 'Video')
+                          and cc.name not in ('Concept Attribute', 'Drug', 'Image', 'URL', 'Video')
                           and cn.name not like '%[Avni]'""";
         List<OpenMRSConcept> concepts = new ArrayList<>();
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {

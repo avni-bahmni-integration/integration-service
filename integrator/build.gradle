@@ -66,9 +66,11 @@ dependencies {
 task unitTest( type: Test ) {
     useJUnitPlatform()
     exclude ("**/**ExternalTest.class")
+    exclude ("**/**FullRunTest.class")
 }
 
 test {
     useJUnitPlatform()
     include ("**/**ExternalTest.class")
+    exclude ("**/**FullRunTest.class")
 }

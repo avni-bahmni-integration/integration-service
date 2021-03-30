@@ -46,7 +46,9 @@ public class MappingMetaDataService {
         BahmniEncounterToAvniEncounterMetaData metaData = new BahmniEncounterToAvniEncounterMetaData();
         metaData.addEncounterMappings(mappings);
         metaData.setBahmniEntityUuidConcept(Names.BahmniEntityUuid);
+
+        MappingMetaData labMapping = mappingMetaDataRepository.findByMappingType(MappingType.LabEncounterType);
+        metaData.addLabMapping(labMapping);
         return metaData;
     }
-
 }

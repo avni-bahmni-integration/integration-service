@@ -8,6 +8,7 @@ public enum MappingType {
     SubjectUUID_Concept,
     PersonAttributeConcept,
     EncounterType,
+    LabEncounterType,
     Community_Enrolment_EncounterType,
     AvniUUID_Concept
 }

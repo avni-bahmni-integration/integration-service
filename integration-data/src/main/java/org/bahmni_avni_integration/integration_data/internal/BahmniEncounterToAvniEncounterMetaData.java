@@ -7,6 +7,7 @@ import java.util.List;
 public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaData {
     private String bahmniEntityUuidConcept;
     private List<MappingMetaData> encounterTypeMappings;
+    private MappingMetaData labMapping;
 
     public String getAvniMappedName(String openmrsEncounterTypeUuid) {
         MappingMetaData mapping = getMappingMetaData(openmrsEncounterTypeUuid);
@@ -36,5 +37,13 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
 
     public MappingMetaData getEncounterMappingFor(String openMRSEncounterUuid) {
         return encounterTypeMappings.stream().filter(x -> x.getBahmniValue().equals(openMRSEncounterUuid)).findFirst().orElse(null);
+    }
+
+    public void addLabMapping(MappingMetaData labMapping) {
+        this.labMapping = labMapping;
+    }
+
+    public MappingMetaData getLabMapping() {
+        return labMapping;
     }
 }

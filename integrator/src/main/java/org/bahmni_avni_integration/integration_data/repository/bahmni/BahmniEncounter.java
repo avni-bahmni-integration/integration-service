@@ -24,4 +24,8 @@ public class BahmniEncounter {
     public OpenMRSFullEncounter getOpenMRSEncounter() {
         return openMRSEncounter;
     }
+
+    public String getEncounterTypeUuid() {
+        return getOpenMRSEncounter().getEncounterType().getUuid();
+    }
 }

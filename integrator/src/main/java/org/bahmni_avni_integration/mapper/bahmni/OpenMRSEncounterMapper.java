@@ -4,6 +4,8 @@ import org.bahmni_avni_integration.contract.avni.AvniBaseContract;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSObservation;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
@@ -12,6 +14,8 @@ import org.bahmni_avni_integration.integration_data.repository.bahmni.BahmniSpli
 import org.bahmni_avni_integration.util.FormatAndParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class OpenMRSEncounterMapper {
@@ -28,8 +32,22 @@ public class OpenMRSEncounterMapper {
         return encounter;
     }
 
+    public GeneralEncounter mapToAvniEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, GeneralEncounter avniPatient) {
+        GeneralEncounter encounter = new GeneralEncounter();
+        encounter.setEncounterDateTime(FormatAndParseUtil.fromIsoDateString(openMRSFullEncounter.getEncounterDatetime()));
+        encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getLabMapping().getAvniValue());
+        encounter.setSubjectId(avniPatient.getSubjectExternalId());
+        addObservations(openMRSFullEncounter.getLeafObservations(), encounter, bahmniEncounterToAvniEncounterMetaData, openMRSFullEncounter.getUuid());
+        encounter.setEmptyCancelObservations();
+        return encounter;
+    }
+
     private void addObservations(BahmniSplitEncounter splitEncounter, AvniBaseContract avniBaseContract, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData) {
-        splitEncounter.getObservations().forEach(openMRSObservation -> {
+        addObservations(splitEncounter.getObservations(), avniBaseContract, bahmniEncounterToAvniEncounterMetaData, splitEncounter.getOpenMRSEncounterUuid());
+    }
+
+    private void addObservations(List<OpenMRSObservation> observations, AvniBaseContract avniBaseContract, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, String encounterUuid) {
+        observations.forEach(openMRSObservation -> {
             MappingMetaData conceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid());
             if (ObsDataType.Coded.equals(conceptMapping.getDataTypeHint())) {
                 MappingMetaData answerConceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept((String) openMRSObservation.getValue());
@@ -38,7 +56,7 @@ public class OpenMRSEncounterMapper {
                 avniBaseContract.addObservation(conceptMapping.getAvniValue(), openMRSObservation.getValue());
             }
         });
-        avniBaseContract.addObservation(bahmniEncounterToAvniEncounterMetaData.getBahmniEntityUuidConcept(), splitEncounter.getOpenMRSEncounterUuid());
+        avniBaseContract.addObservation(bahmniEncounterToAvniEncounterMetaData.getBahmniEntityUuidConcept(), encounterUuid);
     }
 
     public Enrolment mapToAvniEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
