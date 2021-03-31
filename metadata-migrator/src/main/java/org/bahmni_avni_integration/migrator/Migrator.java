@@ -35,9 +35,9 @@ public class Migrator implements CommandLineRunner {
             bahmniToAvniService.cleanup();
             integrationDataService.cleanup();
 
-            bahmniToAvniService.createStandardMetadata();
             bahmniToAvniService.migratePatientAttributes();
             bahmniToAvniService.migrateConcepts();
+            bahmniToAvniService.createStandardMetadata();
             bahmniToAvniService.migrateForms();
 
             integrationDataService.createConstants();

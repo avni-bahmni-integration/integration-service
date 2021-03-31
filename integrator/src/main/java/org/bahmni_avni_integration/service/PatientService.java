@@ -12,7 +12,7 @@ import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEn
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSPatientRepository;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSPersonRepository;
-import org.bahmni_avni_integration.util.FormatAndParseUtil;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Value;

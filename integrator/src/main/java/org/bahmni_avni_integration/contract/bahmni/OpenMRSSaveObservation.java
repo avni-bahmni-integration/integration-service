@@ -3,7 +3,7 @@ package org.bahmni_avni_integration.contract.bahmni;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
-import org.bahmni_avni_integration.util.FormatAndParseUtil;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

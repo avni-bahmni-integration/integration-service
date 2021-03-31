@@ -3,7 +3,7 @@ package org.bahmni_avni_integration.integration_data.repository.avni;
 import org.bahmni_avni_integration.client.AvniHttpClient;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.EnrolmentsResponse;
-import org.bahmni_avni_integration.util.FormatAndParseUtil;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

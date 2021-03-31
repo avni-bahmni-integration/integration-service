@@ -82,7 +82,7 @@ public class OpenMRSRepository {
     }
 
 //    todo what happens to observations for concepts of type N/A being direct observation
-    public OpenMRSForm getLabForm() throws SQLException {
+    public OpenMRSForm getLabForm(String formName) throws SQLException {
         String sql = """
                 select distinct cn.name from concept
                 join concept_name cn on concept.concept_id = cn.concept_id
@@ -91,7 +91,7 @@ public class OpenMRSRepository {
                 where cc.name = 'LabTest' and concept.is_set = false and cd.name != 'N/A' and cn.concept_name_type = 'FULLY_SPECIFIED' and cn.name not like '%[Avni]'
                 """;
         OpenMRSForm openMRSForm = new OpenMRSForm();
-        openMRSForm.setFormName("Lab Results");
+        openMRSForm.setFormName(formName);
         openMRSForm.setType("Encounter");
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             Statement statement = connection.createStatement();

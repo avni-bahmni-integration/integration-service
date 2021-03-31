@@ -3,10 +3,7 @@ package org.bahmni_avni_integration.migrator.service;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.migrator.config.AvniConfig;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSConcept;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSPersonAttribute;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSPersonAttributes;
+import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.repository.AvniRepository;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
@@ -49,10 +46,6 @@ public class BahmniToAvniService {
             mappingMetaDataRepository.saveMapping(form.getMappingGroup(), MappingType.EncounterType, form.getUuid(), form.getFormName(), null);
         }
         logger.info("Bahmni forms created in Avni");
-
-        OpenMRSForm labForm = openMRSRepository.getLabForm();
-        avniRepository.createForms(Collections.singletonList(labForm));
-        logger.info("Lab form created in Avni");
     }
 
     public void migratePatientAttributes() throws SQLException {
@@ -80,11 +73,26 @@ public class BahmniToAvniService {
     public void createStandardMetadata() throws SQLException {
         avniRepository.createConcept(ObsDataType.Text, Names.BahmniEntityUuid);
 
-        List<Map<String, String>> standardMappings = implementationConfigurationRepository.getStandardMappings();
-        Map<String, String> labMappingType = standardMappings.stream().filter(stringStringMap -> stringStringMap.get("MappingType").equals(MappingType.LabEncounterType.name())).findFirst().orElse(null);
+        StandardMappings standardMappings = implementationConfigurationRepository.getStandardMappings();
+        Map<String, String> labMappingType = standardMappings.getLabMappingType();
         if (labMappingType != null) {
-            avniRepository.createEncounterType(labMappingType.get("Avni Value"), avniConfig.getImplementationUserId());
+            OpenMRSForm labForm = openMRSRepository.getLabForm(labMappingType.get("Avni Value"));
+            avniRepository.createForms(Collections.singletonList(labForm));
+            logger.info("Lab form and encounter type created in Avni");
         }
+
+        Map<String, String> drugOrderMappingType = standardMappings.getDrugOrderMappingType();
+        Map<String, String> drugOrderConceptMapping = standardMappings.getDrugOrderConcept();
+        if (drugOrderMappingType != null) {
+            avniRepository.createConcept(ObsDataType.Text, drugOrderConceptMapping.get("Avni Value"));
+
+            OpenMRSForm prescriptionForm = new OpenMRSForm();
+            prescriptionForm.setFormName(drugOrderMappingType.get("Avni Value"));
+            prescriptionForm.setType("Encounter");
+            prescriptionForm.addTerm(new ConceptName(drugOrderConceptMapping.get("Avni Value")));
+            logger.info("Prescript form, encounter type, and concept created in Avni");
+        }
+
         logger.info("Standard Metadata created");
     }
 

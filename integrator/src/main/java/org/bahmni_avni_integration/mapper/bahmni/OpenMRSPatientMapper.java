@@ -7,7 +7,7 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttribute;
 import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaDataCollection;
-import org.bahmni_avni_integration.util.FormatAndParseUtil;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

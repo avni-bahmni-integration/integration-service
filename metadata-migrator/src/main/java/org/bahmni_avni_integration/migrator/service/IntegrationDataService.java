@@ -34,7 +34,7 @@ public class IntegrationDataService {
     }
 
     public void createStandardMappings() {
-        List<Map<String, String>> standardMappings = implementationConfigurationRepository.getStandardMappings();
+        List<Map<String, String>> standardMappings = implementationConfigurationRepository.getStandardMappings().getList();
         standardMappings.forEach(keyValues -> {
             mappingMetaDataRepository.saveMapping(MappingGroup.valueOf(keyValues.get("MappingGroup")), MappingType.valueOf(keyValues.get("MappingType")), keyValues.get("Bahmni Value"), keyValues.get("Avni Value"));
         });

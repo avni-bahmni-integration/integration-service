@@ -5,10 +5,13 @@ import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.config.AvniConfig;
 import org.bahmni_avni_integration.migrator.domain.*;
+import org.bahmni_avni_integration.migrator.repository.avni.AvniAuditRepository;
 import org.bahmni_avni_integration.migrator.repository.avni.AvniConceptRepository;
 import org.bahmni_avni_integration.migrator.repository.avni.AvniEncounterTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,6 +23,9 @@ public class AvniRepository {
     private final ConnectionFactory connectionFactory;
     private static final Logger logger = Logger.getLogger(AvniRepository.class);
     private final AvniConfig avniConfig;
+
+    @Value("${app.config.common.audit}")
+    private boolean useCommonAudit;
 
     @Autowired
     public AvniRepository(ConnectionFactory connectionFactory, AvniConfig avniConfig) {
@@ -36,7 +42,7 @@ public class AvniRepository {
         String deleteEncounterTypes = "delete from encounter_type e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
         String deleteConceptAnswers = "delete from concept_answer e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
         String deleteConcepts = "delete from concept e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteAudits = "delete from audit where created_by_id = ?";
+        String deleteAudits = "delete from audit where id in (select id from audit where created_by_id = ? limit 30)";
 
         try (Connection connection = connectionFactory.getAvniConnection()) {
             delete(deleteFormsMappings, connection, "Form Mapping");
@@ -54,8 +60,11 @@ public class AvniRepository {
     private void deleteAudits(String auditDeleteSql, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(auditDeleteSql);
         preparedStatement.setInt(1, avniConfig.getImplementationUserId());
-        int deletedRowCount = preparedStatement.executeUpdate();
-        logger.info(String.format("Deleted %d rows of audit", deletedRowCount));
+        while (true) {
+            int count = preparedStatement.executeUpdate();
+            if (count <= 0) break;
+            logger.info(String.format("Deleted %d rows of audit", count));
+        }
         preparedStatement.close();
     }
 
@@ -247,16 +256,42 @@ public class AvniRepository {
 
     public void saveConcepts(List<OpenMRSConcept> concepts) throws SQLException {
         try (Connection connection = connectionFactory.getAvniConnection()) {
+            int commonAuditId = 0;
+            if (useCommonAudit) {
+                AvniAuditRepository avniAuditRepository = new AvniAuditRepository(connection);
+                commonAuditId = avniAuditRepository.createAudit(avniConfig.getImplementationUserId());
+            }
+
             AvniConceptRepository avniConceptRepository = new AvniConceptRepository(connection);
+            int count = 0;
             for (OpenMRSConcept concept : concepts) {
-                avniConceptRepository.addConcept(concept.getAvniDataType(), concept.getAvniName(), avniConfig.getImplementationUserId());
+                count++;
+                if (useCommonAudit)
+                    avniConceptRepository.addConceptToBatchWithCommonAudit(concept.getAvniDataType(), concept.getAvniName(), commonAuditId);
+                else
+                    avniConceptRepository.addConceptToBatch(concept.getAvniDataType(), concept.getAvniName(), avniConfig.getImplementationUserId());
+
                 if (concept.getAvniDataType().equals(ObsDataType.Coded.name())) {
                     int i = 1;
                     for (OpenMRSConcept answerConcept : concept.getAnswers()) {
-                        avniConceptRepository.addConcept(answerConcept.getAvniDataType(), answerConcept.getAvniName(), avniConfig.getImplementationUserId());
-                        avniConceptRepository.addConceptAnswer(concept.getAvniName(), answerConcept.getAvniName(), i++, avniConfig.getImplementationUserId());
+                        if (useCommonAudit) {
+                            avniConceptRepository.addConceptToBatchWithCommonAudit(answerConcept.getAvniDataType(), answerConcept.getAvniName(), commonAuditId);
+                            avniConceptRepository.addConceptAnswerToBatchWithCommonAudit(concept.getAvniName(), answerConcept.getAvniName(), i++, commonAuditId);
+                        } else {
+                            avniConceptRepository.addConceptToBatch(answerConcept.getAvniDataType(), answerConcept.getAvniName(), avniConfig.getImplementationUserId());
+                            avniConceptRepository.addConceptAnswerToBatch(concept.getAvniName(), answerConcept.getAvniName(), i++, avniConfig.getImplementationUserId());
+                        }
                     }
                 }
+                if (count % 20 == 0) {
+                    avniConceptRepository.executeConceptBatch();
+                    avniConceptRepository.executeConceptAnswerBatch();
+                    logger.info("Created 20 more concepts in Avni");
+                }
+            }
+            if (count % 20 > 0) {
+                avniConceptRepository.executeConceptBatch();
+                avniConceptRepository.executeConceptAnswerBatch();
             }
         }
         logger.info("Created concepts in Avni");

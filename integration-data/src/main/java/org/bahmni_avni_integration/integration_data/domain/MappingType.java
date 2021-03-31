@@ -9,6 +9,8 @@ public enum MappingType {
     PersonAttributeConcept,
     EncounterType,
     LabEncounterType,
+    DrugOrderEncounterType,
+    DrugOrderConcept,
     Community_Enrolment_EncounterType,
     AvniUUID_Concept
 }

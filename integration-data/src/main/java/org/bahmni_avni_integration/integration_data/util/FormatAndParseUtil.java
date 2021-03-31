@@ -1,13 +1,16 @@
-package org.bahmni_avni_integration.util;
+package org.bahmni_avni_integration.integration_data.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Objects;
 
 public class FormatAndParseUtil {
+    public static String escapedForSql(String s) {
+        return s.replaceAll("'", "''");
+    }
+
     public static String toISODateStringWithTimezone(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
         return dateFormat.format(date);
