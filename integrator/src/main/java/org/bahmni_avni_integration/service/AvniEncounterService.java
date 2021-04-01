@@ -36,7 +36,7 @@ public class AvniEncounterService {
 
     public GeneralEncounter getLabResultGeneralEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData metaData) {
         Map<String, Object> obsCriteria = Map.of(metaData.getBahmniEntityUuidConcept(), openMRSFullEncounter.getUuid());
-        return avniEncounterRepository.getEncounter(metaData.getLabMapping().getAvniValue(), obsCriteria);
+        return avniEncounterRepository.getEncounter(metaData.getLabEncounterTypeMapping().getAvniValue(), obsCriteria);
     }
 
     public void create(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
@@ -62,6 +62,6 @@ public class AvniEncounterService {
     public GeneralEncounter getDrugOrderGeneralEncounter(OpenMRSFullEncounter openMRSEncounter, BahmniEncounterToAvniEncounterMetaData metaData) {
         Map<String, Object> obsCriteria = Map.of(metaData.getBahmniEntityUuidConcept(), openMRSEncounter.getUuid());
         // OpenMRS encounter uuid will be shared by multiple entities in Avni, hence encounter type is required
-        return avniEncounterRepository.getEncounter(metaData.getDrugOrderMapping().getAvniValue(), obsCriteria);
+        return avniEncounterRepository.getEncounter(metaData.getDrugOrderEncounterTypeMapping().getAvniValue(), obsCriteria);
     }
 }

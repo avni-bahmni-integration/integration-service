@@ -41,7 +41,7 @@ public class PatientEncounterEventWorkerExternalTest extends BaseExternalTest {
 
     @Test
     public void processDrugPrescriptionEncounter() {
-        patientEventWorker.process(patientEvent("dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"));
-        patientEncounterEventWorker.process(encounterEvent("00026702-c617-4af3-850f-e8bfc138804f"));
+        patientEventWorker.process(patientEvent("00052bd1-4e72-45ee-9c8f-b711685aae89"));
+        patientEncounterEventWorker.process(encounterEvent("42269eee-4d3f-45df-bdbf-b37af98290f9"));
     }
 }

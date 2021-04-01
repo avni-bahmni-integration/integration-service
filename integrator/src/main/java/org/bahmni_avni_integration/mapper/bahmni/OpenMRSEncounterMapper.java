@@ -35,7 +35,7 @@ public class OpenMRSEncounterMapper {
     public GeneralEncounter mapToAvniEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, GeneralEncounter avniPatient) {
         GeneralEncounter encounter = new GeneralEncounter();
         encounter.setEncounterDateTime(FormatAndParseUtil.fromIsoDateString(openMRSFullEncounter.getEncounterDatetime()));
-        encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getLabMapping().getAvniValue());
+        encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getLabEncounterTypeMapping().getAvniValue());
         encounter.setSubjectId(avniPatient.getSubjectExternalId());
         addObservations(openMRSFullEncounter.getLeafObservations(), encounter, bahmniEncounterToAvniEncounterMetaData, openMRSFullEncounter.getUuid());
         encounter.setEmptyCancelObservations();
@@ -45,10 +45,10 @@ public class OpenMRSEncounterMapper {
     public GeneralEncounter mapDrugOrderEncounterToAvniEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, GeneralEncounter avniPatient) {
         GeneralEncounter encounter = new GeneralEncounter();
         encounter.setEncounterDateTime(FormatAndParseUtil.fromIsoDateString(openMRSFullEncounter.getEncounterDatetime()));
-        encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getLabMapping().getAvniValue());
+        encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getDrugOrderEncounterTypeMapping().getAvniValue());
         encounter.setSubjectId(avniPatient.getSubjectExternalId());
         List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
-        encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getDrugOrderMapping().getAvniValue(), String.join("\n", drugOrders));
+        encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getDrugOrderConceptMapping().getAvniValue(), String.join("\n", drugOrders));
         encounter.setEmptyCancelObservations();
         return encounter;
     }

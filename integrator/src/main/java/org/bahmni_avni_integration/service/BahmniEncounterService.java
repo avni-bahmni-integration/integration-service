@@ -3,7 +3,6 @@ package org.bahmni_avni_integration.service;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
-import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.repository.bahmni.BahmniEncounter;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.ict4h.atomfeed.client.domain.Event;
@@ -25,7 +24,7 @@ public class BahmniEncounterService {
     }
 
     public boolean isProcessableLabEncounter(BahmniEncounter bahmniEncounter, BahmniEncounterToAvniEncounterMetaData metaData, Constants constants) {
-         return this.isOutpatientEncounter(bahmniEncounter, constants) && bahmniEncounter.getEncounterTypeUuid().equals(metaData.getLabMapping().getBahmniValue());
+         return this.isOutpatientEncounter(bahmniEncounter, constants) && bahmniEncounter.getEncounterTypeUuid().equals(metaData.getLabEncounterTypeMapping().getBahmniValue());
     }
 
     private boolean isOutpatientEncounter(BahmniEncounter bahmniEncounter, Constants constants) {

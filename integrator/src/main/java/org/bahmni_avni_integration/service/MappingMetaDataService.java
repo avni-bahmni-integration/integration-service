@@ -49,6 +49,7 @@ public class MappingMetaDataService {
 
         metaData.addLabMapping(mappingMetaDataRepository.findByMappingType(MappingType.LabEncounterType));
         metaData.addDrugOrderMapping(mappingMetaDataRepository.findByMappingType(MappingType.DrugOrderEncounterType));
+        metaData.addDrugOrderConceptMapping(mappingMetaDataRepository.findByMappingType(MappingType.DrugOrderEncounterType));
         return metaData;
     }
 }

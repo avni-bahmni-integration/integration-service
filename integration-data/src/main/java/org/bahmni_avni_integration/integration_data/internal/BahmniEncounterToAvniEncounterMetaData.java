@@ -7,8 +7,9 @@ import java.util.List;
 public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaData {
     private String bahmniEntityUuidConcept;
     private List<MappingMetaData> encounterTypeMappings;
-    private MappingMetaData labMapping;
-    private MappingMetaData drugOrderMapping;
+    private MappingMetaData labEncounterTypeMapping;
+    private MappingMetaData drugOrderEncounterTypeMapping;
+    private MappingMetaData drugOrderConceptMapping;
 
     public String getAvniMappedName(String openmrsEncounterTypeUuid) {
         MappingMetaData mapping = getMappingMetaData(openmrsEncounterTypeUuid);
@@ -41,18 +42,26 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
     }
 
     public void addLabMapping(MappingMetaData labMapping) {
-        this.labMapping = labMapping;
+        this.labEncounterTypeMapping = labMapping;
     }
 
-    public MappingMetaData getLabMapping() {
-        return labMapping;
+    public MappingMetaData getLabEncounterTypeMapping() {
+        return labEncounterTypeMapping;
     }
 
     public void addDrugOrderMapping(MappingMetaData drugOrderMapping) {
-        this.drugOrderMapping = drugOrderMapping;
+        this.drugOrderEncounterTypeMapping = drugOrderMapping;
     }
 
-    public MappingMetaData getDrugOrderMapping() {
-        return drugOrderMapping;
+    public MappingMetaData getDrugOrderEncounterTypeMapping() {
+        return drugOrderEncounterTypeMapping;
+    }
+
+    public void addDrugOrderConceptMapping(MappingMetaData drugOrderConceptMapping) {
+        this.drugOrderConceptMapping = drugOrderConceptMapping;
+    }
+
+    public MappingMetaData getDrugOrderConceptMapping() {
+        return drugOrderConceptMapping;
     }
 }

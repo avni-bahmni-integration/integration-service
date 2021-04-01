@@ -50,7 +50,11 @@ public class IntegrationDataService {
 
     public void cleanup() {
         mappingMetaDataRepository.deleteAll();
-        constantsRepository.deleteAll();
+        cleanupConstants();
         logger.info("Integration metadata cleaned up");
+    }
+
+    public void cleanupConstants() {
+        constantsRepository.deleteAll();
     }
 }

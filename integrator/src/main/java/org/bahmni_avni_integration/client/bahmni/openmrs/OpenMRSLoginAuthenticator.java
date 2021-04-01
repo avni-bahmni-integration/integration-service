@@ -25,10 +25,10 @@ import java.io.InputStream;
 import java.net.URI;
 
 public class OpenMRSLoginAuthenticator implements Authenticator {
-    private static Logger logger = Logger.getLogger(OpenMRSLoginAuthenticator.class);
+    private static final Logger logger = Logger.getLogger(OpenMRSLoginAuthenticator.class);
     private final String SESSION_ID_KEY = "JSESSIONID";
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
 
     private ConnectionDetails authenticationDetails;
@@ -70,7 +70,7 @@ public class OpenMRSLoginAuthenticator implements Authenticator {
                 InputStream content = entity.getContent();
                 responseText = IOUtils.toString(content);
             }
-            logger.info(String.format("Authentication response: %s", responseText));
+            logger.debug(String.format("Authentication response: %s", responseText));
             EntityUtils.consume(entity);
             OpenMRSAuthenticationResponse openMRSResponse = objectMapper.readValue(responseText, OpenMRSAuthenticationResponse.class);
             confirmAuthenticated(openMRSResponse);

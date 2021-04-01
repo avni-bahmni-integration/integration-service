@@ -11,6 +11,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @EnableJpaRepositories("org.bahmni_avni_integration.integration_data.repository")
@@ -21,7 +24,7 @@ public class Migrator implements CommandLineRunner {
     @Autowired
     private IntegrationDataService integrationDataService;
 
-    private static Logger logger = Logger.getLogger(Migrator.class);
+    private static final Logger logger = Logger.getLogger(Migrator.class);
 
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(Migrator.class, args).close();
@@ -29,7 +32,12 @@ public class Migrator implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (args.length == 0) return;
+        List<String> nonSpringArguments = Arrays.stream(args).filter(s -> !s.startsWith("--")).collect(Collectors.toList());
+        if (nonSpringArguments.size() == 0) return;
+        if (nonSpringArguments.get(0).equals("adhoc")) {
+            runAdhoc();
+            System.exit(0);
+        }
 
         try {
             bahmniToAvniService.cleanup();
@@ -42,11 +50,15 @@ public class Migrator implements CommandLineRunner {
 
             integrationDataService.createConstants();
             integrationDataService.createStandardMappings();
+            System.exit(0);
         } catch (Exception e) {
             logger.error("Migrator failed", e);
             System.exit(1);
-        } finally {
-            System.exit(0);
         }
+    }
+
+    private void runAdhoc() {
+        integrationDataService.cleanupConstants();
+        integrationDataService.createConstants();
     }
 }

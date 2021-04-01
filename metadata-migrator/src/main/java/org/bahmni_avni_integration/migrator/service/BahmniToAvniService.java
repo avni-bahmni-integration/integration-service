@@ -86,11 +86,12 @@ public class BahmniToAvniService {
         if (drugOrderMappingType != null) {
             avniRepository.createConcept(ObsDataType.Text, drugOrderConceptMapping.get("Avni Value"));
 
-            OpenMRSForm prescriptionForm = new OpenMRSForm();
-            prescriptionForm.setFormName(drugOrderMappingType.get("Avni Value"));
-            prescriptionForm.setType("Encounter");
-            prescriptionForm.addTerm(new ConceptName(drugOrderConceptMapping.get("Avni Value")));
-            logger.info("Prescript form, encounter type, and concept created in Avni");
+            OpenMRSForm drugOrderForm = new OpenMRSForm();
+            drugOrderForm.setFormName(drugOrderMappingType.get("Avni Value"));
+            drugOrderForm.setType("Encounter");
+            drugOrderForm.addTerm(new ConceptName(drugOrderConceptMapping.get("Avni Value")));
+            avniRepository.createForms(Collections.singletonList(drugOrderForm));
+            logger.info("Drug order form, encounter type, and concept created in Avni");
         }
 
         logger.info("Standard Metadata created");
