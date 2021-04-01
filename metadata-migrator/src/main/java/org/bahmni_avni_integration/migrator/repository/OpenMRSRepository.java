@@ -165,7 +165,7 @@ public class OpenMRSRepository {
         return new CreateConceptResult(resultSet.getInt(1), false);
     }
 
-    public void createConceptSet(Connection connection, int conceptId, int conceptSetId, double sortWeight) throws SQLException {
+    public void addToConceptSet(Connection connection, int conceptId, int conceptSetId, double sortWeight) throws SQLException {
         if (!conceptSetExists(connection, conceptId, conceptSetId)) {
             var insertConceptSetPS = connection.prepareStatement("insert into concept_set(concept_id, concept_set, sort_weight, creator, date_created, uuid) values (?, ?, ?, 1, now(), ?)");
             insertConceptSetPS.setInt(1, conceptId);

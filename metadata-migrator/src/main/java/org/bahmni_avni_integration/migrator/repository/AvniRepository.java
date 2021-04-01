@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.migrator.repository;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.integration_data.domain.Names;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.config.AvniConfig;
@@ -152,14 +153,37 @@ public class AvniRepository {
     }
 
     private List<AvniForm> fetchForms(Connection connection) throws SQLException {
-        String formSelect = "select id, name from form where organisation_id in (select id from organisation) and name not ilike '% (Hospital)' and is_voided = false order by id";
+        String formSelect = """
+                select distinct form.id as form_id, form.name as form_name, form.form_type as form_type, 
+                st.name as st_name, p.name as p_name, et.name as et_name
+                from form
+                        join form_mapping fm on form.id = fm.form_id
+                        left join subject_type st on fm.subject_type_id = st.id
+                        left join program p on fm.entity_id = p.id
+                        left join encounter_type et on fm.observations_type_entity_id = et.id
+                where form.organisation_id in (select id from organisation)
+                 and form.name not ilike '% (Hospital)'
+                 and form.name <> ?
+                 and form_type IN (?, ?, ?, ?)
+                 and form.is_voided = false
+                order by form_type, p.name, form.id;
+                """;
         List<AvniForm> forms = new ArrayList<>();
         try (PreparedStatement formPS = connection.prepareStatement(formSelect)) {
+            formPS.setString(1, Names.AvniPatientRegistrationEncounter);
+            formPS.setString(2, AvniFormType.IndividualProfile.name());
+            formPS.setString(3, AvniFormType.ProgramEnrolment.name());
+            formPS.setString(4, AvniFormType.ProgramEncounter.name());
+            formPS.setString(5, AvniFormType.Encounter.name());
             ResultSet formResult = formPS.executeQuery();
             while (formResult.next()) {
                 AvniForm form = new AvniForm();
-                form.setId(formResult.getLong("id"));
-                form.setName(formResult.getString("name"));
+                form.setId(formResult.getLong("form_id"));
+                form.setName(formResult.getString("form_name"));
+                form.setFormType(AvniFormType.valueOf(formResult.getString("form_type")));
+                form.setSubjectType(formResult.getString("st_name"));
+                form.setProgram(formResult.getString("p_name"));
+                form.setEncounterType(formResult.getString("et_name"));
                 form.setFormElementGroups(fetchFormElementGroups(connection, form.getId()));
                 forms.add(form);
             }
