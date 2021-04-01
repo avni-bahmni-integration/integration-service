@@ -15,7 +15,8 @@ public class OpenMRSFullEncounter {
     private OpenMRSUuidHolder patient;
     private OpenMRSUuidHolder encounterType;
     private OpenMRSUuidHolder location;
-    private Map<String, Object> map = new HashMap<>();
+    private final Map<String, Object> map = new HashMap<>();
+    private boolean voided;
 
     public OpenMRSUuidHolder getPatient() {
         return patient;
@@ -136,5 +137,9 @@ public class OpenMRSFullEncounter {
         Map<String, Object> visit = (Map<String, Object>) map.get("visit");
         Map<String, Object> visitType = (Map<String, Object>) visit.get("visitType");
         return (String) visitType.get("uuid");
+    }
+
+    public boolean isVoided() {
+        return voided;
     }
 }

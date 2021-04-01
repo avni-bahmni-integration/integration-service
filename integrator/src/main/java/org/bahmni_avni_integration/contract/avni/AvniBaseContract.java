@@ -56,4 +56,8 @@ public class AvniBaseContract {
         Map<String, Object> map = (Map<String, Object>) get("observations");
         map.put(conceptName, value);
     }
+
+    public void setVoided(boolean voided) {
+        set("voided", voided);
+    }
 }

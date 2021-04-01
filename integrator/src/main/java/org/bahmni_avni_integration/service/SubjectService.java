@@ -43,16 +43,19 @@ public class SubjectService {
         );
     }
 
-    public GeneralEncounter createRegistrationEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData) {
+    public void createRegistrationEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData) {
+        if (openMRSPatient.isVoided()) return;
+
         MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
         GeneralEncounter encounterRequest = OpenMRSPatientMapper.mapToAvniEncounter(openMRSPatient, subject, patientToSubjectMetaData, conceptMetaData);
-        return avniEncounterRepository.create(encounterRequest);
+        avniEncounterRepository.create(encounterRequest);
     }
 
-    public GeneralEncounter updateRegistrationEncounter(GeneralEncounter encounterRequest, OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
+    public void updateRegistrationEncounter(GeneralEncounter encounterRequest, OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
         MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
         encounterRequest.set("observations", OpenMRSPatientMapper.mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData));
-        return avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);
+        encounterRequest.setVoided(openMRSPatient.isVoided());
+        avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);
     }
 
     // Patient from OpenMRS/Bahmni is saved as Encounter in Avni

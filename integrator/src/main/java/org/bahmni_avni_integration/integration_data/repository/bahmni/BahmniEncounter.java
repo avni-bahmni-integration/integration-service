@@ -18,7 +18,7 @@ public class BahmniEncounter {
 
     public List<BahmniSplitEncounter> getSplitEncounters() {
         List<String> forms = openMRSEncounter.getForms();
-        return forms.stream().filter(metaData::hasBahmniConceptSet).map(form -> new BahmniSplitEncounter(form, openMRSEncounter.getUuid(), openMRSEncounter.getEncounterDatetime(), openMRSEncounter.getLeafObservations(form), openMRSEncounter.getPatient().getUuid())).collect(Collectors.toList());
+        return forms.stream().filter(metaData::hasBahmniConceptSet).map(form -> new BahmniSplitEncounter(form, openMRSEncounter.getUuid(), openMRSEncounter.getEncounterDatetime(), openMRSEncounter.getLeafObservations(form), openMRSEncounter.isVoided())).collect(Collectors.toList());
     }
 
     public OpenMRSFullEncounter getOpenMRSEncounter() {

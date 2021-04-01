@@ -10,11 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class OpenMRSFullEncounterTest {
     @Test
-    public void getEncounter() throws URISyntaxException {
+    public void getEncounter() {
         OpenMRSFullEncounter openMRSFullEncounter = TestUtils.readResource("fullEncounter.json", OpenMRSFullEncounter.class);
         assertNotNull(openMRSFullEncounter);
         List<OpenMRSObservation> leafObservations = openMRSFullEncounter.getLeafObservations();
         assertNotEquals(0, leafObservations.size());
+        assertFalse(openMRSFullEncounter.isVoided());
     }
 
     @Test
@@ -32,6 +33,7 @@ public class OpenMRSFullEncounterTest {
 
         leafObservations = openMRSFullEncounter.getLeafObservations(forms.get(1));
         assertNotEquals(0, leafObservations.size());
+        assertTrue(openMRSFullEncounter.isVoided());
     }
 
     @Test

@@ -5,18 +5,18 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSObservation;
 import java.util.List;
 
 public class BahmniSplitEncounter {
-    private String formConceptSetUuid;
-    private String openMRSEncounterUuid;
-    private String openMRSEncounterDateTime;
-    private List<OpenMRSObservation> observations;
-    private String patientUuid;
+    private final String formConceptSetUuid;
+    private final String openMRSEncounterUuid;
+    private final String openMRSEncounterDateTime;
+    private final List<OpenMRSObservation> observations;
+    private final boolean voided;
 
-    public BahmniSplitEncounter(String formConceptSetUuid, String openMRSEncounterUuid, String openMRSEncounterDateTime, List<OpenMRSObservation> observations, String patientUuid) {
+    public BahmniSplitEncounter(String formConceptSetUuid, String openMRSEncounterUuid, String openMRSEncounterDateTime, List<OpenMRSObservation> observations, boolean voided) {
         this.formConceptSetUuid = formConceptSetUuid;
         this.openMRSEncounterUuid = openMRSEncounterUuid;
         this.openMRSEncounterDateTime = openMRSEncounterDateTime;
         this.observations = observations;
-        this.patientUuid = patientUuid;
+        this.voided = voided;
     }
 
     public String getFormConceptSetUuid() {
@@ -35,7 +35,7 @@ public class BahmniSplitEncounter {
         return observations;
     }
 
-    public String getPatientUuid() {
-        return patientUuid;
+    public boolean isVoided() {
+        return voided;
     }
 }

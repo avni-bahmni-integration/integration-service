@@ -40,16 +40,22 @@ public class AvniEncounterService {
     }
 
     public void create(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+        if (splitEncounter.isVoided()) return;
+
         GeneralEncounter encounter = openMRSEncounterMapper.mapToAvniEncounter(splitEncounter, metaData, avniPatient);
         avniEncounterRepository.create(encounter);
     }
 
     public void createLabEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+        if (openMRSFullEncounter.isVoided()) return;
+
         GeneralEncounter encounter = openMRSEncounterMapper.mapToAvniEncounter(openMRSFullEncounter, metaData, avniPatient);
         avniEncounterRepository.create(encounter);
     }
 
     public void createDrugOrderEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+        if (openMRSFullEncounter.isVoided()) return;
+
         GeneralEncounter encounter = openMRSEncounterMapper.mapDrugOrderEncounterToAvniEncounter(openMRSFullEncounter, metaData, avniPatient);
         avniEncounterRepository.create(encounter);
     }

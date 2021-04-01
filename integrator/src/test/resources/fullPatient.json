@@ -1,0 +1,411 @@
+{
+  "uuid": "506c9d8c-7d92-4525-88b7-0804cd63fed5",
+  "display": "TRI08121601 - AABCCDDEE FFGGHHII",
+  "identifiers": [
+    {
+      "display": "Patient Identifier = TRI08121601",
+      "uuid": "cf5d7e3a-68e1-4d30-87c2-6f012babd3e0",
+      "identifier": "TRI08121601",
+      "identifierType": {
+        "uuid": "81433852-3f10-11e4-adec-0800271c1b75",
+        "display": "Patient Identifier",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patientidentifiertype/81433852-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "location": null,
+      "preferred": true,
+      "voided": false,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/506c9d8c-7d92-4525-88b7-0804cd63fed5/identifier/cf5d7e3a-68e1-4d30-87c2-6f012babd3e0"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/506c9d8c-7d92-4525-88b7-0804cd63fed5/identifier/cf5d7e3a-68e1-4d30-87c2-6f012babd3e0?v=full"
+        }
+      ],
+      "resourceVersion": "1.8"
+    }
+  ],
+  "person": {
+    "uuid": "506c9d8c-7d92-4525-88b7-0804cd63fed5",
+    "display": "AABCCDDEE FFGGHHII",
+    "gender": "M",
+    "age": 38,
+    "birthdate": "1983-01-01T00:00:00.000+0530",
+    "birthdateEstimated": false,
+    "dead": false,
+    "deathDate": null,
+    "causeOfDeath": null,
+    "preferredName": {
+      "display": "AABCCDDEE FFGGHHII",
+      "uuid": "d620003a-830d-4841-a702-2c881fe89f2c",
+      "givenName": "AABCCDDEE",
+      "middleName": null,
+      "familyName": "FFGGHHII",
+      "familyName2": null,
+      "voided": false,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/name/d620003a-830d-4841-a702-2c881fe89f2c"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/name/d620003a-830d-4841-a702-2c881fe89f2c?v=full"
+        }
+      ],
+      "resourceVersion": "1.8"
+    },
+    "preferredAddress": {
+      "display": "A",
+      "uuid": "b0733dd3-4f1d-4dcd-aa51-ebeb19026a06",
+      "preferred": true,
+      "address1": "A",
+      "address2": "B",
+      "cityVillage": "C",
+      "stateProvince": "D",
+      "country": null,
+      "postalCode": null,
+      "countyDistrict": "Nilgiris",
+      "address3": null,
+      "address4": null,
+      "address5": null,
+      "address6": null,
+      "startDate": null,
+      "endDate": null,
+      "latitude": null,
+      "longitude": null,
+      "voided": false,
+      "address7": null,
+      "address8": null,
+      "address9": null,
+      "address10": null,
+      "address11": null,
+      "address12": null,
+      "address13": null,
+      "address14": null,
+      "address15": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/address/b0733dd3-4f1d-4dcd-aa51-ebeb19026a06"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/address/b0733dd3-4f1d-4dcd-aa51-ebeb19026a06?v=full"
+        }
+      ],
+      "resourceVersion": "2.0"
+    },
+    "names": [
+      {
+        "display": "AABCCDDEE FFGGHHII",
+        "uuid": "d620003a-830d-4841-a702-2c881fe89f2c",
+        "givenName": "AABCCDDEE",
+        "middleName": null,
+        "familyName": "FFGGHHII",
+        "familyName2": null,
+        "voided": false,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/name/d620003a-830d-4841-a702-2c881fe89f2c"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/name/d620003a-830d-4841-a702-2c881fe89f2c?v=full"
+          }
+        ],
+        "resourceVersion": "1.8"
+      }
+    ],
+    "addresses": [
+      {
+        "display": "A",
+        "uuid": "b0733dd3-4f1d-4dcd-aa51-ebeb19026a06",
+        "preferred": true,
+        "address1": "A",
+        "address2": "B",
+        "cityVillage": "C",
+        "stateProvince": "D",
+        "country": null,
+        "postalCode": null,
+        "countyDistrict": "Nilgiris",
+        "address3": null,
+        "address4": null,
+        "address5": null,
+        "address6": null,
+        "startDate": null,
+        "endDate": null,
+        "latitude": null,
+        "longitude": null,
+        "voided": false,
+        "address7": null,
+        "address8": null,
+        "address9": null,
+        "address10": null,
+        "address11": null,
+        "address12": null,
+        "address13": null,
+        "address14": null,
+        "address15": null,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/address/b0733dd3-4f1d-4dcd-aa51-ebeb19026a06"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/address/b0733dd3-4f1d-4dcd-aa51-ebeb19026a06?v=full"
+          }
+        ],
+        "resourceVersion": "2.0"
+      }
+    ],
+    "attributes": [
+      {
+        "display": "isSangamHead = XXXX",
+        "uuid": "409cde20-f57d-11e5-89bb-3ca82a4c07d8",
+        "value": false,
+        "attributeType": {
+          "uuid": "9234695b-0f68-4970-aeb7-3b32d4a2b346",
+          "display": "isSangamHead",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/personattributetype/9234695b-0f68-4970-aeb7-3b32d4a2b346"
+            }
+          ]
+        },
+        "voided": false,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/409cde20-f57d-11e5-89bb-3ca82a4c07d8"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/409cde20-f57d-11e5-89bb-3ca82a4c07d8?v=full"
+          }
+        ],
+        "resourceVersion": "1.8"
+      },
+      {
+        "display": null,
+        "uuid": "571a8c4d-a68b-4fa3-a389-97dfa07ce220",
+        "value": null,
+        "attributeType": {
+          "uuid": "59a6aee8-99bf-4386-a6f3-8630dbbcbc52",
+          "display": "Is_Tribal",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/personattributetype/59a6aee8-99bf-4386-a6f3-8630dbbcbc52"
+            }
+          ]
+        },
+        "voided": false,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/571a8c4d-a68b-4fa3-a389-97dfa07ce220"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/571a8c4d-a68b-4fa3-a389-97dfa07ce220?v=full"
+          }
+        ],
+        "resourceVersion": "1.8"
+      },
+      {
+        "display": null,
+        "uuid": "3f3256d7-aeac-4e14-bf6e-5aecbfbb19b1",
+        "value": null,
+        "attributeType": {
+          "uuid": "7ba3e7c2-2735-42c0-a03b-e300c99e34d9",
+          "display": "Tribe",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/personattributetype/7ba3e7c2-2735-42c0-a03b-e300c99e34d9"
+            }
+          ]
+        },
+        "voided": false,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/3f3256d7-aeac-4e14-bf6e-5aecbfbb19b1"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/3f3256d7-aeac-4e14-bf6e-5aecbfbb19b1?v=full"
+          }
+        ],
+        "resourceVersion": "1.8"
+      },
+      {
+        "display": null,
+        "uuid": "56a1f23d-f7e1-4e00-b0bf-d2d11cd0d9c8",
+        "value": null,
+        "attributeType": {
+          "uuid": "4e723c81-f150-43ef-99b8-3a219fa6137b",
+          "display": "Is_Sangam",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/personattributetype/4e723c81-f150-43ef-99b8-3a219fa6137b"
+            }
+          ]
+        },
+        "voided": false,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/56a1f23d-f7e1-4e00-b0bf-d2d11cd0d9c8"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/56a1f23d-f7e1-4e00-b0bf-d2d11cd0d9c8?v=full"
+          }
+        ],
+        "resourceVersion": "1.8"
+      },
+      {
+        "display": null,
+        "uuid": "a1b7b14b-f2b6-4838-a98f-9191012963af",
+        "value": null,
+        "attributeType": {
+          "uuid": "9c6094a6-353d-4e5d-85c3-d97d5508192f",
+          "display": "Is_Premium_Paid",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/personattributetype/9c6094a6-353d-4e5d-85c3-d97d5508192f"
+            }
+          ]
+        },
+        "voided": false,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/a1b7b14b-f2b6-4838-a98f-9191012963af"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/a1b7b14b-f2b6-4838-a98f-9191012963af?v=full"
+          }
+        ],
+        "resourceVersion": "1.8"
+      },
+      {
+        "display": null,
+        "uuid": "2316247c-74b5-474a-891c-030164806274",
+        "value": null,
+        "attributeType": {
+          "uuid": "7a0a3ad9-5035-4d99-b5db-d386364e3dd6",
+          "display": "Visiting",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/personattributetype/7a0a3ad9-5035-4d99-b5db-d386364e3dd6"
+            }
+          ]
+        },
+        "voided": false,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/2316247c-74b5-474a-891c-030164806274"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/2316247c-74b5-474a-891c-030164806274?v=full"
+          }
+        ],
+        "resourceVersion": "1.8"
+      },
+      {
+        "display": null,
+        "uuid": "687c2a3e-eb08-47f2-baef-ef585164f3c9",
+        "value": null,
+        "attributeType": {
+          "uuid": "db157c6c-3dbd-465a-8efb-41a02985c62b",
+          "display": "SCP Status",
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/personattributetype/db157c6c-3dbd-465a-8efb-41a02985c62b"
+            }
+          ]
+        },
+        "voided": false,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/687c2a3e-eb08-47f2-baef-ef585164f3c9"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5/attribute/687c2a3e-eb08-47f2-baef-ef585164f3c9?v=full"
+          }
+        ],
+        "resourceVersion": "1.8"
+      }
+    ],
+    "voided": false,
+    "auditInfo": {
+      "creator": {
+        "uuid": "c1c21e11-3f10-11e4-adec-0800271c1b75",
+        "display": "superman",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/user/c1c21e11-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "dateCreated": "2016-03-24T13:00:36.000+0530",
+      "changedBy": null,
+      "dateChanged": null
+    },
+    "deathdateEstimated": false,
+    "birthtime": null,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/person/506c9d8c-7d92-4525-88b7-0804cd63fed5"
+      }
+    ],
+    "resourceVersion": "1.11"
+  },
+  "voided": false,
+  "auditInfo": {
+    "creator": {
+      "uuid": "c1c21e11-3f10-11e4-adec-0800271c1b75",
+      "display": "superman",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/user/c1c21e11-3f10-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "dateCreated": "2016-03-24T13:00:36.000+0530",
+    "changedBy": null,
+    "dateChanged": null
+  },
+  "links": [
+    {
+      "rel": "self",
+      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/506c9d8c-7d92-4525-88b7-0804cd63fed5"
+    }
+  ],
+  "resourceVersion": "1.8"
+}

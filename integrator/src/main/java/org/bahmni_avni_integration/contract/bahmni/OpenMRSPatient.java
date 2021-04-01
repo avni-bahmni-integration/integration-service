@@ -11,6 +11,7 @@ public class OpenMRSPatient {
     private String display;
     private OpenMRSPerson person;
     private List<OpenMRSPatientIdentifier> identifiers;
+    private boolean voided;
 
     public OpenMRSPatient(OpenMRSPerson person) {
         this.person = person;
@@ -71,5 +72,13 @@ public class OpenMRSPatient {
     public String getPatientId() {
         OpenMRSPatientIdentifier openMRSPatientIdentifier = this.getIdentifiers().stream().filter(OpenMRSPatientIdentifier::isPreferred).findFirst().orElse(null);
         return openMRSPatientIdentifier.getIdentifier();
+    }
+
+    public boolean isVoided() {
+        return voided;
+    }
+
+    public void setVoided(boolean voided) {
+        this.voided = voided;
     }
 }

@@ -29,6 +29,7 @@ public class OpenMRSEncounterMapper {
         encounter.setSubjectId(avniPatient.getSubjectExternalId());
         addObservations(splitEncounter, encounter, bahmniEncounterToAvniEncounterMetaData);
         encounter.setEmptyCancelObservations();
+        encounter.setVoided(splitEncounter.isVoided());
         return encounter;
     }
 
@@ -39,6 +40,7 @@ public class OpenMRSEncounterMapper {
         encounter.setSubjectId(avniPatient.getSubjectExternalId());
         addObservations(openMRSFullEncounter.getLeafObservations(), encounter, bahmniEncounterToAvniEncounterMetaData, openMRSFullEncounter.getUuid());
         encounter.setEmptyCancelObservations();
+        encounter.setVoided(openMRSFullEncounter.isVoided());
         return encounter;
     }
 
@@ -50,6 +52,7 @@ public class OpenMRSEncounterMapper {
         List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
         encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getDrugOrderConceptMapping().getAvniValue(), String.join("\n", drugOrders));
         encounter.setEmptyCancelObservations();
+        encounter.setVoided(openMRSFullEncounter.isVoided());
         return encounter;
     }
 
