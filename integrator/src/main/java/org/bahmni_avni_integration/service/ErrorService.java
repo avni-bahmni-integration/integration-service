@@ -64,18 +64,6 @@ public class ErrorService {
         errorRecordRepository.save(errorRecord);
     }
 
-    public void errorOccurred(BahmniSplitEncounter bahmniSplitEncounter, ErrorType errorType) {
-        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEncounterExternalIdAndErrorType(BahmniEntityType.Encounter, bahmniSplitEncounter.getOpenMRSEncounterUuid(), errorType);
-        if (errorRecord != null) return;
-
-        errorRecord = new ErrorRecord();
-        errorRecord.setBahmniEntityType(BahmniEntityType.Encounter);
-        errorRecord.setSubjectPatientExternalId(bahmniSplitEncounter.getPatientUuid());
-        errorRecord.setEncounterExternalId(bahmniSplitEncounter.getOpenMRSEncounterUuid());
-        errorRecord.setErrorType(errorType);
-        errorRecordRepository.save(errorRecord);
-    }
-
     public void errorOccurred(OpenMRSFullEncounter openMRSFullEncounter, ErrorType errorType) {
         ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEncounterExternalIdAndErrorType(BahmniEntityType.Encounter, openMRSFullEncounter.getUuid(), errorType);
         if (errorRecord != null) return;

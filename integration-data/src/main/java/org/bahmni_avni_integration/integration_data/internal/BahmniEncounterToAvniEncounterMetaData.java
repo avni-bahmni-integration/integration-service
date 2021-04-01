@@ -8,6 +8,7 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
     private String bahmniEntityUuidConcept;
     private List<MappingMetaData> encounterTypeMappings;
     private MappingMetaData labMapping;
+    private MappingMetaData drugOrderMapping;
 
     public String getAvniMappedName(String openmrsEncounterTypeUuid) {
         MappingMetaData mapping = getMappingMetaData(openmrsEncounterTypeUuid);
@@ -45,5 +46,13 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
 
     public MappingMetaData getLabMapping() {
         return labMapping;
+    }
+
+    public void addDrugOrderMapping(MappingMetaData drugOrderMapping) {
+        this.drugOrderMapping = drugOrderMapping;
+    }
+
+    public MappingMetaData getDrugOrderMapping() {
+        return drugOrderMapping;
     }
 }

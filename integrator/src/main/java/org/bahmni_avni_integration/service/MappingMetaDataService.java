@@ -47,8 +47,8 @@ public class MappingMetaDataService {
         metaData.addEncounterMappings(mappings);
         metaData.setBahmniEntityUuidConcept(Names.BahmniEntityUuid);
 
-        MappingMetaData labMapping = mappingMetaDataRepository.findByMappingType(MappingType.LabEncounterType);
-        metaData.addLabMapping(labMapping);
+        metaData.addLabMapping(mappingMetaDataRepository.findByMappingType(MappingType.LabEncounterType));
+        metaData.addDrugOrderMapping(mappingMetaDataRepository.findByMappingType(MappingType.DrugOrderEncounterType));
         return metaData;
     }
 }

@@ -5,6 +5,7 @@ import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEventWorker;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +19,8 @@ public class PatientEncounterEventWorkerExternalTest extends BaseExternalTest {
     @Autowired
     private MappingMetaDataService mappingMetaDataService;
 
-    @BeforeAll
-    public void beforeAll() {
+    @BeforeEach
+    public void beforeEach() {
         patientEventWorker.setConstants(getConstants());
 
         patientEncounterEventWorker.setConstants(getConstants());
@@ -34,7 +35,13 @@ public class PatientEncounterEventWorkerExternalTest extends BaseExternalTest {
 
     @Test
     public void processLabEncounter() {
-        patientEventWorker.process(patientEvent("25e6c02f-2d9f-45bf-bf80-bd7d032fc42f"));
-        patientEncounterEventWorker.process(encounterEvent("695a0121-770a-4328-967d-1709ec45bed2"));
+        patientEventWorker.process(patientEvent("9312db47-73eb-452c-9f0b-800bf0c4cbf4"));
+        patientEncounterEventWorker.process(encounterEvent("a605cfe6-92e1-4bee-9f02-bded7ee385a2"));
+    }
+
+    @Test
+    public void processDrugPrescriptionEncounter() {
+        patientEventWorker.process(patientEvent("dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"));
+        patientEncounterEventWorker.process(encounterEvent("00026702-c617-4af3-850f-e8bfc138804f"));
     }
 }

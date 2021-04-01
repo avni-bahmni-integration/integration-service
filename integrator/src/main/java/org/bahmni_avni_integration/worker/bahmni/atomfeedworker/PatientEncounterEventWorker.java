@@ -38,6 +38,7 @@ public class PatientEncounterEventWorker implements EventWorker {
     private ErrorService errorService;
 
     private BahmniEncounterToAvniEncounterMetaData metaData;
+    private Constants constants;
 
     @Override
     public void process(Event event) {
@@ -48,71 +49,93 @@ public class PatientEncounterEventWorker implements EventWorker {
         }
 
         GeneralEncounter avniPatient = subjectService.findPatient(metaData, bahmniEncounter.getOpenMRSEncounter().getPatient().getUuid());
-        if (bahmniEncounter.getEncounterTypeUuid().equals(metaData.getLabMapping().getBahmniValue())) {
-            processLabEncounter(bahmniEncounter.getOpenMRSEncounter(), metaData, avniPatient);
-        } else {
-            List<BahmniSplitEncounter> splitEncounters = bahmniEncounter.getSplitEncounters();
-            splitEncounters.forEach((splitEncounter) -> {
-                MappingMetaData mapping = metaData.getEncounterMappingFor(splitEncounter.getFormConceptSetUuid());
-                switch (mapping.getMappingGroup()) {
-                    case GeneralEncounter -> processGeneralEncounter(splitEncounter, metaData, avniPatient);
-                    case ProgramEnrolment -> processProgramEnrolment(splitEncounter, metaData, avniPatient);
-                    case ProgramEncounter -> processProgramEncounter(splitEncounter, metaData, avniPatient);
+        try {
+            if (encounterService.isProcessableLabEncounter(bahmniEncounter, metaData, constants)) {
+                processLabEncounter(bahmniEncounter.getOpenMRSEncounter(), metaData, avniPatient);
+            } else {
+                if (encounterService.isProcessablePrescriptionEncounter(bahmniEncounter, constants)) {
+                    processDrugOrderEncounter(bahmniEncounter.getOpenMRSEncounter(), metaData, avniPatient);
                 }
-            });
+                List<BahmniSplitEncounter> splitEncounters = bahmniEncounter.getSplitEncounters();
+                for (BahmniSplitEncounter splitEncounter : splitEncounters) {
+                    MappingMetaData mapping = metaData.getEncounterMappingFor(splitEncounter.getFormConceptSetUuid());
+                    switch (mapping.getMappingGroup()) {
+                        case GeneralEncounter -> processGeneralEncounter(splitEncounter, metaData, avniPatient);
+                        case ProgramEnrolment -> processProgramEnrolment(splitEncounter, metaData, avniPatient);
+                        case ProgramEncounter -> processProgramEncounter(splitEncounter, metaData, avniPatient);
+                    }
+                }
+            }
+        } catch (NoSubjectWithIdException e) {
+            errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), ErrorType.NoSubjectWithId);
+        } catch (SubjectIdChangedException e) {
+            errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), ErrorType.SubjectIdChanged);
         }
     }
 
-    private void processProgramEncounter(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+    private void processDrugOrderEncounter(OpenMRSFullEncounter openMRSEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {
+        GeneralEncounter existingAvniEncounter = avniEncounterService.getDrugOrderGeneralEncounter(openMRSEncounter, metaData);
+        if (existingAvniEncounter != null && avniPatient != null) {
+            avniEncounterService.updateDrugOrderEncounter(openMRSEncounter, existingAvniEncounter, metaData, avniPatient);
+        } else if (existingAvniEncounter != null && avniPatient == null) {
+            throw new SubjectIdChangedException();
+        } else if (existingAvniEncounter == null && avniPatient != null) {
+            avniEncounterService.createDrugOrderEncounter(openMRSEncounter, metaData, avniPatient);
+        } else if (existingAvniEncounter == null && avniPatient == null) {
+            throw new NoSubjectWithIdException();
+        }
+    }
+
+    private void processLabEncounter(OpenMRSFullEncounter openMRSEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {
+        GeneralEncounter existingAvniEncounter = avniEncounterService.getLabResultGeneralEncounter(openMRSEncounter, metaData);
+        if (existingAvniEncounter != null && avniPatient != null) {
+            avniEncounterService.updateLabEncounter(openMRSEncounter, existingAvniEncounter, metaData, avniPatient);
+        } else if (existingAvniEncounter != null && avniPatient == null) {
+            throw new SubjectIdChangedException();
+        } else if (existingAvniEncounter == null && avniPatient != null) {
+            avniEncounterService.createLabEncounter(openMRSEncounter, metaData, avniPatient);
+        } else if (existingAvniEncounter == null && avniPatient == null) {
+            throw new NoSubjectWithIdException();
+        }
+    }
+
+    private void processProgramEncounter(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {
         ProgramEncounter existingEncounter = programEncounterService.getProgramEncounter(splitEncounter, metaData);
         Enrolment enrolment = avniEnrolmentService.getMatchingEnrolment(avniPatient.getSubjectExternalId(), splitEncounter, metaData);
         if (existingEncounter != null && avniPatient != null) {
             programEncounterService.update(splitEncounter, existingEncounter, metaData, enrolment);
         } else if (existingEncounter != null && avniPatient == null) {
-            errorService.errorOccurred(splitEncounter, ErrorType.SubjectIdChanged);
+            throw new SubjectIdChangedException();
         } else if (existingEncounter == null && avniPatient != null) {
             programEncounterService.create(splitEncounter, metaData, enrolment);
         } else if (existingEncounter == null && avniPatient == null) {
-            errorService.errorOccurred(splitEncounter, ErrorType.NoSubjectWithId);
+            throw new NoSubjectWithIdException();
         }
     }
 
-    private void processProgramEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+    private void processProgramEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {
         Enrolment existingEnrolment = avniEnrolmentService.getEnrolment(splitEncounter, metaData);
         if (existingEnrolment != null && avniPatient != null) {
             avniEnrolmentService.update(splitEncounter, existingEnrolment, metaData, avniPatient);
         } else if (existingEnrolment != null && avniPatient == null) {
-            errorService.errorOccurred(splitEncounter, ErrorType.SubjectIdChanged);
+            throw new SubjectIdChangedException();
         } else if (existingEnrolment == null && avniPatient != null) {
             avniEnrolmentService.create(splitEncounter, metaData, avniPatient);
         } else if (existingEnrolment == null && avniPatient == null) {
-            errorService.errorOccurred(splitEncounter, ErrorType.NoSubjectWithId);
+            throw new NoSubjectWithIdException();
         }
     }
 
-    private void processGeneralEncounter(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+    private void processGeneralEncounter(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {
         GeneralEncounter existingAvniEncounter = avniEncounterService.getGeneralEncounter(splitEncounter, metaData);
         if (existingAvniEncounter != null && avniPatient != null) {
             avniEncounterService.update(splitEncounter, existingAvniEncounter, metaData, avniPatient);
         } else if (existingAvniEncounter != null && avniPatient == null) {
-            errorService.errorOccurred(splitEncounter, ErrorType.SubjectIdChanged);
+            throw new SubjectIdChangedException();
         } else if (existingAvniEncounter == null && avniPatient != null) {
             avniEncounterService.create(splitEncounter, metaData, avniPatient);
         } else if (existingAvniEncounter == null && avniPatient == null) {
-            errorService.errorOccurred(splitEncounter, ErrorType.NoSubjectWithId);
-        }
-    }
-
-    private void processLabEncounter(OpenMRSFullEncounter openMRSEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
-        GeneralEncounter existingAvniEncounter = avniEncounterService.getGeneralEncounter(openMRSEncounter, metaData.getLabMapping().getAvniValue(), metaData);
-        if (existingAvniEncounter != null && avniPatient != null) {
-            avniEncounterService.updateLabEncounter(openMRSEncounter, existingAvniEncounter, metaData, avniPatient);
-        } else if (existingAvniEncounter != null && avniPatient == null) {
-            errorService.errorOccurred(openMRSEncounter, ErrorType.SubjectIdChanged);
-        } else if (existingAvniEncounter == null && avniPatient != null) {
-            avniEncounterService.createLabEncounter(openMRSEncounter, metaData, avniPatient);
-        } else if (existingAvniEncounter == null && avniPatient == null) {
-            errorService.errorOccurred(openMRSEncounter, ErrorType.NoSubjectWithId);
+            throw new NoSubjectWithIdException();
         }
     }
 
@@ -126,5 +149,12 @@ public class PatientEncounterEventWorker implements EventWorker {
     }
 
     public void setConstants(Constants constants) {
+        this.constants = constants;
+    }
+
+    static class SubjectIdChangedException extends Exception {
+    }
+
+    static class NoSubjectWithIdException extends Exception {
     }
 }

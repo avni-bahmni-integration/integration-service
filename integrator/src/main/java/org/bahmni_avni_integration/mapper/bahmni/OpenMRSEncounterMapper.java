@@ -42,6 +42,17 @@ public class OpenMRSEncounterMapper {
         return encounter;
     }
 
+    public GeneralEncounter mapDrugOrderEncounterToAvniEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, GeneralEncounter avniPatient) {
+        GeneralEncounter encounter = new GeneralEncounter();
+        encounter.setEncounterDateTime(FormatAndParseUtil.fromIsoDateString(openMRSFullEncounter.getEncounterDatetime()));
+        encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getLabMapping().getAvniValue());
+        encounter.setSubjectId(avniPatient.getSubjectExternalId());
+        List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
+        encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getDrugOrderMapping().getAvniValue(), String.join("\n", drugOrders));
+        encounter.setEmptyCancelObservations();
+        return encounter;
+    }
+
     private void addObservations(BahmniSplitEncounter splitEncounter, AvniBaseContract avniBaseContract, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData) {
         addObservations(splitEncounter.getObservations(), avniBaseContract, bahmniEncounterToAvniEncounterMetaData, splitEncounter.getOpenMRSEncounterUuid());
     }

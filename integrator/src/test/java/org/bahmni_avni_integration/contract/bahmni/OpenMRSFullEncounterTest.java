@@ -33,4 +33,12 @@ public class OpenMRSFullEncounterTest {
         leafObservations = openMRSFullEncounter.getLeafObservations(forms.get(1));
         assertNotEquals(0, leafObservations.size());
     }
+
+    @Test
+    public void getDrugOrders() {
+        OpenMRSFullEncounter openMRSFullEncounter = TestUtils.readResource("encounterWithDrugOrders.json", OpenMRSFullEncounter.class);
+        assertNotNull(openMRSFullEncounter);
+        List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
+        assertEquals(5, drugOrders.size());
+    }
 }

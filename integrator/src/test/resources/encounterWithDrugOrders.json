@@ -1,0 +1,1160 @@
+{
+  "uuid": "00026702-c617-4af3-850f-e8bfc138804f",
+  "display": "Consultation 08/27/2017",
+  "encounterDatetime": "2017-08-27T12:18:30.000+0530",
+  "patient": {
+    "uuid": "dc906a5e-9bad-4f4a-8ee9-4d429ff925e9",
+    "display": "TRI11341705 - AABCCDDEE FFGGHHII",
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"
+      }
+    ]
+  },
+  "location": {
+    "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+    "display": "OPD",
+    "name": "OPD",
+    "description": null,
+    "address1": null,
+    "address2": null,
+    "cityVillage": null,
+    "stateProvince": null,
+    "country": null,
+    "postalCode": null,
+    "latitude": null,
+    "longitude": null,
+    "countyDistrict": null,
+    "address3": null,
+    "address4": null,
+    "address5": null,
+    "address6": null,
+    "tags": [
+      {
+        "uuid": "b8bbf83e-645f-451f-8efe-a0db56f09676",
+        "display": "Login Location",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/locationtag/b8bbf83e-645f-451f-8efe-a0db56f09676"
+          }
+        ]
+      },
+      {
+        "uuid": "8542904c-4fb3-11e8-9b90-3ca82a4c07d8",
+        "display": "Appointment Location",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/locationtag/8542904c-4fb3-11e8-9b90-3ca82a4c07d8"
+          }
+        ]
+      }
+    ],
+    "parentLocation": {
+      "uuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
+      "display": "Registration Desk",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c5854fd7-3f12-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "childLocations": [],
+    "retired": false,
+    "attributes": [],
+    "address7": null,
+    "address8": null,
+    "address9": null,
+    "address10": null,
+    "address11": null,
+    "address12": null,
+    "address13": null,
+    "address14": null,
+    "address15": null,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75?v=full"
+      }
+    ],
+    "resourceVersion": "2.0"
+  },
+  "form": null,
+  "encounterType": {
+    "uuid": "81852aee-3f10-11e4-adec-0800271c1b75",
+    "display": "Consultation",
+    "name": "Consultation",
+    "description": "Consultation encounter",
+    "retired": false,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/81852aee-3f10-11e4-adec-0800271c1b75"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/81852aee-3f10-11e4-adec-0800271c1b75?v=full"
+      }
+    ],
+    "resourceVersion": "1.8"
+  },
+  "obs": [],
+  "orders": [
+    {
+      "uuid": "cd480235-750d-4917-ab9a-09fab639aae7",
+      "orderNumber": "ORD-261015",
+      "accessionNumber": null,
+      "patient": {
+        "uuid": "dc906a5e-9bad-4f4a-8ee9-4d429ff925e9",
+        "display": "TRI11341705 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"
+          }
+        ]
+      },
+      "concept": {
+        "uuid": "4044a9b7-7a96-4ab1-879f-8ea42060a9d0",
+        "display": "Aspirin",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/4044a9b7-7a96-4ab1-879f-8ea42060a9d0"
+          }
+        ]
+      },
+      "action": "NEW",
+      "careSetting": {
+        "uuid": "6f0c9a92-6f24-11e3-af88-005056821db0",
+        "display": "Outpatient",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/caresetting/6f0c9a92-6f24-11e3-af88-005056821db0"
+          }
+        ]
+      },
+      "previousOrder": null,
+      "dateActivated": "2017-08-27T12:18:30.000+0530",
+      "scheduledDate": "2017-08-27T12:18:30.000+0530",
+      "dateStopped": null,
+      "autoExpireDate": "2017-09-26T12:18:29.000+0530",
+      "encounter": {
+        "uuid": "00026702-c617-4af3-850f-e8bfc138804f",
+        "display": "Consultation 08/27/2017",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f"
+          }
+        ]
+      },
+      "orderer": {
+        "uuid": "e3abb399-65af-4aa4-ade0-6e04bbfda253",
+        "display": "Dr. Mrudula Rao.MBBS,PGDFM - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/e3abb399-65af-4aa4-ade0-6e04bbfda253"
+          }
+        ]
+      },
+      "orderReason": null,
+      "orderReasonNonCoded": null,
+      "orderType": {
+        "uuid": "131168f4-15f5-102d-96e4-000c29c2a5d7",
+        "display": "Drug Order",
+        "name": "Drug Order",
+        "javaClassName": "org.openmrs.DrugOrder",
+        "retired": false,
+        "description": "An order for a medication to be given to the patient",
+        "conceptClasses": [
+          {
+            "uuid": "8d490dfc-c2cc-11de-8d13-0010c6dffd0f",
+            "display": "Drug",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d490dfc-c2cc-11de-8d13-0010c6dffd0f"
+              }
+            ]
+          }
+        ],
+        "parent": null,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7?v=full"
+          }
+        ],
+        "resourceVersion": "1.10"
+      },
+      "urgency": "ON_SCHEDULED_DATE",
+      "instructions": null,
+      "commentToFulfiller": null,
+      "display": "(NEW) Aspirin 75Mg: null",
+      "drug": {
+        "uuid": "5a299e22-8404-4232-9f59-7fba1862cfca",
+        "display": "Aspirin 75Mg",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/drug/5a299e22-8404-4232-9f59-7fba1862cfca"
+          }
+        ]
+      },
+      "dosingType": "org.openmrs.module.bahmniemrapi.drugorder.dosinginstructions.FlexibleDosingInstructions",
+      "dose": 1.0,
+      "doseUnits": {
+        "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
+        "display": "Tablet(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/86239663-7b04-4563-b877-d7efc4fe6c46"
+          }
+        ]
+      },
+      "frequency": {
+        "uuid": "9d7c32a2-3f10-11e4-adec-0800271c1b75",
+        "display": "OD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/orderfrequency/9d7c32a2-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "asNeeded": false,
+      "asNeededCondition": null,
+      "quantity": 30.0,
+      "quantityUnits": {
+        "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
+        "display": "Tablet(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/86239663-7b04-4563-b877-d7efc4fe6c46"
+          }
+        ]
+      },
+      "numRefills": 0,
+      "dosingInstructions": "{\"instructions\":\"As directed\"}",
+      "duration": 30,
+      "durationUnits": {
+        "uuid": "9d7437a9-3f10-11e4-adec-0800271c1b75",
+        "display": "Day(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d7437a9-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "route": {
+        "uuid": "9d6bc13f-3f10-11e4-adec-0800271c1b75",
+        "display": "Oral",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d6bc13f-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "brandName": null,
+      "dispenseAsWritten": false,
+      "drugNonCoded": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/cd480235-750d-4917-ab9a-09fab639aae7"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/cd480235-750d-4917-ab9a-09fab639aae7?v=full"
+        }
+      ],
+      "type": "drugorder",
+      "resourceVersion": "1.10"
+    },
+    {
+      "uuid": "aa589c3a-2f68-48be-a9b1-9fea0640e259",
+      "orderNumber": "ORD-261019",
+      "accessionNumber": null,
+      "patient": {
+        "uuid": "dc906a5e-9bad-4f4a-8ee9-4d429ff925e9",
+        "display": "TRI11341705 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"
+          }
+        ]
+      },
+      "concept": {
+        "uuid": "f26462aa-4c8b-432d-9155-145ec77be9dc",
+        "display": "Beclomethasone Dipropionate Levosalbutamol",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/f26462aa-4c8b-432d-9155-145ec77be9dc"
+          }
+        ]
+      },
+      "action": "NEW",
+      "careSetting": {
+        "uuid": "6f0c9a92-6f24-11e3-af88-005056821db0",
+        "display": "Outpatient",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/caresetting/6f0c9a92-6f24-11e3-af88-005056821db0"
+          }
+        ]
+      },
+      "previousOrder": null,
+      "dateActivated": "2017-08-27T12:18:31.000+0530",
+      "scheduledDate": "2017-08-27T12:18:30.000+0530",
+      "dateStopped": null,
+      "autoExpireDate": "2017-08-28T12:18:29.000+0530",
+      "encounter": {
+        "uuid": "00026702-c617-4af3-850f-e8bfc138804f",
+        "display": "Consultation 08/27/2017",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f"
+          }
+        ]
+      },
+      "orderer": {
+        "uuid": "e3abb399-65af-4aa4-ade0-6e04bbfda253",
+        "display": "Dr. Mrudula Rao.MBBS,PGDFM - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/e3abb399-65af-4aa4-ade0-6e04bbfda253"
+          }
+        ]
+      },
+      "orderReason": null,
+      "orderReasonNonCoded": null,
+      "orderType": {
+        "uuid": "131168f4-15f5-102d-96e4-000c29c2a5d7",
+        "display": "Drug Order",
+        "name": "Drug Order",
+        "javaClassName": "org.openmrs.DrugOrder",
+        "retired": false,
+        "description": "An order for a medication to be given to the patient",
+        "conceptClasses": [
+          {
+            "uuid": "8d490dfc-c2cc-11de-8d13-0010c6dffd0f",
+            "display": "Drug",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d490dfc-c2cc-11de-8d13-0010c6dffd0f"
+              }
+            ]
+          }
+        ],
+        "parent": null,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7?v=full"
+          }
+        ],
+        "resourceVersion": "1.10"
+      },
+      "urgency": "ON_SCHEDULED_DATE",
+      "instructions": null,
+      "commentToFulfiller": null,
+      "display": "(NEW) Betamethasone crème: null",
+      "drug": {
+        "uuid": "dd8d60f8-62de-4149-a4cc-b87dedb24dbb",
+        "display": "Betamethasone crème",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/drug/dd8d60f8-62de-4149-a4cc-b87dedb24dbb"
+          }
+        ]
+      },
+      "dosingType": "org.openmrs.module.bahmniemrapi.drugorder.dosinginstructions.FlexibleDosingInstructions",
+      "dose": 1.0,
+      "doseUnits": {
+        "uuid": "333f4c20-8a92-11e4-977f-0800271c1b75",
+        "display": "Unit(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/333f4c20-8a92-11e4-977f-0800271c1b75"
+          }
+        ]
+      },
+      "frequency": {
+        "uuid": "24ec3a69-fb1c-11e5-a399-3ca82a4c07d8",
+        "display": "SOS",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/orderfrequency/24ec3a69-fb1c-11e5-a399-3ca82a4c07d8"
+          }
+        ]
+      },
+      "asNeeded": false,
+      "asNeededCondition": null,
+      "quantity": 1.0,
+      "quantityUnits": {
+        "uuid": "333f4c20-8a92-11e4-977f-0800271c1b75",
+        "display": "Unit(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/333f4c20-8a92-11e4-977f-0800271c1b75"
+          }
+        ]
+      },
+      "numRefills": 0,
+      "dosingInstructions": "{\"instructions\":\"As directed\"}",
+      "duration": 1,
+      "durationUnits": {
+        "uuid": "9d7437a9-3f10-11e4-adec-0800271c1b75",
+        "display": "Day(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d7437a9-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "route": {
+        "uuid": "33b16adb-8a92-11e4-977f-0800271c1b75",
+        "display": "Topical",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/33b16adb-8a92-11e4-977f-0800271c1b75"
+          }
+        ]
+      },
+      "brandName": null,
+      "dispenseAsWritten": false,
+      "drugNonCoded": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/aa589c3a-2f68-48be-a9b1-9fea0640e259"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/aa589c3a-2f68-48be-a9b1-9fea0640e259?v=full"
+        }
+      ],
+      "type": "drugorder",
+      "resourceVersion": "1.10"
+    },
+    {
+      "uuid": "db09fea1-323c-4dec-91ca-2dd5d0028ddc",
+      "orderNumber": "ORD-261017",
+      "accessionNumber": null,
+      "patient": {
+        "uuid": "dc906a5e-9bad-4f4a-8ee9-4d429ff925e9",
+        "display": "TRI11341705 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"
+          }
+        ]
+      },
+      "concept": {
+        "uuid": "bd187aeb-3119-4693-8fa7-9481abc9e957",
+        "display": "Salbutamol",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/bd187aeb-3119-4693-8fa7-9481abc9e957"
+          }
+        ]
+      },
+      "action": "NEW",
+      "careSetting": {
+        "uuid": "6f0c9a92-6f24-11e3-af88-005056821db0",
+        "display": "Outpatient",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/caresetting/6f0c9a92-6f24-11e3-af88-005056821db0"
+          }
+        ]
+      },
+      "previousOrder": null,
+      "dateActivated": "2017-08-27T12:18:31.000+0530",
+      "scheduledDate": "2017-08-27T12:18:30.000+0530",
+      "dateStopped": null,
+      "autoExpireDate": "2017-09-03T12:18:29.000+0530",
+      "encounter": {
+        "uuid": "00026702-c617-4af3-850f-e8bfc138804f",
+        "display": "Consultation 08/27/2017",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f"
+          }
+        ]
+      },
+      "orderer": {
+        "uuid": "e3abb399-65af-4aa4-ade0-6e04bbfda253",
+        "display": "Dr. Mrudula Rao.MBBS,PGDFM - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/e3abb399-65af-4aa4-ade0-6e04bbfda253"
+          }
+        ]
+      },
+      "orderReason": null,
+      "orderReasonNonCoded": null,
+      "orderType": {
+        "uuid": "131168f4-15f5-102d-96e4-000c29c2a5d7",
+        "display": "Drug Order",
+        "name": "Drug Order",
+        "javaClassName": "org.openmrs.DrugOrder",
+        "retired": false,
+        "description": "An order for a medication to be given to the patient",
+        "conceptClasses": [
+          {
+            "uuid": "8d490dfc-c2cc-11de-8d13-0010c6dffd0f",
+            "display": "Drug",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d490dfc-c2cc-11de-8d13-0010c6dffd0f"
+              }
+            ]
+          }
+        ],
+        "parent": null,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7?v=full"
+          }
+        ],
+        "resourceVersion": "1.10"
+      },
+      "urgency": "ON_SCHEDULED_DATE",
+      "instructions": null,
+      "commentToFulfiller": null,
+      "display": "(NEW) Salbutamol 2Mg: null",
+      "drug": {
+        "uuid": "bc3e17e8-5a3e-47c3-8741-042419c8a0db",
+        "display": "Salbutamol 2Mg",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/drug/bc3e17e8-5a3e-47c3-8741-042419c8a0db"
+          }
+        ]
+      },
+      "dosingType": "org.openmrs.module.bahmniemrapi.drugorder.dosinginstructions.FlexibleDosingInstructions",
+      "dose": 1.0,
+      "doseUnits": {
+        "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
+        "display": "Tablet(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/86239663-7b04-4563-b877-d7efc4fe6c46"
+          }
+        ]
+      },
+      "frequency": {
+        "uuid": "9d7d0641-3f10-11e4-adec-0800271c1b75",
+        "display": "BD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/orderfrequency/9d7d0641-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "asNeeded": false,
+      "asNeededCondition": null,
+      "quantity": 14.0,
+      "quantityUnits": {
+        "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
+        "display": "Tablet(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/86239663-7b04-4563-b877-d7efc4fe6c46"
+          }
+        ]
+      },
+      "numRefills": 0,
+      "dosingInstructions": "{\"instructions\":\"As directed\"}",
+      "duration": 7,
+      "durationUnits": {
+        "uuid": "9d7437a9-3f10-11e4-adec-0800271c1b75",
+        "display": "Day(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d7437a9-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "route": {
+        "uuid": "9d6bc13f-3f10-11e4-adec-0800271c1b75",
+        "display": "Oral",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d6bc13f-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "brandName": null,
+      "dispenseAsWritten": false,
+      "drugNonCoded": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/db09fea1-323c-4dec-91ca-2dd5d0028ddc"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/db09fea1-323c-4dec-91ca-2dd5d0028ddc?v=full"
+        }
+      ],
+      "type": "drugorder",
+      "resourceVersion": "1.10"
+    },
+    {
+      "uuid": "e53bfc6a-ca62-4521-8851-6307aced4d84",
+      "orderNumber": "ORD-261018",
+      "accessionNumber": null,
+      "patient": {
+        "uuid": "dc906a5e-9bad-4f4a-8ee9-4d429ff925e9",
+        "display": "TRI11341705 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"
+          }
+        ]
+      },
+      "concept": {
+        "uuid": "a7e19ecc-a8a7-4994-8204-d219051ae716",
+        "display": "Cetirizine",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/a7e19ecc-a8a7-4994-8204-d219051ae716"
+          }
+        ]
+      },
+      "action": "NEW",
+      "careSetting": {
+        "uuid": "6f0c9a92-6f24-11e3-af88-005056821db0",
+        "display": "Outpatient",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/caresetting/6f0c9a92-6f24-11e3-af88-005056821db0"
+          }
+        ]
+      },
+      "previousOrder": null,
+      "dateActivated": "2017-08-27T12:18:31.000+0530",
+      "scheduledDate": "2017-08-27T12:18:30.000+0530",
+      "dateStopped": null,
+      "autoExpireDate": "2017-09-03T12:18:29.000+0530",
+      "encounter": {
+        "uuid": "00026702-c617-4af3-850f-e8bfc138804f",
+        "display": "Consultation 08/27/2017",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f"
+          }
+        ]
+      },
+      "orderer": {
+        "uuid": "e3abb399-65af-4aa4-ade0-6e04bbfda253",
+        "display": "Dr. Mrudula Rao.MBBS,PGDFM - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/e3abb399-65af-4aa4-ade0-6e04bbfda253"
+          }
+        ]
+      },
+      "orderReason": null,
+      "orderReasonNonCoded": null,
+      "orderType": {
+        "uuid": "131168f4-15f5-102d-96e4-000c29c2a5d7",
+        "display": "Drug Order",
+        "name": "Drug Order",
+        "javaClassName": "org.openmrs.DrugOrder",
+        "retired": false,
+        "description": "An order for a medication to be given to the patient",
+        "conceptClasses": [
+          {
+            "uuid": "8d490dfc-c2cc-11de-8d13-0010c6dffd0f",
+            "display": "Drug",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d490dfc-c2cc-11de-8d13-0010c6dffd0f"
+              }
+            ]
+          }
+        ],
+        "parent": null,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7?v=full"
+          }
+        ],
+        "resourceVersion": "1.10"
+      },
+      "urgency": "ON_SCHEDULED_DATE",
+      "instructions": null,
+      "commentToFulfiller": null,
+      "display": "(NEW) Cetirizine  10Mg: null",
+      "drug": {
+        "uuid": "126ac4fa-f12c-478a-a93b-cf8b4199e42c",
+        "display": "Cetirizine  10Mg",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/drug/126ac4fa-f12c-478a-a93b-cf8b4199e42c"
+          }
+        ]
+      },
+      "dosingType": "org.openmrs.module.bahmniemrapi.drugorder.dosinginstructions.FlexibleDosingInstructions",
+      "dose": 1.0,
+      "doseUnits": {
+        "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
+        "display": "Tablet(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/86239663-7b04-4563-b877-d7efc4fe6c46"
+          }
+        ]
+      },
+      "frequency": {
+        "uuid": "9d7c32a2-3f10-11e4-adec-0800271c1b75",
+        "display": "OD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/orderfrequency/9d7c32a2-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "asNeeded": false,
+      "asNeededCondition": null,
+      "quantity": 7.0,
+      "quantityUnits": {
+        "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
+        "display": "Tablet(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/86239663-7b04-4563-b877-d7efc4fe6c46"
+          }
+        ]
+      },
+      "numRefills": 0,
+      "dosingInstructions": "{\"instructions\":\"As directed\"}",
+      "duration": 7,
+      "durationUnits": {
+        "uuid": "9d7437a9-3f10-11e4-adec-0800271c1b75",
+        "display": "Day(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d7437a9-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "route": {
+        "uuid": "9d6bc13f-3f10-11e4-adec-0800271c1b75",
+        "display": "Oral",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d6bc13f-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "brandName": null,
+      "dispenseAsWritten": false,
+      "drugNonCoded": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/e53bfc6a-ca62-4521-8851-6307aced4d84"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/e53bfc6a-ca62-4521-8851-6307aced4d84?v=full"
+        }
+      ],
+      "type": "drugorder",
+      "resourceVersion": "1.10"
+    },
+    {
+      "uuid": "4bda9710-9fb6-4227-a847-335d61c7ad20",
+      "orderNumber": "ORD-261016",
+      "accessionNumber": null,
+      "patient": {
+        "uuid": "dc906a5e-9bad-4f4a-8ee9-4d429ff925e9",
+        "display": "TRI11341705 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"
+          }
+        ]
+      },
+      "concept": {
+        "uuid": "dae043b5-3d27-4e40-b21b-4222e8655cf5",
+        "display": "Atorvastatin",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/dae043b5-3d27-4e40-b21b-4222e8655cf5"
+          }
+        ]
+      },
+      "action": "NEW",
+      "careSetting": {
+        "uuid": "6f0c9a92-6f24-11e3-af88-005056821db0",
+        "display": "Outpatient",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/caresetting/6f0c9a92-6f24-11e3-af88-005056821db0"
+          }
+        ]
+      },
+      "previousOrder": null,
+      "dateActivated": "2017-08-27T12:18:30.000+0530",
+      "scheduledDate": "2017-08-27T12:18:30.000+0530",
+      "dateStopped": null,
+      "autoExpireDate": "2017-09-26T12:18:29.000+0530",
+      "encounter": {
+        "uuid": "00026702-c617-4af3-850f-e8bfc138804f",
+        "display": "Consultation 08/27/2017",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f"
+          }
+        ]
+      },
+      "orderer": {
+        "uuid": "e3abb399-65af-4aa4-ade0-6e04bbfda253",
+        "display": "Dr. Mrudula Rao.MBBS,PGDFM - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/e3abb399-65af-4aa4-ade0-6e04bbfda253"
+          }
+        ]
+      },
+      "orderReason": null,
+      "orderReasonNonCoded": null,
+      "orderType": {
+        "uuid": "131168f4-15f5-102d-96e4-000c29c2a5d7",
+        "display": "Drug Order",
+        "name": "Drug Order",
+        "javaClassName": "org.openmrs.DrugOrder",
+        "retired": false,
+        "description": "An order for a medication to be given to the patient",
+        "conceptClasses": [
+          {
+            "uuid": "8d490dfc-c2cc-11de-8d13-0010c6dffd0f",
+            "display": "Drug",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d490dfc-c2cc-11de-8d13-0010c6dffd0f"
+              }
+            ]
+          }
+        ],
+        "parent": null,
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7"
+          },
+          {
+            "rel": "full",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/ordertype/131168f4-15f5-102d-96e4-000c29c2a5d7?v=full"
+          }
+        ],
+        "resourceVersion": "1.10"
+      },
+      "urgency": "ON_SCHEDULED_DATE",
+      "instructions": null,
+      "commentToFulfiller": null,
+      "display": "(NEW) Atorvastatin 10Mg: null",
+      "drug": {
+        "uuid": "33e61819-8482-4473-aa1a-1ac617b7a045",
+        "display": "Atorvastatin 10Mg",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/drug/33e61819-8482-4473-aa1a-1ac617b7a045"
+          }
+        ]
+      },
+      "dosingType": "org.openmrs.module.bahmniemrapi.drugorder.dosinginstructions.FlexibleDosingInstructions",
+      "dose": 1.0,
+      "doseUnits": {
+        "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
+        "display": "Tablet(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/86239663-7b04-4563-b877-d7efc4fe6c46"
+          }
+        ]
+      },
+      "frequency": {
+        "uuid": "9d7c32a2-3f10-11e4-adec-0800271c1b75",
+        "display": "OD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/orderfrequency/9d7c32a2-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "asNeeded": false,
+      "asNeededCondition": null,
+      "quantity": 30.0,
+      "quantityUnits": {
+        "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
+        "display": "Tablet(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/86239663-7b04-4563-b877-d7efc4fe6c46"
+          }
+        ]
+      },
+      "numRefills": 0,
+      "dosingInstructions": "{\"instructions\":\"As directed\"}",
+      "duration": 30,
+      "durationUnits": {
+        "uuid": "9d7437a9-3f10-11e4-adec-0800271c1b75",
+        "display": "Day(s)",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d7437a9-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "route": {
+        "uuid": "9d6bc13f-3f10-11e4-adec-0800271c1b75",
+        "display": "Oral",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/9d6bc13f-3f10-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "brandName": null,
+      "dispenseAsWritten": false,
+      "drugNonCoded": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/4bda9710-9fb6-4227-a847-335d61c7ad20"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/4bda9710-9fb6-4227-a847-335d61c7ad20?v=full"
+        }
+      ],
+      "type": "drugorder",
+      "resourceVersion": "1.10"
+    }
+  ],
+  "voided": false,
+  "auditInfo": {
+    "creator": {
+      "uuid": "f78ee44b-a075-4bc7-b705-9a08a6ff3a57",
+      "display": "mrudula",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/user/f78ee44b-a075-4bc7-b705-9a08a6ff3a57"
+        }
+      ]
+    },
+    "dateCreated": "2017-08-27T12:18:30.000+0530",
+    "changedBy": null,
+    "dateChanged": null
+  },
+  "visit": {
+    "uuid": "5c044da3-08ac-4686-a3d8-7c71425b3a57",
+    "display": "OPD @ Registration Desk - 08/27/2017 11:18 AM",
+    "patient": {
+      "uuid": "dc906a5e-9bad-4f4a-8ee9-4d429ff925e9",
+      "display": "TRI11341705 - AABCCDDEE FFGGHHII",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"
+        }
+      ]
+    },
+    "visitType": {
+      "uuid": "c22a5000-3f10-11e4-adec-0800271c1b75",
+      "display": "OPD",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visittype/c22a5000-3f10-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "indication": null,
+    "location": {
+      "uuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
+      "display": "Registration Desk",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c5854fd7-3f12-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "startDatetime": "2017-08-27T11:18:45.000+0530",
+    "stopDatetime": "2017-08-27T12:18:30.000+0530",
+    "encounters": [
+      {
+        "uuid": "00026702-c617-4af3-850f-e8bfc138804f",
+        "display": "Consultation 08/27/2017",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f"
+          }
+        ]
+      },
+      {
+        "uuid": "40d585a4-20f8-44f5-99b6-a6ab1c38dc35",
+        "display": "REG 08/27/2017",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/40d585a4-20f8-44f5-99b6-a6ab1c38dc35"
+          }
+        ]
+      }
+    ],
+    "attributes": [
+      {
+        "uuid": "21121f1d-0f36-44cf-9435-e7c77e861c45",
+        "display": "Visit Status: OPD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/5c044da3-08ac-4686-a3d8-7c71425b3a57/attribute/21121f1d-0f36-44cf-9435-e7c77e861c45"
+          }
+        ]
+      }
+    ],
+    "voided": false,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/5c044da3-08ac-4686-a3d8-7c71425b3a57"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/5c044da3-08ac-4686-a3d8-7c71425b3a57?v=full"
+      }
+    ],
+    "resourceVersion": "1.9"
+  },
+  "encounterProviders": [
+    {
+      "uuid": "c5b19417-391d-4051-8114-41911c34f492",
+      "provider": {
+        "uuid": "e3abb399-65af-4aa4-ade0-6e04bbfda253",
+        "display": "Dr. Mrudula Rao.MBBS,PGDFM - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/e3abb399-65af-4aa4-ade0-6e04bbfda253"
+          }
+        ]
+      },
+      "encounterRole": {
+        "uuid": "a0b03050-c99b-11e0-9572-0800200c9a66",
+        "display": "Unknown",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounterrole/a0b03050-c99b-11e0-9572-0800200c9a66"
+          }
+        ]
+      },
+      "voided": false,
+      "links": [
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f/encounterprovider/c5b19417-391d-4051-8114-41911c34f492?v=full"
+        }
+      ],
+      "resourceVersion": "1.9"
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f"
+    }
+  ],
+  "resourceVersion": "1.9"
+}

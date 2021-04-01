@@ -11,6 +11,7 @@ import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurati
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,11 +25,17 @@ public class IntegrationDataService {
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
 
-    private static Logger logger = Logger.getLogger(IntegrationDataService.class);
+    private static final Logger logger = Logger.getLogger(IntegrationDataService.class);
 
     public void createConstants() {
-        Map<String, String> constants = implementationConfigurationRepository.getConstants();
-        List<Constant> list = constants.keySet().stream().map(key -> new Constant(ConstantKey.valueOf(key), constants.get(key))).collect(Collectors.toList());
+        Map<String, Object> constants = implementationConfigurationRepository.getConstants();
+        List<Constant> list = constants.keySet().stream().filter(key -> constants.get(key) instanceof String).map(key -> new Constant(ConstantKey.valueOf(key), (String) constants.get(key))).collect(Collectors.toList());
+        constants.keySet().stream().filter(key -> !(constants.get(key) instanceof String)).forEach(key -> {
+            ArrayList arrayList = (ArrayList) constants.get(key);
+            arrayList.forEach(valueElement -> {
+                list.add(new Constant(ConstantKey.valueOf(key), (String) valueElement));
+            });
+        });
         constantsRepository.saveAll(list);
         logger.info("Created constants");
     }

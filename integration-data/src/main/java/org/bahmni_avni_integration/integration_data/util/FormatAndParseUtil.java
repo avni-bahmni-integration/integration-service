@@ -7,22 +7,21 @@ import java.util.Date;
 import java.util.Objects;
 
 public class FormatAndParseUtil {
+    private static final SimpleDateFormat humanReadableFormat = new SimpleDateFormat("dd-MM-yyyy");;
+    private static final SimpleDateFormat isoDateWithTimezone = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+    private static final SimpleDateFormat avniDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
     public static String escapedForSql(String s) {
         return s.replaceAll("'", "''");
     }
 
     public static String toISODateStringWithTimezone(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
-        return dateFormat.format(date);
+        return isoDateWithTimezone.format(date);
     }
 
     public static String toISODateString(Date date) {
-        DateFormat dateFormat = getIsoDateFormat();
-        return String.format("%s%s", dateFormat.format(date), "Z");
-    }
-
-    private static DateFormat getIsoDateFormat() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        return String.format("%s%s", isoDateFormat.format(date), "Z");
     }
 
     public static String now() {
@@ -30,9 +29,8 @@ public class FormatAndParseUtil {
     }
 
     public static Date fromAvniDate(String dateString) {
-        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            return df1.parse(dateString);
+            return avniDateFormat.parse(dateString);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -40,8 +38,7 @@ public class FormatAndParseUtil {
 
     public static Date fromAvniDateTime(String dateString) {
         try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            return dateFormat.parse(dateString);
+            return isoDateFormat.parse(dateString);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -49,8 +46,7 @@ public class FormatAndParseUtil {
 
     public static Date fromIsoDateString(String date) {
         try {
-            DateFormat dateFormat = getIsoDateFormat();
-            return dateFormat.parse(date);
+            return isoDateFormat.parse(date);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -65,5 +61,9 @@ public class FormatAndParseUtil {
         if (Objects.equals(gender, "Female")) return "F";
         if (Objects.equals(gender, "Other")) return "U";
         return null;
+    }
+
+    public static String toHumanReadableFormat(Date date) {
+        return humanReadableFormat.format(date);
     }
 }

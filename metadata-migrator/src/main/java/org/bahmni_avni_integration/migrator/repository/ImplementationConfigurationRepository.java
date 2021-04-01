@@ -21,8 +21,8 @@ public class ImplementationConfigurationRepository {
         return ObjectJsonMapper.readValue(fileUtil.readConfigFile("bahmni/bahmni-forms.json"),  new TypeReference<List<OpenMRSForm>>(){});
     }
 
-    public Map<String, String> getConstants() {
-        return ObjectJsonMapper.readValue(fileUtil.readConfigFile("integration/constants.json"),  new TypeReference<Map<String, String>>(){});
+    public Map<String, Object> getConstants() {
+        return ObjectJsonMapper.readValue(fileUtil.readConfigFile("integration/constants.json"),  new TypeReference<Map<String, Object>>(){});
     }
 
     public StandardMappings getStandardMappings() {

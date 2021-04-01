@@ -28,4 +28,8 @@ public class BahmniEncounter {
     public String getEncounterTypeUuid() {
         return getOpenMRSEncounter().getEncounterType().getUuid();
     }
+
+    public String getVisitTypeUuid() {
+        return openMRSEncounter.getVisitTypeUuid();
+    }
 }

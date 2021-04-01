@@ -2,6 +2,7 @@ package org.bahmni_avni_integration.contract.bahmni;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,7 +80,7 @@ public class OpenMRSFullEncounter {
 
             Object value = observation.get("value");
             if (value instanceof Map) {
-                value = ((Map)value).get("uuid");
+                value = ((Map) value).get("uuid");
             }
             openMRSObservation.setValue(value);
             leafObservations.add(openMRSObservation);
@@ -108,5 +109,32 @@ public class OpenMRSFullEncounter {
             Map<String, Object> conceptObj = (Map<String, Object>) stringObjectMap.get("concept");
             return (String) conceptObj.get("uuid");
         }).collect(Collectors.toList());
+    }
+
+    public List<String> getDrugOrders() {
+        ArrayList<String> list = new ArrayList<>();
+        List<Map<String, Object>> orders = (List<Map<String, Object>>) map.get("orders");
+        if (orders == null || orders.size() == 0) return list;
+        return orders.stream().filter(stringObjectMap -> {
+            Map<String, Object> orderType = (Map<String, Object>) stringObjectMap.get("orderType");
+            return "Drug Order".equals(orderType.get("name"));
+        }).map(stringObjectMap -> {
+            Map<String, Object> drug = (Map<String, Object>) stringObjectMap.get("drug");
+            Map<String, Object> doseUnits = (Map<String, Object>) stringObjectMap.get("doseUnits");
+            double dose = (double) stringObjectMap.get("dose");
+            int duration = (int) stringObjectMap.get("duration");
+            boolean asNeeded = (boolean) stringObjectMap.get("asNeeded");
+            String scheduledDate = (String) stringObjectMap.get("scheduledDate");
+            Date date = FormatAndParseUtil.fromIsoDateString(scheduledDate);
+            String humanReadableDate = FormatAndParseUtil.toHumanReadableFormat(date);
+
+            return asNeeded ? String.format("%s %s - as needed - starting %s", drug.get("display"), doseUnits.get("display"), humanReadableDate) : String.format("%s %s - %f for %d days - starting %s", drug.get("display"), doseUnits.get("display"), dose, duration, humanReadableDate);
+        }).collect(Collectors.toList());
+    }
+
+    public String getVisitTypeUuid() {
+        Map<String, Object> visit = (Map<String, Object>) map.get("visit");
+        Map<String, Object> visitType = (Map<String, Object>) visit.get("visitType");
+        return (String) visitType.get("uuid");
     }
 }

@@ -1,4 +1,4 @@
-package org.bahmni_avni_integration.util;
+package org.bahmni_avni_integration.integration.data.util;
 
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.junit.jupiter.api.Test;
