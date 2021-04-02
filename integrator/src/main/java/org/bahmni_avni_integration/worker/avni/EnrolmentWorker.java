@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.worker.avni;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
@@ -16,6 +17,7 @@ import org.bahmni_avni_integration.service.EnrolmentService;
 import org.bahmni_avni_integration.service.EntityStatusService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.PatientService;
+import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.javatuples.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.function.Predicate;
 
 @Component
-public class EnrolmentWorker {
+public class EnrolmentWorker implements ErrorRecordWorker {
     private final AvniEntityStatusRepository avniEntityStatusRepository;
     private final AvniEnrolmentRepository avniEnrolmentRepository;
     private final EntityStatusService entityStatusService;
@@ -87,5 +89,10 @@ public class EnrolmentWorker {
 
     public void processEnrolments(Constants constants) {
         this.processEnrolments(constants, enrolment -> true);
+    }
+
+    @Override
+    public void processError(String entityUuid) {
+        throw new NotImplementedException();
     }
 }

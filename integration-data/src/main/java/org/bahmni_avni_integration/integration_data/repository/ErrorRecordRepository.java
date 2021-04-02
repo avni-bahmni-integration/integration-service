@@ -17,5 +17,5 @@ public interface ErrorRecordRepository extends PagingAndSortingRepository<ErrorR
     ErrorRecord findByAvniEntityTypeAndEntityId(AvniEntityType avniEntityType, String entityId);
     ErrorRecord findByBahmniEntityTypeAndEntityId(BahmniEntityType bahmniEntityType, String entityId);
 
-    Page<ErrorRecord> findAllByErrorRecordLogsErrorTypeIn(List<ErrorType> errorTypes, Pageable pageable);
+    Page<ErrorRecord> findAllByErrorRecordLogsErrorTypeNotInOrderById(List<ErrorType> errorTypes, Pageable pageable);
 }

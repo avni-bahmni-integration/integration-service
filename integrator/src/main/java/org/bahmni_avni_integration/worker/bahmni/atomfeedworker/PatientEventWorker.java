@@ -9,6 +9,7 @@ import org.bahmni_avni_integration.integration_data.repository.MultipleResultsFo
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.PatientService;
 import org.bahmni_avni_integration.service.SubjectService;
+import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PatientEventWorker implements EventWorker {
+public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired

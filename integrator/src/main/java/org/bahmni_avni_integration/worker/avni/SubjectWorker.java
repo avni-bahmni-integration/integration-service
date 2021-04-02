@@ -1,18 +1,20 @@
 package org.bahmni_avni_integration.worker.avni;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
-import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.EntityStatusService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.PatientService;
+import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.function.Predicate;
 
 @Component
-public class SubjectWorker {
+public class SubjectWorker implements ErrorRecordWorker {
     @Autowired
     private AvniEntityStatusRepository avniEntityStatusRepository;
     @Autowired
@@ -77,5 +79,10 @@ public class SubjectWorker {
 
     public void processSubjects(Constants constants) {
         this.processSubjects(constants, subjects -> true);
+    }
+
+    @Override
+    public void processError(String entityUuid) {
+        throw new NotImplementedException();
     }
 }
