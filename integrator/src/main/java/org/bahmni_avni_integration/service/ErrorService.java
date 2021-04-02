@@ -94,4 +94,8 @@ public class ErrorService {
     public void successfullyProcessed(OpenMRSPatient openMRSPatient) {
         successfullyProcessedBahmniEntity(BahmniEntityType.Patient, openMRSPatient.getUuid());
     }
+
+    public void successfullyProcessed(OpenMRSFullEncounter openMRSFullEncounter) {
+        successfullyProcessedBahmniEntity(BahmniEntityType.Encounter, openMRSFullEncounter.getUuid());
+    }
 }

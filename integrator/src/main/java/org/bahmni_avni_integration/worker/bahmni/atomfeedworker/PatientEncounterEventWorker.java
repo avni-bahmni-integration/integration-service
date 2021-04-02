@@ -1,10 +1,10 @@
 package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
+import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
@@ -50,6 +50,10 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
             return;
         }
 
+        processEncounter(bahmniEncounter);
+    }
+
+    private void processEncounter(BahmniEncounter bahmniEncounter) {
         GeneralEncounter avniPatient = subjectService.findPatient(metaData, bahmniEncounter.getOpenMRSEncounter().getPatient().getUuid());
         try {
             if (encounterService.isProcessableLabEncounter(bahmniEncounter, metaData, constants)) {
@@ -68,6 +72,7 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
                     }
                 }
             }
+            errorService.successfullyProcessed(bahmniEncounter.getOpenMRSEncounter());
         } catch (NoSubjectWithIdException e) {
             errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), ErrorType.NoSubjectWithId);
         } catch (SubjectIdChangedException e) {
@@ -156,7 +161,14 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
 
     @Override
     public void processError(String entityUuid) {
-        throw new NotImplementedException();
+        BahmniEncounter bahmniEncounter = encounterService.getEncounter(entityUuid, metaData);
+        if (bahmniEncounter == null) {
+            logger.warn(String.format("Encounter has been deleted now: %s", entityUuid));
+            errorService.errorOccurred(entityUuid, ErrorType.EntityIsDeleted, BahmniEntityType.Encounter);
+            return;
+        }
+
+        processEncounter(bahmniEncounter);
     }
 
     static class SubjectIdChangedException extends Exception {

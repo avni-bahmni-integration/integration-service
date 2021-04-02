@@ -139,7 +139,7 @@ public class PatientService {
     }
 
     public void patientDeleted(String patientUuid) {
-        errorService.errorOccurred(patientUuid, ErrorType.PatientIsDeleted, BahmniEntityType.Patient);
+        errorService.errorOccurred(patientUuid, ErrorType.EntityIsDeleted, BahmniEntityType.Patient);
     }
 
     public void notACommunityMember(OpenMRSPatient patient) {

@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.service;
 
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
+import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.bahmni_avni_integration.integration_data.repository.bahmni.BahmniEncounter;
@@ -19,6 +20,12 @@ public class BahmniEncounterService {
 
     public BahmniEncounter getEncounter(Event event, BahmniEncounterToAvniEncounterMetaData metaData) {
         OpenMRSFullEncounter encounter = encounterRepository.getEncounter(event);
+        if (encounter == null) return null;
+        return new BahmniEncounter(encounter, metaData);
+    }
+
+    public BahmniEncounter getEncounter(String encounterUuid, BahmniEncounterToAvniEncounterMetaData metaData) {
+        OpenMRSFullEncounter encounter = encounterRepository.getEncounterByUuid(encounterUuid);
         if (encounter == null) return null;
         return new BahmniEncounter(encounter, metaData);
     }
