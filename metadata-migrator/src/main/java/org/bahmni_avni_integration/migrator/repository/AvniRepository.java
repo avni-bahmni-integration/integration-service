@@ -166,7 +166,6 @@ public class AvniRepository {
                  and form.name <> ?
                  and form_type IN (?, ?, ?, ?)
                  and form.is_voided = false
-                order by form_type, p.name, form.id;
                 """;
         List<AvniForm> forms = new ArrayList<>();
         try (PreparedStatement formPS = connection.prepareStatement(formSelect)) {

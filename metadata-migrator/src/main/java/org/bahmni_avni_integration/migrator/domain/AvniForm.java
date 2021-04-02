@@ -1,5 +1,8 @@
 package org.bahmni_avni_integration.migrator.domain;
 
+import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
+import org.bahmni_avni_integration.integration_data.domain.MappingType;
+
 import java.util.List;
 
 public final class AvniForm {
@@ -63,11 +66,29 @@ public final class AvniForm {
         this.subjectType = subjectType;
     }
 
-    public String getEncounterType() {
+    public String getAvniValueForMapping() {
         return switch (formType) {
-            case IndividualProfile -> subjectType;
+            case IndividualProfile -> null;
             case ProgramEncounter, Encounter -> encounterType;
             case ProgramEnrolment -> program;
+        };
+    }
+
+    public MappingType getMappingType() {
+        return switch (formType) {
+            case IndividualProfile -> MappingType.CommunityRegistration_BahmniForm;
+            case Encounter -> MappingType.CommunityEncounter_BahmniForm;
+            case ProgramEncounter -> MappingType.CommunityProgramEncounter_BahmniForm;
+            case ProgramEnrolment -> MappingType.CommunityEnrolment_BahmniForm;
+        };
+    }
+
+    public MappingGroup getMappingGroup() {
+        return switch (formType) {
+            case IndividualProfile -> MappingGroup.PatientSubject;
+            case Encounter -> MappingGroup.GeneralEncounter;
+            case ProgramEncounter -> MappingGroup.ProgramEncounter;
+            case ProgramEnrolment -> MappingGroup.ProgramEnrolment;
         };
     }
 }

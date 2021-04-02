@@ -2,6 +2,7 @@ package org.bahmni_avni_integration.migrator.service;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
+import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
@@ -27,7 +28,10 @@ public class AvniToBahmniService {
     private final ConnectionFactory connectionFactory;
     private static Logger logger = Logger.getLogger(AvniToBahmniService.class);
 
-    public AvniToBahmniService(OpenMRSRepository openMRSRepository, AvniRepository avniRepository, MappingMetaDataRepository mappingMetaDataRepository, ConnectionFactory connectionFactory) {
+    public AvniToBahmniService(OpenMRSRepository openMRSRepository,
+                               AvniRepository avniRepository,
+                               MappingMetaDataRepository mappingMetaDataRepository,
+                               ConnectionFactory connectionFactory) {
         this.openMRSRepository = openMRSRepository;
         this.avniRepository = avniRepository;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
@@ -47,11 +51,10 @@ public class AvniToBahmniService {
     private void createForms(List<AvniForm> forms, Connection connection) throws SQLException {
         for (var form : forms) {
             String bahmniFormConceptUuid = UUID.randomUUID().toString();
-            var conceptResult = openMRSRepository.createConcept(connection,
-                    bahmniFormConceptUuid, form.getName(), form.getName(), "N/A", "Misc", true);
+            var conceptResult = openMRSRepository.createConceptSet(connection, bahmniFormConceptUuid, form.getName());
             int formConceptId = conceptResult.conceptId();
             logger.debug("Form: %s Concept Id: %d".formatted(form.getName(), formConceptId));
-            saveObsMapping(form.getName(), bahmniFormConceptUuid);
+            saveFormMapping(form, bahmniFormConceptUuid);
             var formElementGroups = form.getFormElementGroups();
             for (AvniFormElementGroup formElementGroup : formElementGroups) {
                 createQuestions(connection, formElementGroup, formConceptId);
@@ -84,7 +87,7 @@ public class AvniToBahmniService {
     private void saveObsMapping(String avniValue, String bahmniValue, ObsDataType obsDataType) {
         var existingMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndAvniValue(MappingGroup.Observation,
                 MappingType.Concept, avniValue);
-        if(existingMapping == null) {
+        if (existingMapping == null) {
             mappingMetaDataRepository.saveMapping(MappingGroup.Observation,
                     MappingType.Concept,
                     bahmniValue,
@@ -94,17 +97,8 @@ public class AvniToBahmniService {
         }
     }
 
-    private void saveFormMapping(MappingType mappingType, String avniValue, String bahmniValue, ObsDataType obsDataType) {
-        var existingMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndAvniValue(
-                MappingGroup.Observation, mappingType, avniValue);
-        if(existingMapping == null) {
-            mappingMetaDataRepository.saveMapping(MappingGroup.Observation,
-                    MappingType.Concept,
-                    bahmniValue,
-                    avniValue,
-                    obsDataType
-            );
-        }
+    private void saveFormMapping(AvniForm avniForm, String bahmniValue) {
+        mappingMetaDataRepository.saveMapping(avniForm.getMappingGroup(), avniForm.getMappingType(), bahmniValue, avniForm.getAvniValueForMapping());
     }
 
     private void createAnswers(Connection connection, AvniConcept concept, int questionConceptId) throws SQLException {
