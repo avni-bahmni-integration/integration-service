@@ -11,7 +11,6 @@ import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
-import org.bahmni_avni_integration.integration_data.repository.bahmni.BahmniSplitEncounter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,70 +18,66 @@ import java.util.List;
 
 @Service
 public class ErrorService {
-    private static Logger logger = Logger.getLogger(ErrorService.class);
+    private static final Logger logger = Logger.getLogger(ErrorService.class);
 
     @Autowired
     private ErrorRecordRepository errorRecordRepository;
 
-    public void errorOccurred(Subject subject, ErrorType errorType, SubjectToPatientMetaData metaData) {
-        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndSubjectPatientExternalIdAndErrorType(AvniEntityType.Subject, subject.getUuid(), errorType);
-        if (errorRecord != null) return;
-
-        String id = subject.getId(metaData);
-        logger.warn(String.format("Patient subject id %s not found", id));
+    private void saveAvniError(String uuid, ErrorType errorType, AvniEntityType avniEntityType) {
+        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(avniEntityType, uuid);
+        if (errorRecord.hasThisAsLastErrorType(errorType)) {
+            logger.info(String.format("Same error as the last processing for entity uuid %s, and type %s", uuid, avniEntityType));
+            return;
+        }
 
         errorRecord = new ErrorRecord();
-        errorRecord.setAvniEntityType(AvniEntityType.Subject);
-        errorRecord.setSubjectPatientExternalId(subject.getUuid());
-        errorRecord.setSubjectPatientId(id);
-        errorRecord.setErrorType(errorType);
+        errorRecord.setAvniEntityType(avniEntityType);
+        errorRecord.setEntityId(uuid);
+        errorRecord.addErrorType(errorType);
         errorRecordRepository.save(errorRecord);
     }
 
-    public void errorOccurred(Enrolment enrolment, ErrorType errorType, Subject subject, SubjectToPatientMetaData metaData) {
-        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEnrolmentExternalIdAndErrorType(AvniEntityType.Enrolment, enrolment.getUuid(), errorType);
-        if (errorRecord != null) return;
+    private void saveBahmniError(String uuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
+        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, uuid);
+        if (errorRecord.hasThisAsLastErrorType(errorType)) {
+            logger.info(String.format("Same error as the last processing for entity uuid %s, and type %s", uuid, bahmniEntityType));
+            return;
+        }
 
         errorRecord = new ErrorRecord();
-        errorRecord.setAvniEntityType(AvniEntityType.Enrolment);
-        errorRecord.setEnrolmentExternalId(enrolment.getUuid());
-        errorRecord.setSubjectPatientExternalId(subject.getUuid());
-        errorRecord.setSubjectPatientId(subject.getId(metaData));
-        errorRecord.setErrorType(errorType);
+        errorRecord.setBahmniEntityType(bahmniEntityType);
+        errorRecord.setEntityId(uuid);
+        errorRecord.addErrorType(errorType);
         errorRecordRepository.save(errorRecord);
+    }
+
+    public void errorOccurred(Subject subject, ErrorType errorType) {
+        saveAvniError(subject.getUuid(), errorType, AvniEntityType.Subject);
+    }
+
+    public void errorOccurred(String entityUuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
+        saveBahmniError(entityUuid, errorType, bahmniEntityType);
+    }
+
+    public void errorOccurred(Enrolment enrolment, ErrorType errorType) {
+        saveAvniError(enrolment.getUuid(), errorType, AvniEntityType.Enrolment);
     }
 
     public void errorOccurred(OpenMRSPatient patient, ErrorType errorType) {
-        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndSubjectPatientExternalIdAndErrorType(BahmniEntityType.Patient, patient.getUuid(), errorType);
-        if (errorRecord != null) return;
-
-        errorRecord = new ErrorRecord();
-        errorRecord.setBahmniEntityType(BahmniEntityType.Patient);
-        errorRecord.setSubjectPatientExternalId(patient.getUuid());
-        errorRecord.setSubjectPatientId(patient.getPatientId());
-        errorRecord.setErrorType(errorType);
-        errorRecordRepository.save(errorRecord);
+        saveBahmniError(patient.getUuid(), errorType, BahmniEntityType.Patient);
     }
 
     public void errorOccurred(OpenMRSFullEncounter openMRSFullEncounter, ErrorType errorType) {
-        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEncounterExternalIdAndErrorType(BahmniEntityType.Encounter, openMRSFullEncounter.getUuid(), errorType);
-        if (errorRecord != null) return;
-
-        errorRecord = new ErrorRecord();
-        errorRecord.setBahmniEntityType(BahmniEntityType.Encounter);
-        errorRecord.setSubjectPatientExternalId(openMRSFullEncounter.getPatient().getUuid());
-        errorRecord.setEncounterExternalId(openMRSFullEncounter.getUuid());
-        errorRecord.setErrorType(errorType);
-        errorRecordRepository.save(errorRecord);
+        saveBahmniError(openMRSFullEncounter.getUuid(), errorType, BahmniEntityType.Encounter);
     }
 
     public void successfullyProcessed(Subject subject) {
-        List<ErrorRecord> errorRecords = errorRecordRepository.findAllByAvniEntityTypeAndSubjectPatientExternalId(AvniEntityType.Subject, subject.getUuid());
-        errorRecordRepository.deleteAll(errorRecords);
+        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(AvniEntityType.Subject, subject.getUuid());
+        errorRecordRepository.delete(errorRecord);
     }
 
     public void successfullyProcessed(Enrolment enrolment) {
-        List<ErrorRecord> errorRecords = errorRecordRepository.findAllByAvniEntityTypeAndEnrolmentExternalId(AvniEntityType.Enrolment, enrolment.getUuid());
-        errorRecordRepository.deleteAll(errorRecords);
+        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(AvniEntityType.Enrolment, enrolment.getUuid());
+        errorRecordRepository.delete(errorRecord);
     }
 }

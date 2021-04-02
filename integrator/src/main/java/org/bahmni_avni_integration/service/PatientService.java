@@ -4,6 +4,7 @@ import org.apache.http.HttpStatus;
 import org.bahmni_avni_integration.client.bahmni.WebClientsException;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.*;
+import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
@@ -78,11 +79,11 @@ public class PatientService {
     }
 
     public void processPatientIdChanged(Subject subject, SubjectToPatientMetaData metaData) {
-        errorService.errorOccurred(subject, ErrorType.PatientIdChanged, metaData);
+        errorService.errorOccurred(subject, ErrorType.PatientIdChanged);
     }
 
     public void processPatientNotFound(Subject subject, SubjectToPatientMetaData metaData) {
-        errorService.errorOccurred(subject, ErrorType.NoPatientWithId, metaData);
+        errorService.errorOccurred(subject, ErrorType.NoPatientWithId);
     }
 
     public void createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
@@ -124,5 +125,24 @@ public class PatientService {
     public boolean shouldFilterPatient(OpenMRSPatient patient, Constants constants) {
         String patientId = patient.getPatientId();
         return !patientId.startsWith(constants.getValue(ConstantKey.BahmniIdentifierPrefix));
+    }
+
+    public OpenMRSPatient getPatient(String patientUuid) {
+        try {
+            return openMRSPatientRepository.getPatient(patientUuid);
+        } catch (WebClientsException e) {
+            if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                return null;
+            }
+            throw e;
+        }
+    }
+
+    public void patientDeleted(String patientUuid) {
+        errorService.errorOccurred(patientUuid, ErrorType.PatientIsDeleted, BahmniEntityType.Patient);
+    }
+
+    public void notACommunityMember(OpenMRSPatient patient) {
+        errorService.errorOccurred(patient, ErrorType.NotACommunityMember);
     }
 }

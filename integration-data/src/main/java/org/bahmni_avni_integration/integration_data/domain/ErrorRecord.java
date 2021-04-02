@@ -2,10 +2,8 @@ package org.bahmni_avni_integration.integration_data.domain;
 
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 public class ErrorRecord extends BaseEntity {
@@ -18,23 +16,10 @@ public class ErrorRecord extends BaseEntity {
     private BahmniEntityType bahmniEntityType;
 
     @Column
-    private String subjectPatientExternalId;
+    private String entityId;
 
-    @Column
-    private String enrolmentExternalId;
-
-    @Column
-    private String programEncounterExternalId;
-
-    @Column
-    private String encounterExternalId;
-
-    @Column
-    private String subjectPatientId;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private ErrorType errorType;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "errorRecord")
+    private Set<ErrorRecordLog> errorRecordLogs = new HashSet<>();
 
     public ErrorRecord() {
     }
@@ -55,51 +40,23 @@ public class ErrorRecord extends BaseEntity {
         this.bahmniEntityType = bahmniEntityType;
     }
 
-    public String getSubjectPatientExternalId() {
-        return subjectPatientExternalId;
+    public String getEntityId() {
+        return entityId;
     }
 
-    public void setSubjectPatientExternalId(String subjectPatientExternalId) {
-        this.subjectPatientExternalId = subjectPatientExternalId;
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
     }
 
-    public String getEnrolmentExternalId() {
-        return enrolmentExternalId;
+    public boolean hasThisAsLastErrorType(ErrorType errorType) {
+        ErrorRecordLog errorRecordLog = this.errorRecordLogs.stream().sorted(Comparator.comparing(BaseEntity::getId)).reduce((first, second) -> second).orElse(null);
+        return Objects.equals(errorRecordLog.getErrorType(), errorType);
     }
 
-    public void setEnrolmentExternalId(String enrolmentExternalId) {
-        this.enrolmentExternalId = enrolmentExternalId;
-    }
-
-    public String getProgramEncounterExternalId() {
-        return programEncounterExternalId;
-    }
-
-    public void setProgramEncounterExternalId(String programEncounterExternalId) {
-        this.programEncounterExternalId = programEncounterExternalId;
-    }
-
-    public String getEncounterExternalId() {
-        return encounterExternalId;
-    }
-
-    public void setEncounterExternalId(String encounterExternalId) {
-        this.encounterExternalId = encounterExternalId;
-    }
-
-    public ErrorType getErrorType() {
-        return errorType;
-    }
-
-    public void setErrorType(ErrorType errorType) {
-        this.errorType = errorType;
-    }
-
-    public String getSubjectPatientId() {
-        return subjectPatientId;
-    }
-
-    public void setSubjectPatientId(String subjectPatientId) {
-        this.subjectPatientId = subjectPatientId;
+    public void addErrorType(ErrorType errorType) {
+        ErrorRecordLog errorRecordLog = new ErrorRecordLog();
+        errorRecordLog.setErrorType(errorType);
+        errorRecordLog.setLoggedAt(new Date());
+        errorRecordLogs.add(errorRecordLog);
     }
 }

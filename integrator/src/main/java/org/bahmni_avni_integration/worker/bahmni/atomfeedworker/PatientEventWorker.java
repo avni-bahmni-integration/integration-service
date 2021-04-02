@@ -42,6 +42,10 @@ public class PatientEventWorker implements EventWorker {
             return;
         }
 
+        processPatient(patient);
+    }
+
+    private void processPatient(OpenMRSPatient patient) {
         logger.debug(String.format("Processing patient: name %s || uuid %s", patient.getName(), patient.getUuid()));
         PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
         GeneralEncounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
@@ -62,10 +66,28 @@ public class PatientEventWorker implements EventWorker {
         } else if (patientEncounter == null && subject == null) {
             subjectService.processSubjectNotFound(patient);
         }
+        throw new AssertionError("Should have never reached here");
     }
 
     @Override
     public void cleanUp(Event event) {
+    }
+
+    public void processError(String patientUuid) {
+        OpenMRSPatient patient = patientService.getPatient(patientUuid);
+        if (patient == null) {
+            logger.warn(String.format("Patient has been deleted now: %s", patientUuid));
+            patientService.patientDeleted(patientUuid);
+            return;
+        }
+
+        if (patientService.shouldFilterPatient(patient, constants)) {
+            logger.warn(String.format("Patient is not eligible for integration anymore: %s", patient.getPatientId()));
+            patientService.notACommunityMember(patient);
+            return;
+        }
+
+        processPatient(patient);
     }
 
 //    avoid loading of constants for every event
