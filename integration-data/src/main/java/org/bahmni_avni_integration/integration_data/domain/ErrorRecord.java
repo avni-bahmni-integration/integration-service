@@ -21,9 +21,6 @@ public class ErrorRecord extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "errorRecord")
     private Set<ErrorRecordLog> errorRecordLogs = new HashSet<>();
 
-    public ErrorRecord() {
-    }
-
     public AvniEntityType getAvniEntityType() {
         return avniEntityType;
     }

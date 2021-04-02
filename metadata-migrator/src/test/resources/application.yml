@@ -6,5 +6,5 @@ spring:
     password: password
   flyway:
     enabled: true
-    check-location: true
+    check-location: false
     locations: classpath:db.migration

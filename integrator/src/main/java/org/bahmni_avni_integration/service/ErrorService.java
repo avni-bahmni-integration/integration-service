@@ -71,13 +71,27 @@ public class ErrorService {
         saveBahmniError(openMRSFullEncounter.getUuid(), errorType, BahmniEntityType.Encounter);
     }
 
+    private void successfullyProcessedAvniEntity(AvniEntityType avniEntityType, String uuid) {
+        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(avniEntityType, uuid);
+        if (errorRecord != null)
+            errorRecordRepository.delete(errorRecord);
+    }
+
+    private void successfullyProcessedBahmniEntity(BahmniEntityType bahmniEntityType, String uuid) {
+        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, uuid);
+        if (errorRecord != null)
+            errorRecordRepository.delete(errorRecord);
+    }
+
     public void successfullyProcessed(Subject subject) {
-        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(AvniEntityType.Subject, subject.getUuid());
-        errorRecordRepository.delete(errorRecord);
+        successfullyProcessedAvniEntity(AvniEntityType.Subject, subject.getUuid());
     }
 
     public void successfullyProcessed(Enrolment enrolment) {
-        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(AvniEntityType.Enrolment, enrolment.getUuid());
-        errorRecordRepository.delete(errorRecord);
+        successfullyProcessedAvniEntity(AvniEntityType.Enrolment, enrolment.getUuid());
+    }
+
+    public void successfullyProcessed(OpenMRSPatient openMRSPatient) {
+        successfullyProcessedBahmniEntity(BahmniEntityType.Patient, openMRSPatient.getUuid());
     }
 }

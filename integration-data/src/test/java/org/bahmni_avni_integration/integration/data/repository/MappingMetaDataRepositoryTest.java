@@ -1,6 +1,8 @@
-package org.bahmni_avni_integration.integration_data.repository;
+package org.bahmni_avni_integration.integration.data.repository;
 
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
+import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
+import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,8 +12,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
-class MappingMetaDataRepositoryTest {
+@SpringBootTest(classes = MappingMetaDataRepository.class)
+class MappingMetaDataRepositoryTest extends AbstractRepositoryTest {
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
 

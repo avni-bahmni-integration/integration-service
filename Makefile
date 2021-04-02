@@ -42,8 +42,10 @@ build-db:
 drop-db:
 	$(call _drop_db,bahmni_avni)
 
-build-test-db:
+create-test-db:
 	$(call _build_db,bahmni_avni_test)
+
+build-test-db: create-test-db
 	./gradlew migrateTestDb
 
 drop-test-db:

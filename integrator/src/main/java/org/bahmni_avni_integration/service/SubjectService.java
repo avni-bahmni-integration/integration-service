@@ -49,6 +49,8 @@ public class SubjectService {
         MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
         GeneralEncounter encounterRequest = OpenMRSPatientMapper.mapToAvniEncounter(openMRSPatient, subject, patientToSubjectMetaData, conceptMetaData);
         avniEncounterRepository.create(encounterRequest);
+
+        errorService.successfullyProcessed(openMRSPatient);
     }
 
     public void updateRegistrationEncounter(GeneralEncounter encounterRequest, OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
@@ -56,6 +58,8 @@ public class SubjectService {
         encounterRequest.set("observations", OpenMRSPatientMapper.mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData));
         encounterRequest.setVoided(openMRSPatient.isVoided());
         avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);
+
+        errorService.successfullyProcessed(openMRSPatient);
     }
 
     // Patient from OpenMRS/Bahmni is saved as Encounter in Avni
