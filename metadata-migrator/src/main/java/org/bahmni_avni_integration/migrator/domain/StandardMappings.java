@@ -16,8 +16,13 @@ public class StandardMappings {
         return getForMappingType(MappingType.LabEncounterType);
     }
 
-    public Map<String, String> getForMappingType(MappingType labEncounterType) {
-        return list.stream().filter(stringStringMap -> stringStringMap.get("MappingType").equals(labEncounterType.name())).findFirst().orElse(null);
+    public Map<String, String> getForMappingType(MappingType mappingType) {
+        return list.stream().filter(stringStringMap -> stringStringMap.get("MappingType").equals(mappingType.name())).findFirst().orElse(null);
+    }
+
+    public String getAvniValueForMappingType(MappingType mappingType) {
+        Map<String, String> map = this.getForMappingType(mappingType);
+        return map.get("Avni Value");
     }
 
     public Map<String, String> getDrugOrderMappingType() {

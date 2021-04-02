@@ -1,9 +1,9 @@
 package org.bahmni_avni_integration.migrator.domain;
 
-public class ConceptName implements OpenMRSTerminology {
-    private String conceptName;
+public class UserProvidedConceptName implements OpenMRSTerminology {
+    private final String conceptName;
 
-    public ConceptName(String conceptName) {
+    public UserProvidedConceptName(String conceptName) {
         this.conceptName = conceptName;
     }
 
@@ -14,6 +14,6 @@ public class ConceptName implements OpenMRSTerminology {
 
     @Override
     public String getAvniName() {
-        return NameMapping.fromBahmniConceptToAvni(conceptName);
+        return conceptName;
     }
 }

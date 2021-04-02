@@ -97,7 +97,7 @@ public class OpenMRSRepository {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
-                openMRSForm.addTerm(new ConceptName(resultSet.getString(1)));
+                openMRSForm.addTerm(new OpenMRSConceptName(resultSet.getString(1)));
             }
         }
         return openMRSForm;

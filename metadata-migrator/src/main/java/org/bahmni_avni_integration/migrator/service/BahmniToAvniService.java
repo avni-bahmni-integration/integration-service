@@ -71,9 +71,10 @@ public class BahmniToAvniService {
     }
 
     public void createStandardMetadata() throws SQLException {
-        avniRepository.createConcept(ObsDataType.Text, Names.BahmniEntityUuid);
-
         StandardMappings standardMappings = implementationConfigurationRepository.getStandardMappings();
+
+        avniRepository.createConcept(ObsDataType.Text, standardMappings.getAvniValueForMappingType(MappingType.BahmniUUID_Concept));
+
         Map<String, String> labMappingType = standardMappings.getLabMappingType();
         if (labMappingType != null) {
             OpenMRSForm labForm = openMRSRepository.getLabForm(labMappingType.get("Avni Value"));
@@ -89,7 +90,7 @@ public class BahmniToAvniService {
             OpenMRSForm drugOrderForm = new OpenMRSForm();
             drugOrderForm.setFormName(drugOrderMappingType.get("Avni Value"));
             drugOrderForm.setType("Encounter");
-            drugOrderForm.addTerm(new ConceptName(drugOrderConceptMapping.get("Avni Value")));
+            drugOrderForm.addTerm(new UserProvidedConceptName(drugOrderConceptMapping.get("Avni Value")));
             avniRepository.createForms(Collections.singletonList(drugOrderForm));
             logger.info("Drug order form, encounter type, and concept created in Avni");
         }

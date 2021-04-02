@@ -33,19 +33,21 @@ public class MappingMetaDataService {
     }
 
     public PatientToSubjectMetaData getForPatientToSubject() {
-        String bahmniEntityUuidConcept = Names.BahmniEntityUuid;
         String avniIdentifierConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
         String subjectType = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Patient_SubjectType);
         String patientEncounterType = Names.AvniPatientRegistrationEncounter;
         String patientIdentifierName = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
-        return new PatientToSubjectMetaData(bahmniEntityUuidConcept, subjectType, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
+        String bahmniEntityUuidConceptInAvni = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
+        return new PatientToSubjectMetaData(bahmniEntityUuidConceptInAvni, subjectType, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
     }
 
     public BahmniEncounterToAvniEncounterMetaData getForBahmniEncounterToAvniEncounter() {
         List<MappingMetaData> mappings = mappingMetaDataRepository.findAllByMappingType(MappingType.EncounterType);
         BahmniEncounterToAvniEncounterMetaData metaData = new BahmniEncounterToAvniEncounterMetaData();
         metaData.addEncounterMappings(mappings);
-        metaData.setBahmniEntityUuidConcept(Names.BahmniEntityUuid);
+
+        String bahmniEntityUuidConceptInAvni = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
+        metaData.setBahmniEntityUuidConcept(bahmniEntityUuidConceptInAvni);
 
         metaData.addLabMapping(mappingMetaDataRepository.findByMappingType(MappingType.LabEncounterType));
         metaData.addDrugOrderMapping(mappingMetaDataRepository.findByMappingType(MappingType.DrugOrderEncounterType));
