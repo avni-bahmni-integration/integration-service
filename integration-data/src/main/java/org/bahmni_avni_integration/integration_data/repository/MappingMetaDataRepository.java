@@ -44,6 +44,12 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
         return mapping.getBahmniValue();
     }
 
+    default String getBahmniValue(MappingGroup mappingGroup, MappingType mappingType, String avniValue) {
+        MappingMetaData mapping = findByMappingGroupAndMappingTypeAndAvniValue(mappingGroup, mappingType, avniValue);
+        if (mapping == null) return null;
+        return mapping.getBahmniValue();
+    }
+
     default MappingMetaData getConceptMappingByOpenMRSConcept(String openMRSConceptUuid) {
         MappingMetaData mappingMetaData = findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, openMRSConceptUuid);
         if (mappingMetaData == null)

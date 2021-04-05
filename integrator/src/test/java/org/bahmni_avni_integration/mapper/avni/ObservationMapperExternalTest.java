@@ -1,6 +1,5 @@
 package org.bahmni_avni_integration.mapper.avni;
 
-import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveObservation;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
@@ -44,13 +43,11 @@ public class ObservationMapperExternalTest {
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         openMRSFullEncounter.setAny("obs", List.of(noProblem, reducedLiquor));
 
-        Enrolment enrolment = new Enrolment();
-        Map<String, Object> avniObservations = new LinkedHashMap<>();
+        var avniObservations = new LinkedHashMap<String, Object>();
         avniObservations.put("Obstetrics history", List.of("No problem"));
-        enrolment.set("observations", avniObservations);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"), List.of());
+                avniObservations, List.of());
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(reducedLiquor.get("uuid"))).findFirst().orElse(null);
 
@@ -71,13 +68,11 @@ public class ObservationMapperExternalTest {
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         openMRSFullEncounter.setAny("obs", List.of(ancRegisteredYes));
 
-        Enrolment enrolment = new Enrolment();
         Map<String, Object> avniObservations = new LinkedHashMap<>();
         avniObservations.put("ANC registered", "No");
-        enrolment.set("observations", avniObservations);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"), List.of());
+                avniObservations, List.of());
         OpenMRSSaveObservation existingObs = observations.stream()
                 .filter(o -> o.getUuid() != null && o.getUuid().equals(ancRegisteredYes.get("uuid"))).findFirst().orElse(null);
         OpenMRSSaveObservation newObs = observations.stream()
@@ -105,11 +100,9 @@ public class ObservationMapperExternalTest {
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         openMRSFullEncounter.setAny("obs", List.of(numberOfBabies));
 
-        Enrolment enrolment = new Enrolment();
-        enrolment.set("observations", new LinkedHashMap<String, Object>());
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"), List.of());
+                new LinkedHashMap<>(), List.of());
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(numberOfBabies.get("uuid"))).findFirst().orElse(null);
 
@@ -124,20 +117,17 @@ public class ObservationMapperExternalTest {
         Map<String, Object> numberOfBabies = createPrimitiveObservation(
                 UUID.randomUUID(),
                 metaData.getBahmniValueForAvniValue("Number of babies"),
-                2
-        );
+                2);
 
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         openMRSFullEncounter.setAny("obs", List.of(numberOfBabies));
 
-        Enrolment enrolment = new Enrolment();
         Map<String, Object> avniObservations = new LinkedHashMap<>();
         avniObservations.put("Number of babies", 4);
-        enrolment.set("observations", avniObservations);
 
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"), List.of());
+                avniObservations, List.of());
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getUuid().equals(numberOfBabies.get("uuid"))).findFirst().orElse(null);
 
@@ -152,17 +142,15 @@ public class ObservationMapperExternalTest {
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         openMRSFullEncounter.setAny("obs", List.of());
 
-        Enrolment enrolment = new Enrolment();
         Map<String, Object> avniObservations = new LinkedHashMap<>();
         avniObservations.put("Number of babies", 4);
-        enrolment.set("observations", avniObservations);
 
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"), List.of());
+                avniObservations, List.of());
+
         OpenMRSSaveObservation observation = observations.stream()
                 .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue("Number of babies"))).findFirst().orElse(null);
-
         assertNotNull(observation);
         assertNull(observation.getUuid());
         assertFalse(observation.isVoided());
@@ -190,15 +178,14 @@ public class ObservationMapperExternalTest {
         );
         openMRSFullEncounter.setAny("obs", List.of(abdominalProblemsNoProblem, obsHistoryNoProblem, obsHistoryStillBirth));
 
-        Enrolment enrolment = new Enrolment();
         Map<String, Object> avniObservations = new LinkedHashMap<>();
         avniObservations.put("Obstetrics history", List.of("No problem", "Reduced liquor"));
         avniObservations.put("Any abdominal problems", List.of("No problem"));
-        enrolment.set("observations", avniObservations);
 
         var updateObservations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"), List.of());
+                avniObservations, List.of());
+
         assertEquals(4, updateObservations.size());
         OpenMRSSaveObservation absProblemResult = updateObservations.stream()
                 .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue("Any abdominal problems"))).findFirst().orElse(null);
@@ -241,15 +228,14 @@ public class ObservationMapperExternalTest {
         );
         openMRSFullEncounter.setAny("obs", List.of(abdominalProblemsNoProblem, obsHistoryNoProblem));
 
-        Enrolment enrolment = new Enrolment();
         Map<String, Object> avniObservations = new LinkedHashMap<>();
         avniObservations.put("Obstetrics history", "No problem");
         avniObservations.put("Any abdominal problems", List.of("No problem"));
-        enrolment.set("observations", avniObservations);
 
         var updateObservations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 openMRSFullEncounter.getLeafObservations(),
-                (Map<String, Object>) enrolment.get("observations"), List.of());
+                avniObservations, List.of());
+
         assertEquals(2, updateObservations.size());
         OpenMRSSaveObservation absProblemResult = updateObservations.stream()
                 .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue("Any abdominal problems"))).findFirst().orElse(null);

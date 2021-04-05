@@ -30,10 +30,19 @@ public class EnrolmentMapper {
         openMRSEncounter.setEncounterType(encounterTypeUuid);
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
-
-        mapEnrolmentUuid(enrolment, openMRSEncounter);
-        observationMapper.mapObservations((LinkedHashMap<String, Object>) enrolment.get("observations"), openMRSEncounter);
+        List<OpenMRSSaveObservation> observations = observationMapper.mapObservations((LinkedHashMap<String, Object>) enrolment.get("observations"));
+        observations.add(avniUuidObs(enrolment));
+        OpenMRSSaveObservation formGroupObservation = formGroupObservation(enrolment);
+        formGroupObservation.setGroupMembers(observations);
+        openMRSEncounter.setObservations(List.of(formGroupObservation));
         return openMRSEncounter;
+    }
+
+    private OpenMRSSaveObservation formGroupObservation(Enrolment enrolment) {
+        var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, enrolment.getProgram());
+        var groupObservation = new OpenMRSSaveObservation();
+        groupObservation.setConcept(formConcept);
+        return groupObservation;
     }
 
     public OpenMRSEncounter mapEnrolmentToExistingEncounter(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
@@ -48,17 +57,19 @@ public class EnrolmentMapper {
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
 
-        String bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
+        String avniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) enrolment.get("observations"),
-                List.of(bahmniValueForAvniUuidConcept));
-        openMRSEncounter.setObservations(observations);
+                List.of(avniUuidConcept));
+        OpenMRSSaveObservation formGroupObservation = formGroupObservation(enrolment);
+        formGroupObservation.setGroupMembers(observations);
+        openMRSEncounter.setObservations(List.of(formGroupObservation));
         return openMRSEncounter;
     }
 
-    private void mapEnrolmentUuid(Enrolment enrolment, OpenMRSEncounter openMRSEncounter) {
+    private OpenMRSSaveObservation avniUuidObs(Enrolment enrolment) {
         String bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
-        openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, enrolment.getUuid(), ObsDataType.Text));
+        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, enrolment.getUuid(), ObsDataType.Text);
     }
 }

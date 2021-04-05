@@ -104,7 +104,8 @@ public class ObservationMapper {
         return voidedObservations;
     }
 
-    public void mapObservations(LinkedHashMap<String, Object> avniObservations, OpenMRSEncounter openMRSEncounter) {
+    public List<OpenMRSSaveObservation> mapObservations(LinkedHashMap<String, Object> avniObservations) {
+        List<OpenMRSSaveObservation> openMRSObservations = new ArrayList<>();
         MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
         avniObservations.forEach((key, value) -> {
             MappingMetaData questionMapping = conceptMappings.getMappingForAvniValue(key);
@@ -112,19 +113,20 @@ public class ObservationMapper {
                 if (ObsDataType.Coded.equals(questionMapping.getDataTypeHint())) {
                     if (value instanceof String) {
                         MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue((String) value);
-                        openMRSEncounter.addObservation(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+                        openMRSObservations.add(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
                     } else if (value instanceof List<?>) {
                         List<String> valueList = (List<String>) value;
                         valueList.forEach(s -> {
                             MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue(s);
-                            openMRSEncounter.addObservation(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+                            openMRSObservations.add(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
                         });
                     }
                 } else {
-                    openMRSEncounter.addObservation(OpenMRSSaveObservation.createPrimitiveObs(questionMapping.getBahmniValue(), value, questionMapping.getDataTypeHint()));
+                    openMRSObservations.add(OpenMRSSaveObservation.createPrimitiveObs(questionMapping.getBahmniValue(), value, questionMapping.getDataTypeHint()));
                 }
             }
         });
+        return openMRSObservations;
     }
 
 }

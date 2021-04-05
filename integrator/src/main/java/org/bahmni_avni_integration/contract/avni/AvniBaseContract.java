@@ -32,6 +32,11 @@ public class AvniBaseContract {
     }
 
     @JsonIgnore
+    public void setUuid(String uuid) {
+        set("ID", uuid);
+    }
+
+    @JsonIgnore
     public Date getLastModifiedDate() {
         Map<String, Object> audit = (Map<String, Object>) map.get("audit");
         String lastModifiedAtString = (String) audit.get("Last modified at");

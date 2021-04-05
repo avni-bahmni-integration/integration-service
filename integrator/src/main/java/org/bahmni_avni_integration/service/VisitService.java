@@ -36,4 +36,10 @@ public class VisitService {
         return visit;
     }
 
+    public OpenMRSUuidHolder getOrCreateVisit(OpenMRSUuidHolder patient) {
+        OpenMRSUuidHolder visit = getVisit(patient.getUuid());
+        if (visit == null) visit = createVisit(patient.getUuid());
+        return visit;
+    }
+
 }

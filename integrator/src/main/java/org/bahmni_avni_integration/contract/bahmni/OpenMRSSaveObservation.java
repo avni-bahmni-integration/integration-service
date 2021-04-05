@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OpenMRSSaveObservation {
@@ -14,6 +16,7 @@ public class OpenMRSSaveObservation {
     private String valueCodedName;
     private String uuid;
     private boolean voided;
+    private List<OpenMRSSaveObservation> groupMembers;
 
     public OpenMRSSaveObservation() {
     }
@@ -108,5 +111,13 @@ public class OpenMRSSaveObservation {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public List<OpenMRSSaveObservation> getGroupMembers() {
+        return groupMembers;
+    }
+
+    public void setGroupMembers(List<OpenMRSSaveObservation> groupMembers) {
+        this.groupMembers = groupMembers;
     }
 }

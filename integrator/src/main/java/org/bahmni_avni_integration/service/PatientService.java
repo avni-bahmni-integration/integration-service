@@ -50,10 +50,7 @@ public class PatientService {
     }
 
     public OpenMRSFullEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
-        OpenMRSUuidHolder visit = visitService.getVisit(patient.getUuid());
-        if (visit == null) {
-            visit = visitService.createVisit(patient.getUuid());
-        }
+        OpenMRSUuidHolder visit = visitService.getOrCreateVisit(patient);
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
         encounter.setVisit(visit.getUuid());
         OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
