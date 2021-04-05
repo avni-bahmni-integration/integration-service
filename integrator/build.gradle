@@ -63,6 +63,19 @@ dependencies {
     compile "org.javatuples:javatuples:1.2"
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDir '../integration-data/src/main/resources'
+        }
+    }
+    test {
+        resources {
+            srcDir '../integration-data/src/main/resources'
+        }
+    }
+}
+
 task unitTest( type: Test ) {
     useJUnitPlatform()
     exclude ("**/**ExternalTest.class")

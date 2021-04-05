@@ -3,6 +3,7 @@ alter table error_record drop column enrolment_external_id;
 alter table error_record drop column program_encounter_external_id;
 alter table error_record drop column encounter_external_id;
 alter table error_record drop column error_type;
+alter table error_record drop column subject_patient_id;
 
 alter table error_record add column entity_id CHARACTER VARYING(250) NOT NULL default 'foo';
 delete from error_record where entity_id = 'foo';

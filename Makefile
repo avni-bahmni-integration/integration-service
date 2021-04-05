@@ -33,6 +33,7 @@ define _run_migrator
 	java -jar --enable-preview metadata-migrator/build/libs/metadata-migrator-0.0.1-SNAPSHOT.jar run
 endef
 
+######## DATABASE
 rebuild-db: drop-db build-db
 
 build-db:
@@ -53,13 +54,11 @@ drop-test-db:
 
 rebuild-test-db: drop-test-db build-test-db
 
-setup-external-test-db: drop-test-db run-migrator
-	$(call _build_db,bahmni_avni_test)
-	sudo -u ${postgres_user} psql bahmni_avni_test -f dump.sql
-
 drop-roles:
 	-psql -h localhost -U $(SU) -d postgres -c 'drop role $(ADMIN_USER)';
+#######
 
+####### BUILD, TEST, LOCAL RUN
 build-server: ## Builds the jar file
 	./gradlew clean build -x test
 
@@ -75,7 +74,6 @@ test-server: drop-test-db build-test-db build-server
 test-server-external: drop-test-db setup-external-test-db
 	./gradlew clean build
 
-## To be used when test-server is run
 open-unit-test-results-integrator:
 	open integrator/build/reports/tests/unitTest/index.html
 
@@ -84,3 +82,17 @@ open-unit-test-results-migrator:
 
 open-test-results: ## To be used when test-server-all is run
 	open integrator/build/reports/tests/test/index.html
+#######
+
+####### RUN STANDALONE
+configure-env-var:
+	. conf/env.conf
+
+configure-integration-db: configure-env-var
+	cat $(CONFIG_LOCATION)/integration/markers.sql | psql -h localhost -d bahmni_avni bahmni_avni_admin -1
+
+run-server-standalone-incremental: configure-env-var
+	java --enable-preview -jar integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar
+
+run-server-standalone-first-time: configure-integration-db run-server-standalone-incremental
+#######
