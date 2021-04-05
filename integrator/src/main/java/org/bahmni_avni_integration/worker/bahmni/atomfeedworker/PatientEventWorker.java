@@ -49,9 +49,11 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
     private void processPatient(OpenMRSPatient patient) {
         logger.debug(String.format("Processing patient: name %s || uuid %s", patient.getName(), patient.getUuid()));
         PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
-        GeneralEncounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
+
         Subject subject;
+        GeneralEncounter patientEncounter;
         try {
+            patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
             subject = subjectService.findSubject(patient, metaData, constants);
         } catch (MultipleResultsFoundException e) {
             subjectService.processMultipleSubjectsFound(patient);
@@ -67,7 +69,6 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
         } else if (patientEncounter == null && subject == null) {
             subjectService.processSubjectNotFound(patient);
         }
-        throw new AssertionError("Should have never reached here");
     }
 
     @Override
@@ -91,7 +92,7 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
         processPatient(patient);
     }
 
-//    avoid loading of constants for every event
+    //    avoid loading of constants for every event
     public void setConstants(Constants constants) {
         this.constants = constants;
     }

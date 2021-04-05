@@ -55,5 +55,6 @@ public class ErrorRecord extends BaseEntity {
         errorRecordLog.setErrorType(errorType);
         errorRecordLog.setLoggedAt(new Date());
         errorRecordLogs.add(errorRecordLog);
+        errorRecordLog.setErrorRecord(this);
     }
 }

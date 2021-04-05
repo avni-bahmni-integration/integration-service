@@ -17,8 +17,7 @@ public class PatientWorkerFullRunTest extends BaseExternalTest {
 
     @Test
     public void processPatients() {
-        patientWorker.setConstants(getConstants());
-        patientWorker.processPatients();
+        patientWorker.processPatients(getConstants());
     }
 
     @Test

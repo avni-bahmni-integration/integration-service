@@ -9,12 +9,9 @@ import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
-import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ErrorService {
@@ -25,7 +22,7 @@ public class ErrorService {
 
     private void saveAvniError(String uuid, ErrorType errorType, AvniEntityType avniEntityType) {
         ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(avniEntityType, uuid);
-        if (errorRecord.hasThisAsLastErrorType(errorType)) {
+        if (errorRecord != null && errorRecord.hasThisAsLastErrorType(errorType)) {
             logger.info(String.format("Same error as the last processing for entity uuid %s, and type %s", uuid, avniEntityType));
             return;
         }
@@ -37,26 +34,26 @@ public class ErrorService {
         errorRecordRepository.save(errorRecord);
     }
 
-    private void saveBahmniError(String uuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
+    private ErrorRecord saveBahmniError(String uuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
         ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, uuid);
-        if (errorRecord.hasThisAsLastErrorType(errorType)) {
+        if (errorRecord != null && errorRecord.hasThisAsLastErrorType(errorType)) {
             logger.info(String.format("Same error as the last processing for entity uuid %s, and type %s", uuid, bahmniEntityType));
-            return;
+            return errorRecord;
         }
 
         errorRecord = new ErrorRecord();
         errorRecord.setBahmniEntityType(bahmniEntityType);
         errorRecord.setEntityId(uuid);
         errorRecord.addErrorType(errorType);
-        errorRecordRepository.save(errorRecord);
+        return errorRecordRepository.save(errorRecord);
     }
 
     public void errorOccurred(Subject subject, ErrorType errorType) {
         saveAvniError(subject.getUuid(), errorType, AvniEntityType.Subject);
     }
 
-    public void errorOccurred(String entityUuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
-        saveBahmniError(entityUuid, errorType, bahmniEntityType);
+    public ErrorRecord errorOccurred(String entityUuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
+        return saveBahmniError(entityUuid, errorType, bahmniEntityType);
     }
 
     public void errorOccurred(Enrolment enrolment, ErrorType errorType) {
@@ -67,8 +64,8 @@ public class ErrorService {
         saveBahmniError(patient.getUuid(), errorType, BahmniEntityType.Patient);
     }
 
-    public void errorOccurred(OpenMRSFullEncounter openMRSFullEncounter, ErrorType errorType) {
-        saveBahmniError(openMRSFullEncounter.getUuid(), errorType, BahmniEntityType.Encounter);
+    public ErrorRecord errorOccurred(OpenMRSFullEncounter openMRSFullEncounter, ErrorType errorType) {
+        return saveBahmniError(openMRSFullEncounter.getUuid(), errorType, BahmniEntityType.Encounter);
     }
 
     private void successfullyProcessedAvniEntity(AvniEntityType avniEntityType, String uuid) {

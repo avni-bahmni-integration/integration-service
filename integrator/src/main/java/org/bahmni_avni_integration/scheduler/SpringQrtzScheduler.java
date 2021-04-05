@@ -60,9 +60,8 @@ public class SpringQrtzScheduler {
 
     @Bean
     public JobDetailFactoryBean jobDetail() {
-
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-        jobDetailFactory.setJobClass(SampleJob.class);
+        jobDetailFactory.setJobClass(MainJob.class);
         jobDetailFactory.setName("Qrtz_Job_Detail");
         jobDetailFactory.setDescription("Invoke Sample Job service...");
         jobDetailFactory.setDurability(true);
