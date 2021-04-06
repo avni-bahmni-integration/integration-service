@@ -34,6 +34,10 @@ public class ErrorService {
         errorRecordRepository.save(errorRecord);
     }
 
+    public boolean hasError(String entityId, BahmniEntityType bahmniEntityType) {
+        return errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, entityId) != null;
+    }
+
     private ErrorRecord saveBahmniError(String uuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
         ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, uuid);
         if (errorRecord != null && errorRecord.hasThisAsLastErrorType(errorType)) {

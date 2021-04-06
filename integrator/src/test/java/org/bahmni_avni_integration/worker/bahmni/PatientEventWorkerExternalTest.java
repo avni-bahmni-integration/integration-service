@@ -23,4 +23,11 @@ class PatientEventWorkerExternalTest {
         openMrsPatientEventWorker.setConstants(constants);
         openMrsPatientEventWorker.process(new Event("0", "/openmrs/ws/rest/v1/patient/42baa8d4-145d-4d76-b4de-6aad19cb3f2a?v=full"));
     }
+
+    @Test
+    public void duplicateTest() {
+        Constants constants = constantsRepository.findAllConstants();
+        openMrsPatientEventWorker.setConstants(constants);
+        openMrsPatientEventWorker.process(new Event("0", "/openmrs/ws/rest/v1/patient/00049185-d25f-43eb-b89d-26be84bea700?v=full"));
+    }
 }

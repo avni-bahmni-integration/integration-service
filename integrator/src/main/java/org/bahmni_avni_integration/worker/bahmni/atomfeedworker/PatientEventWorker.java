@@ -3,9 +3,11 @@ package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
+import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.repository.MultipleResultsFoundException;
+import org.bahmni_avni_integration.service.ErrorService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.PatientService;
 import org.bahmni_avni_integration.service.SubjectService;
@@ -15,6 +17,7 @@ import org.ict4h.atomfeed.client.service.EventWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,8 +31,14 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
     private MappingMetaDataService mappingMetaDataService;
 
     @Autowired
+    private ErrorService errorService;
+
+    @Autowired
     private SubjectService subjectService;
     private Constants constants;
+
+    @Value("${app.first.run}")
+    private boolean isFirstRun;
 
     @Override
     public void process(Event event) {
@@ -50,10 +59,16 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
         logger.debug(String.format("Processing patient: name %s || uuid %s", patient.getName(), patient.getUuid()));
         PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
 
+        GeneralEncounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
+        if (isFirstRun) {
+            if (patientEncounter != null || errorService.hasError(patient.getUuid(), BahmniEntityType.Patient)) {
+                logger.info("Early return for first run, as the record is already processed before");
+                return;
+            }
+        }
+
         Subject subject;
-        GeneralEncounter patientEncounter;
         try {
-            patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
             subject = subjectService.findSubject(patient, metaData, constants);
         } catch (MultipleResultsFoundException e) {
             subjectService.processMultipleSubjectsFound(patient);
