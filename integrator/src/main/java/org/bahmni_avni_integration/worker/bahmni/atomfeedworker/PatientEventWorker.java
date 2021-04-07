@@ -14,15 +14,14 @@ import org.bahmni_avni_integration.service.SubjectService;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.apache.log4j.Logger;
 
 @Component
 public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = Logger.getLogger(PatientEventWorker.class);
 
     @Autowired
     private PatientService patientService;

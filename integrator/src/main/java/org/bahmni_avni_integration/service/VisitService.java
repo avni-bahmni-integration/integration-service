@@ -1,18 +1,17 @@
 package org.bahmni_avni_integration.service;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSVisitRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VisitService {
     private final ConstantsRepository constantsRepository;
     private final OpenMRSVisitRepository openMRSVisitRepository;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = Logger.getLogger(VisitService.class);
 
     public VisitService(ConstantsRepository constantsRepository, OpenMRSVisitRepository openMRSVisitRepository) {
         this.constantsRepository = constantsRepository;

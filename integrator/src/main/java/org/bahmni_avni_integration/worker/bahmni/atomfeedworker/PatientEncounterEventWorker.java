@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
@@ -15,8 +16,6 @@ import org.bahmni_avni_integration.service.*;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,7 @@ import java.util.List;
 
 @Component
 public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWorker {
-    private static final Logger logger = LoggerFactory.getLogger(PatientEncounterEventWorker.class);
+    private static final Logger logger = Logger.getLogger(PatientEncounterEventWorker.class);
 
     @Autowired
     private BahmniEncounterService encounterService;

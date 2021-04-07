@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.service;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
@@ -10,15 +11,13 @@ import org.bahmni_avni_integration.mapper.bahmni.OpenMRSPatientMapper;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniEncounterRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class SubjectService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = Logger.getLogger(SubjectService.class);
     private final AvniEncounterRepository avniEncounterRepository;
     private final AvniSubjectRepository avniSubjectRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;

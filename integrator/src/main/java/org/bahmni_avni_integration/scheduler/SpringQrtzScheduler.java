@@ -1,10 +1,9 @@
 package org.bahmni_avni_integration.scheduler;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.config.AutoWiringSpringBeanJobFactory;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,7 +19,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableAutoConfiguration
 public class SpringQrtzScheduler {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = Logger.getLogger(SpringQrtzScheduler.class);
     @Value("${app.cron.main}")
     private String cronExpression;
 

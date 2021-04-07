@@ -14,8 +14,7 @@ import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder
 import com.amazonaws.services.cognitoidp.model.*;
 import com.amazonaws.util.Base64;
 import com.amazonaws.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -31,8 +30,7 @@ import java.util.*;
  * Private class for SRP client side math.
  */
 public class AuthenticationHelper {
-
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = Logger.getLogger(AuthenticationHelper.class);
 
     private static final String HEX_N =
             "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1"
@@ -90,6 +88,7 @@ public class AuthenticationHelper {
     private String clientId;
     private String secretKey;
     private String region;
+    private AWSCognitoIdentityProvider cognitoIdentityProvider;
 
     public AuthenticationHelper(String userPoolID, String clientid, String secretKey) {
         do {
@@ -152,13 +151,13 @@ public class AuthenticationHelper {
      * @param password Password for the SRP request
      * @return the JWT token if the request is successful else null.
      */
-    public String PerformSRPAuthentication(String username, String password) {
-        String authresult = null;
+    public AuthenticationResultType performSRPAuthentication(String username, String password) {
+        AuthenticationResultType authResult = null;
 
         InitiateAuthRequest initiateAuthRequest = initiateUserSrpAuthRequest(username);
         try {
             AnonymousAWSCredentials awsCreds = new AnonymousAWSCredentials();
-            AWSCognitoIdentityProvider cognitoIdentityProvider = AWSCognitoIdentityProviderClientBuilder
+            cognitoIdentityProvider = AWSCognitoIdentityProviderClientBuilder
                     .standard()
                     .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                     .withRegion(Regions.fromName(this.region))
@@ -168,13 +167,24 @@ public class AuthenticationHelper {
                 RespondToAuthChallengeRequest challengeRequest = userSrpAuthRequest(initiateAuthResult, password,
                         initiateAuthRequest.getAuthParameters().get("SECRET_HASH"));
                 RespondToAuthChallengeResult result = cognitoIdentityProvider.respondToAuthChallenge(challengeRequest);
-                authresult = result.getAuthenticationResult().getIdToken();
+                authResult = result.getAuthenticationResult();
             }
         } catch (final Exception ex) {
             System.out.println("Exception" + ex);
-
         }
-        return authresult;
+        return authResult;
+    }
+
+    public AuthenticationResultType refresh(String refreshToken) {
+        Map<String, String> authParams = new HashMap<String, String>();
+        authParams.put("REFRESH_TOKEN", refreshToken);
+        AdminInitiateAuthRequest authRequest = new AdminInitiateAuthRequest()
+                .withAuthFlow(AuthFlowType.REFRESH_TOKEN_AUTH)
+                .withUserPoolId("***")
+                .withClientId("***")
+                .withAuthParameters(authParams);
+        AdminInitiateAuthResult authResult = cognitoIdentityProvider.adminInitiateAuth(authRequest);
+        return authResult.getAuthenticationResult();
     }
 
     /**

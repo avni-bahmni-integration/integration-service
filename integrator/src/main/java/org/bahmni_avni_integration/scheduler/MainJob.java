@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.scheduler;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
@@ -8,8 +9,6 @@ import org.bahmni_avni_integration.worker.bahmni.PatientWorker;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,7 @@ import java.util.List;
 @Component
 @DisallowConcurrentExecution
 public class MainJob implements Job {
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = Logger.getLogger(MainJob.class);
 
     @Autowired
     private PatientWorker patientWorker;
@@ -34,7 +33,7 @@ public class MainJob implements Job {
     private FailedEventRepository failedEventRepository;
 
     public void execute(JobExecutionContext context) {
-        logger.info("Job ** {} ** fired @ {}", context.getJobDetail().getKey().getName(), context.getFireTime());
+        logger.info(String.format("Job ** {%s} ** fired @ {%s}", context.getJobDetail().getKey().getName(), context.getFireTime()));
         try {
             failedEventRepository.deleteAll();
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
@@ -48,7 +47,7 @@ public class MainJob implements Job {
         } catch (Exception e) {
             logger.error("Error calling API", e);
         }
-        logger.info("Next job scheduled @ {}", context.getNextFireTime());
+        logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }
 
     private boolean hasTask(List<IntegrationTask> tasks, IntegrationTask task) {
