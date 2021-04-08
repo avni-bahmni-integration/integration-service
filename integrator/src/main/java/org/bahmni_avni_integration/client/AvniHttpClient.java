@@ -13,7 +13,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -54,7 +53,7 @@ public class AvniHttpClient {
             return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
-                authenticationResultType = helper.refresh(authenticationResultType.getRefreshToken());
+                this.refreshToken();
                 return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
             }
             throw e;
@@ -83,11 +82,15 @@ public class AvniHttpClient {
             return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
-                authenticationResultType = helper.refresh(authenticationResultType.getRefreshToken());
+                refreshToken();
                 return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
             }
             throw e;
         }
+    }
+
+    public void refreshToken() {
+        authenticationResultType = helper.refresh(authenticationResultType.getRefreshToken(), authenticationResultType.getIdToken());
     }
 
     private HttpHeaders authHeaders() {
@@ -97,7 +100,7 @@ public class AvniHttpClient {
         return headers;
     }
 
-    private String fetchAuthToken() {
+    public String fetchAuthToken() {
         if (authenticationResultType != null && !authenticationResultType.getIdToken().isEmpty()) {
             return authenticationResultType.getIdToken();
         }
@@ -106,7 +109,7 @@ public class AvniHttpClient {
         logger.debug("Getting cognito details");
         ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(apiUrl("/cognito-details"), CognitoDetailsResponse.class);
         CognitoDetailsResponse cognitoDetails = response.getBody();
-        helper = new AuthenticationHelper(cognitoDetails.getPoolId(), cognitoDetails.getClientId(), "");
+        helper = new AuthenticationHelper(cognitoDetails.getPoolId(), cognitoDetails.getClientId());
         authenticationResultType = helper.performSRPAuthentication(AVNI_IMPL_USER, AVNI_IMPL_PASSWORD);
         return authenticationResultType.getIdToken();
     }

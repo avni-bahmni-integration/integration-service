@@ -18,7 +18,7 @@ public class OpenMRSAtomFeedPropertiesFactory {
     public AtomFeedProperties getProperties() {
         AtomFeedProperties feedProperties = new AtomFeedProperties();
         feedProperties.setConnectTimeout(bahmniFeedConnectTimeout);
-        feedProperties.setReadTimeout(bahmniFeedConnectTimeout);
+        feedProperties.setReadTimeout(bahmniFeedReadTimeout);
         feedProperties.setMaxFailedEvents(bahmniFeedMaxFailedEvents);
         return feedProperties;
     }

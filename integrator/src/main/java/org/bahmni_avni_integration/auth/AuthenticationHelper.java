@@ -5,7 +5,6 @@ package org.bahmni_avni_integration.auth;
 // SPDX-License-Identifier: MIT-0
  */
 
-
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.regions.Regions;
@@ -84,20 +83,24 @@ public class AuthenticationHelper {
 
     private BigInteger a;
     private BigInteger A;
-    private String userPoolID;
-    private String clientId;
-    private String secretKey;
-    private String region;
+    private final String userPoolID;
+    private final String clientId;
+    private final String secretKey;
+    private final String region;
     private AWSCognitoIdentityProvider cognitoIdentityProvider;
 
-    public AuthenticationHelper(String userPoolID, String clientid, String secretKey) {
+    public AuthenticationHelper(String userPoolID, String clientId) {
+        this(userPoolID, clientId, null);
+    }
+
+    public AuthenticationHelper(String userPoolID, String clientId, String secretKey) {
         do {
             a = new BigInteger(EPHEMERAL_KEY_LENGTH, SECURE_RANDOM).mod(N);
             A = g.modPow(a, N);
         } while (A.mod(N).equals(BigInteger.ZERO));
 
         this.userPoolID = userPoolID;
-        this.clientId = clientid;
+        this.clientId = clientId;
         this.region = "ap-south-1";
         this.secretKey = secretKey;
     }
@@ -175,13 +178,13 @@ public class AuthenticationHelper {
         return authResult;
     }
 
-    public AuthenticationResultType refresh(String refreshToken) {
+    public AuthenticationResultType refresh(String refreshToken, String authToken) {
         Map<String, String> authParams = new HashMap<String, String>();
         authParams.put("REFRESH_TOKEN", refreshToken);
         AdminInitiateAuthRequest authRequest = new AdminInitiateAuthRequest()
                 .withAuthFlow(AuthFlowType.REFRESH_TOKEN_AUTH)
-                .withUserPoolId("***")
-                .withClientId("***")
+                .withUserPoolId(userPoolID)
+                .withClientId(clientId)
                 .withAuthParameters(authParams);
         AdminInitiateAuthResult authResult = cognitoIdentityProvider.adminInitiateAuth(authRequest);
         return authResult.getAuthenticationResult();
