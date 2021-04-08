@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.client;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,11 +16,19 @@ class AvniHttpClientExternalTest {
     private AvniHttpClient avniHttpClient;
 
     @Test
-    void refreshAuthToken() throws InterruptedException {
+    @Disabled
+    void refreshAuthToken() {
         avniHttpClient.fetchAuthToken();
         avniHttpClient.get("/concept", HashMap.class);
-        Thread.sleep(5000);
         avniHttpClient.refreshToken();
+        avniHttpClient.get("/concept", HashMap.class);
+    }
+
+    @Test
+    void clearAuthInformation() {
+        avniHttpClient.fetchAuthToken();
+        avniHttpClient.get("/concept", HashMap.class);
+        avniHttpClient.clearAuthInformation();
         avniHttpClient.get("/concept", HashMap.class);
     }
 }

@@ -53,7 +53,7 @@ public class AvniHttpClient {
             return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
-                this.refreshToken();
+                this.clearAuthInformation();
                 return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
             }
             throw e;
@@ -82,7 +82,7 @@ public class AvniHttpClient {
             return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
-                refreshToken();
+                clearAuthInformation();
                 return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
             }
             throw e;
@@ -91,6 +91,11 @@ public class AvniHttpClient {
 
     public void refreshToken() {
         authenticationResultType = helper.refresh(authenticationResultType.getRefreshToken(), authenticationResultType.getIdToken());
+    }
+
+    //        couldn't get refresh token to work hence clearing auth information when token expires so that a new token is taken
+    public void clearAuthInformation() {
+        authenticationResultType = null;
     }
 
     private HttpHeaders authHeaders() {
