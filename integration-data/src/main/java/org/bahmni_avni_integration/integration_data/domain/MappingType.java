@@ -11,7 +11,7 @@ public enum MappingType {
     LabEncounterType,
     DrugOrderEncounterType,
     DrugOrderConcept,
-    Community_Enrolment_EncounterType,
+    CommunityEnrolment_EncounterType,
     AvniUUID_Concept,
     BahmniUUID_Concept,
     CommunityRegistration_BahmniForm,

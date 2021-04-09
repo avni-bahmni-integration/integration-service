@@ -44,7 +44,6 @@ public class EnrolmentMapperExternalTest {
         var entityUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
         var openMRSEncounter = enrolmentMapper.mapEnrolmentToEncounter(enrolment,
                 "cc0369c8-748c-42cc-a534-5ab40855c3f8",
-                "f39ce690-d1c4-4bb3-aa4b-893bdd73e5a1",
                 constantsRepository.findAllConstants());
         var groupObs = openMRSEncounter.getObservations().get(0);
         assertEquals(formConcept, groupObs.getConcept());

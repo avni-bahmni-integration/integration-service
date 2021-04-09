@@ -1,24 +1,22 @@
 package org.bahmni_avni_integration.migrator.service;
 
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
-import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
-import org.bahmni_avni_integration.integration_data.domain.MappingType;
-import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
+import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.AvniConcept;
 import org.bahmni_avni_integration.migrator.domain.AvniForm;
 import org.bahmni_avni_integration.migrator.domain.AvniFormElementGroup;
 import org.bahmni_avni_integration.migrator.repository.AvniRepository;
+import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
+import static java.util.Map.entry;
 
 @Service
 public class AvniToBahmniService {
@@ -26,16 +24,18 @@ public class AvniToBahmniService {
     private final AvniRepository avniRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final ConnectionFactory connectionFactory;
+    private final ImplementationConfigurationRepository implementationConfigurationRepository;
     private static Logger logger = Logger.getLogger(AvniToBahmniService.class);
 
     public AvniToBahmniService(OpenMRSRepository openMRSRepository,
                                AvniRepository avniRepository,
                                MappingMetaDataRepository mappingMetaDataRepository,
-                               ConnectionFactory connectionFactory) {
+                               ConnectionFactory connectionFactory, ImplementationConfigurationRepository implementationConfigurationRepository) {
         this.openMRSRepository = openMRSRepository;
         this.avniRepository = avniRepository;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.connectionFactory = connectionFactory;
+        this.implementationConfigurationRepository = implementationConfigurationRepository;
     }
 
     public void migrateForms() throws SQLException {
@@ -69,7 +69,7 @@ public class AvniToBahmniService {
             var concept = formElement.getConcept();
             var bahmniQuestionConceptUuid = UUID.randomUUID().toString();
             var conceptResult = openMRSRepository.createConcept(connection,
-                    bahmniQuestionConceptUuid, concept.getName(), concept.getName(), concept.getDataType(), "Misc", false);
+                    bahmniQuestionConceptUuid, concept.getName(), concept.getDataType(), "Misc", false);
             var questionConceptId = conceptResult.conceptId();
             openMRSRepository.addToConceptSet(connection, questionConceptId, formConceptId, i);
             saveObsMapping(concept.getName(), bahmniQuestionConceptUuid, ObsDataType.parseAvniDataType(concept.getDataType()));
@@ -106,10 +106,104 @@ public class AvniToBahmniService {
         for (int i = 0; i < answerConcepts.size(); i++) {
             var answerConcept = answerConcepts.get(i);
             var bahmniAnswerConceptUuid = UUID.randomUUID().toString();
-            var conceptResult = openMRSRepository.createConcept(connection, bahmniAnswerConceptUuid, answerConcept.getName(), answerConcept.getName(), "N/A", "Misc", false);
+            var conceptResult = openMRSRepository.createConcept(connection, bahmniAnswerConceptUuid, answerConcept.getName(), "N/A", "Misc", false);
             int answerConceptId = conceptResult.conceptId();
             openMRSRepository.createConceptAnswer(connection, questionConceptId, answerConceptId, i);
             saveObsMapping(answerConcept.getName(), bahmniAnswerConceptUuid);
         }
+    }
+
+    public void cleanup() throws SQLException {
+        openMRSRepository.cleanup();
+    }
+
+    public void createStandardMetadata() throws SQLException {
+        Map<String, Object> constants = implementationConfigurationRepository.getConstants();
+
+        try (var connection = connectionFactory.getOpenMRSDbConnection()) {
+            var entityConceptUuid = UUID.randomUUID().toString();
+            String entityConceptName = "Avni Entity UUID";
+            createStandardConceptAndMapping(connection,
+                    entityConceptUuid,
+                    entityConceptName,
+                    "Text",
+                    null,
+                    "External uuid is used to match entities after first save");
+
+            var standardConceptMappings = standardConceptMappings();
+            for (Map<String, String> mapping : standardConceptMappings) {
+                var conceptUuid = UUID.randomUUID().toString();
+                String conceptName = mapping.get("conceptName");
+                String conceptDataType = mapping.get("dataType");
+                createStandardConceptAndMapping(connection, conceptUuid, conceptName, conceptDataType, conceptName, null);
+            }
+
+            openMRSRepository.createLocation(connection, "Community", (String) constants.get(ConstantKey.IntegrationBahmniLocation.name()));
+            openMRSRepository.createVisitType(connection, "Community", (String) constants.get(ConstantKey.IntegrationBahmniVisitType.name()));
+        }
+    }
+
+    private void createStandardConceptAndMapping(Connection connection, String conceptUuid, String conceptName, String conceptDataType, String avniValue, String about) throws SQLException {
+        openMRSRepository.createConcept(connection, conceptUuid, conceptName, conceptDataType, "Misc", false);
+        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Observation,
+                MappingType.Concept,
+                conceptUuid,
+                avniValue,
+                about,
+                ObsDataType.parseAvniDataType(conceptDataType)));
+    }
+
+    private List<Map<String, String>> standardConceptMappings() {
+        List<Map<String, String>> mappings = new ArrayList<>();
+        mappings.add(Map.ofEntries(
+                entry("conceptName", "Registration date"),
+                entry("dataType", "Text")));
+
+        mappings.add(Map.ofEntries(
+                entry("conceptName", "First name"),
+                entry("dataType", "Text")));
+
+        mappings.add(Map.ofEntries(
+                entry("conceptName", "Last name"),
+                entry("dataType", "Text")));
+
+        mappings.add(Map.ofEntries(
+                entry("conceptName", "Date of birth"),
+                entry("dataType", "Date")));
+
+        mappings.add(Map.ofEntries(
+                entry("conceptName", "Gender"),
+                entry("dataType", "Text")));
+        return mappings;
+    }
+
+    public void migratePrograms() throws SQLException {
+        List<String> programs = avniRepository.getPrograms();
+        try (var connection = connectionFactory.getOpenMRSDbConnection()) {
+            for (String avniProgramName : programs) {
+                var openMrsEncounterTypeUuid = UUID.randomUUID().toString();
+                openMRSRepository.createEncounterType(connection, String.format("%s Community Enrolment", avniProgramName), openMrsEncounterTypeUuid);
+                mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEnrolment,
+                        MappingType.CommunityEnrolment_EncounterType,
+                        openMrsEncounterTypeUuid,
+                        avniProgramName,
+                        "Encounter type in OpenMRS for community enrolment data in Avni",
+                        null));
+            }
+        } catch (SQLException sqlException) {
+            logger.error("Could not migrate programs", sqlException);
+            throw sqlException;
+        }
+    }
+
+    private MappingMetaData mappingMetadata(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, String about, ObsDataType obsDataType) {
+        MappingMetaData mappingMetaData = new MappingMetaData();
+        mappingMetaData.setMappingGroup(mappingGroup);
+        mappingMetaData.setMappingType(mappingType);
+        mappingMetaData.setBahmniValue(bahmniValue);
+        mappingMetaData.setAvniValue(avniValue);
+        mappingMetaData.setAbout(about);
+        mappingMetaData.setDataTypeHint(obsDataType);
+        return mappingMetaData;
     }
 }

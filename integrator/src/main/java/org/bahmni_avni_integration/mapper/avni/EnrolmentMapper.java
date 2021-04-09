@@ -23,7 +23,9 @@ public class EnrolmentMapper {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
     }
 
-    public OpenMRSEncounter mapEnrolmentToEncounter(Enrolment enrolment, String patientUuid, String encounterTypeUuid, Constants constants) {
+    public OpenMRSEncounter mapEnrolmentToEncounter(Enrolment enrolment, String patientUuid, Constants constants) {
+        MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_EncounterType);
+        String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(new Date()));
         openMRSEncounter.setPatient(patientUuid);
@@ -46,7 +48,7 @@ public class EnrolmentMapper {
     }
 
     public OpenMRSEncounter mapEnrolmentToExistingEncounter(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
-        MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
+        MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_EncounterType);
         String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
 
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();

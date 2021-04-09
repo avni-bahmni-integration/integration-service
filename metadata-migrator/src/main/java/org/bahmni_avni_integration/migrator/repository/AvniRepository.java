@@ -333,4 +333,18 @@ public class AvniRepository {
             avniEncounterTypeRepository.create(avniValue, auditUserId);
         }
     }
+
+    public List<String> getPrograms() throws SQLException {
+        var programs = new ArrayList<String>();
+        var programSelect = "select name from program where is_voided=false";
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            try (PreparedStatement formPS = connection.prepareStatement(programSelect)) {
+                ResultSet resultSet = formPS.executeQuery();
+                while (resultSet.next()) {
+                    programs.add(resultSet.getString("name"));
+                }
+            }
+        }
+        return programs;
+    }
 }

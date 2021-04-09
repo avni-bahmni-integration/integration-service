@@ -31,7 +31,7 @@ public class Migrator implements CommandLineRunner {
         this.avniToBahmniService = avniToBahmniService;
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         SpringApplication.run(Migrator.class, args).close();
     }
 
@@ -39,22 +39,32 @@ public class Migrator implements CommandLineRunner {
     public void run(String... args) throws Exception {
         List<String> nonSpringArguments = Arrays.stream(args).filter(s -> !s.startsWith("--")).collect(Collectors.toList());
         if (nonSpringArguments.size() == 0) return;
-        switch (nonSpringArguments.get(0)) {
-            case "adhoc" -> {
+        switch (MigratorDirection.valueOf(nonSpringArguments.get(0))) {
+            case Adhoc -> {
                 runAdhoc();
             }
-            case "bahmni-to-avni" -> {
+            case BahmniToAvni -> {
                 bahmniToAvni();
             }
-            case "avni-to-bahmni" -> {
+            case AvniToBahmni -> {
                 avniToBahmni();
             }
         }
 
     }
 
-    private void avniToBahmni() {
+    private void avniToBahmni() throws SQLException {
         logger.debug("Migrating metadata from Avni to Bahmni");
+        avniToBahmniService.cleanup();
+        integrationDataService.cleanup();
+
+        avniToBahmniService.createStandardMetadata();
+        avniToBahmniService.migratePrograms();
+        avniToBahmniService.migrateForms();
+
+        integrationDataService.createConstants();
+        integrationDataService.createStandardMappings();
+
         System.exit(0);
     }
 

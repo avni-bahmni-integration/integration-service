@@ -49,9 +49,9 @@ public class EnrolmentService {
 
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
         OpenMRSUuidHolder visit = visitService.getOrCreateVisit(openMRSPatient);
-        MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.Community_Enrolment_EncounterType);
+        MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_EncounterType);
         String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
-        OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToEncounter(enrolment, openMRSPatient.getUuid(), encounterTypeUuid, constants);
+        OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToEncounter(enrolment, openMRSPatient.getUuid(), constants);
         encounter.setVisit(visit.getUuid());
         OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 

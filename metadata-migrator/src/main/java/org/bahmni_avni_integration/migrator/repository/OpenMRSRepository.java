@@ -3,9 +3,9 @@ package org.bahmni_avni_integration.migrator.repository;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.migrator.ConnectionFactory;
+import org.bahmni_avni_integration.migrator.config.BahmniConfig;
 import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.util.FileUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -16,14 +16,15 @@ import java.util.stream.Collectors;
 
 @Component
 public class OpenMRSRepository {
-    @Autowired
-    private ConnectionFactory connectionFactory;
-    @Autowired
-    private FileUtil fileUtil;
+    private final ConnectionFactory connectionFactory;
+    private final FileUtil fileUtil;
+    private final BahmniConfig bahmniConfig;
     private static Logger logger = Logger.getLogger(OpenMRSRepository.class);
 
-    public OpenMRSRepository(ConnectionFactory connectionFactory) {
+    public OpenMRSRepository(ConnectionFactory connectionFactory, FileUtil fileUtil, BahmniConfig bahmniConfig) {
         this.connectionFactory = connectionFactory;
+        this.fileUtil = fileUtil;
+        this.bahmniConfig = bahmniConfig;
     }
 
     public void populateForms(List<OpenMRSForm> formList) throws SQLException {
@@ -81,7 +82,7 @@ public class OpenMRSRepository {
         return attributes;
     }
 
-//    todo what happens to observations for concepts of type N/A being direct observation
+    //    todo what happens to observations for concepts of type N/A being direct observation
     public OpenMRSForm getLabForm(String formName) throws SQLException {
         String sql = """
                 select distinct cn.name from concept
@@ -147,26 +148,32 @@ public class OpenMRSRepository {
         }
     }
 
-    public CreateConceptResult createConcept(Connection connection, String conceptUuid, String conceptFullName, String conceptShortName, String dataTypeName, String className, boolean isSet) throws SQLException {
-        String conceptFullNameWithAvniSuffix = String.format("%s [Avni]", conceptFullName);
+    public CreateConceptResult createConcept(Connection connection,
+                                             String conceptUuid,
+                                             String conceptName,
+                                             String dataTypeName,
+                                             String className,
+                                             boolean isSet) throws SQLException {
+        String conceptFullNameWithAvniSuffix = NameMapping.fromAvniConceptToBahmni(conceptName);
         int existingConceptId = getConceptId(connection, conceptFullNameWithAvniSuffix);
         if (existingConceptId != -1)
             return new CreateConceptResult(existingConceptId, true);
 
-        var insertConceptPS = connection.prepareStatement("select add_concept_abi_func(?, ?, ?, ?, ?, ?)");
-        insertConceptPS.setString(1, conceptNameWithAvniSuffix(conceptFullName));
-        insertConceptPS.setString(2, conceptShortName);
+        var insertConceptPS = connection.prepareStatement("select add_concept_abi_func(?, ?, ?, ?, ?, ?, ?)");
+        insertConceptPS.setString(1, conceptFullNameWithAvniSuffix);
+        insertConceptPS.setString(2, conceptName);
         insertConceptPS.setString(3, dataTypeName);
         insertConceptPS.setString(4, className);
         insertConceptPS.setBoolean(5, isSet);
         insertConceptPS.setString(6, conceptUuid);
+        insertConceptPS.setInt(7, bahmniConfig.getRefDataAdminId());
         ResultSet resultSet = insertConceptPS.executeQuery();
         resultSet.next();
         return new CreateConceptResult(resultSet.getInt(1), false);
     }
 
     public CreateConceptResult createConceptSet(Connection connection, String conceptUuid, String name) throws SQLException {
-        return createConcept(connection, conceptUuid, name, name, "N/A", "Misc", true);
+        return createConcept(connection, conceptUuid, name, "N/A", "Misc", true);
     }
 
     public void addToConceptSet(Connection connection, int conceptId, int conceptSetId, double sortWeight) throws SQLException {
@@ -207,10 +214,6 @@ public class OpenMRSRepository {
         return resultSet.next();
     }
 
-    private String conceptNameWithAvniSuffix(String conceptName) {
-        return String.format("%s [Avni]", conceptName);
-    }
-
     private int getConceptId(Connection connection, String conceptFullName) throws SQLException {
         var getConceptPS = connection.prepareStatement("SELECT concept_id from concept_name where name = BINARY ? and concept_name_type='FULLY_SPECIFIED'");
         getConceptPS.setString(1, conceptFullName);
@@ -241,6 +244,109 @@ public class OpenMRSRepository {
         ResultSet resultSet = formConceptPS.executeQuery();
         while (resultSet.next()) {
             form.addTerm(OpenMRSConcept.forFormExtract(resultSet.getString(1), resultSet.getString(2)));
+        }
+    }
+
+    public void cleanup() throws SQLException {
+        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
+            cleanupTxData(connection);
+            cleanupRefData(connection);
+        }
+    }
+
+    private void cleanupRefData(Connection connection) throws SQLException {
+        deleteRefData("delete from concept_numeric where concept_id in (select concept_id from concept where creator = ?)", connection, "concept_numeric");
+        deleteRefData("delete from concept_name where creator = ?", connection, "concept_name");
+        deleteRefData("delete from concept_answer where creator = ?", connection, "concept_answer");
+        deleteRefData("delete from concept_set where creator = ?", connection, "concept_set");
+        deleteRefData("delete from concept where creator = ?", connection, "concept");
+        deleteRefData("delete from encounter_type where creator = ?", connection, "encounter_type");
+        deleteRefData("delete from location where creator = ?", connection, "location");
+        deleteRefData("delete from visit_type where creator = ?", connection, "visit_type");
+    }
+
+    private void cleanupTxData(Connection connection) throws SQLException {
+        deleteTxData("delete from obs where creator = ? and previous_version is not null", connection, "Obs");
+        deleteTxData("""
+                delete
+                from obs
+                where obs_group_id in (select *
+                                       from (select obs_id
+                                             from obs
+                                             where obs_group_id in
+                                                   (select *
+                                                    from (select obs_id
+                                                          from obs
+                                                          where creator = ?
+                                                            and obs_group_id is not null) as temp)) as temp2)
+                """, connection, "Obs");
+        deleteTxData("""
+                delete
+                from obs
+                where obs_group_id in
+                      (select * from (select obs_id from obs where creator = ? and obs_group_id is not null) as temp)
+                """, connection, "Obs");
+        deleteTxData("delete from obs where creator = ? and obs_group_id is not null", connection, "Obs");
+        deleteTxData("delete from obs where creator = ?", connection, "Obs");
+        deleteTxData("delete from encounter_provider where creator = ?", connection, "Obs");
+        deleteTxData("delete from visit_attribute where creator = ?", connection, "Obs");
+        deleteTxData("delete from encounter where creator = ?", connection, "Obs");
+        deleteTxData("delete from visit where creator = ?", connection, "Obs");
+    }
+
+    private void deleteTxData(String sql, Connection connection, String entityType) throws SQLException {
+        delete(sql, connection, entityType, bahmniConfig.getTxDataAdminId());
+    }
+
+    private void deleteRefData(String sql, Connection connection, String entityType) throws SQLException {
+        delete(sql, connection, entityType, bahmniConfig.getRefDataAdminId());
+    }
+
+    private void delete(String sql, Connection connection, String entityType, int creatorId) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, creatorId);
+        int deletedRowCount = preparedStatement.executeUpdate();
+        logger.info(String.format("Deleted %d rows of %s", deletedRowCount, entityType));
+        preparedStatement.close();
+    }
+
+
+    public void createEncounterType(Connection connection, String name, String uuid) throws SQLException {
+        var insertEncounterType = """
+                insert into encounter_type (name, date_created, uuid, changed_by, date_changed, creator) values (?, curdate(), ?, ?, curdate(), ?)
+                """;
+        try (var ps = connection.prepareStatement(insertEncounterType)) {
+            ps.setString(1, name);
+            ps.setString(2, uuid);
+            ps.setInt(3, bahmniConfig.getRefDataAdminId());
+            ps.setInt(4, bahmniConfig.getRefDataAdminId());
+            ps.executeUpdate();
+        }
+    }
+
+    public void createLocation(Connection connection, String name, String uuid) throws SQLException {
+        var insertLocation = """
+                insert into location (name, uuid, date_created, creator)
+                values (?, ?, curdate(), ?)
+                """;
+        try (var ps = connection.prepareStatement(insertLocation)) {
+            ps.setString(1, name);
+            ps.setString(2, uuid);
+            ps.setInt(3, bahmniConfig.getRefDataAdminId());
+            ps.executeUpdate();
+        }
+    }
+
+    public void createVisitType(Connection connection, String name, String uuid) throws SQLException {
+        var insertVisitType = """
+                insert into visit_type (name, uuid, date_created, creator)
+                values (?, ?, curdate(), ?)
+                """;
+        try (var ps = connection.prepareStatement(insertVisitType)) {
+            ps.setString(1, name);
+            ps.setString(2, uuid);
+            ps.setInt(3, bahmniConfig.getRefDataAdminId());
+            ps.executeUpdate();
         }
     }
 }
