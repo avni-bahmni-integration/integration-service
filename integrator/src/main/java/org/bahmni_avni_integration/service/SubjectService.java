@@ -37,7 +37,7 @@ public class SubjectService {
         subjectCriteria.put(patientToSubjectMetaData.avniIdentifierConcept(), identifier.replace(prefix, ""));
         return avniSubjectRepository.getSubject(
                 new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime(),
-                patientToSubjectMetaData.subjectType(),
+                constants.getValue(ConstantKey.IntegrationAvniSubjectType),
                 subjectCriteria
         );
     }

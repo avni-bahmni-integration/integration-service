@@ -7,5 +7,6 @@ public enum ConstantKey {
     IntegrationBahmniLocation,
     IntegrationBahmniIdentifierType,
     IntegrationBahmniVisitType,
-    OutpatientVisitTypes
+    OutpatientVisitTypes,
+    IntegrationAvniSubjectType
 }

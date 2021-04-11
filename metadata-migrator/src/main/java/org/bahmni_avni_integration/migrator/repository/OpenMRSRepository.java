@@ -154,13 +154,13 @@ public class OpenMRSRepository {
                                              String dataTypeName,
                                              String className,
                                              boolean isSet) throws SQLException {
-        String conceptFullNameWithAvniSuffix = NameMapping.fromAvniConceptToBahmni(conceptName);
-        int existingConceptId = getConceptId(connection, conceptFullNameWithAvniSuffix);
+        String conceptNameWithAvniSuffix = NameMapping.fromAvniConceptToBahmni(conceptName);
+        int existingConceptId = getConceptIdByFullySpecifiedName(connection, conceptNameWithAvniSuffix);
         if (existingConceptId != -1)
             return new CreateConceptResult(existingConceptId, true);
 
         var insertConceptPS = connection.prepareStatement("select add_concept_abi_func(?, ?, ?, ?, ?, ?, ?)");
-        insertConceptPS.setString(1, conceptFullNameWithAvniSuffix);
+        insertConceptPS.setString(1, conceptNameWithAvniSuffix);
         insertConceptPS.setString(2, conceptName);
         insertConceptPS.setString(3, dataTypeName);
         insertConceptPS.setString(4, className);
@@ -172,17 +172,14 @@ public class OpenMRSRepository {
         return new CreateConceptResult(resultSet.getInt(1), false);
     }
 
-    public CreateConceptResult createConceptSet(Connection connection, String conceptUuid, String name) throws SQLException {
-        return createConcept(connection, conceptUuid, name, "N/A", "Misc", true);
-    }
-
     public void addToConceptSet(Connection connection, int conceptId, int conceptSetId, double sortWeight) throws SQLException {
         if (!conceptSetExists(connection, conceptId, conceptSetId)) {
-            var insertConceptSetPS = connection.prepareStatement("insert into concept_set(concept_id, concept_set, sort_weight, creator, date_created, uuid) values (?, ?, ?, 1, now(), ?)");
+            var insertConceptSetPS = connection.prepareStatement("insert into concept_set(concept_id, concept_set, sort_weight, creator, date_created, uuid) values (?, ?, ?, ?, now(), ?)");
             insertConceptSetPS.setInt(1, conceptId);
             insertConceptSetPS.setInt(2, conceptSetId);
             insertConceptSetPS.setDouble(3, sortWeight);
-            insertConceptSetPS.setString(4, UUID.randomUUID().toString());
+            insertConceptSetPS.setInt(4, bahmniConfig.getRefDataAdminId());
+            insertConceptSetPS.setString(5, UUID.randomUUID().toString());
             insertConceptSetPS.executeUpdate();
         }
     }
@@ -197,11 +194,12 @@ public class OpenMRSRepository {
 
     public void createConceptAnswer(Connection connection, int conceptId, int answerConceptId, double sortWeight) throws SQLException {
         if (!conceptAnswerExists(connection, conceptId, answerConceptId)) {
-            var insertConceptAnswerPS = connection.prepareStatement("insert into concept_answer(concept_id, answer_concept, sort_weight, creator, date_created, uuid) values (?, ?, ?, 1, now(), ?)");
+            var insertConceptAnswerPS = connection.prepareStatement("insert into concept_answer(concept_id, answer_concept, sort_weight, creator, date_created, uuid) values (?, ?, ?, ?, now(), ?)");
             insertConceptAnswerPS.setInt(1, conceptId);
             insertConceptAnswerPS.setInt(2, answerConceptId);
             insertConceptAnswerPS.setDouble(3, sortWeight);
-            insertConceptAnswerPS.setString(4, UUID.randomUUID().toString());
+            insertConceptAnswerPS.setInt(4, bahmniConfig.getRefDataAdminId());
+            insertConceptAnswerPS.setString(5, UUID.randomUUID().toString());
             insertConceptAnswerPS.executeUpdate();
         }
     }
@@ -214,7 +212,7 @@ public class OpenMRSRepository {
         return resultSet.next();
     }
 
-    private int getConceptId(Connection connection, String conceptFullName) throws SQLException {
+    private int getConceptIdByFullySpecifiedName(Connection connection, String conceptFullName) throws SQLException {
         var getConceptPS = connection.prepareStatement("SELECT concept_id from concept_name where name = BINARY ? and concept_name_type='FULLY_SPECIFIED'");
         getConceptPS.setString(1, conceptFullName);
         var resultSet = getConceptPS.executeQuery();
@@ -249,8 +247,15 @@ public class OpenMRSRepository {
 
     public void cleanup() throws SQLException {
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
+            cleanupFunctions(connection);
             cleanupTxData(connection);
             cleanupRefData(connection);
+        }
+    }
+
+    private void cleanupFunctions(Connection connection) throws SQLException {
+        try (var ps = connection.prepareStatement("DROP FUNCTION IF EXISTS add_concept_abi_func")) {
+            ps.executeUpdate();
         }
     }
 
@@ -346,6 +351,12 @@ public class OpenMRSRepository {
             ps.setString(1, name);
             ps.setString(2, uuid);
             ps.setInt(3, bahmniConfig.getRefDataAdminId());
+            ps.executeUpdate();
+        }
+    }
+
+    public void createAddConceptProcedure(Connection connection) throws SQLException {
+        try (var ps = connection.prepareStatement(fileUtil.readConfigFile("create_add_concept_abi_func.sql"))) {
             ps.executeUpdate();
         }
     }

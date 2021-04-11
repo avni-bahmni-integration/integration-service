@@ -54,11 +54,10 @@ public class SubjectMapper {
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
 
-        MappingMetaData subjectUuidMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.SubjectUUID_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) subject.get("observations"),
-                List.of(subjectUuidMapping.getBahmniValue()));
+                List.of(mappingMetaDataRepository.getBahmniValueForAvniUuidConcept()));
         openMRSEncounter.setObservations(groupObs(observations));
         return openMRSEncounter;
     }

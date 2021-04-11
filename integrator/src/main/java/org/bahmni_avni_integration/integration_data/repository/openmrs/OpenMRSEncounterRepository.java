@@ -36,14 +36,6 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         return encounterReference == null ? null : getEncounterByUuid(encounterReference.getUuid());
     }
 
-    public OpenMRSEncounter getEncounter(String subjectId) {
-        String conceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.SubjectUUID_Concept);
-        String json = openMRSWebClient.get(URI.create(String.format("%s?obsConcept=%s&obsValues=%s", getResourcePath("encounter"), conceptUuid, encode(subjectId))));
-        SearchResults<OpenMRSEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSEncounter>>() {
-        });
-        return pickAndExpectOne(searchResults, String.format("%s-%s", conceptUuid, subjectId));
-    }
-
     public OpenMRSFullEncounter createEncounter(OpenMRSEncounter encounter) {
         String json = ObjectJsonMapper.writeValueAsString(encounter);
         String outputJson = openMRSWebClient.post(getResourcePath("encounter"), json);

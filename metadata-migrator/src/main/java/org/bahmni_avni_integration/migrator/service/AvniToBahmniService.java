@@ -51,7 +51,7 @@ public class AvniToBahmniService {
     private void createForms(List<AvniForm> forms, Connection connection) throws SQLException {
         for (var form : forms) {
             String bahmniFormConceptUuid = UUID.randomUUID().toString();
-            var conceptResult = openMRSRepository.createConceptSet(connection, bahmniFormConceptUuid, form.getName());
+            var conceptResult = openMRSRepository.createConcept(connection, bahmniFormConceptUuid, form.getName(), "N/A", "Misc", true);
             int formConceptId = conceptResult.conceptId();
             logger.debug("Form: %s Concept Id: %d".formatted(form.getName(), formConceptId));
             saveFormMapping(form, bahmniFormConceptUuid);
@@ -121,26 +121,60 @@ public class AvniToBahmniService {
         Map<String, Object> constants = implementationConfigurationRepository.getConstants();
 
         try (var connection = connectionFactory.getOpenMRSDbConnection()) {
-            var entityConceptUuid = UUID.randomUUID().toString();
-            String entityConceptName = "Avni Entity UUID";
-            createStandardConceptAndMapping(connection,
-                    entityConceptUuid,
-                    entityConceptName,
-                    "Text",
-                    null,
-                    "External uuid is used to match entities after first save");
-
-            var standardConceptMappings = standardConceptMappings();
-            for (Map<String, String> mapping : standardConceptMappings) {
-                var conceptUuid = UUID.randomUUID().toString();
-                String conceptName = mapping.get("conceptName");
-                String conceptDataType = mapping.get("dataType");
-                createStandardConceptAndMapping(connection, conceptUuid, conceptName, conceptDataType, conceptName, null);
-            }
-
-            openMRSRepository.createLocation(connection, "Community", (String) constants.get(ConstantKey.IntegrationBahmniLocation.name()));
-            openMRSRepository.createVisitType(connection, "Community", (String) constants.get(ConstantKey.IntegrationBahmniVisitType.name()));
+            openMRSRepository.createAddConceptProcedure(connection);
+            createEntityConceptAndMapping(connection);
+            createStandardConceptsAndMappings(connection);
+            createCommunityLocationAndMapping(connection, constants);
+            createCommunityVisitTypeAndMapping(connection, constants);
+            createRegistrationEncounterTypeAndMapping(connection);
         }
+    }
+
+    private void createRegistrationEncounterTypeAndMapping(Connection connection) throws SQLException {
+        var registrationEncounterTypeUuid = UUID.randomUUID().toString();
+        openMRSRepository.createEncounterType(connection, "Community Registration", registrationEncounterTypeUuid);
+        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.PatientSubject,
+                MappingType.Subject_EncounterType,
+                registrationEncounterTypeUuid,
+                null,
+                "Encounter type in OpenMRS for subject registration data in Avni",
+                null));
+    }
+
+    private void createCommunityVisitTypeAndMapping(Connection connection, Map<String, Object> constants) throws SQLException {
+        var integrationBahmniVisitTypeUuid = (String) constants.get(ConstantKey.IntegrationBahmniVisitType.name());
+        openMRSRepository.createVisitType(connection, "Community", integrationBahmniVisitTypeUuid);
+    }
+
+    private void createCommunityLocationAndMapping(Connection connection, Map<String, Object> constants) throws SQLException {
+        var integrationBahmniLocationUuid = (String) constants.get(ConstantKey.IntegrationBahmniLocation.name());
+        openMRSRepository.createLocation(connection, "Community", integrationBahmniLocationUuid);
+    }
+
+    private void createStandardConceptsAndMappings(Connection connection) throws SQLException {
+        var standardConceptMappings = standardConceptMappings();
+        for (Map<String, String> mapping : standardConceptMappings) {
+            var conceptUuid = UUID.randomUUID().toString();
+            String conceptName = mapping.get("conceptName");
+            String conceptDataType = mapping.get("dataType");
+            createStandardConceptAndMapping(connection, conceptUuid, conceptName, conceptDataType, conceptName, null);
+        }
+    }
+
+    private void createEntityConceptAndMapping(Connection connection) throws SQLException {
+        var entityConceptUuid = UUID.randomUUID().toString();
+        openMRSRepository.createConcept(connection,
+                entityConceptUuid,
+                "Avni Entity UUID",
+                "Text",
+                "Misc",
+                false);
+        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
+                MappingType.AvniUUID_Concept,
+                entityConceptUuid,
+                null,
+                "External uuid is used to match entities after first save",
+                null));
     }
 
     private void createStandardConceptAndMapping(Connection connection, String conceptUuid, String conceptName, String conceptDataType, String avniValue, String about) throws SQLException {

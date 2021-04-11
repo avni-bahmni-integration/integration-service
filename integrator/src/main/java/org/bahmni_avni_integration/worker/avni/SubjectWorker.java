@@ -7,6 +7,7 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
+import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
@@ -44,7 +45,7 @@ public class SubjectWorker implements ErrorRecordWorker {
         mainLoop:
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
-            Subject[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), metaData.subjectType());
+            Subject[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), constants.getValue(ConstantKey.IntegrationAvniSubjectType));
             logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUpto()));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {

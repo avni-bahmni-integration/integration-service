@@ -19,26 +19,22 @@ public class MappingMetaDataService {
     private MappingMetaDataRepository mappingMetaDataRepository;
 
     public SubjectToPatientMetaData getForSubjectToPatient() {
-        MappingMetaData patientSubjectMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.Patient_SubjectType);
-        String subjectType = patientSubjectMapping.getAvniValue();
-
         MappingMetaData patientIdentifierMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
         String avniIdentifierConcept = patientIdentifierMapping.getAvniValue();
 
         String encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.Subject_EncounterType);
 
-        String subjectUuidConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.SubjectUUID_Concept);
+        String subjectUuidConceptUuid = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
 
-        return new SubjectToPatientMetaData(subjectType, avniIdentifierConcept, encounterTypeUuid, subjectUuidConceptUuid);
+        return new SubjectToPatientMetaData(avniIdentifierConcept, encounterTypeUuid, subjectUuidConceptUuid);
     }
 
     public PatientToSubjectMetaData getForPatientToSubject() {
         String avniIdentifierConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
-        String subjectType = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.Patient_SubjectType);
         String patientEncounterType = Names.AvniPatientRegistrationEncounter;
         String patientIdentifierName = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
         String bahmniEntityUuidConceptInAvni = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
-        return new PatientToSubjectMetaData(bahmniEntityUuidConceptInAvni, subjectType, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
+        return new PatientToSubjectMetaData(bahmniEntityUuidConceptInAvni, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
     }
 
     public BahmniEncounterToAvniEncounterMetaData getForBahmniEncounterToAvniEncounter() {
