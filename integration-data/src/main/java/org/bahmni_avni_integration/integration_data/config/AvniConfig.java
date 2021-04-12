@@ -1,4 +1,4 @@
-package org.bahmni_avni_integration.migrator.config;
+package org.bahmni_avni_integration.integration_data.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

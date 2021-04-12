@@ -2,8 +2,11 @@ package org.bahmni_avni_integration.migrator.service;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.*;
+import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
+import org.bahmni_avni_integration.integration_data.domain.MappingType;
+import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
-import org.bahmni_avni_integration.migrator.ConnectionFactory;
+import org.bahmni_avni_integration.integration_data.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.AvniConcept;
 import org.bahmni_avni_integration.migrator.domain.AvniForm;
 import org.bahmni_avni_integration.migrator.domain.AvniFormElementGroup;

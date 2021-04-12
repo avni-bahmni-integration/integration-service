@@ -2,13 +2,12 @@ package org.bahmni_avni_integration.migrator.service;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.*;
-import org.bahmni_avni_integration.migrator.config.AvniConfig;
+import org.bahmni_avni_integration.integration_data.config.AvniConfig;
 import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.repository.AvniRepository;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
-import org.bahmni_avni_integration.migrator.repository.avni.AvniEncounterTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

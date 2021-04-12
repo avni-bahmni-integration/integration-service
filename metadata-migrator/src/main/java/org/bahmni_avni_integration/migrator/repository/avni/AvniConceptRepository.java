@@ -1,8 +1,6 @@
 package org.bahmni_avni_integration.migrator.repository.avni;
 
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
-import org.bahmni_avni_integration.migrator.config.AvniConfig;
 
 import java.sql.Connection;
 import java.sql.SQLException;

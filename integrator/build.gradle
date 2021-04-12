@@ -52,6 +52,7 @@ dependencies {
     compile group: 'org.ict4h', name: 'atomfeed-spring-server', version: '1.9.4'
     implementation platform('software.amazon.awssdk:bom:2.15.0')
     implementation 'software.amazon.awssdk:cognitoidentity'
+    implementation 'com.bugsnag:bugsnag-spring:3.+'
 
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.939')
     implementation 'com.amazonaws:aws-java-sdk-cognitoidp'

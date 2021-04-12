@@ -1,8 +1,8 @@
-package org.bahmni_avni_integration.migrator;
+package org.bahmni_avni_integration.integration_data;
 
-import org.bahmni_avni_integration.migrator.config.AvniConfig;
-import org.bahmni_avni_integration.migrator.config.BahmniConfig;
-import org.bahmni_avni_integration.migrator.util.TxConfigurableConnection;
+import org.bahmni_avni_integration.integration_data.config.AvniConfig;
+import org.bahmni_avni_integration.integration_data.config.BahmniConfig;
+import org.bahmni_avni_integration.integration_data.util.TxConfigurableConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

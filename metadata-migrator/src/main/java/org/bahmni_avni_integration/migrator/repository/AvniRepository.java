@@ -3,8 +3,8 @@ package org.bahmni_avni_integration.migrator.repository;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.Names;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
-import org.bahmni_avni_integration.migrator.ConnectionFactory;
-import org.bahmni_avni_integration.migrator.config.AvniConfig;
+import org.bahmni_avni_integration.integration_data.ConnectionFactory;
+import org.bahmni_avni_integration.integration_data.config.AvniConfig;
 import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.repository.avni.AvniAuditRepository;
 import org.bahmni_avni_integration.migrator.repository.avni.AvniConceptRepository;
@@ -12,7 +12,6 @@ import org.bahmni_avni_integration.migrator.repository.avni.AvniEncounterTypeRep
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 import java.sql.*;
 import java.util.ArrayList;

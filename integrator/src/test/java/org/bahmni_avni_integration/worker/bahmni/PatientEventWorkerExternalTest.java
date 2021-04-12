@@ -28,6 +28,6 @@ class PatientEventWorkerExternalTest {
     public void duplicateTest() {
         Constants constants = constantsRepository.findAllConstants();
         openMrsPatientEventWorker.setConstants(constants);
-        openMrsPatientEventWorker.process(new Event("0", "/openmrs/ws/rest/v1/patient/00049185-d25f-43eb-b89d-26be84bea700?v=full"));
+        openMrsPatientEventWorker.process(new Event("0", "/openmrs/ws/rest/v1/patient/866dea68-7d64-4a5f-bad0-18ee43d1736e?v=full"));
     }
 }
