@@ -2,10 +2,9 @@ package org.bahmni_avni_integration.migrator.repository;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.ConnectionFactory;
-import org.bahmni_avni_integration.integration_data.config.BahmniConfig;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.migrator.domain.*;
-import org.bahmni_avni_integration.migrator.util.FileUtil;
+import org.bahmni_avni_integration.integration_data.util.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

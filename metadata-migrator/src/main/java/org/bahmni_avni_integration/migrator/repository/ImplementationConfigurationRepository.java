@@ -3,10 +3,9 @@ package org.bahmni_avni_integration.migrator.repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
 import org.bahmni_avni_integration.migrator.domain.StandardMappings;
-import org.bahmni_avni_integration.migrator.util.FileUtil;
+import org.bahmni_avni_integration.integration_data.util.FileUtil;
 import org.bahmni_avni_integration.migrator.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

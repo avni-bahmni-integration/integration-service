@@ -22,7 +22,6 @@ public class PatientWorkerFullRunTest extends BaseExternalTest {
 
     @Test
     public void processEncounters() {
-        patientEncounterWorker.setCache(getConstants(), mappingMetaDataService.getForBahmniEncounterToAvniEncounter());
-        patientEncounterWorker.processEncounters();
+        patientEncounterWorker.processEncounters(getConstants(), mappingMetaDataService.getForBahmniEncounterToAvniEncounter());
     }
 }

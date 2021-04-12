@@ -1,4 +1,4 @@
-package org.bahmni_avni_integration.migrator.util;
+package org.bahmni_avni_integration.integration_data.util;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

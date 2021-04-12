@@ -4,10 +4,9 @@ import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
+import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
-import org.bahmni_avni_integration.worker.bahmni.PatientFirstRunWorker;
-import org.bahmni_avni_integration.worker.bahmni.PatientWorker;
-import org.bahmni_avni_integration.worker.bahmni.PatientsProcessor;
+import org.bahmni_avni_integration.worker.bahmni.*;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -26,6 +25,15 @@ public class MainJob implements Job {
     private PatientWorker patientWorker;
     @Autowired
     private PatientFirstRunWorker patientFirstRunWorker;
+
+    @Autowired
+    private PatientEncounterWorker patientEncounterWorker;
+    @Autowired
+    private PatientEncounterFirstRunWorker patientEncounterFirstRunWorker;
+
+    @Autowired
+    private MappingMetaDataService mappingMetaDataService;
+
     @Autowired
     private SubjectWorker subjectWorker;
     @Autowired
@@ -47,13 +55,18 @@ public class MainJob implements Job {
 
             if (hasTask(tasks, IntegrationTask.AvniSubject))
                 subjectWorker.processSubjects(allConstants);
-            if (hasTask(tasks, IntegrationTask.BahmniPatient)) {
+            if (hasTask(tasks, IntegrationTask.BahmniPatient))
                 getPatientWorker().processPatients(allConstants);
-            }
+            if (hasTask(tasks, IntegrationTask.BahmniEncounter))
+                getPatientEncounterWorker().processEncounters(allConstants, mappingMetaDataService.getForBahmniEncounterToAvniEncounter());
         } catch (Exception e) {
             logger.error("Error calling API", e);
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
+    }
+
+    private PatientEncountersProcessor getPatientEncounterWorker() {
+        return isFirstRun ? patientEncounterFirstRunWorker : patientEncounterWorker;
     }
 
     private PatientsProcessor getPatientWorker() {

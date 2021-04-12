@@ -15,25 +15,20 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @Component
-public class PatientEncounterWorker extends BaseBahmniWorker {
+public class PatientEncounterWorker extends BaseBahmniWorker implements PatientEncountersProcessor {
     private final PatientEncounterEventWorker eventWorker;
-    private MappingMetaDataService mappingMetaDataService;
     @Value("${bahmni.feed.patient}")
     private String patientFeedLink;
 
     @Autowired
-    public PatientEncounterWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory, PatientEncounterEventWorker eventWorker, MappingMetaDataService mappingMetaDataService) {
+    public PatientEncounterWorker(PlatformTransactionManager transactionManager, DataSource dataSource, OpenMRSWebClient openMRSWebClient, OpenMRSAtomFeedPropertiesFactory atomFeedPropertiesFactory, PatientEncounterEventWorker eventWorker) {
         super(transactionManager, dataSource, openMRSWebClient, atomFeedPropertiesFactory);
         this.eventWorker = eventWorker;
-        this.mappingMetaDataService = mappingMetaDataService;
     }
 
-    public void processEncounters() {
-        process(patientFeedLink, eventWorker);
-    }
-
-    public void setCache(Constants constants, BahmniEncounterToAvniEncounterMetaData metaData) {
+    public void processEncounters(Constants constants, BahmniEncounterToAvniEncounterMetaData metaData) {
         eventWorker.setConstants(constants);
         eventWorker.setMetaData(metaData);
+        process(patientFeedLink, eventWorker);
     }
 }
