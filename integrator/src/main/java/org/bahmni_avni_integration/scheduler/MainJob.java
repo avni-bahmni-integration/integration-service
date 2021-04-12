@@ -5,7 +5,9 @@ import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
+import org.bahmni_avni_integration.worker.bahmni.PatientFirstRunWorker;
 import org.bahmni_avni_integration.worker.bahmni.PatientWorker;
+import org.bahmni_avni_integration.worker.bahmni.PatientsProcessor;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -23,11 +25,15 @@ public class MainJob implements Job {
     @Autowired
     private PatientWorker patientWorker;
     @Autowired
+    private PatientFirstRunWorker patientFirstRunWorker;
+    @Autowired
     private SubjectWorker subjectWorker;
     @Autowired
     private ConstantsRepository constantsRepository;
     @Value("${app.tasks}")
     private String tasks;
+    @Value("${app.first.run}")
+    private boolean isFirstRun;
 
     @Autowired
     private FailedEventRepository failedEventRepository;
@@ -42,12 +48,16 @@ public class MainJob implements Job {
             if (hasTask(tasks, IntegrationTask.AvniSubject))
                 subjectWorker.processSubjects(allConstants);
             if (hasTask(tasks, IntegrationTask.BahmniPatient)) {
-                patientWorker.processPatients(allConstants);
+                getPatientWorker().processPatients(allConstants);
             }
         } catch (Exception e) {
             logger.error("Error calling API", e);
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
+    }
+
+    private PatientsProcessor getPatientWorker() {
+        return isFirstRun ? patientFirstRunWorker : patientWorker;
     }
 
     private boolean hasTask(List<IntegrationTask> tasks, IntegrationTask task) {

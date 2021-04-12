@@ -12,7 +12,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @Component
-public class PatientWorker extends BaseBahmniWorker {
+public class PatientWorker extends BaseBahmniWorker implements PatientsProcessor {
     @Value("${bahmni.feed.patient}")
     private String patientFeedLink;
     private final PatientEventWorker eventWorker;

@@ -53,6 +53,8 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+
     compile "log4j:log4j:1.2.16"
 }
 

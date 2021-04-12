@@ -17,13 +17,6 @@ public class BahmniConfig {
     @Value("${openmrs.mysql.port}")
     private int openMrsMySqlPort;
 
-    @Value("${openmrs.refdata.admin.id}")
-    private int refDataAdminId;
-
-    @Value("${openmrs.txdata.admin.id}")
-    private int txDataAdminId;
-
-
     public String getOpenMrsMySqlUser() {
         return openMrsMySqlUser;
     }
@@ -38,13 +31,5 @@ public class BahmniConfig {
 
     public int getOpenMrsMySqlPort() {
         return openMrsMySqlPort;
-    }
-
-    public int getRefDataAdminId() {
-        return refDataAdminId;
-    }
-
-    public int getTxDataAdminId() {
-        return txDataAdminId;
     }
 }

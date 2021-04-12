@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest(classes = ErrorRecordRepository.class)
-public class ErrorRecordRepositoryTest extends AbstractRepositoryTest {
+public class ErrorRecordRepositoryTest extends AbstractSpringTest {
     @Autowired
     private ErrorRecordRepository errorRecordRepository;
 

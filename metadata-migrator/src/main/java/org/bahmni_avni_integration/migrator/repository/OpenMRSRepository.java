@@ -1,13 +1,12 @@
 package org.bahmni_avni_integration.migrator.repository;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.integration_data.ConnectionFactory;
 import org.bahmni_avni_integration.integration_data.config.BahmniConfig;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
-import org.bahmni_avni_integration.integration_data.ConnectionFactory;
-import org.bahmni_avni_integration.integration_data.config.BahmniConfig;
-import org.bahmni_avni_integration.integration_data.ConnectionFactory;
 import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.util.FileUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -20,13 +19,17 @@ import java.util.stream.Collectors;
 public class OpenMRSRepository {
     private final ConnectionFactory connectionFactory;
     private final FileUtil fileUtil;
-    private final BahmniConfig bahmniConfig;
-    private static Logger logger = Logger.getLogger(OpenMRSRepository.class);
+    private static final Logger logger = Logger.getLogger(OpenMRSRepository.class);
 
-    public OpenMRSRepository(ConnectionFactory connectionFactory, FileUtil fileUtil, BahmniConfig bahmniConfig) {
+    @Value("${openmrs.txdata.admin.id}")
+    private int txDataAdminId;
+
+    @Value("${openmrs.refdata.admin.id}")
+    private int refDataAdminId;
+
+    public OpenMRSRepository(ConnectionFactory connectionFactory, FileUtil fileUtil) {
         this.connectionFactory = connectionFactory;
         this.fileUtil = fileUtil;
-        this.bahmniConfig = bahmniConfig;
     }
 
     public void populateForms(List<OpenMRSForm> formList) throws SQLException {
@@ -168,7 +171,7 @@ public class OpenMRSRepository {
         insertConceptPS.setString(4, className);
         insertConceptPS.setBoolean(5, isSet);
         insertConceptPS.setString(6, conceptUuid);
-        insertConceptPS.setInt(7, bahmniConfig.getRefDataAdminId());
+        insertConceptPS.setInt(7, refDataAdminId);
         ResultSet resultSet = insertConceptPS.executeQuery();
         resultSet.next();
         return new CreateConceptResult(resultSet.getInt(1), false);
@@ -180,7 +183,7 @@ public class OpenMRSRepository {
             insertConceptSetPS.setInt(1, conceptId);
             insertConceptSetPS.setInt(2, conceptSetId);
             insertConceptSetPS.setDouble(3, sortWeight);
-            insertConceptSetPS.setInt(4, bahmniConfig.getRefDataAdminId());
+            insertConceptSetPS.setInt(4, refDataAdminId);
             insertConceptSetPS.setString(5, UUID.randomUUID().toString());
             insertConceptSetPS.executeUpdate();
         }
@@ -200,7 +203,7 @@ public class OpenMRSRepository {
             insertConceptAnswerPS.setInt(1, conceptId);
             insertConceptAnswerPS.setInt(2, answerConceptId);
             insertConceptAnswerPS.setDouble(3, sortWeight);
-            insertConceptAnswerPS.setInt(4, bahmniConfig.getRefDataAdminId());
+            insertConceptAnswerPS.setInt(4, refDataAdminId);
             insertConceptAnswerPS.setString(5, UUID.randomUUID().toString());
             insertConceptAnswerPS.executeUpdate();
         }
@@ -302,11 +305,11 @@ public class OpenMRSRepository {
     }
 
     private void deleteTxData(String sql, Connection connection, String entityType) throws SQLException {
-        delete(sql, connection, entityType, bahmniConfig.getTxDataAdminId());
+        delete(sql, connection, entityType, txDataAdminId);
     }
 
     private void deleteRefData(String sql, Connection connection, String entityType) throws SQLException {
-        delete(sql, connection, entityType, bahmniConfig.getRefDataAdminId());
+        delete(sql, connection, entityType, refDataAdminId);
     }
 
     private void delete(String sql, Connection connection, String entityType, int creatorId) throws SQLException {
@@ -325,8 +328,8 @@ public class OpenMRSRepository {
         try (var ps = connection.prepareStatement(insertEncounterType)) {
             ps.setString(1, name);
             ps.setString(2, uuid);
-            ps.setInt(3, bahmniConfig.getRefDataAdminId());
-            ps.setInt(4, bahmniConfig.getRefDataAdminId());
+            ps.setInt(3, refDataAdminId);
+            ps.setInt(4, refDataAdminId);
             ps.executeUpdate();
         }
     }
@@ -339,7 +342,7 @@ public class OpenMRSRepository {
         try (var ps = connection.prepareStatement(insertLocation)) {
             ps.setString(1, name);
             ps.setString(2, uuid);
-            ps.setInt(3, bahmniConfig.getRefDataAdminId());
+            ps.setInt(3, refDataAdminId);
             ps.executeUpdate();
         }
     }
@@ -352,7 +355,7 @@ public class OpenMRSRepository {
         try (var ps = connection.prepareStatement(insertVisitType)) {
             ps.setString(1, name);
             ps.setString(2, uuid);
-            ps.setInt(3, bahmniConfig.getRefDataAdminId());
+            ps.setInt(3, refDataAdminId);
             ps.executeUpdate();
         }
     }
