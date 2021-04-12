@@ -60,6 +60,14 @@ public class OpenMRSFullEncounter {
         return leafObservations;
     }
 
+    public Optional<OpenMRSObservation> findObservation(String conceptUuid) {
+        var observations = (List<Map<String, Object>>) map.get("obs");
+        return observations.stream()
+                .map(this::getOpenMRSObservation)
+                .filter(observation -> Objects.equals(observation.getConceptUuid(), conceptUuid))
+                .findFirst();
+    }
+
     public List<OpenMRSObservation> getLeafObservations(String form) {
         List<Map<String, Object>> observations = (List<Map<String, Object>>) map.get("obs");
         Map<String, Object> formObservationNode = findForm(form);
@@ -74,18 +82,23 @@ public class OpenMRSFullEncounter {
         if (groupMembers != null) {
             groupMembers.forEach(groupMember -> addLeafObservation(leafObservations, groupMember));
         } else {
-            Map<String, Object> conceptNode = (Map<String, Object>) observation.get("concept");
-            OpenMRSObservation openMRSObservation = new OpenMRSObservation();
-            openMRSObservation.setObsUuid((String) observation.get("uuid"));
-            openMRSObservation.setConceptUuid((String) conceptNode.get("uuid"));
-
-            Object value = observation.get("value");
-            if (value instanceof Map) {
-                value = ((Map) value).get("uuid");
-            }
-            openMRSObservation.setValue(value);
+            OpenMRSObservation openMRSObservation = getOpenMRSObservation(observation);
             leafObservations.add(openMRSObservation);
         }
+    }
+
+    private OpenMRSObservation getOpenMRSObservation(Map<String, Object> observation) {
+        OpenMRSObservation openMRSObservation = new OpenMRSObservation();
+        Map<String, Object> conceptNode = (Map<String, Object>) observation.get("concept");
+        openMRSObservation.setConceptUuid((String) conceptNode.get("uuid"));
+        openMRSObservation.setObsUuid((String) observation.get("uuid"));
+
+        Object value = observation.get("value");
+        if (value instanceof Map) {
+            value = ((Map) value).get("uuid");
+        }
+        openMRSObservation.setValue(value);
+        return openMRSObservation;
     }
 
     public String getUuid() {

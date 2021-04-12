@@ -30,9 +30,6 @@ public class PatientService {
     private final OpenMRSPersonRepository openMRSPersonRepository;
     private final VisitService visitService;
 
-    @Value("${bahmni.avni.database}")
-    private String db;
-
     public PatientService(SubjectMapper subjectMapper, OpenMRSEncounterRepository openMRSEncounterRepository, OpenMRSPatientRepository openMRSPatientRepository, ErrorService errorService, OpenMRSPersonRepository openMRSPersonRepository, VisitService visitService) {
         this.subjectMapper = subjectMapper;
         this.openMRSEncounterRepository = openMRSEncounterRepository;

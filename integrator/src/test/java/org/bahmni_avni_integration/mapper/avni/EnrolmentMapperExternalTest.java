@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,6 +30,10 @@ public class EnrolmentMapperExternalTest {
 
     @Autowired
     private ConstantsRepository constantsRepository;
+
+    private String existingGroupUuid = "22dc3419-b8e5-4316-bf4d-39b9aa743164";
+    private String program = "Mother";
+
 
     @Test
     public void mapEnrolmentToEncounter() {
@@ -59,7 +65,6 @@ public class EnrolmentMapperExternalTest {
         var metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
         var enrolment = new Enrolment();
         enrolment.setUuid("fb6c59c6-cbb5-4c65-8d7e-99019fdb2490");
-        String program = "Mother";
         enrolment.setProgram(program);
         var avniObservations = new LinkedHashMap<String, Object>();
         int numberOfBabies = 4;
@@ -68,8 +73,11 @@ public class EnrolmentMapperExternalTest {
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
         var openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEncounter(getExistingEncounter(), enrolment,
                 constantsRepository.findAllConstants());
-        var groupObs = openMRSEncounter.getObservations().get(0);
+        var observations = openMRSEncounter.getObservations();
+        var groupObs = observations.get(0);
+        assertEquals(1, observations.size());
         assertEquals(formConcept, groupObs.getConcept());
+        assertEquals(existingGroupUuid, groupObs.getUuid());
         var numberOfBabiesObs = getGroupMember(metaData.getBahmniValueForAvniValue("Number of babies"), groupObs);
         assertEquals(numberOfBabies, numberOfBabiesObs.getValue());
     }
@@ -78,8 +86,12 @@ public class EnrolmentMapperExternalTest {
         OpenMRSFullEncounter encounter = new OpenMRSFullEncounter();
         OpenMRSUuidHolder patient = new OpenMRSUuidHolder();
         patient.setUuid("e0d4570b-3ca0-439e-a65e-d8ebe95caa14");
+        var formConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
         encounter.setPatient(patient);
-        encounter.setAny("obs", new ArrayList<>());
+        encounter.setAny("obs", List.of(
+                Map.of("uuid", existingGroupUuid,
+                        "concept", Map.of("uuid", formConceptUuid),
+                        "groupMembers", List.of())));
         return encounter;
     }
 

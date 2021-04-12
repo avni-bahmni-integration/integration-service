@@ -12,8 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
+import javax.sql.DataSource;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,6 +30,11 @@ public class SubjectMapperExternalTest {
 
     @Autowired
     private ConstantsRepository constantsRepository;
+
+    @Autowired
+    DataSource dataSource;
+
+    private String existingGroupUuid = "22dc3419-b8e5-4316-bf4d-39b9aa743164";
 
     @Test
     public void mapSubjectToEncounter() {
@@ -67,8 +74,12 @@ public class SubjectMapperExternalTest {
                 "cc0369c8-748c-42cc-a534-5ab40855c3f8",
                 "f39ce690-d1c4-4bb3-aa4b-893bdd73e5a1",
                 constantsRepository.findAllConstants());
-        var groupObs = openMRSEncounter.getObservations().get(0);
+
+        var observations = openMRSEncounter.getObservations();
+        var groupObs = observations.get(0);
+        assertEquals(1, observations.size());
         assertEquals(formConcept, groupObs.getConcept());
+        assertEquals(existingGroupUuid, groupObs.getUuid());
         var numberOfBabiesObs = getGroupMember(metaData.getBahmniValueForAvniValue("Number of babies"), groupObs);
         assertEquals(numberOfBabies, numberOfBabiesObs.getValue());
     }
@@ -77,8 +88,12 @@ public class SubjectMapperExternalTest {
         OpenMRSFullEncounter encounter = new OpenMRSFullEncounter();
         OpenMRSUuidHolder patient = new OpenMRSUuidHolder();
         patient.setUuid("e0d4570b-3ca0-439e-a65e-d8ebe95caa14");
+        var formConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
         encounter.setPatient(patient);
-        encounter.setAny("obs", new ArrayList<>());
+        encounter.setAny("obs", List.of(
+                Map.of("uuid", existingGroupUuid,
+                        "concept", Map.of("uuid", formConceptUuid),
+                        "groupMembers", List.of())));
         return encounter;
     }
 

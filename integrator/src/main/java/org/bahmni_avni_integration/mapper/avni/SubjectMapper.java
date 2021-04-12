@@ -2,19 +2,13 @@ package org.bahmni_avni_integration.mapper.avni;
 
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounterProvider;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveObservation;
+import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class SubjectMapper {
@@ -58,7 +52,7 @@ public class SubjectMapper {
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) subject.get("observations"),
                 List.of(mappingMetaDataRepository.getBahmniValueForAvniUuidConcept()));
-        openMRSEncounter.setObservations(groupObs(observations));
+        openMRSEncounter.setObservations(existingGroupObs(existingEncounter, observations));
         return openMRSEncounter;
     }
 
@@ -66,6 +60,16 @@ public class SubjectMapper {
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
         var groupObservation = new OpenMRSSaveObservation();
         groupObservation.setConcept(formConcept);
+        groupObservation.setGroupMembers(observations);
+        return List.of(groupObservation);
+    }
+
+    private List<OpenMRSSaveObservation> existingGroupObs(OpenMRSFullEncounter existingEncounter, List<OpenMRSSaveObservation> observations) {
+        var formConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        Optional<OpenMRSObservation> existingGroupObs = existingEncounter.findObservation(formConceptUuid);
+        var groupObservation = new OpenMRSSaveObservation();
+        existingGroupObs.ifPresent(o -> groupObservation.setUuid(o.getObsUuid()));
+        groupObservation.setConcept(formConceptUuid);
         groupObservation.setGroupMembers(observations);
         return List.of(groupObservation);
     }

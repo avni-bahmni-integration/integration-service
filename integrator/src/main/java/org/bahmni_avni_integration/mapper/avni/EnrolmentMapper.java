@@ -1,10 +1,7 @@
 package org.bahmni_avni_integration.mapper.avni;
 
 import org.bahmni_avni_integration.contract.avni.Enrolment;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounterProvider;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveObservation;
+import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
@@ -47,6 +44,15 @@ public class EnrolmentMapper {
         return groupObservation;
     }
 
+    private OpenMRSSaveObservation existingGroupObs(Enrolment enrolment, OpenMRSFullEncounter existingEncounter) {
+        var formConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, enrolment.getProgram());
+        Optional<OpenMRSObservation> existingGroupObs = existingEncounter.findObservation(formConceptUuid);
+        var groupObservation = new OpenMRSSaveObservation();
+        existingGroupObs.ifPresent(o -> groupObservation.setUuid(o.getObsUuid()));
+        groupObservation.setConcept(formConceptUuid);
+        return groupObservation;
+    }
+
     public OpenMRSEncounter mapEnrolmentToExistingEncounter(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
         MappingMetaDataCollection encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_EncounterType);
         String encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
@@ -64,7 +70,7 @@ public class EnrolmentMapper {
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) enrolment.get("observations"),
                 List.of(avniUuidConcept));
-        OpenMRSSaveObservation formGroupObservation = formGroupObservation(enrolment);
+        OpenMRSSaveObservation formGroupObservation = existingGroupObs(enrolment, existingEncounter);
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));
         return openMRSEncounter;

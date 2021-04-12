@@ -71,6 +71,9 @@ run-migrator: build-server
 test-server: drop-test-db build-test-db build-server
 	./gradlew unitTest
 
+setup-external-test-db: drop-test-db create-test-db
+	sudo -u ${postgres_user} psql bahmni_avni_test -f dump.sql
+
 test-server-external: drop-test-db setup-external-test-db
 	./gradlew clean build
 
