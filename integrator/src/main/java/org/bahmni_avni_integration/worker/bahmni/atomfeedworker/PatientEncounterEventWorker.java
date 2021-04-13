@@ -74,8 +74,10 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
             errorService.successfullyProcessed(bahmniEncounter.getOpenMRSEncounter());
         } catch (NoSubjectWithIdException e) {
             errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), ErrorType.NoSubjectWithId);
+            logger.info("No subject found with the identifier");
         } catch (SubjectIdChangedException e) {
             errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), ErrorType.SubjectIdChanged);
+            logger.info("Subject id changed!!");
         }
     }
 
@@ -83,10 +85,12 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         GeneralEncounter existingAvniEncounter = avniEncounterService.getDrugOrderGeneralEncounter(openMRSEncounter, metaData);
         if (existingAvniEncounter != null && avniPatient != null) {
             avniEncounterService.updateDrugOrderEncounter(openMRSEncounter, existingAvniEncounter, metaData, avniPatient);
+            logger.info("Updated drug order encounter");
         } else if (existingAvniEncounter != null && avniPatient == null) {
             throw new SubjectIdChangedException();
         } else if (existingAvniEncounter == null && avniPatient != null) {
             avniEncounterService.createDrugOrderEncounter(openMRSEncounter, metaData, avniPatient);
+            logger.info("Created drug order encounter");
         } else if (existingAvniEncounter == null && avniPatient == null) {
             throw new NoSubjectWithIdException();
         }
@@ -96,10 +100,12 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         GeneralEncounter existingAvniEncounter = avniEncounterService.getLabResultGeneralEncounter(openMRSEncounter, metaData);
         if (existingAvniEncounter != null && avniPatient != null) {
             avniEncounterService.updateLabEncounter(openMRSEncounter, existingAvniEncounter, metaData, avniPatient);
+            logger.info("Updated lab encounter");
         } else if (existingAvniEncounter != null && avniPatient == null) {
             throw new SubjectIdChangedException();
         } else if (existingAvniEncounter == null && avniPatient != null) {
             avniEncounterService.createLabEncounter(openMRSEncounter, metaData, avniPatient);
+            logger.info("Created lab encounter");
         } else if (existingAvniEncounter == null && avniPatient == null) {
             throw new NoSubjectWithIdException();
         }
@@ -110,12 +116,22 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         Enrolment enrolment = avniEnrolmentService.getMatchingEnrolment(avniPatient.getSubjectExternalId(), splitEncounter, metaData);
         if (existingEncounter != null && avniPatient != null) {
             programEncounterService.update(splitEncounter, existingEncounter, metaData, enrolment);
+            logger.info("Updated program encounter");
         } else if (existingEncounter != null && avniPatient == null) {
             throw new SubjectIdChangedException();
         } else if (existingEncounter == null && avniPatient != null) {
+            handleIfNotEnrolledYet(enrolment, metaData, splitEncounter, avniPatient);
             programEncounterService.create(splitEncounter, metaData, enrolment);
+            logger.info("Created program encounter");
         } else if (existingEncounter == null && avniPatient == null) {
             throw new NoSubjectWithIdException();
+        }
+    }
+
+    private void handleIfNotEnrolledYet(Enrolment enrolment, BahmniEncounterToAvniEncounterMetaData metaData, BahmniSplitEncounter bahmniSplitEncounter, GeneralEncounter avniPatient) {
+        if (enrolment == null) {
+            avniEnrolmentService.createEmptyEnrolmentFor(bahmniSplitEncounter, metaData, avniPatient);
+            logger.info("Created empty program enrolment");
         }
     }
 
@@ -123,10 +139,12 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         Enrolment existingEnrolment = avniEnrolmentService.getEnrolment(splitEncounter, metaData);
         if (existingEnrolment != null && avniPatient != null) {
             avniEnrolmentService.update(splitEncounter, existingEnrolment, metaData, avniPatient);
+            logger.info("Updated program enrolment");
         } else if (existingEnrolment != null && avniPatient == null) {
             throw new SubjectIdChangedException();
         } else if (existingEnrolment == null && avniPatient != null) {
             avniEnrolmentService.create(splitEncounter, metaData, avniPatient);
+            logger.info("Created program enrolment");
         } else if (existingEnrolment == null && avniPatient == null) {
             throw new NoSubjectWithIdException();
         }
@@ -136,10 +154,12 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         GeneralEncounter existingAvniEncounter = avniEncounterService.getGeneralEncounter(splitEncounter, metaData);
         if (existingAvniEncounter != null && avniPatient != null) {
             avniEncounterService.update(splitEncounter, existingAvniEncounter, metaData, avniPatient);
+            logger.info("Updated general encounter");
         } else if (existingAvniEncounter != null && avniPatient == null) {
             throw new SubjectIdChangedException();
         } else if (existingAvniEncounter == null && avniPatient != null) {
             avniEncounterService.create(splitEncounter, metaData, avniPatient);
+            logger.info("Created general encounter");
         } else if (existingAvniEncounter == null && avniPatient == null) {
             throw new NoSubjectWithIdException();
         }

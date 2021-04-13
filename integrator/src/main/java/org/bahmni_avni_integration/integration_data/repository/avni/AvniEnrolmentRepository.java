@@ -50,7 +50,7 @@ public class AvniEnrolmentRepository extends BaseAvniRepository {
     }
 
     public Enrolment[] getEnrolments(String subjectExternalId, String program) {
-        Map<String, String> queryParams = Map.of("Subject", subjectExternalId, "Program", program);
+        Map<String, String> queryParams = Map.of("subject", subjectExternalId, "program", program);
         ResponseEntity<EnrolmentsResponse> responseEntity = avniHttpClient.get("/api/programEnrolments", queryParams, EnrolmentsResponse.class);
         return responseEntity.getBody().getContent();
     }

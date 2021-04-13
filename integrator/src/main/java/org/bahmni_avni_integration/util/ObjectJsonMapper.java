@@ -9,8 +9,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class ObjectJsonMapper {
-    private static Logger logger = Logger.getLogger(ObjectJsonMapper.class);
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger logger = Logger.getLogger(ObjectJsonMapper.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String writeValueAsString(Object o) {
         try {

@@ -45,4 +45,9 @@ public class AvniEnrolmentService {
             return Minutes.minutesBetween(encounterDateTime, enrolment1DateTime).compareTo(Minutes.minutesBetween(encounterDateTime, enrolment2DateTime));
         }).orElse(null);
     }
+
+    public void createEmptyEnrolmentFor(BahmniSplitEncounter bahmniSplitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+        Enrolment enrolment = openMRSEncounterMapper.mapToEmptyAvniEnrolment(bahmniSplitEncounter, metaData, avniPatient);
+        avniEnrolmentRepository.create(enrolment);
+    }
 }

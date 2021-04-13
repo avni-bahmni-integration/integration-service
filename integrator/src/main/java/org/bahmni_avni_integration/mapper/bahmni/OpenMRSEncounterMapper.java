@@ -50,6 +50,7 @@ public class OpenMRSEncounterMapper {
         encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getDrugOrderEncounterTypeMapping().getAvniValue());
         encounter.setSubjectId(avniPatient.getSubjectExternalId());
         List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
+        encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getBahmniEntityUuidConcept(), openMRSFullEncounter.getUuid());
         encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getDrugOrderConceptMapping().getAvniValue(), String.join("\n", drugOrders));
         encounter.setEmptyCancelObservations();
         encounter.setVoided(openMRSFullEncounter.isVoided());
@@ -78,8 +79,8 @@ public class OpenMRSEncounterMapper {
         enrolment.setSubjectId(avniPatient.getSubjectExternalId());
         enrolment.setEnrolmentDateTime(FormatAndParseUtil.fromIsoDateString(splitEncounter.getOpenMRSEncounterDateTime()));
         enrolment.setProgram(metaData.getAvniMappedName(splitEncounter.getFormConceptSetUuid()));
-        addObservations(splitEncounter, enrolment, metaData);
         enrolment.setEmptyExitObservations();
+        addObservations(splitEncounter, enrolment, metaData);
         return enrolment;
     }
 
@@ -91,5 +92,15 @@ public class OpenMRSEncounterMapper {
         addObservations(splitEncounter, programEncounter, metaData);
         programEncounter.setEmptyCancelObservations();
         return programEncounter;
+    }
+
+    public Enrolment mapToEmptyAvniEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+        Enrolment enrolment = new Enrolment();
+        enrolment.setSubjectId(avniPatient.getSubjectExternalId());
+        enrolment.setEnrolmentDateTime(FormatAndParseUtil.fromIsoDateString(splitEncounter.getOpenMRSEncounterDateTime()));
+        enrolment.setProgram(metaData.getAvniMappedName(splitEncounter.getFormConceptSetUuid()));
+        enrolment.setEmptyExitObservations();
+        enrolment.addObservation(metaData.getBahmniEntityUuidConcept(), splitEncounter.getOpenMRSEncounterUuid());
+        return enrolment;
     }
 }

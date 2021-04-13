@@ -48,7 +48,7 @@ public class PatientEncounterFirstRunWorker implements PatientEncountersProcesso
                 eventWorker.process(new Event("0", String.format("/openmrs/ws/rest/v1/encounter/%s?v=full", encounterUuid)));
                 bahmniEntityStatus.setReadUpto(encounterId);
                 bahmniEntityStatusRepository.save(bahmniEntityStatus);
-                logger.info(String.format("Completed patient id=%d, uuid:%s", encounterId, encounterUuid));
+                logger.info(String.format("Completed encounter id=%d, uuid:%s", encounterId, encounterUuid));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
