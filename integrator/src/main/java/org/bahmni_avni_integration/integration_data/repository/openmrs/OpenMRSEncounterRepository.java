@@ -1,7 +1,9 @@
 package org.bahmni_avni_integration.integration_data.repository.openmrs;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.http.HttpStatus;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
+import org.bahmni_avni_integration.client.bahmni.WebClientsException;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;

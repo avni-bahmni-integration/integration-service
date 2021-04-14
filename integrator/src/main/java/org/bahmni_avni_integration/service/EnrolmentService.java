@@ -43,7 +43,7 @@ public class EnrolmentService {
         return new Pair<>(patient, encounter);
     }
 
-    public void processPatientNotFound(Enrolment enrolment, Subject subject, SubjectToPatientMetaData metaData) {
+    public void processPatientNotFound(Enrolment enrolment) {
         errorService.errorOccurred(enrolment, ErrorType.NoPatientWithId);
     }
 

@@ -46,6 +46,10 @@ public final class AvniForm {
         this.formType = formType;
     }
 
+    public String getEncounterType() {
+        return encounterType;
+    }
+
     public void setEncounterType(String encounterType) {
         this.encounterType = encounterType;
     }
@@ -69,7 +73,8 @@ public final class AvniForm {
     public String getAvniValueForMapping() {
         return switch (formType) {
             case IndividualProfile -> null;
-            case ProgramEncounter, Encounter -> encounterType;
+            case ProgramEncounter -> String.format("%s-%s", program, encounterType);
+            case Encounter -> encounterType;
             case ProgramEnrolment -> program;
         };
     }

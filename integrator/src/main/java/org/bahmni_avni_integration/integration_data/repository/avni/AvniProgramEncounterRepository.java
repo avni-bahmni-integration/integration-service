@@ -1,13 +1,17 @@
 package org.bahmni_avni_integration.integration_data.repository.avni;
 
 import org.bahmni_avni_integration.client.AvniHttpClient;
+import org.bahmni_avni_integration.contract.avni.Enrolment;
+import org.bahmni_avni_integration.contract.avni.EnrolmentsResponse;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncountersResponse;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +19,19 @@ import java.util.Map;
 public class AvniProgramEncounterRepository extends BaseAvniRepository {
     @Autowired
     private AvniHttpClient avniHttpClient;
+
+    public ProgramEncounter[] getProgramEncounters(Date lastModifiedDateTime) {
+        Map<String, String> queryParams = Map.of("lastModifiedDateTime",
+                FormatAndParseUtil.toISODateString(lastModifiedDateTime));
+        ResponseEntity<ProgramEncountersResponse> responseEntity = avniHttpClient.get("/api/programEncounters", queryParams, ProgramEncountersResponse.class);
+        ProgramEncountersResponse enrolmentsResponse = responseEntity.getBody();
+        return enrolmentsResponse.getContent();
+    }
+
+    public ProgramEncounter getProgramEncounter(String id) {
+        ResponseEntity<ProgramEncounter> responseEntity = avniHttpClient.get(String.format("/api/programEncounter/%s", id), ProgramEncounter.class);
+        return responseEntity.getBody();
+    }
 
     public ProgramEncounter get(HashMap<String, Object> concepts) {
         HashMap<String, String> queryParams = new HashMap<>();

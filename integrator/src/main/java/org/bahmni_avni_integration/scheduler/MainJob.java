@@ -5,6 +5,8 @@ import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
+import org.bahmni_avni_integration.worker.avni.EnrolmentWorker;
+import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.bahmni_avni_integration.worker.bahmni.*;
 import org.quartz.DisallowConcurrentExecution;
@@ -36,6 +38,13 @@ public class MainJob implements Job {
 
     @Autowired
     private SubjectWorker subjectWorker;
+
+    @Autowired
+    private EnrolmentWorker enrolmentWorker;
+
+    @Autowired
+    private ProgramEncounterWorker programEncounterWorker;
+
     @Autowired
     private ConstantsRepository constantsRepository;
     @Value("${app.tasks}")
@@ -55,6 +64,10 @@ public class MainJob implements Job {
 
             if (hasTask(tasks, IntegrationTask.AvniSubject))
                 subjectWorker.processSubjects(allConstants);
+            if (hasTask(tasks, IntegrationTask.AvniEnrolment))
+                enrolmentWorker.processEnrolments(allConstants);
+            if (hasTask(tasks, IntegrationTask.AvniEnrolment))
+                programEncounterWorker.processProgramEncounters(allConstants);
             if (hasTask(tasks, IntegrationTask.BahmniPatient))
                 getPatientWorker().processPatients(allConstants);
             if (hasTask(tasks, IntegrationTask.BahmniEncounter))

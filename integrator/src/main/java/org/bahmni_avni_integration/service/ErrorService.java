@@ -2,6 +2,7 @@ package org.bahmni_avni_integration.service;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
+import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
@@ -64,6 +65,10 @@ public class ErrorService {
         saveAvniError(enrolment.getUuid(), errorType, AvniEntityType.Enrolment);
     }
 
+    public void errorOccurred(ProgramEncounter programEncounter, ErrorType errorType) {
+        saveAvniError(programEncounter.getUuid(), errorType, AvniEntityType.ProgramEncounter);
+    }
+
     public void errorOccurred(OpenMRSPatient patient, ErrorType errorType) {
         saveBahmniError(patient.getUuid(), errorType, BahmniEntityType.Patient);
     }
@@ -90,6 +95,10 @@ public class ErrorService {
 
     public void successfullyProcessed(Enrolment enrolment) {
         successfullyProcessedAvniEntity(AvniEntityType.Enrolment, enrolment.getUuid());
+    }
+
+    public void successfullyProcessed(ProgramEncounter programEncounter) {
+        successfullyProcessedAvniEntity(AvniEntityType.ProgramEncounter, programEncounter.getUuid());
     }
 
     public void successfullyProcessed(OpenMRSPatient openMRSPatient) {

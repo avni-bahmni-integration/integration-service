@@ -79,7 +79,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
             enrolmentService.updateCommunityEnrolment(encounter, enrolment, constants);
         } else if (patient == null && encounter == null) {
             logger.debug(String.format("Patient with identifier %s not found", subject.getId(metaData)));
-            enrolmentService.processPatientNotFound(enrolment, subject, metaData);
+            enrolmentService.processPatientNotFound(enrolment);
         }
 
         entityStatusService.saveEntityStatus(enrolment);

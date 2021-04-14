@@ -5,7 +5,7 @@ public class NameMapping {
         return String.format("%s [H]", name);
     }
 
-    public static String fromAvniConceptToBahmni(String name) {
+    public static String fromAvniNameToBahmni(String name) {
         return String.format("%s [Avni]", name);
     }
 

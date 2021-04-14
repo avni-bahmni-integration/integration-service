@@ -158,7 +158,7 @@ public class OpenMRSRepository {
                                              String dataTypeName,
                                              String className,
                                              boolean isSet) throws SQLException {
-        String conceptNameWithAvniSuffix = NameMapping.fromAvniConceptToBahmni(conceptName);
+        String conceptNameWithAvniSuffix = NameMapping.fromAvniNameToBahmni(conceptName);
         int existingConceptId = getConceptIdByFullySpecifiedName(connection, conceptNameWithAvniSuffix);
         if (existingConceptId != -1)
             return new CreateConceptResult(existingConceptId, true);
@@ -297,10 +297,10 @@ public class OpenMRSRepository {
                 """, connection, "Obs");
         deleteTxData("delete from obs where creator = ? and obs_group_id is not null", connection, "Obs");
         deleteTxData("delete from obs where creator = ?", connection, "Obs");
-        deleteTxData("delete from encounter_provider where creator = ?", connection, "Obs");
-        deleteTxData("delete from visit_attribute where creator = ?", connection, "Obs");
-        deleteTxData("delete from encounter where creator = ?", connection, "Obs");
-        deleteTxData("delete from visit where creator = ?", connection, "Obs");
+        deleteTxData("delete from encounter_provider where creator = ?", connection, "encounter_provider");
+        deleteTxData("delete from visit_attribute where creator = ?", connection, "visit_attribute");
+        deleteTxData("delete from encounter where creator = ?", connection, "encounter");
+        deleteTxData("delete from visit where creator = ?", connection, "visit");
     }
 
     private void deleteTxData(String sql, Connection connection, String entityType) throws SQLException {

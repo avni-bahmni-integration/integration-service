@@ -7,9 +7,7 @@ import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.ConnectionFactory;
-import org.bahmni_avni_integration.migrator.domain.AvniConcept;
-import org.bahmni_avni_integration.migrator.domain.AvniForm;
-import org.bahmni_avni_integration.migrator.domain.AvniFormElementGroup;
+import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.repository.AvniRepository;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
@@ -20,6 +18,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static java.util.Map.entry;
+import static org.bahmni_avni_integration.migrator.domain.AvniFormType.*;
 
 @Service
 public class AvniToBahmniService {
@@ -58,10 +57,28 @@ public class AvniToBahmniService {
             int formConceptId = conceptResult.conceptId();
             logger.debug("Form: %s Concept Id: %d".formatted(form.getName(), formConceptId));
             saveFormMapping(form, bahmniFormConceptUuid);
+            createEncounterTypeAndMapping(connection, form);
             var formElementGroups = form.getFormElementGroups();
             for (AvniFormElementGroup formElementGroup : formElementGroups) {
                 createQuestions(connection, formElementGroup, formConceptId);
             }
+        }
+    }
+
+    private void createEncounterTypeAndMapping(Connection connection, AvniForm form) throws SQLException {
+        if (form.getFormType().equals(ProgramEncounter)) {
+            var encounterTypeUuid = UUID.randomUUID().toString();
+            String avniEncounterType = String.format("%s-%s", form.getProgram(), form.getEncounterType());
+            openMRSRepository.createEncounterType(connection,
+                    NameMapping.fromAvniNameToBahmni(avniEncounterType),
+                    encounterTypeUuid);
+            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEncounter,
+                    MappingType.CommunityEncounter_EncounterType,
+                    encounterTypeUuid,
+                    avniEncounterType,
+                    "Encounter type in OpenMRS for encounter type in Avni",
+                    null));
+
         }
     }
 
