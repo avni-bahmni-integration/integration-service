@@ -27,6 +27,12 @@ public class AvniRepository {
     @Value("${app.config.common.audit}")
     private boolean useCommonAudit;
 
+    private static final String formInsert = "insert into form (name, form_type, uuid, version, audit_id, organisation_id) values (?, ?, uuid_generate_v4(), 0, create_audit(?), (select id from organisation))";
+    private static final String formElementGroupInsert = "insert into form_element_group (name, form_id, uuid, version, audit_id, organisation_id) values (?, (select id from form where name = ?), uuid_generate_v4(), 0, create_audit(?), (select id from organisation))";
+    private static final String formElementInsert = "insert into form_element (name, display_order, concept_id, form_element_group_id, uuid, version, audit_id, organisation_id)  values (?, ?, (select id from concept where name = ?), (select id from form_element_group where name = ?), uuid_generate_v4(), 0, create_audit(?), (select id from organisation))";
+    private static final String encounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(?), (select id from organisation))";
+    private static final String programEncounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id, entity_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(?), (select id from organisation), (select id from program where name = ?))";
+
     @Autowired
     public AvniRepository(ConnectionFactory connectionFactory, AvniConfig avniConfig) {
         this.connectionFactory = connectionFactory;
@@ -78,12 +84,6 @@ public class AvniRepository {
 
     public void createForms(List<OpenMRSForm> forms) throws SQLException {
         try (Connection connection = connectionFactory.getAvniConnection()) {
-            String formInsert = "insert into form (name, form_type, uuid, version, audit_id, organisation_id) values (?, ?, uuid_generate_v4(), 0, create_audit(?), (select id from organisation))";
-            String formElementGroupInsert = "insert into form_element_group (name, form_id, uuid, version, audit_id, organisation_id) values (?, (select id from form where name = ?), uuid_generate_v4(), 0, create_audit(?), (select id from organisation))";
-            String formElementInsert = "insert into form_element (name, display_order, concept_id, form_element_group_id, uuid, version, audit_id, organisation_id)  values (?, ?, (select id from concept where name = ?), (select id from form_element_group where name = ?), uuid_generate_v4(), 0, create_audit(?), (select id from organisation))";
-            String encounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(?), (select id from organisation))";
-            String programEncounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id, entity_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(?), (select id from organisation), (select id from program where name = ?))";
-
             PreparedStatement formInsertPS = connection.prepareStatement(formInsert);
             PreparedStatement formElementGroupPS = connection.prepareStatement(formElementGroupInsert);
             PreparedStatement formElementPS = connection.prepareStatement(formElementInsert);

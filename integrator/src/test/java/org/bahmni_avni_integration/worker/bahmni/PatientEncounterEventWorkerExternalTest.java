@@ -4,7 +4,6 @@ import org.bahmni_avni_integration.BaseExternalTest;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEventWorker;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class PatientEncounterEventWorkerExternalTest extends BaseExternalTest {
         patientEventWorker.setConstants(getConstants());
 
         patientEncounterEventWorker.setConstants(getConstants());
-        patientEncounterEventWorker.setMetaData(mappingMetaDataService.getForBahmniEncounterToAvniEncounter());
+        patientEncounterEventWorker.setMetaData(mappingMetaDataService.getForBahmniEncounterToAvniEntities());
     }
 
     @Test

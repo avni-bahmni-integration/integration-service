@@ -120,19 +120,21 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         } else if (existingEncounter != null && avniPatient == null) {
             throw new SubjectIdChangedException();
         } else if (existingEncounter == null && avniPatient != null) {
-            handleIfNotEnrolledYet(enrolment, metaData, splitEncounter, avniPatient);
-            programEncounterService.create(splitEncounter, metaData, enrolment);
+            Enrolment effectiveEnrolment = enrolIfNotEnrolled(enrolment, metaData, splitEncounter, avniPatient);
+            programEncounterService.create(splitEncounter, metaData, effectiveEnrolment);
             logger.info("Created program encounter");
         } else if (existingEncounter == null && avniPatient == null) {
             throw new NoSubjectWithIdException();
         }
     }
 
-    private void handleIfNotEnrolledYet(Enrolment enrolment, BahmniEncounterToAvniEncounterMetaData metaData, BahmniSplitEncounter bahmniSplitEncounter, GeneralEncounter avniPatient) {
+    private Enrolment enrolIfNotEnrolled(Enrolment enrolment, BahmniEncounterToAvniEncounterMetaData metaData, BahmniSplitEncounter bahmniSplitEncounter, GeneralEncounter avniPatient) {
         if (enrolment == null) {
-            avniEnrolmentService.createEmptyEnrolmentFor(bahmniSplitEncounter, metaData, avniPatient);
+            Enrolment newEnrolment = avniEnrolmentService.createEmptyEnrolmentFor(bahmniSplitEncounter, metaData, avniPatient);
             logger.info("Created empty program enrolment");
+            return newEnrolment;
         }
+        return enrolment;
     }
 
     private void processProgramEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {

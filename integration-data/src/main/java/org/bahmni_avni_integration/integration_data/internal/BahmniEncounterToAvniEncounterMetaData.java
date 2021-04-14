@@ -10,6 +10,7 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
     private MappingMetaData labEncounterTypeMapping;
     private MappingMetaData drugOrderEncounterTypeMapping;
     private MappingMetaData drugOrderConceptMapping;
+    private List<MappingMetaData> programMappings;
 
     public String getAvniMappedName(String openmrsEncounterTypeUuid) {
         MappingMetaData mapping = getMappingMetaData(openmrsEncounterTypeUuid);
@@ -63,5 +64,15 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
 
     public MappingMetaData getDrugOrderConceptMapping() {
         return drugOrderConceptMapping;
+    }
+
+    public void addProgramMapping(List<MappingMetaData> mappings) {
+        this.programMappings = mappings;
+    }
+
+    public String getAvniProgramName(String formConceptSetUuid) {
+        MappingMetaData programMapping = this.programMappings.stream().filter(mappingMetaData -> mappingMetaData.getBahmniValue().equals(formConceptSetUuid)).findFirst().orElse(null);
+        if (programMapping == null) return null;
+        return programMapping.getAvniValue();
     }
 }

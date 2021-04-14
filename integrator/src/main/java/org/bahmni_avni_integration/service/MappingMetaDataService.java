@@ -37,7 +37,7 @@ public class MappingMetaDataService {
         return new PatientToSubjectMetaData(bahmniEntityUuidConceptInAvni, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
     }
 
-    public BahmniEncounterToAvniEncounterMetaData getForBahmniEncounterToAvniEncounter() {
+    public BahmniEncounterToAvniEncounterMetaData getForBahmniEncounterToAvniEntities() {
         List<MappingMetaData> mappings = mappingMetaDataRepository.findAllByMappingType(MappingType.EncounterType);
         BahmniEncounterToAvniEncounterMetaData metaData = new BahmniEncounterToAvniEncounterMetaData();
         metaData.addEncounterMappings(mappings);
@@ -48,6 +48,7 @@ public class MappingMetaDataService {
         metaData.addLabMapping(mappingMetaDataRepository.findByMappingType(MappingType.LabEncounterType));
         metaData.addDrugOrderMapping(mappingMetaDataRepository.findByMappingType(MappingType.DrugOrderEncounterType));
         metaData.addDrugOrderConceptMapping(mappingMetaDataRepository.findByMappingType(MappingType.DrugOrderConcept));
+        metaData.addProgramMapping(mappingMetaDataRepository.findAllByMappingGroupAndMappingType(MappingGroup.ProgramEnrolment, MappingType.BahmniForm_CommunityProgram));
         return metaData;
     }
 }

@@ -22,6 +22,6 @@ public class PatientWorkerFullRunTest extends BaseExternalTest {
 
     @Test
     public void processEncounters() {
-        patientEncounterWorker.processEncounters(getConstants(), mappingMetaDataService.getForBahmniEncounterToAvniEncounter());
+        patientEncounterWorker.processEncounters(getConstants(), mappingMetaDataService.getForBahmniEncounterToAvniEntities());
     }
 }

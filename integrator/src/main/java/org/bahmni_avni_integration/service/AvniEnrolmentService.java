@@ -46,8 +46,8 @@ public class AvniEnrolmentService {
         }).orElse(null);
     }
 
-    public void createEmptyEnrolmentFor(BahmniSplitEncounter bahmniSplitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
+    public Enrolment createEmptyEnrolmentFor(BahmniSplitEncounter bahmniSplitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
         Enrolment enrolment = openMRSEncounterMapper.mapToEmptyAvniEnrolment(bahmniSplitEncounter, metaData, avniPatient);
-        avniEnrolmentRepository.create(enrolment);
+        return avniEnrolmentRepository.create(enrolment);
     }
 }

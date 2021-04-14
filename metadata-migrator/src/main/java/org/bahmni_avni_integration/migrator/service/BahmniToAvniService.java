@@ -8,6 +8,7 @@ import org.bahmni_avni_integration.migrator.repository.AvniRepository;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.migrator.repository.OpenMRSRepository;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.hibernate.engine.spi.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class BahmniToAvniService {
     @Autowired
     private AvniConfig avniConfig;
 
-    private static Logger logger = Logger.getLogger(BahmniToAvniService.class);
+    private static final Logger logger = Logger.getLogger(BahmniToAvniService.class);
 
     public void migrateForms() throws SQLException {
         List<OpenMRSForm> forms = implementationConfigurationRepository.getForms();
@@ -43,6 +44,8 @@ public class BahmniToAvniService {
         for (OpenMRSForm form : forms) {
             logger.info(String.format("Creating mapping for form: %s", form.getFormName()));
             mappingMetaDataRepository.saveMapping(form.getMappingGroup(), MappingType.EncounterType, form.getUuid(), form.getFormName(), null);
+            if (form.getProgram() != null)
+                mappingMetaDataRepository.saveMapping(MappingGroup.ProgramEnrolment, MappingType.BahmniForm_CommunityProgram, form.getUuid(), form.getProgram(), null);
         }
         logger.info("Bahmni forms created in Avni");
     }

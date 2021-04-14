@@ -98,7 +98,7 @@ public class OpenMRSEncounterMapper {
         Enrolment enrolment = new Enrolment();
         enrolment.setSubjectId(avniPatient.getSubjectExternalId());
         enrolment.setEnrolmentDateTime(FormatAndParseUtil.fromIsoDateString(splitEncounter.getOpenMRSEncounterDateTime()));
-        enrolment.setProgram(metaData.getAvniMappedName(splitEncounter.getFormConceptSetUuid()));
+        enrolment.setProgram(metaData.getAvniProgramName(splitEncounter.getFormConceptSetUuid()));
         enrolment.setEmptyExitObservations();
         enrolment.addObservation(metaData.getBahmniEntityUuidConcept(), splitEncounter.getOpenMRSEncounterUuid());
         return enrolment;

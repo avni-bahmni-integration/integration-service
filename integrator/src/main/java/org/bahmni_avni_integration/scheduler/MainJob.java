@@ -58,7 +58,7 @@ public class MainJob implements Job {
             if (hasTask(tasks, IntegrationTask.BahmniPatient))
                 getPatientWorker().processPatients(allConstants);
             if (hasTask(tasks, IntegrationTask.BahmniEncounter))
-                getPatientEncounterWorker().processEncounters(allConstants, mappingMetaDataService.getForBahmniEncounterToAvniEncounter());
+                getPatientEncounterWorker().processEncounters(allConstants, mappingMetaDataService.getForBahmniEncounterToAvniEntities());
         } catch (Exception e) {
             logger.error("Error calling API", e);
         }

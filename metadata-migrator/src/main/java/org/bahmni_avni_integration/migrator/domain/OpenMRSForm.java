@@ -12,7 +12,7 @@ public class OpenMRSForm {
     private String type;
     private String program;
 
-    private List<OpenMRSTerminology> openMRSTerminologies = new ArrayList<>();
+    private final List<OpenMRSTerminology> openMRSTerminologies = new ArrayList<>();
 
     public int getFormId() {
         return formId;

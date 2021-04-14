@@ -12,6 +12,7 @@ public enum MappingType {
     CommunityEnrolment_EncounterType,
     AvniUUID_Concept,
     BahmniUUID_Concept,
+    BahmniForm_CommunityProgram,
     CommunityRegistration_BahmniForm,
     CommunityEnrolment_BahmniForm,
     CommunityProgramEncounter_BahmniForm,
