@@ -1,9 +1,13 @@
 package org.bahmni_avni_integration.migrator.domain;
 
+import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
+import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class OpenMRSConcept implements OpenMRSTerminology {
     private String uuid;
@@ -89,6 +93,20 @@ public class OpenMRSConcept implements OpenMRSTerminology {
 
     public List<OpenMRSConcept> getAnswers() {
         return answers;
+    }
+
+    public List<OpenMRSConcept> getAvniAnswers(Map<String, Object> constants) {
+        if (dataType.equals(ObsDataType.Boolean.name())) {
+            return Arrays.asList(conceptForBoolean("True"), conceptForBoolean("False"));
+        }
+        return this.getAnswers();
+    }
+
+    private OpenMRSConcept conceptForBoolean(String openmrsConceptName) {
+        OpenMRSConcept openMRSConcept = new OpenMRSConcept();
+        openMRSConcept.dataType = ObsDataType.getAvniNADataType();
+        openMRSConcept.name = openmrsConceptName;
+        return openMRSConcept;
     }
 
     public String getNameType() {

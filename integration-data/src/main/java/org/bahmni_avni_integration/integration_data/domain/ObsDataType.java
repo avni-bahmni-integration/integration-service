@@ -10,4 +10,8 @@ public enum ObsDataType {
             return null;
         }
     }
+
+    public static String getAvniNADataType() {
+        return "N/A";
+    }
 }

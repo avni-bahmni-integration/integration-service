@@ -37,6 +37,15 @@ public class OpenMRSFullEncounterTest {
     }
 
     @Test
+    public void getEncounter3() {
+        OpenMRSFullEncounter openMRSFullEncounter = TestUtils.readResource("fullEncounter3.json", OpenMRSFullEncounter.class);
+        assertNotNull(openMRSFullEncounter);
+        List<OpenMRSObservation> leafObservations = openMRSFullEncounter.getLeafObservations();
+        OpenMRSObservation openMRSObservation1 = leafObservations.stream().filter(openMRSObservation -> openMRSObservation.getConceptUuid().equals("821eb0cd-3f10-11e4-adec-0800271c1b75")).findFirst().orElse(null);
+        assertNotNull(openMRSObservation1);
+    }
+
+    @Test
     public void getDrugOrders() {
         OpenMRSFullEncounter openMRSFullEncounter = TestUtils.readResource("encounterWithDrugOrders.json", OpenMRSFullEncounter.class);
         assertNotNull(openMRSFullEncounter);

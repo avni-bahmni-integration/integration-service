@@ -135,7 +135,7 @@ public class OpenMRSFullEncounter {
         }).map(stringObjectMap -> {
             Map<String, Object> drug = (Map<String, Object>) stringObjectMap.get("drug");
             Map<String, Object> doseUnits = (Map<String, Object>) stringObjectMap.get("doseUnits");
-            double dose = (double) stringObjectMap.get("dose");
+            Double dose = stringObjectMap.get("dose") == null ? null : (Double) stringObjectMap.get("dose");
             int duration = (int) stringObjectMap.get("duration");
             boolean asNeeded = (boolean) stringObjectMap.get("asNeeded");
             String scheduledDate = (String) stringObjectMap.get("scheduledDate");

@@ -1,0 +1,2270 @@
+{
+  "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+  "display": "LAB_RESULT 04/02/2016",
+  "encounterDatetime": "2016-04-02T12:06:19.000+0530",
+  "patient": {
+    "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+    "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+      }
+    ]
+  },
+  "location": null,
+  "form": null,
+  "encounterType": {
+    "uuid": "82024e00-3f10-11e4-adec-0800271c1b75",
+    "display": "LAB_RESULT",
+    "name": "LAB_RESULT",
+    "description": "Lab Result encounter",
+    "retired": false,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/82024e00-3f10-11e4-adec-0800271c1b75"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/82024e00-3f10-11e4-adec-0800271c1b75?v=full"
+      }
+    ],
+    "resourceVersion": "1.8"
+  },
+  "obs": [
+    {
+      "uuid": "a7a5be5d-0416-4c80-bd51-328666dbbff7",
+      "display": "Thyroid function test - TSH: ",
+      "concept": {
+        "uuid": "ac63f2c7-4c1a-49d2-9850-1475eb6f7780",
+        "display": "Thyroid function test - TSH",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/ac63f2c7-4c1a-49d2-9850-1475eb6f7780"
+          }
+        ]
+      },
+      "person": {
+        "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+        "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+          }
+        ]
+      },
+      "obsDatetime": "2016-04-02T13:15:53.000+0530",
+      "accessionNumber": null,
+      "obsGroup": null,
+      "valueCodedName": null,
+      "groupMembers": [
+        {
+          "uuid": "93f3b894-c3c1-4dd8-8555-7a94d313b3a7",
+          "display": "Thyroid function test - TSH: ",
+          "concept": {
+            "uuid": "ac63f2c7-4c1a-49d2-9850-1475eb6f7780",
+            "display": "Thyroid function test - TSH",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/ac63f2c7-4c1a-49d2-9850-1475eb6f7780"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+            "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-02T13:15:53.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "a7a5be5d-0416-4c80-bd51-328666dbbff7",
+            "display": "Thyroid function test - TSH: ",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a7a5be5d-0416-4c80-bd51-328666dbbff7"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "6a49eb6e-bc8d-469b-a76b-c8d38118f7ab",
+              "display": "REFERRED_OUT: true",
+              "concept": {
+                "uuid": "821eb0cd-3f10-11e4-adec-0800271c1b75",
+                "display": "REFERRED_OUT",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/821eb0cd-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-02T13:15:53.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "93f3b894-c3c1-4dd8-8555-7a94d313b3a7",
+                "display": "Thyroid function test - TSH: ",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93f3b894-c3c1-4dd8-8555-7a94d313b3a7"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "03e103b4-287d-4923-b921-5ed2ea0ceaa9",
+                "display": "Thyroid function test - TSH",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/03e103b4-287d-4923-b921-5ed2ea0ceaa9"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                "display": "LAB_RESULT 04/02/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": {
+                "uuid": "78763e68-104e-465d-8ce3-35f9edfb083d",
+                "display": "True",
+                "name": {
+                  "display": "True",
+                  "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                  "name": "True",
+                  "locale": "en",
+                  "localePreferred": true,
+                  "conceptNameType": "FULLY_SPECIFIED",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.9"
+                },
+                "datatype": {
+                  "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+                  "display": "N/A",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                    }
+                  ]
+                },
+                "conceptClass": {
+                  "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+                  "display": "Misc",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                    }
+                  ]
+                },
+                "set": false,
+                "version": null,
+                "retired": false,
+                "names": [
+                  {
+                    "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                    "display": "True",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                      }
+                    ]
+                  },
+                  {
+                    "uuid": "03eacf79-cfe9-4f82-9267-0e0c0a694a44",
+                    "display": "Yes",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/03eacf79-cfe9-4f82-9267-0e0c0a694a44"
+                      }
+                    ]
+                  }
+                ],
+                "descriptions": [],
+                "mappings": [],
+                "answers": [],
+                "setMembers": [],
+                "attributes": [],
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d"
+                  },
+                  {
+                    "rel": "full",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d?v=full"
+                  }
+                ],
+                "resourceVersion": "2.0"
+              },
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/6a49eb6e-bc8d-469b-a76b-c8d38118f7ab"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/6a49eb6e-bc8d-469b-a76b-c8d38118f7ab?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            },
+            {
+              "uuid": "6acd3a2b-7020-4b2c-a4aa-48a0e419bdcd",
+              "display": "Thyroid function test - TSH: 0.87",
+              "concept": {
+                "uuid": "ac63f2c7-4c1a-49d2-9850-1475eb6f7780",
+                "display": "Thyroid function test - TSH",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/ac63f2c7-4c1a-49d2-9850-1475eb6f7780"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-02T13:15:53.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "93f3b894-c3c1-4dd8-8555-7a94d313b3a7",
+                "display": "Thyroid function test - TSH: ",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93f3b894-c3c1-4dd8-8555-7a94d313b3a7"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "03e103b4-287d-4923-b921-5ed2ea0ceaa9",
+                "display": "Thyroid function test - TSH",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/03e103b4-287d-4923-b921-5ed2ea0ceaa9"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                "display": "LAB_RESULT 04/02/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": 0.87,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/6acd3a2b-7020-4b2c-a4aa-48a0e419bdcd"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/6acd3a2b-7020-4b2c-a4aa-48a0e419bdcd?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            },
+            {
+              "uuid": "c94b8469-2804-4986-bcdb-d6c92af70801",
+              "display": "LAB_MAXNORMAL: 5.5",
+              "concept": {
+                "uuid": "8206f0cb-3f10-11e4-adec-0800271c1b75",
+                "display": "LAB_MAXNORMAL",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8206f0cb-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-02T13:15:53.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "93f3b894-c3c1-4dd8-8555-7a94d313b3a7",
+                "display": "Thyroid function test - TSH: ",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93f3b894-c3c1-4dd8-8555-7a94d313b3a7"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "03e103b4-287d-4923-b921-5ed2ea0ceaa9",
+                "display": "Thyroid function test - TSH",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/03e103b4-287d-4923-b921-5ed2ea0ceaa9"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                "display": "LAB_RESULT 04/02/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": 5.5,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/c94b8469-2804-4986-bcdb-d6c92af70801"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/c94b8469-2804-4986-bcdb-d6c92af70801?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            },
+            {
+              "uuid": "a1401bc0-900a-4c8d-8076-f3dc2605e5c4",
+              "display": "LAB_MINNORMAL: 0.3",
+              "concept": {
+                "uuid": "82063446-3f10-11e4-adec-0800271c1b75",
+                "display": "LAB_MINNORMAL",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/82063446-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-02T13:15:53.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "93f3b894-c3c1-4dd8-8555-7a94d313b3a7",
+                "display": "Thyroid function test - TSH: ",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93f3b894-c3c1-4dd8-8555-7a94d313b3a7"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "03e103b4-287d-4923-b921-5ed2ea0ceaa9",
+                "display": "Thyroid function test - TSH",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/03e103b4-287d-4923-b921-5ed2ea0ceaa9"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                "display": "LAB_RESULT 04/02/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": 0.3,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a1401bc0-900a-4c8d-8076-f3dc2605e5c4"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a1401bc0-900a-4c8d-8076-f3dc2605e5c4?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": null,
+          "order": {
+            "uuid": "03e103b4-287d-4923-b921-5ed2ea0ceaa9",
+            "display": "Thyroid function test - TSH",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/03e103b4-287d-4923-b921-5ed2ea0ceaa9"
+              }
+            ],
+            "type": "order"
+          },
+          "encounter": {
+            "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+            "display": "LAB_RESULT 04/02/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": null,
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93f3b894-c3c1-4dd8-8555-7a94d313b3a7"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/93f3b894-c3c1-4dd8-8555-7a94d313b3a7?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        }
+      ],
+      "comment": null,
+      "location": null,
+      "order": {
+        "uuid": "03e103b4-287d-4923-b921-5ed2ea0ceaa9",
+        "display": "Thyroid function test - TSH",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/03e103b4-287d-4923-b921-5ed2ea0ceaa9"
+          }
+        ],
+        "type": "order"
+      },
+      "encounter": {
+        "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+        "display": "LAB_RESULT 04/02/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+          }
+        ]
+      },
+      "voided": false,
+      "value": null,
+      "valueModifier": null,
+      "formFieldPath": null,
+      "formFieldNamespace": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a7a5be5d-0416-4c80-bd51-328666dbbff7"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a7a5be5d-0416-4c80-bd51-328666dbbff7?v=full"
+        }
+      ],
+      "resourceVersion": "1.11"
+    },
+    {
+      "uuid": "28da0a4a-1ae5-469a-bce0-6970edc9bc40",
+      "display": "Urine Microscopic Examination: null, null, null",
+      "concept": {
+        "uuid": "cda7d0d2-d3a6-4a13-b61c-401b94298bb8",
+        "display": "Urine Microscopic Examination",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/cda7d0d2-d3a6-4a13-b61c-401b94298bb8"
+          }
+        ]
+      },
+      "person": {
+        "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+        "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+          }
+        ]
+      },
+      "obsDatetime": "2016-04-02T13:38:31.000+0530",
+      "accessionNumber": null,
+      "obsGroup": null,
+      "valueCodedName": null,
+      "groupMembers": [
+        {
+          "uuid": "9824bfe5-e717-4d43-9c31-0df9e5cbce52",
+          "display": "Urine Microscopy Pus cells: null",
+          "concept": {
+            "uuid": "c02dd22d-7795-45ca-bcbf-d1610c20dfc3",
+            "display": "Urine Microscopy Pus cells",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c02dd22d-7795-45ca-bcbf-d1610c20dfc3"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+            "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-02T13:38:31.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "28da0a4a-1ae5-469a-bce0-6970edc9bc40",
+            "display": "Urine Microscopic Examination: null, null, null",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/28da0a4a-1ae5-469a-bce0-6970edc9bc40"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "7598956a-fd4f-4061-99b9-c77b41d6f70e",
+              "display": "Urine Microscopy Pus cells: null",
+              "concept": {
+                "uuid": "c02dd22d-7795-45ca-bcbf-d1610c20dfc3",
+                "display": "Urine Microscopy Pus cells",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c02dd22d-7795-45ca-bcbf-d1610c20dfc3"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-02T13:38:31.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "9824bfe5-e717-4d43-9c31-0df9e5cbce52",
+                "display": "Urine Microscopy Pus cells: null",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/9824bfe5-e717-4d43-9c31-0df9e5cbce52"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": [
+                {
+                  "uuid": "d3bdbb53-7fef-4c20-a336-e5412bc26d7f",
+                  "display": "Urine Microscopy Pus cells: NEG",
+                  "concept": {
+                    "uuid": "c02dd22d-7795-45ca-bcbf-d1610c20dfc3",
+                    "display": "Urine Microscopy Pus cells",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c02dd22d-7795-45ca-bcbf-d1610c20dfc3"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                    "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-02T13:38:31.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "7598956a-fd4f-4061-99b9-c77b41d6f70e",
+                    "display": "Urine Microscopy Pus cells: null",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/7598956a-fd4f-4061-99b9-c77b41d6f70e"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": null,
+                  "order": {
+                    "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                    "display": "Urine Microscopic Examination",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                      }
+                    ],
+                    "type": "order"
+                  },
+                  "encounter": {
+                    "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                    "display": "LAB_RESULT 04/02/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": "NEG",
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": null,
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/d3bdbb53-7fef-4c20-a336-e5412bc26d7f"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/d3bdbb53-7fef-4c20-a336-e5412bc26d7f?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                },
+                {
+                  "uuid": "9efe5c6c-5fe3-41a8-8bbb-354ce9a6fed5",
+                  "display": "LAB_ABNORMAL: true",
+                  "concept": {
+                    "uuid": "8207b3e9-3f10-11e4-adec-0800271c1b75",
+                    "display": "LAB_ABNORMAL",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8207b3e9-3f10-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                    "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-02T13:38:31.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "7598956a-fd4f-4061-99b9-c77b41d6f70e",
+                    "display": "Urine Microscopy Pus cells: null",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/7598956a-fd4f-4061-99b9-c77b41d6f70e"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": null,
+                  "order": {
+                    "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                    "display": "Urine Microscopic Examination",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                      }
+                    ],
+                    "type": "order"
+                  },
+                  "encounter": {
+                    "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                    "display": "LAB_RESULT 04/02/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": {
+                    "uuid": "78763e68-104e-465d-8ce3-35f9edfb083d",
+                    "display": "True",
+                    "name": {
+                      "display": "True",
+                      "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                      "name": "True",
+                      "locale": "en",
+                      "localePreferred": true,
+                      "conceptNameType": "FULLY_SPECIFIED",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                        },
+                        {
+                          "rel": "full",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39?v=full"
+                        }
+                      ],
+                      "resourceVersion": "1.9"
+                    },
+                    "datatype": {
+                      "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "N/A",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "conceptClass": {
+                      "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "Misc",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "set": false,
+                    "version": null,
+                    "retired": false,
+                    "names": [
+                      {
+                        "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                        "display": "True",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                          }
+                        ]
+                      },
+                      {
+                        "uuid": "03eacf79-cfe9-4f82-9267-0e0c0a694a44",
+                        "display": "Yes",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/03eacf79-cfe9-4f82-9267-0e0c0a694a44"
+                          }
+                        ]
+                      }
+                    ],
+                    "descriptions": [],
+                    "mappings": [],
+                    "answers": [],
+                    "setMembers": [],
+                    "attributes": [],
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d"
+                      },
+                      {
+                        "rel": "full",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d?v=full"
+                      }
+                    ],
+                    "resourceVersion": "2.0"
+                  },
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": null,
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/9efe5c6c-5fe3-41a8-8bbb-354ce9a6fed5"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/9efe5c6c-5fe3-41a8-8bbb-354ce9a6fed5?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                }
+              ],
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                "display": "Urine Microscopic Examination",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                "display": "LAB_RESULT 04/02/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": null,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/7598956a-fd4f-4061-99b9-c77b41d6f70e"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/7598956a-fd4f-4061-99b9-c77b41d6f70e?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": null,
+          "order": {
+            "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+            "display": "Urine Microscopic Examination",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+              }
+            ],
+            "type": "order"
+          },
+          "encounter": {
+            "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+            "display": "LAB_RESULT 04/02/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": null,
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/9824bfe5-e717-4d43-9c31-0df9e5cbce52"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/9824bfe5-e717-4d43-9c31-0df9e5cbce52?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        },
+        {
+          "uuid": "edb612f2-a8e4-4237-a350-185d4c38f969",
+          "display": "Urine Microscopy Epithelial cells: null",
+          "concept": {
+            "uuid": "e8841227-63cd-4ef8-80f1-a31b5a0489c9",
+            "display": "Urine Microscopy Epithelial cells",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/e8841227-63cd-4ef8-80f1-a31b5a0489c9"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+            "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-02T13:38:31.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "28da0a4a-1ae5-469a-bce0-6970edc9bc40",
+            "display": "Urine Microscopic Examination: null, null, null",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/28da0a4a-1ae5-469a-bce0-6970edc9bc40"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "e11fdcc5-a876-4d74-b6d7-66ff870eb8f1",
+              "display": "Urine Microscopy Epithelial cells: null",
+              "concept": {
+                "uuid": "e8841227-63cd-4ef8-80f1-a31b5a0489c9",
+                "display": "Urine Microscopy Epithelial cells",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/e8841227-63cd-4ef8-80f1-a31b5a0489c9"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-02T13:38:31.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "edb612f2-a8e4-4237-a350-185d4c38f969",
+                "display": "Urine Microscopy Epithelial cells: null",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/edb612f2-a8e4-4237-a350-185d4c38f969"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": [
+                {
+                  "uuid": "ccf50e2e-1652-404b-8f61-486680364cad",
+                  "display": "LAB_ABNORMAL: true",
+                  "concept": {
+                    "uuid": "8207b3e9-3f10-11e4-adec-0800271c1b75",
+                    "display": "LAB_ABNORMAL",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8207b3e9-3f10-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                    "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-02T13:38:31.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "e11fdcc5-a876-4d74-b6d7-66ff870eb8f1",
+                    "display": "Urine Microscopy Epithelial cells: null",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/e11fdcc5-a876-4d74-b6d7-66ff870eb8f1"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": null,
+                  "order": {
+                    "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                    "display": "Urine Microscopic Examination",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                      }
+                    ],
+                    "type": "order"
+                  },
+                  "encounter": {
+                    "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                    "display": "LAB_RESULT 04/02/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": {
+                    "uuid": "78763e68-104e-465d-8ce3-35f9edfb083d",
+                    "display": "True",
+                    "name": {
+                      "display": "True",
+                      "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                      "name": "True",
+                      "locale": "en",
+                      "localePreferred": true,
+                      "conceptNameType": "FULLY_SPECIFIED",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                        },
+                        {
+                          "rel": "full",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39?v=full"
+                        }
+                      ],
+                      "resourceVersion": "1.9"
+                    },
+                    "datatype": {
+                      "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "N/A",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "conceptClass": {
+                      "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "Misc",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "set": false,
+                    "version": null,
+                    "retired": false,
+                    "names": [
+                      {
+                        "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                        "display": "True",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                          }
+                        ]
+                      },
+                      {
+                        "uuid": "03eacf79-cfe9-4f82-9267-0e0c0a694a44",
+                        "display": "Yes",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/03eacf79-cfe9-4f82-9267-0e0c0a694a44"
+                          }
+                        ]
+                      }
+                    ],
+                    "descriptions": [],
+                    "mappings": [],
+                    "answers": [],
+                    "setMembers": [],
+                    "attributes": [],
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d"
+                      },
+                      {
+                        "rel": "full",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d?v=full"
+                      }
+                    ],
+                    "resourceVersion": "2.0"
+                  },
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": null,
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/ccf50e2e-1652-404b-8f61-486680364cad"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/ccf50e2e-1652-404b-8f61-486680364cad?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                },
+                {
+                  "uuid": "1efc3431-278a-48f0-b231-ce7c5c209847",
+                  "display": "Urine Microscopy Epithelial cells: NEG",
+                  "concept": {
+                    "uuid": "e8841227-63cd-4ef8-80f1-a31b5a0489c9",
+                    "display": "Urine Microscopy Epithelial cells",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/e8841227-63cd-4ef8-80f1-a31b5a0489c9"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                    "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-02T13:38:31.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "e11fdcc5-a876-4d74-b6d7-66ff870eb8f1",
+                    "display": "Urine Microscopy Epithelial cells: null",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/e11fdcc5-a876-4d74-b6d7-66ff870eb8f1"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": null,
+                  "order": {
+                    "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                    "display": "Urine Microscopic Examination",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                      }
+                    ],
+                    "type": "order"
+                  },
+                  "encounter": {
+                    "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                    "display": "LAB_RESULT 04/02/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": "NEG",
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": null,
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/1efc3431-278a-48f0-b231-ce7c5c209847"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/1efc3431-278a-48f0-b231-ce7c5c209847?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                }
+              ],
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                "display": "Urine Microscopic Examination",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                "display": "LAB_RESULT 04/02/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": null,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/e11fdcc5-a876-4d74-b6d7-66ff870eb8f1"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/e11fdcc5-a876-4d74-b6d7-66ff870eb8f1?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": null,
+          "order": {
+            "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+            "display": "Urine Microscopic Examination",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+              }
+            ],
+            "type": "order"
+          },
+          "encounter": {
+            "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+            "display": "LAB_RESULT 04/02/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": null,
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/edb612f2-a8e4-4237-a350-185d4c38f969"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/edb612f2-a8e4-4237-a350-185d4c38f969?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        },
+        {
+          "uuid": "58f17e75-9182-43e9-bd8e-4146d8b502ac",
+          "display": "Urine Microscopy - Casts: null",
+          "concept": {
+            "uuid": "c3e46ff7-7eb4-4c71-8bd7-2ccc4fe7407e",
+            "display": "Urine Microscopy - Casts",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c3e46ff7-7eb4-4c71-8bd7-2ccc4fe7407e"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+            "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-02T13:38:31.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "28da0a4a-1ae5-469a-bce0-6970edc9bc40",
+            "display": "Urine Microscopic Examination: null, null, null",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/28da0a4a-1ae5-469a-bce0-6970edc9bc40"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "dcb9b269-d7fc-4e7d-a251-568844893af3",
+              "display": "Urine Microscopy - Casts: null",
+              "concept": {
+                "uuid": "c3e46ff7-7eb4-4c71-8bd7-2ccc4fe7407e",
+                "display": "Urine Microscopy - Casts",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c3e46ff7-7eb4-4c71-8bd7-2ccc4fe7407e"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-02T13:38:31.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "58f17e75-9182-43e9-bd8e-4146d8b502ac",
+                "display": "Urine Microscopy - Casts: null",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/58f17e75-9182-43e9-bd8e-4146d8b502ac"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": [
+                {
+                  "uuid": "e6a3fe52-fa04-4d9e-8b3c-87b38f627a78",
+                  "display": "LAB_ABNORMAL: true",
+                  "concept": {
+                    "uuid": "8207b3e9-3f10-11e4-adec-0800271c1b75",
+                    "display": "LAB_ABNORMAL",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/8207b3e9-3f10-11e4-adec-0800271c1b75"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                    "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-02T13:38:31.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "dcb9b269-d7fc-4e7d-a251-568844893af3",
+                    "display": "Urine Microscopy - Casts: null",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/dcb9b269-d7fc-4e7d-a251-568844893af3"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": null,
+                  "order": {
+                    "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                    "display": "Urine Microscopic Examination",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                      }
+                    ],
+                    "type": "order"
+                  },
+                  "encounter": {
+                    "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                    "display": "LAB_RESULT 04/02/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": {
+                    "uuid": "78763e68-104e-465d-8ce3-35f9edfb083d",
+                    "display": "True",
+                    "name": {
+                      "display": "True",
+                      "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                      "name": "True",
+                      "locale": "en",
+                      "localePreferred": true,
+                      "conceptNameType": "FULLY_SPECIFIED",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                        },
+                        {
+                          "rel": "full",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39?v=full"
+                        }
+                      ],
+                      "resourceVersion": "1.9"
+                    },
+                    "datatype": {
+                      "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "N/A",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "conceptClass": {
+                      "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+                      "display": "Misc",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                        }
+                      ]
+                    },
+                    "set": false,
+                    "version": null,
+                    "retired": false,
+                    "names": [
+                      {
+                        "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                        "display": "True",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                          }
+                        ]
+                      },
+                      {
+                        "uuid": "03eacf79-cfe9-4f82-9267-0e0c0a694a44",
+                        "display": "Yes",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/03eacf79-cfe9-4f82-9267-0e0c0a694a44"
+                          }
+                        ]
+                      }
+                    ],
+                    "descriptions": [],
+                    "mappings": [],
+                    "answers": [],
+                    "setMembers": [],
+                    "attributes": [],
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d"
+                      },
+                      {
+                        "rel": "full",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d?v=full"
+                      }
+                    ],
+                    "resourceVersion": "2.0"
+                  },
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": null,
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/e6a3fe52-fa04-4d9e-8b3c-87b38f627a78"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/e6a3fe52-fa04-4d9e-8b3c-87b38f627a78?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                },
+                {
+                  "uuid": "8f841032-0f90-4615-9d3f-c1e02db87fa5",
+                  "display": "Urine Microscopy - Casts: NEG",
+                  "concept": {
+                    "uuid": "c3e46ff7-7eb4-4c71-8bd7-2ccc4fe7407e",
+                    "display": "Urine Microscopy - Casts",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/c3e46ff7-7eb4-4c71-8bd7-2ccc4fe7407e"
+                      }
+                    ]
+                  },
+                  "person": {
+                    "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                    "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                      }
+                    ]
+                  },
+                  "obsDatetime": "2016-04-02T13:38:31.000+0530",
+                  "accessionNumber": null,
+                  "obsGroup": {
+                    "uuid": "dcb9b269-d7fc-4e7d-a251-568844893af3",
+                    "display": "Urine Microscopy - Casts: null",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/dcb9b269-d7fc-4e7d-a251-568844893af3"
+                      }
+                    ]
+                  },
+                  "valueCodedName": null,
+                  "groupMembers": null,
+                  "comment": null,
+                  "location": null,
+                  "order": {
+                    "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                    "display": "Urine Microscopic Examination",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                      }
+                    ],
+                    "type": "order"
+                  },
+                  "encounter": {
+                    "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                    "display": "LAB_RESULT 04/02/2016",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                      }
+                    ]
+                  },
+                  "voided": false,
+                  "value": "NEG",
+                  "valueModifier": null,
+                  "formFieldPath": null,
+                  "formFieldNamespace": null,
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/8f841032-0f90-4615-9d3f-c1e02db87fa5"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/8f841032-0f90-4615-9d3f-c1e02db87fa5?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.11"
+                }
+              ],
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+                "display": "Urine Microscopic Examination",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                "display": "LAB_RESULT 04/02/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": null,
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/dcb9b269-d7fc-4e7d-a251-568844893af3"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/dcb9b269-d7fc-4e7d-a251-568844893af3?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": null,
+          "order": {
+            "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+            "display": "Urine Microscopic Examination",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+              }
+            ],
+            "type": "order"
+          },
+          "encounter": {
+            "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+            "display": "LAB_RESULT 04/02/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": null,
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/58f17e75-9182-43e9-bd8e-4146d8b502ac"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/58f17e75-9182-43e9-bd8e-4146d8b502ac?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        }
+      ],
+      "comment": null,
+      "location": null,
+      "order": {
+        "uuid": "6b11db10-1397-45ec-bd0f-8ac6bd5aa04a",
+        "display": "Urine Microscopic Examination",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/6b11db10-1397-45ec-bd0f-8ac6bd5aa04a"
+          }
+        ],
+        "type": "order"
+      },
+      "encounter": {
+        "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+        "display": "LAB_RESULT 04/02/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+          }
+        ]
+      },
+      "voided": false,
+      "value": null,
+      "valueModifier": null,
+      "formFieldPath": null,
+      "formFieldNamespace": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/28da0a4a-1ae5-469a-bce0-6970edc9bc40"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/28da0a4a-1ae5-469a-bce0-6970edc9bc40?v=full"
+        }
+      ],
+      "resourceVersion": "1.11"
+    },
+    {
+      "uuid": "b31ad4fb-0f8a-4cdd-9fd9-cf47c90e9e28",
+      "display": "AFB - sputum: ",
+      "concept": {
+        "uuid": "0706f44c-d6c6-4a7b-b8d9-c74c02e3ab7f",
+        "display": "AFB - sputum",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/0706f44c-d6c6-4a7b-b8d9-c74c02e3ab7f"
+          }
+        ]
+      },
+      "person": {
+        "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+        "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+          }
+        ]
+      },
+      "obsDatetime": "2016-06-11T15:01:49.000+0530",
+      "accessionNumber": null,
+      "obsGroup": null,
+      "valueCodedName": null,
+      "groupMembers": [
+        {
+          "uuid": "a3467c03-b246-4aa0-bee9-061dc66d2bd9",
+          "display": "AFB - sputum: ",
+          "concept": {
+            "uuid": "0706f44c-d6c6-4a7b-b8d9-c74c02e3ab7f",
+            "display": "AFB - sputum",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/0706f44c-d6c6-4a7b-b8d9-c74c02e3ab7f"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+            "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+              }
+            ]
+          },
+          "obsDatetime": "2016-06-11T15:01:49.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "b31ad4fb-0f8a-4cdd-9fd9-cf47c90e9e28",
+            "display": "AFB - sputum: ",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/b31ad4fb-0f8a-4cdd-9fd9-cf47c90e9e28"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "ae3361a7-8bc2-4ed9-8df4-467b17b16949",
+              "display": "AFB - sputum: Negative",
+              "concept": {
+                "uuid": "0706f44c-d6c6-4a7b-b8d9-c74c02e3ab7f",
+                "display": "AFB - sputum",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/0706f44c-d6c6-4a7b-b8d9-c74c02e3ab7f"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+                "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-06-11T15:01:49.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "a3467c03-b246-4aa0-bee9-061dc66d2bd9",
+                "display": "AFB - sputum: ",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a3467c03-b246-4aa0-bee9-061dc66d2bd9"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "2b6a59d4-cd20-4a68-a901-436cb200097a",
+                "display": "AFB - sputum",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/2b6a59d4-cd20-4a68-a901-436cb200097a"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+                "display": "LAB_RESULT 04/02/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": {
+                "uuid": "718b4589-2a11-4355-b8dc-aa668a93e098",
+                "display": "Negative",
+                "name": {
+                  "display": "Negative",
+                  "uuid": "d3fb64da-1544-4ebf-9519-fb23a2e4d2a4",
+                  "name": "Negative",
+                  "locale": "en",
+                  "localePreferred": true,
+                  "conceptNameType": "FULLY_SPECIFIED",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/718b4589-2a11-4355-b8dc-aa668a93e098/name/d3fb64da-1544-4ebf-9519-fb23a2e4d2a4"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/718b4589-2a11-4355-b8dc-aa668a93e098/name/d3fb64da-1544-4ebf-9519-fb23a2e4d2a4?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.9"
+                },
+                "datatype": {
+                  "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+                  "display": "N/A",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                    }
+                  ]
+                },
+                "conceptClass": {
+                  "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+                  "display": "Misc",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                    }
+                  ]
+                },
+                "set": false,
+                "version": null,
+                "retired": false,
+                "names": [
+                  {
+                    "uuid": "d3fb64da-1544-4ebf-9519-fb23a2e4d2a4",
+                    "display": "Negative",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/718b4589-2a11-4355-b8dc-aa668a93e098/name/d3fb64da-1544-4ebf-9519-fb23a2e4d2a4"
+                      }
+                    ]
+                  }
+                ],
+                "descriptions": [],
+                "mappings": [],
+                "answers": [],
+                "setMembers": [],
+                "attributes": [],
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/718b4589-2a11-4355-b8dc-aa668a93e098"
+                  },
+                  {
+                    "rel": "full",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/718b4589-2a11-4355-b8dc-aa668a93e098?v=full"
+                  }
+                ],
+                "resourceVersion": "2.0"
+              },
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/ae3361a7-8bc2-4ed9-8df4-467b17b16949"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/ae3361a7-8bc2-4ed9-8df4-467b17b16949?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": null,
+          "order": {
+            "uuid": "2b6a59d4-cd20-4a68-a901-436cb200097a",
+            "display": "AFB - sputum",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/2b6a59d4-cd20-4a68-a901-436cb200097a"
+              }
+            ],
+            "type": "order"
+          },
+          "encounter": {
+            "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+            "display": "LAB_RESULT 04/02/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": null,
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a3467c03-b246-4aa0-bee9-061dc66d2bd9"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/a3467c03-b246-4aa0-bee9-061dc66d2bd9?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        }
+      ],
+      "comment": null,
+      "location": null,
+      "order": {
+        "uuid": "2b6a59d4-cd20-4a68-a901-436cb200097a",
+        "display": "AFB - sputum",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/2b6a59d4-cd20-4a68-a901-436cb200097a"
+          }
+        ],
+        "type": "order"
+      },
+      "encounter": {
+        "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+        "display": "LAB_RESULT 04/02/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+          }
+        ]
+      },
+      "voided": false,
+      "value": null,
+      "valueModifier": null,
+      "formFieldPath": null,
+      "formFieldNamespace": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/b31ad4fb-0f8a-4cdd-9fd9-cf47c90e9e28"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/b31ad4fb-0f8a-4cdd-9fd9-cf47c90e9e28?v=full"
+        }
+      ],
+      "resourceVersion": "1.11"
+    }
+  ],
+  "orders": [],
+  "voided": false,
+  "auditInfo": {
+    "creator": {
+      "uuid": "A4F30A1B-5EB9-11DF-A648-37A07F9C90FB",
+      "display": "daemon",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/user/A4F30A1B-5EB9-11DF-A648-37A07F9C90FB"
+        }
+      ]
+    },
+    "dateCreated": "2016-04-02T13:16:01.000+0530",
+    "changedBy": null,
+    "dateChanged": null
+  },
+  "visit": {
+    "uuid": "365fdb73-d7c5-484e-a241-483c788ece63",
+    "display": "OPD @ Registration Desk - 04/02/2016 10:51 AM",
+    "patient": {
+      "uuid": "8467378b-c7f2-437c-8ecb-310741fb7bef",
+      "display": "TRI03090101 - AABCCDDEE FFGGHHII",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/8467378b-c7f2-437c-8ecb-310741fb7bef"
+        }
+      ]
+    },
+    "visitType": {
+      "uuid": "c22a5000-3f10-11e4-adec-0800271c1b75",
+      "display": "OPD",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visittype/c22a5000-3f10-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "indication": null,
+    "location": {
+      "uuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
+      "display": "Registration Desk",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c5854fd7-3f12-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "startDatetime": "2016-04-02T10:51:29.000+0530",
+    "stopDatetime": "2016-04-02T12:06:19.000+0530",
+    "encounters": [
+      {
+        "uuid": "c0052073-0526-44fa-a57b-946a4e64a07c",
+        "display": "LAB_RESULT 04/02/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+          }
+        ]
+      },
+      {
+        "uuid": "b094888a-e5ff-4c7a-85d0-20f22a22245c",
+        "display": "Consultation 04/02/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/b094888a-e5ff-4c7a-85d0-20f22a22245c"
+          }
+        ]
+      },
+      {
+        "uuid": "2d5dd876-80b1-4923-918c-8aa7344a4909",
+        "display": "REG 04/02/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/2d5dd876-80b1-4923-918c-8aa7344a4909"
+          }
+        ]
+      }
+    ],
+    "attributes": [
+      {
+        "uuid": "2720bb9e-7dfd-4ece-9a2a-84d6eb85ec14",
+        "display": "Visit Status: OPD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/365fdb73-d7c5-484e-a241-483c788ece63/attribute/2720bb9e-7dfd-4ece-9a2a-84d6eb85ec14"
+          }
+        ]
+      }
+    ],
+    "voided": false,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/365fdb73-d7c5-484e-a241-483c788ece63"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/365fdb73-d7c5-484e-a241-483c788ece63?v=full"
+      }
+    ],
+    "resourceVersion": "1.9"
+  },
+  "encounterProviders": [
+    {
+      "uuid": "5536b28d-124b-436c-bb3f-e2fd4938c009",
+      "provider": {
+        "uuid": "7d162c29-3f12-11e4-adec-0800271c1b75",
+        "display": "LABSYSTEM - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/7d162c29-3f12-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "encounterRole": {
+        "uuid": "a0b03050-c99b-11e0-9572-0800200c9a66",
+        "display": "Unknown",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounterrole/a0b03050-c99b-11e0-9572-0800200c9a66"
+          }
+        ]
+      },
+      "voided": false,
+      "links": [
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c/encounterprovider/5536b28d-124b-436c-bb3f-e2fd4938c009?v=full"
+        }
+      ],
+      "resourceVersion": "1.9"
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/c0052073-0526-44fa-a57b-946a4e64a07c"
+    }
+  ],
+  "resourceVersion": "1.9"
+}

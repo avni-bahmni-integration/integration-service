@@ -31,9 +31,6 @@ public class BahmniToAvniService {
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
 
-    @Autowired
-    private AvniConfig avniConfig;
-
     private static final Logger logger = Logger.getLogger(BahmniToAvniService.class);
 
     public void migrateForms() throws SQLException {
@@ -64,7 +61,7 @@ public class BahmniToAvniService {
 
     public void migrateConcepts() throws SQLException {
         List<OpenMRSConcept> concepts = openMRSRepository.getConcepts();
-        avniRepository.saveConcepts(concepts);
+        avniRepository.saveConcepts(concepts, implementationConfigurationRepository.getConstants());
         for (OpenMRSConcept openMRSConcept : concepts) {
             ObsDataType dataTypeHint = openMRSConcept.getAvniDataType().equals(ObsDataType.Coded.name()) ? ObsDataType.Coded : null;
             mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);

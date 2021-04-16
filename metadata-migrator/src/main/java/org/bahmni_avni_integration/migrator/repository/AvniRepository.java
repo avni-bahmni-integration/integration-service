@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.migrator.repository;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.domain.Names;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.integration_data.ConnectionFactory;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -276,7 +278,7 @@ public class AvniRepository {
         logger.info("Saved person attributes as concepts to Avni");
     }
 
-    public void saveConcepts(List<OpenMRSConcept> concepts) throws SQLException {
+    public void saveConcepts(List<OpenMRSConcept> concepts, Map<String, Object> constants) throws SQLException {
         try (Connection connection = connectionFactory.getAvniConnection()) {
             int commonAuditId = 0;
             if (useCommonAudit) {
@@ -295,7 +297,7 @@ public class AvniRepository {
 
                 if (concept.getAvniDataType().equals(ObsDataType.Coded.name())) {
                     int i = 1;
-                    for (OpenMRSConcept answerConcept : concept.getAnswers()) {
+                    for (OpenMRSConcept answerConcept : concept.getAvniAnswers(constants)) {
                         if (useCommonAudit) {
                             avniConceptRepository.addConceptToBatchWithCommonAudit(answerConcept.getAvniDataType(), answerConcept.getAvniName(), commonAuditId);
                             avniConceptRepository.addConceptAnswerToBatchWithCommonAudit(concept.getAvniName(), answerConcept.getAvniName(), i++, commonAuditId);
