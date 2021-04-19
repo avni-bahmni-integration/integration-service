@@ -1,22 +1,45 @@
 package org.bahmni_avni_integration.contract.avni;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bahmni_avni_integration.util.Empty;
 
 import java.util.Date;
 
 public class ProgramEncounter extends AvniBaseContract {
+
+    @JsonIgnore
     public String getSubjectId() {
         return (String) get("Subject ID");
     }
+
+    @JsonIgnore
     public String getSubjectType() {
         return (String) get("Subject type");
     }
+
+    @JsonIgnore
     public String getProgram() {
         return (String) get("Program");
     }
 
+    @JsonIgnore
     public String getEncounterType() {
         return (String) get("Encounter type");
+    }
+
+    @JsonIgnore
+    public String getEncounterDateTime() {
+        return (String) get("Encounter datetime");
+    }
+
+    @JsonIgnore
+    public String getEarliestScheduledDate() {
+        return (String) get("Earliest scheduled date");
+    }
+
+    @JsonIgnore
+    public boolean isCompleted() {
+        return getEncounterDateTime() != null;
     }
 
     public void setEncounterDateTime(Date date) {

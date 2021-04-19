@@ -54,6 +54,10 @@ public class ProgramEncounterService {
         return savedEncounter;
     }
 
+    public boolean shouldFilterEncounter(ProgramEncounter programEncounter) {
+        return !programEncounter.isCompleted();
+    }
+
     public void processPatientNotFound(ProgramEncounter programEncounter) {
         errorService.errorOccurred(programEncounter, ErrorType.NoPatientWithId);
     }

@@ -64,6 +64,12 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processProgramEncounter(Constants constants, Predicate<ProgramEncounter> continueAfterOneRecord, ProgramEncounter programEncounter, SubjectToPatientMetaData subjectToPatientMetaData) {
         logger.debug(String.format("Processing avni program encounter %s", programEncounter.getUuid()));
+
+        if (programEncounterService.shouldFilterEncounter(programEncounter)) {
+            logger.warn(String.format("Program encounter should be filtered out: %s", programEncounter.getUuid()));
+            return !continueAfterOneRecord.test(programEncounter);
+        }
+
         var subject = avniSubjectRepository.getSubject(programEncounter.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
         Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter = programEncounterService.findCommunityEncounter(programEncounter, subject, constants, subjectToPatientMetaData);
@@ -83,8 +89,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
         entityStatusService.saveEntityStatus(programEncounter);
 
-        if (!continueAfterOneRecord.test(programEncounter)) return true;
-        return false;
+        return !continueAfterOneRecord.test(programEncounter);
     }
 
     public void processProgramEncounters(Constants constants) {
