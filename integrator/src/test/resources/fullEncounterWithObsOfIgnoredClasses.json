@@ -1,0 +1,658 @@
+{
+  "uuid": "cdbbf3b6-6242-45ff-a441-1879e05cc9cd",
+  "display": "LAB_RESULT 04/19/2016",
+  "encounterDatetime": "2016-04-19T09:05:46.000+0530",
+  "patient": {
+    "uuid": "0631f6fa-c7cd-477c-9a1d-717421048610",
+    "display": "TRI13014801 - AABCCDDEE FFGGHHII",
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/0631f6fa-c7cd-477c-9a1d-717421048610"
+      }
+    ]
+  },
+  "location": null,
+  "form": null,
+  "encounterType": {
+    "uuid": "82024e00-3f10-11e4-adec-0800271c1b75",
+    "display": "LAB_RESULT",
+    "name": "LAB_RESULT",
+    "description": "Lab Result encounter",
+    "retired": false,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/82024e00-3f10-11e4-adec-0800271c1b75"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/82024e00-3f10-11e4-adec-0800271c1b75?v=full"
+      }
+    ],
+    "resourceVersion": "1.8"
+  },
+  "obs": [
+    {
+      "uuid": "5ca198c0-9db4-4718-91a4-4c974e898939",
+      "display": "Biopsy: null",
+      "concept": {
+        "uuid": "a8900bd5-72c8-41f3-ba85-1ff6b003026d",
+        "display": "Biopsy",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/a8900bd5-72c8-41f3-ba85-1ff6b003026d"
+          }
+        ]
+      },
+      "person": {
+        "uuid": "0631f6fa-c7cd-477c-9a1d-717421048610",
+        "display": "TRI13014801 - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/0631f6fa-c7cd-477c-9a1d-717421048610"
+          }
+        ]
+      },
+      "obsDatetime": "2016-04-19T17:21:08.000+0530",
+      "accessionNumber": null,
+      "obsGroup": null,
+      "valueCodedName": null,
+      "groupMembers": [
+        {
+          "uuid": "628d5e4f-f2ff-4964-859f-6acc14726963",
+          "display": "Biopsy: null",
+          "concept": {
+            "uuid": "a8900bd5-72c8-41f3-ba85-1ff6b003026d",
+            "display": "Biopsy",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/a8900bd5-72c8-41f3-ba85-1ff6b003026d"
+              }
+            ]
+          },
+          "person": {
+            "uuid": "0631f6fa-c7cd-477c-9a1d-717421048610",
+            "display": "TRI13014801 - AABCCDDEE FFGGHHII",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/0631f6fa-c7cd-477c-9a1d-717421048610"
+              }
+            ]
+          },
+          "obsDatetime": "2016-04-19T17:21:08.000+0530",
+          "accessionNumber": null,
+          "obsGroup": {
+            "uuid": "5ca198c0-9db4-4718-91a4-4c974e898939",
+            "display": "Biopsy: null",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/5ca198c0-9db4-4718-91a4-4c974e898939"
+              }
+            ]
+          },
+          "valueCodedName": null,
+          "groupMembers": [
+            {
+              "uuid": "0e8d1952-e9e0-48ec-813f-68981a3080a3",
+              "display": "Biopsy: 93/16",
+              "concept": {
+                "uuid": "a8900bd5-72c8-41f3-ba85-1ff6b003026d",
+                "display": "Biopsy",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/a8900bd5-72c8-41f3-ba85-1ff6b003026d"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "0631f6fa-c7cd-477c-9a1d-717421048610",
+                "display": "TRI13014801 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/0631f6fa-c7cd-477c-9a1d-717421048610"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-19T17:21:08.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "628d5e4f-f2ff-4964-859f-6acc14726963",
+                "display": "Biopsy: null",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/628d5e4f-f2ff-4964-859f-6acc14726963"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "40558b10-3b08-4043-a5a3-484f7aa68744",
+                "display": "Biopsy",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/40558b10-3b08-4043-a5a3-484f7aa68744"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "cdbbf3b6-6242-45ff-a441-1879e05cc9cd",
+                "display": "LAB_RESULT 04/19/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/cdbbf3b6-6242-45ff-a441-1879e05cc9cd"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": "93/16",
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0e8d1952-e9e0-48ec-813f-68981a3080a3"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/0e8d1952-e9e0-48ec-813f-68981a3080a3?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            },
+            {
+              "uuid": "9f0ce0f5-3839-4f7f-a691-b682422c7028",
+              "display": "LAB_REPORT: 84eb03c6-fa75-4153-9443-71417c0fadb9_BOJAN.JPG",
+              "concept": {
+                "uuid": "bb5e4849-3f10-11e4-adec-0800271c1b75",
+                "display": "LAB_REPORT",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/bb5e4849-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "0631f6fa-c7cd-477c-9a1d-717421048610",
+                "display": "TRI13014801 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/0631f6fa-c7cd-477c-9a1d-717421048610"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-19T17:21:08.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "628d5e4f-f2ff-4964-859f-6acc14726963",
+                "display": "Biopsy: null",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/628d5e4f-f2ff-4964-859f-6acc14726963"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "40558b10-3b08-4043-a5a3-484f7aa68744",
+                "display": "Biopsy",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/40558b10-3b08-4043-a5a3-484f7aa68744"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "cdbbf3b6-6242-45ff-a441-1879e05cc9cd",
+                "display": "LAB_RESULT 04/19/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/cdbbf3b6-6242-45ff-a441-1879e05cc9cd"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": "84eb03c6-fa75-4153-9443-71417c0fadb9_BOJAN.JPG",
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/9f0ce0f5-3839-4f7f-a691-b682422c7028"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/9f0ce0f5-3839-4f7f-a691-b682422c7028?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            },
+            {
+              "uuid": "c07dae77-3e77-468e-a3fe-9587bded97ed",
+              "display": "REFERRED_OUT: true",
+              "concept": {
+                "uuid": "821eb0cd-3f10-11e4-adec-0800271c1b75",
+                "display": "REFERRED_OUT",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/821eb0cd-3f10-11e4-adec-0800271c1b75"
+                  }
+                ]
+              },
+              "person": {
+                "uuid": "0631f6fa-c7cd-477c-9a1d-717421048610",
+                "display": "TRI13014801 - AABCCDDEE FFGGHHII",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/0631f6fa-c7cd-477c-9a1d-717421048610"
+                  }
+                ]
+              },
+              "obsDatetime": "2016-04-19T17:21:08.000+0530",
+              "accessionNumber": null,
+              "obsGroup": {
+                "uuid": "628d5e4f-f2ff-4964-859f-6acc14726963",
+                "display": "Biopsy: null",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/628d5e4f-f2ff-4964-859f-6acc14726963"
+                  }
+                ]
+              },
+              "valueCodedName": null,
+              "groupMembers": null,
+              "comment": null,
+              "location": null,
+              "order": {
+                "uuid": "40558b10-3b08-4043-a5a3-484f7aa68744",
+                "display": "Biopsy",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/40558b10-3b08-4043-a5a3-484f7aa68744"
+                  }
+                ],
+                "type": "order"
+              },
+              "encounter": {
+                "uuid": "cdbbf3b6-6242-45ff-a441-1879e05cc9cd",
+                "display": "LAB_RESULT 04/19/2016",
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/cdbbf3b6-6242-45ff-a441-1879e05cc9cd"
+                  }
+                ]
+              },
+              "voided": false,
+              "value": {
+                "uuid": "78763e68-104e-465d-8ce3-35f9edfb083d",
+                "display": "True",
+                "name": {
+                  "display": "True",
+                  "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                  "name": "True",
+                  "locale": "en",
+                  "localePreferred": true,
+                  "conceptNameType": "FULLY_SPECIFIED",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                    },
+                    {
+                      "rel": "full",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39?v=full"
+                    }
+                  ],
+                  "resourceVersion": "1.9"
+                },
+                "datatype": {
+                  "uuid": "8d4a4c94-c2cc-11de-8d13-0010c6dffd0f",
+                  "display": "N/A",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptdatatype/8d4a4c94-c2cc-11de-8d13-0010c6dffd0f"
+                    }
+                  ]
+                },
+                "conceptClass": {
+                  "uuid": "8d492774-c2cc-11de-8d13-0010c6dffd0f",
+                  "display": "Misc",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/conceptclass/8d492774-c2cc-11de-8d13-0010c6dffd0f"
+                    }
+                  ]
+                },
+                "set": false,
+                "version": null,
+                "retired": false,
+                "names": [
+                  {
+                    "uuid": "9f8ee888-f74d-4291-adaa-addc610c3b39",
+                    "display": "True",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/9f8ee888-f74d-4291-adaa-addc610c3b39"
+                      }
+                    ]
+                  },
+                  {
+                    "uuid": "03eacf79-cfe9-4f82-9267-0e0c0a694a44",
+                    "display": "Yes",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d/name/03eacf79-cfe9-4f82-9267-0e0c0a694a44"
+                      }
+                    ]
+                  }
+                ],
+                "descriptions": [],
+                "mappings": [],
+                "answers": [],
+                "setMembers": [],
+                "attributes": [],
+                "links": [
+                  {
+                    "rel": "self",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d"
+                  },
+                  {
+                    "rel": "full",
+                    "uri": "http://143.110.188.91/openmrs/ws/rest/v1/concept/78763e68-104e-465d-8ce3-35f9edfb083d?v=full"
+                  }
+                ],
+                "resourceVersion": "2.0"
+              },
+              "valueModifier": null,
+              "formFieldPath": null,
+              "formFieldNamespace": null,
+              "links": [
+                {
+                  "rel": "self",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/c07dae77-3e77-468e-a3fe-9587bded97ed"
+                },
+                {
+                  "rel": "full",
+                  "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/c07dae77-3e77-468e-a3fe-9587bded97ed?v=full"
+                }
+              ],
+              "resourceVersion": "1.11"
+            }
+          ],
+          "comment": null,
+          "location": null,
+          "order": {
+            "uuid": "40558b10-3b08-4043-a5a3-484f7aa68744",
+            "display": "Biopsy",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/40558b10-3b08-4043-a5a3-484f7aa68744"
+              }
+            ],
+            "type": "order"
+          },
+          "encounter": {
+            "uuid": "cdbbf3b6-6242-45ff-a441-1879e05cc9cd",
+            "display": "LAB_RESULT 04/19/2016",
+            "links": [
+              {
+                "rel": "self",
+                "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/cdbbf3b6-6242-45ff-a441-1879e05cc9cd"
+              }
+            ]
+          },
+          "voided": false,
+          "value": null,
+          "valueModifier": null,
+          "formFieldPath": null,
+          "formFieldNamespace": null,
+          "links": [
+            {
+              "rel": "self",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/628d5e4f-f2ff-4964-859f-6acc14726963"
+            },
+            {
+              "rel": "full",
+              "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/628d5e4f-f2ff-4964-859f-6acc14726963?v=full"
+            }
+          ],
+          "resourceVersion": "1.11"
+        }
+      ],
+      "comment": null,
+      "location": null,
+      "order": {
+        "uuid": "40558b10-3b08-4043-a5a3-484f7aa68744",
+        "display": "Biopsy",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/40558b10-3b08-4043-a5a3-484f7aa68744"
+          }
+        ],
+        "type": "order"
+      },
+      "encounter": {
+        "uuid": "cdbbf3b6-6242-45ff-a441-1879e05cc9cd",
+        "display": "LAB_RESULT 04/19/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/cdbbf3b6-6242-45ff-a441-1879e05cc9cd"
+          }
+        ]
+      },
+      "voided": false,
+      "value": null,
+      "valueModifier": null,
+      "formFieldPath": null,
+      "formFieldNamespace": null,
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/5ca198c0-9db4-4718-91a4-4c974e898939"
+        },
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/obs/5ca198c0-9db4-4718-91a4-4c974e898939?v=full"
+        }
+      ],
+      "resourceVersion": "1.11"
+    }
+  ],
+  "orders": [],
+  "voided": false,
+  "auditInfo": {
+    "creator": {
+      "uuid": "A4F30A1B-5EB9-11DF-A648-37A07F9C90FB",
+      "display": "daemon",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/user/A4F30A1B-5EB9-11DF-A648-37A07F9C90FB"
+        }
+      ]
+    },
+    "dateCreated": "2016-04-19T17:21:16.000+0530",
+    "changedBy": null,
+    "dateChanged": null
+  },
+  "visit": {
+    "uuid": "c6edfc9f-d24f-43e8-912e-37bc94f553ee",
+    "display": "Followup @ Registration Desk - 04/19/2016 07:44 AM",
+    "patient": {
+      "uuid": "0631f6fa-c7cd-477c-9a1d-717421048610",
+      "display": "TRI13014801 - AABCCDDEE FFGGHHII",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/0631f6fa-c7cd-477c-9a1d-717421048610"
+        }
+      ]
+    },
+    "visitType": {
+      "uuid": "8c719d2e-a97d-48c1-a595-bacc33f9bbbe",
+      "display": "Followup",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visittype/8c719d2e-a97d-48c1-a595-bacc33f9bbbe"
+        }
+      ]
+    },
+    "indication": null,
+    "location": {
+      "uuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
+      "display": "Registration Desk",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c5854fd7-3f12-11e4-adec-0800271c1b75"
+        }
+      ]
+    },
+    "startDatetime": "2016-04-19T07:44:55.000+0530",
+    "stopDatetime": "2016-04-19T09:05:46.000+0530",
+    "encounters": [
+      {
+        "uuid": "cdbbf3b6-6242-45ff-a441-1879e05cc9cd",
+        "display": "LAB_RESULT 04/19/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/cdbbf3b6-6242-45ff-a441-1879e05cc9cd"
+          }
+        ]
+      },
+      {
+        "uuid": "dd2ae67f-6d1d-48c0-9453-27e75bad8d5c",
+        "display": "Consultation 04/19/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/dd2ae67f-6d1d-48c0-9453-27e75bad8d5c"
+          }
+        ]
+      },
+      {
+        "uuid": "8931bdf5-3ee1-479c-86f8-0d9c5e2e046e",
+        "display": "Consultation 04/19/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/8931bdf5-3ee1-479c-86f8-0d9c5e2e046e"
+          }
+        ]
+      },
+      {
+        "uuid": "156bfc90-563a-4044-b3b8-f52ec0e31e1b",
+        "display": "REG 04/19/2016",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/156bfc90-563a-4044-b3b8-f52ec0e31e1b"
+          }
+        ]
+      }
+    ],
+    "attributes": [
+      {
+        "uuid": "badfa4e3-2f37-45df-a080-94fbb40c682c",
+        "display": "Visit Status: OPD",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/c6edfc9f-d24f-43e8-912e-37bc94f553ee/attribute/badfa4e3-2f37-45df-a080-94fbb40c682c"
+          }
+        ]
+      }
+    ],
+    "voided": false,
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/c6edfc9f-d24f-43e8-912e-37bc94f553ee"
+      },
+      {
+        "rel": "full",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/c6edfc9f-d24f-43e8-912e-37bc94f553ee?v=full"
+      }
+    ],
+    "resourceVersion": "1.9"
+  },
+  "encounterProviders": [
+    {
+      "uuid": "a18d4951-1151-45ea-a07d-4b493fd59d27",
+      "provider": {
+        "uuid": "7d162c29-3f12-11e4-adec-0800271c1b75",
+        "display": "LABSYSTEM - AABCCDDEE FFGGHHII",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/provider/7d162c29-3f12-11e4-adec-0800271c1b75"
+          }
+        ]
+      },
+      "encounterRole": {
+        "uuid": "a0b03050-c99b-11e0-9572-0800200c9a66",
+        "display": "Unknown",
+        "links": [
+          {
+            "rel": "self",
+            "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounterrole/a0b03050-c99b-11e0-9572-0800200c9a66"
+          }
+        ]
+      },
+      "voided": false,
+      "links": [
+        {
+          "rel": "full",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/cdbbf3b6-6242-45ff-a441-1879e05cc9cd/encounterprovider/a18d4951-1151-45ea-a07d-4b493fd59d27?v=full"
+        }
+      ],
+      "resourceVersion": "1.9"
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/cdbbf3b6-6242-45ff-a441-1879e05cc9cd"
+    }
+  ],
+  "resourceVersion": "1.9"
+}

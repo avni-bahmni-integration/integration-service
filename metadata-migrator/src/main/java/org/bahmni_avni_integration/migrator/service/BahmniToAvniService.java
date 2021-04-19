@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.migrator.service;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.config.AvniConfig;
+import org.bahmni_avni_integration.integration_data.repository.IgnoredBahmniConceptRepository;
 import org.bahmni_avni_integration.migrator.domain.*;
 import org.bahmni_avni_integration.migrator.repository.AvniRepository;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
@@ -30,6 +31,9 @@ public class BahmniToAvniService {
 
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
+
+    @Autowired
+    private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
 
     private static final Logger logger = Logger.getLogger(BahmniToAvniService.class);
 
@@ -66,6 +70,9 @@ public class BahmniToAvniService {
             ObsDataType dataTypeHint = openMRSConcept.getAvniDataType().equals(ObsDataType.Coded.name()) ? ObsDataType.Coded : null;
             mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);
         }
+        List<String> ignoredConcepts = implementationConfigurationRepository.getIgnoredConcepts();
+        for (String ignoredConcept : ignoredConcepts)
+            ignoredBahmniConceptRepository.save(new IgnoredBahmniConcept(ignoredConcept));
         logger.info("Saved mapping for concepts");
     }
 

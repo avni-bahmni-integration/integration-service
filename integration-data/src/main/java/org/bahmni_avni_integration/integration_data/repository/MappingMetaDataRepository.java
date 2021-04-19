@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.integration_data.repository;
 
 import org.bahmni_avni_integration.integration_data.domain.*;
+import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,7 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     MappingMetaData findByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
 
     MappingMetaData findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue);
+
     MappingMetaData findByMappingGroupAndMappingTypeAndAvniValue(MappingGroup mappingGroup, MappingType mappingType, String avniValue);
 
     List<MappingMetaData> findAllByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
@@ -18,6 +20,7 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     List<MappingMetaData> findAllByMappingGroupAndMappingTypeIn(MappingGroup mappingGroup, List<MappingType> mappingTypes);
 
     List<MappingMetaData> findAllByMappingType(MappingType mappingType);
+
     MappingMetaData findByMappingType(MappingType mappingType);
 
     default MappingMetaDataCollection findAll(MappingGroup mappingGroup, List<MappingType> mappingTypes) {
@@ -50,10 +53,10 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
         return mapping.getBahmniValue();
     }
 
-    default MappingMetaData getConceptMappingByOpenMRSConcept(String openMRSConceptUuid) {
+    default MappingMetaData getConceptMappingByOpenMRSConcept(String openMRSConceptUuid, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, boolean isIgnorable) {
         MappingMetaData mappingMetaData = findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, openMRSConceptUuid);
-        if (mappingMetaData == null)
-            throw new RuntimeException(String.format("No mapping found for openmrs concept with uuid = %s", openMRSConceptUuid));
+        if (mappingMetaData == null && isIgnorable && !bahmniEncounterToAvniEncounterMetaData.isIgnoredInBahmni(openMRSConceptUuid))
+            throw new RuntimeException(String.format("No mapping found for openmrs concept with uuid = %s and is also not ignored", openMRSConceptUuid));
         return mappingMetaData;
     }
 

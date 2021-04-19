@@ -1,7 +1,9 @@
 package org.bahmni_avni_integration.integration_data.internal;
 
+import org.bahmni_avni_integration.integration_data.domain.IgnoredBahmniConcept;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaData {
@@ -11,6 +13,7 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
     private MappingMetaData drugOrderEncounterTypeMapping;
     private MappingMetaData drugOrderConceptMapping;
     private List<MappingMetaData> programMappings;
+    private List<IgnoredBahmniConcept> ignoredBahmniConcepts;
 
     public String getAvniMappedName(String openmrsEncounterTypeUuid) {
         MappingMetaData mapping = getMappingMetaData(openmrsEncounterTypeUuid);
@@ -74,5 +77,13 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
         MappingMetaData programMapping = this.programMappings.stream().filter(mappingMetaData -> mappingMetaData.getBahmniValue().equals(formConceptSetUuid)).findFirst().orElse(null);
         if (programMapping == null) return null;
         return programMapping.getAvniValue();
+    }
+
+    public void setIgnoredConcepts(List<IgnoredBahmniConcept> ignoredBahmniConcepts) {
+        this.ignoredBahmniConcepts = ignoredBahmniConcepts;
+    }
+
+    public boolean isIgnoredInBahmni(String conceptUuid) {
+        return ignoredBahmniConcepts.stream().filter(ignoredBahmniConcept -> ignoredBahmniConcept.getConceptUuid().equals(conceptUuid)).findFirst().orElse(null) != null;
     }
 }

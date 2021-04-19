@@ -1,0 +1,1 @@
+alter table ignored_bahmni_concept ADD CONSTRAINT ignored_bahmni_concept_concept_uuid unique(concept_uuid);

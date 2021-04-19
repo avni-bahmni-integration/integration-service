@@ -27,4 +27,8 @@ public class ImplementationConfigurationRepository {
     public StandardMappings getStandardMappings() {
         return new StandardMappings(ObjectJsonMapper.readValue(fileUtil.readConfigFile("integration/standard-mappings.json"),  new TypeReference<List<Map<String, String>>>(){}));
     }
+
+    public List<String> getIgnoredConcepts() {
+        return ObjectJsonMapper.readValue(fileUtil.readConfigFile("bahmni/ignored-concepts.json"),  new TypeReference<List<String>>(){});
+    }
 }

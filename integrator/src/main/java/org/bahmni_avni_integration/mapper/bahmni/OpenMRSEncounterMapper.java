@@ -63,9 +63,11 @@ public class OpenMRSEncounterMapper {
 
     private void addObservations(List<OpenMRSObservation> observations, AvniBaseContract avniBaseContract, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, String encounterUuid) {
         observations.forEach(openMRSObservation -> {
-            MappingMetaData conceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid());
+            MappingMetaData conceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid(), bahmniEncounterToAvniEncounterMetaData, true);
+            if (conceptMapping == null) return;
+
             if (ObsDataType.Coded.equals(conceptMapping.getDataTypeHint())) {
-                MappingMetaData answerConceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept((String) openMRSObservation.getValue());
+                MappingMetaData answerConceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept((String) openMRSObservation.getValue(), bahmniEncounterToAvniEncounterMetaData, false);
                 avniBaseContract.addObservation(conceptMapping.getAvniValue(), answerConceptMapping.getAvniValue());
             } else {
                 avniBaseContract.addObservation(conceptMapping.getAvniValue(), openMRSObservation.getValue());

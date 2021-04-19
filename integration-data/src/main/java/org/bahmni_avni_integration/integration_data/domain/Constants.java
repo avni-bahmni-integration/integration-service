@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Constants {
-    private final List<Constant> list = new ArrayList<>();;
+    private final List<Constant> list = new ArrayList<>();
 
     public Constants(Iterable<Constant> iterable) {
         iterable.forEach(list::add);

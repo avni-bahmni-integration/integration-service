@@ -1,7 +1,11 @@
 package org.bahmni_avni_integration.integration_data.domain;
 
 public enum ObsDataType {
-    Coded, Date, Numeric, Text, Boolean;
+    Coded, Date, Numeric, Text, Boolean, NA;
+
+    public static String BahmniNAType() {
+        return "N/A";
+    }
 
     public static ObsDataType parseAvniDataType(String dataType) {
         try {
@@ -9,9 +13,5 @@ public enum ObsDataType {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public static String getAvniNADataType() {
-        return "N/A";
     }
 }
