@@ -4,5 +4,6 @@ public enum AvniFormType {
     IndividualProfile,
     Encounter,
     ProgramEncounter,
-    ProgramEnrolment
+    ProgramEnrolment,
+    ProgramExit
 }

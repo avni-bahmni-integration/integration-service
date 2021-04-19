@@ -73,6 +73,43 @@ public class AvniToBahmniService {
                     NameMapping.fromAvniNameToBahmni(avniEncounterType),
                     encounterTypeUuid);
             mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEncounter,
+                    MappingType.CommunityProgramEncounter_EncounterType,
+                    encounterTypeUuid,
+                    avniEncounterType,
+                    "Encounter type in OpenMRS for encounter type in Avni",
+                    null));
+
+        } else if (form.getFormType().equals(ProgramEnrolment)) {
+            var openMrsEncounterTypeUuid = UUID.randomUUID().toString();
+            openMRSRepository.createEncounterType(connection,
+                    NameMapping.fromAvniNameToBahmni(String.format("%s Program Enrolment", form.getProgram())),
+                    openMrsEncounterTypeUuid);
+            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEnrolment,
+                    MappingType.CommunityEnrolment_EncounterType,
+                    openMrsEncounterTypeUuid,
+                    form.getProgram(),
+                    "Encounter type in OpenMRS for program enrolment data in Avni",
+                    null));
+
+        } else if (form.getFormType().equals(ProgramExit)) {
+            var openMrsEncounterTypeUuid = UUID.randomUUID().toString();
+            openMRSRepository.createEncounterType(connection,
+                    NameMapping.fromAvniNameToBahmni(String.format("%s Program Exit", form.getProgram())),
+                    openMrsEncounterTypeUuid);
+            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEnrolment,
+                    MappingType.CommunityEnrolmentExit_EncounterType,
+                    openMrsEncounterTypeUuid,
+                    form.getProgram(),
+                    "Encounter type in OpenMRS for program exit data in Avni",
+                    null));
+
+        } else if (form.getFormType().equals(Encounter)) {
+            var encounterTypeUuid = UUID.randomUUID().toString();
+            String avniEncounterType = form.getEncounterType();
+            openMRSRepository.createEncounterType(connection,
+                    NameMapping.fromAvniNameToBahmni(avniEncounterType),
+                    encounterTypeUuid);
+            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.GeneralEncounter,
                     MappingType.CommunityEncounter_EncounterType,
                     encounterTypeUuid,
                     avniEncounterType,
@@ -229,25 +266,6 @@ public class AvniToBahmniService {
                 entry("conceptName", "Gender"),
                 entry("dataType", "Text")));
         return mappings;
-    }
-
-    public void migratePrograms() throws SQLException {
-        List<String> programs = avniRepository.getPrograms();
-        try (var connection = connectionFactory.getOpenMRSDbConnection()) {
-            for (String avniProgramName : programs) {
-                var openMrsEncounterTypeUuid = UUID.randomUUID().toString();
-                openMRSRepository.createEncounterType(connection, String.format("%s Community Enrolment", avniProgramName), openMrsEncounterTypeUuid);
-                mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEnrolment,
-                        MappingType.CommunityEnrolment_EncounterType,
-                        openMrsEncounterTypeUuid,
-                        avniProgramName,
-                        "Encounter type in OpenMRS for community enrolment data in Avni",
-                        null));
-            }
-        } catch (SQLException sqlException) {
-            logger.error("Could not migrate programs", sqlException);
-            throw sqlException;
-        }
     }
 
     private MappingMetaData mappingMetadata(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, String about, ObsDataType obsDataType) {

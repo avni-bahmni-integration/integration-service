@@ -21,7 +21,7 @@ public class ProgramEncounterMapper {
 
     public OpenMRSEncounter mapEncounter(ProgramEncounter programEncounter, String patientUuid, Constants constants) {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
-                MappingType.CommunityEncounter_EncounterType,
+                MappingType.CommunityProgramEncounter_EncounterType,
                 avniValueForEncounterType(programEncounter.getProgram(), programEncounter.getEncounterType()));
         var openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(new Date()));
@@ -62,7 +62,7 @@ public class ProgramEncounterMapper {
 
     public OpenMRSEncounter mapProgramEncounterToExistingEncounter(OpenMRSFullEncounter existingEncounter, ProgramEncounter programEncounter, Constants constants) {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
-                MappingType.CommunityEncounter_EncounterType,
+                MappingType.CommunityProgramEncounter_EncounterType,
                 avniValueForEncounterType(programEncounter.getProgram(), programEncounter.getEncounterType()));
 
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
