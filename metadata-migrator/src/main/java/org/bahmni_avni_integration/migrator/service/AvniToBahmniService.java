@@ -53,15 +53,17 @@ public class AvniToBahmniService {
     private void createForms(List<AvniForm> forms, Connection connection) throws SQLException {
         for (var form : forms) {
             String bahmniFormConceptUuid = UUID.randomUUID().toString();
-            var conceptResult = openMRSRepository.createConcept(connection, bahmniFormConceptUuid, form.getName(), "N/A", "Misc", true);
-            int formConceptId = conceptResult.conceptId();
-            logger.debug("Form: %s Concept Id: %d".formatted(form.getName(), formConceptId));
-            saveFormMapping(form, bahmniFormConceptUuid);
-            createEncounterTypeAndMapping(connection, form);
-            var formElementGroups = form.getFormElementGroups();
-            for (AvniFormElementGroup formElementGroup : formElementGroups) {
-                createQuestions(connection, formElementGroup, formConceptId);
+            var conceptResult = openMRSRepository.createSetConcept(connection, bahmniFormConceptUuid, form.getName());
+            if (!conceptResult.conceptExists()) {
+                int formConceptId = conceptResult.conceptId();
+                logger.debug("Form: %s Concept Id: %d".formatted(form.getName(), formConceptId));
+                saveFormMapping(form, bahmniFormConceptUuid);
+                var formElementGroups = form.getFormElementGroups();
+                for (AvniFormElementGroup formElementGroup : formElementGroups) {
+                    createQuestions(connection, formElementGroup, formConceptId);
+                }
             }
+            createEncounterTypeAndMapping(connection, form);
         }
     }
 
@@ -127,12 +129,14 @@ public class AvniToBahmniService {
             var bahmniQuestionConceptUuid = UUID.randomUUID().toString();
             var conceptResult = openMRSRepository.createConcept(connection,
                     bahmniQuestionConceptUuid, concept.getName(), concept.getDataType(), "Misc", false);
-            var questionConceptId = conceptResult.conceptId();
-            openMRSRepository.addToConceptSet(connection, questionConceptId, formConceptId, i);
-            saveObsMapping(concept.getName(), bahmniQuestionConceptUuid, ObsDataType.parseAvniDataType(concept.getDataType()));
+            if (!conceptResult.conceptExists()) {
+                var questionConceptId = conceptResult.conceptId();
+                openMRSRepository.addToConceptSet(connection, questionConceptId, formConceptId, i);
+                saveObsMapping(concept.getName(), bahmniQuestionConceptUuid, ObsDataType.parseAvniDataType(concept.getDataType()));
 
-            if (Objects.equals("Coded", formElement.getConcept().getDataType())) {
-                createAnswers(connection, concept, questionConceptId);
+                if (formElement.isCoded()) {
+                    createAnswers(connection, concept, questionConceptId);
+                }
             }
         }
     }
@@ -155,7 +159,38 @@ public class AvniToBahmniService {
     }
 
     private void saveFormMapping(AvniForm avniForm, String bahmniValue) {
-        mappingMetaDataRepository.saveMapping(avniForm.getMappingGroup(), avniForm.getMappingType(), bahmniValue, avniForm.getAvniValueForMapping());
+        mappingMetaDataRepository.saveMapping(getMappingGroup(avniForm), getMappingType(avniForm), bahmniValue, getAvniValueForMapping(avniForm));
+    }
+
+    private MappingGroup getMappingGroup(AvniForm avniForm) {
+        var formType = avniForm.getFormType();
+        return switch (formType) {
+            case IndividualProfile -> MappingGroup.PatientSubject;
+            case Encounter -> MappingGroup.GeneralEncounter;
+            case ProgramEncounter -> MappingGroup.ProgramEncounter;
+            case ProgramEnrolment, ProgramExit -> MappingGroup.ProgramEnrolment;
+        };
+    }
+
+    private MappingType getMappingType(AvniForm avniForm) {
+        var formType = avniForm.getFormType();
+        return switch (formType) {
+            case IndividualProfile -> MappingType.CommunityRegistration_BahmniForm;
+            case Encounter -> MappingType.CommunityEncounter_BahmniForm;
+            case ProgramEncounter -> MappingType.CommunityProgramEncounter_BahmniForm;
+            case ProgramEnrolment -> MappingType.CommunityEnrolment_BahmniForm;
+            case ProgramExit -> MappingType.CommunityEnrolmentExit_BahmniForm;
+        };
+    }
+
+    private String getAvniValueForMapping(AvniForm avniForm) {
+        var formType = avniForm.getFormType();
+        return switch (formType) {
+            case IndividualProfile -> null;
+            case ProgramEncounter -> String.format("%s-%s", avniForm.getProgram(), avniForm.getEncounterType());
+            case Encounter -> avniForm.getEncounterType();
+            case ProgramEnrolment, ProgramExit -> avniForm.getProgram();
+        };
     }
 
     private void createAnswers(Connection connection, AvniConcept concept, int questionConceptId) throws SQLException {
@@ -166,6 +201,7 @@ public class AvniToBahmniService {
             var conceptResult = openMRSRepository.createConcept(connection, bahmniAnswerConceptUuid, answerConcept.getName(), "N/A", "Misc", false);
             int answerConceptId = conceptResult.conceptId();
             openMRSRepository.createConceptAnswer(connection, questionConceptId, answerConceptId, i);
+
             saveObsMapping(answerConcept.getName(), bahmniAnswerConceptUuid);
         }
     }

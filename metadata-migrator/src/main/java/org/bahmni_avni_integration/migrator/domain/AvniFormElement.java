@@ -8,6 +8,10 @@ public final class AvniFormElement {
         return concept;
     }
 
+    public boolean isCoded() {
+        return concept.isCoded();
+    }
+
     public void setConcept(AvniConcept avniConcept) {
         this.concept = avniConcept;
     }

@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.bahmni_avni_integration.migrator.domain.AvniFormType.ProgramExit;
 
 @Component
 public class AvniRepository {
@@ -149,7 +152,7 @@ public class AvniRepository {
 
     public List<AvniForm> getForms() throws SQLException {
         try (Connection connection = connectionFactory.getAvniConnection()) {
-            return fetchForms(connection);
+            return fetchForms(connection).stream().filter(form -> form.getFormType().equals(ProgramExit)).collect(Collectors.toList());
         }
     }
 
@@ -165,7 +168,7 @@ public class AvniRepository {
                 where form.organisation_id in (select id from organisation)
                  and form.name not ilike '% (Hospital)'
                  and form.name <> ?
-                 and form_type IN (?, ?, ?, ?)
+                 and form_type IN (?, ?, ?, ?, ?)
                  and form.is_voided = false
                 """;
         List<AvniForm> forms = new ArrayList<>();
@@ -175,6 +178,7 @@ public class AvniRepository {
             formPS.setString(3, AvniFormType.ProgramEnrolment.name());
             formPS.setString(4, AvniFormType.ProgramEncounter.name());
             formPS.setString(5, AvniFormType.Encounter.name());
+            formPS.setString(6, AvniFormType.ProgramExit.name());
             ResultSet formResult = formPS.executeQuery();
             while (formResult.next()) {
                 AvniForm form = new AvniForm();
@@ -237,7 +241,7 @@ public class AvniRepository {
             concept.setDataType(conceptResult.getString("data_type"));
         }
 
-        if (Objects.equals(concept.getDataType(), "Coded")) {
+        if (concept.isCoded()) {
             concept.setAnswerConcepts(fetchAnswerConcepts(connection, conceptId));
         }
 

@@ -70,30 +70,4 @@ public final class AvniForm {
         this.subjectType = subjectType;
     }
 
-    public String getAvniValueForMapping() {
-        return switch (formType) {
-            case IndividualProfile -> null;
-            case ProgramEncounter -> String.format("%s-%s", program, encounterType);
-            case Encounter -> encounterType;
-            case ProgramEnrolment -> program;
-        };
-    }
-
-    public MappingType getMappingType() {
-        return switch (formType) {
-            case IndividualProfile -> MappingType.CommunityRegistration_BahmniForm;
-            case Encounter -> MappingType.CommunityEncounter_BahmniForm;
-            case ProgramEncounter -> MappingType.CommunityProgramEncounter_BahmniForm;
-            case ProgramEnrolment -> MappingType.CommunityEnrolment_BahmniForm;
-        };
-    }
-
-    public MappingGroup getMappingGroup() {
-        return switch (formType) {
-            case IndividualProfile -> MappingGroup.PatientSubject;
-            case Encounter -> MappingGroup.GeneralEncounter;
-            case ProgramEncounter -> MappingGroup.ProgramEncounter;
-            case ProgramEnrolment -> MappingGroup.ProgramEnrolment;
-        };
-    }
 }

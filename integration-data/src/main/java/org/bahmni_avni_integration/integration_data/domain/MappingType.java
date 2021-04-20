@@ -18,6 +18,7 @@ public enum MappingType {
     BahmniForm_CommunityProgram,
     CommunityRegistration_BahmniForm,
     CommunityEnrolment_BahmniForm,
+    CommunityEnrolmentExit_BahmniForm,
     CommunityProgramEncounter_BahmniForm,
     CommunityEncounter_BahmniForm
 }

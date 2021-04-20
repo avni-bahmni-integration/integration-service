@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.migrator.domain;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class AvniConcept {
     private long id;
@@ -38,5 +39,9 @@ public final class AvniConcept {
 
     public void setAnswerConcepts(List<AvniConcept> answerConcepts) {
         this.answerConcepts = answerConcepts;
+    }
+
+    public boolean isCoded() {
+        return Objects.equals(dataType, "Coded");
     }
 }
