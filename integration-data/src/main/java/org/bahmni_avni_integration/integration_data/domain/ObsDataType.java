@@ -1,11 +1,14 @@
 package org.bahmni_avni_integration.integration_data.domain;
 
-public enum ObsDataType {
-    Coded, Date, Numeric, Text, Boolean, NA;
+import java.util.Map;
 
-    public static String BahmniNAType() {
-        return "N/A";
-    }
+public enum ObsDataType {
+    Coded, Date, Numeric, Text, Boolean, NA, DateTime;
+    private static final Map<String, ObsDataType> bahmniToAvniExceptionsMap = Map.of(
+            "N/A", NA,
+            "Datetime", DateTime,
+            "Boolean", Coded
+    );
 
     public static ObsDataType parseAvniDataType(String dataType) {
         try {
@@ -13,5 +16,9 @@ public enum ObsDataType {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static ObsDataType getAvniDataType(String bahmniDataType) {
+        return bahmniToAvniExceptionsMap.containsKey(bahmniDataType) ? bahmniToAvniExceptionsMap.get(bahmniDataType) : ObsDataType.valueOf(bahmniDataType);
     }
 }

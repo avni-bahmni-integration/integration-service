@@ -64,6 +64,8 @@ dependencies {
     compile "commons-lang:commons-lang:2.6"
 
     compile "org.javatuples:javatuples:1.2"
+
+    implementation 'com.bugsnag:bugsnag-spring:3.+'
 }
 
 sourceSets {

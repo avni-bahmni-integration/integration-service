@@ -65,9 +65,7 @@ public class OpenMRSConcept implements OpenMRSTerminology {
     }
 
     public String getAvniDataType() {
-        if (dataType.equals(ObsDataType.Boolean.name())) return ObsDataType.Coded.name();
-        else if (dataType.equals(ObsDataType.BahmniNAType())) return ObsDataType.NA.name();
-        return dataType;
+        return ObsDataType.getAvniDataType(dataType).name();
     }
 
     @Override

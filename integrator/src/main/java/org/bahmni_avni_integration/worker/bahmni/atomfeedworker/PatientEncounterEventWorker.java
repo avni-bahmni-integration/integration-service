@@ -113,7 +113,8 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
 
     private void processProgramEncounter(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {
         ProgramEncounter existingEncounter = programEncounterService.getProgramEncounter(splitEncounter, metaData);
-        Enrolment enrolment = avniEnrolmentService.getMatchingEnrolment(avniPatient.getSubjectExternalId(), splitEncounter, metaData);
+        Enrolment enrolment = avniPatient == null ? null : avniEnrolmentService.getMatchingEnrolment(avniPatient.getSubjectExternalId(), splitEncounter, metaData);
+
         if (existingEncounter != null && avniPatient != null) {
             programEncounterService.update(splitEncounter, existingEncounter, metaData, enrolment);
             logger.info("Updated program encounter");
