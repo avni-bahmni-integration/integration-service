@@ -56,7 +56,7 @@ public class AvniToBahmniService {
             var conceptResult = openMRSRepository.createSetConcept(connection, bahmniFormConceptUuid, getConceptSetName(form));
             if (!conceptResult.conceptExists()) {
                 int formConceptId = conceptResult.conceptId();
-                logger.debug("Form: %s Concept Id: %d".formatted(form.getName(), formConceptId));
+                logger.debug("Form: %s Concept Id: %d".formatted(getConceptSetName(form), formConceptId));
                 saveFormMapping(form, bahmniFormConceptUuid);
                 var formElementGroups = form.getFormElementGroups();
                 for (AvniFormElementGroup formElementGroup : formElementGroups) {
@@ -129,14 +129,12 @@ public class AvniToBahmniService {
             var bahmniQuestionConceptUuid = UUID.randomUUID().toString();
             var conceptResult = openMRSRepository.createConcept(connection,
                     bahmniQuestionConceptUuid, concept.getName(), concept.getDataType(), "Misc", false);
-            if (!conceptResult.conceptExists()) {
-                var questionConceptId = conceptResult.conceptId();
-                openMRSRepository.addToConceptSet(connection, questionConceptId, formConceptId, i);
-                saveObsMapping(concept.getName(), bahmniQuestionConceptUuid, ObsDataType.parseAvniDataType(concept.getDataType()));
+            var questionConceptId = conceptResult.conceptId();
+            openMRSRepository.addToConceptSet(connection, questionConceptId, formConceptId, i);
+            saveObsMapping(concept.getName(), bahmniQuestionConceptUuid, ObsDataType.parseAvniDataType(concept.getDataType()));
 
-                if (formElement.isCoded()) {
-                    createAnswers(connection, concept, questionConceptId);
-                }
+            if (formElement.isCoded()) {
+                createAnswers(connection, concept, questionConceptId);
             }
         }
     }
