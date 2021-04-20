@@ -13,10 +13,7 @@ import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMet
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniEnrolmentRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
-import org.bahmni_avni_integration.service.EnrolmentService;
-import org.bahmni_avni_integration.service.EntityStatusService;
-import org.bahmni_avni_integration.service.MappingMetaDataService;
-import org.bahmni_avni_integration.service.PatientService;
+import org.bahmni_avni_integration.service.*;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.javatuples.Pair;
 import org.springframework.stereotype.Component;
@@ -32,18 +29,27 @@ public class EnrolmentWorker implements ErrorRecordWorker {
     private final EntityStatusService entityStatusService;
     private final EnrolmentService enrolmentService;
     private final PatientService patientService;
+    private final ErrorService errorService;
 
     private static Logger logger = Logger.getLogger(EnrolmentWorker.class);
     private final AvniSubjectRepository avniSubjectRepository;
     private final MappingMetaDataService mappingMetaDataService;
 
-    public EnrolmentWorker(AvniEntityStatusRepository avniEntityStatusRepository, MappingMetaDataService mappingMetaDataService, AvniEnrolmentRepository avniEnrolmentRepository, EntityStatusService entityStatusService, EnrolmentService enrolmentService, PatientService patientService, AvniSubjectRepository avniSubjectRepository) {
+    public EnrolmentWorker(AvniEntityStatusRepository avniEntityStatusRepository,
+                           MappingMetaDataService mappingMetaDataService,
+                           AvniEnrolmentRepository avniEnrolmentRepository,
+                           EntityStatusService entityStatusService,
+                           EnrolmentService enrolmentService,
+                           PatientService patientService,
+                           ErrorService errorService,
+                           AvniSubjectRepository avniSubjectRepository) {
         this.avniEntityStatusRepository = avniEntityStatusRepository;
         this.mappingMetaDataService = mappingMetaDataService;
         this.avniEnrolmentRepository = avniEnrolmentRepository;
         this.entityStatusService = entityStatusService;
         this.enrolmentService = enrolmentService;
         this.patientService = patientService;
+        this.errorService = errorService;
         this.avniSubjectRepository = avniSubjectRepository;
     }
 
@@ -67,24 +73,40 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         logger.debug(String.format("Processing avni enrolment %s", enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
-        Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter = enrolmentService.findCommunityEnrolment(enrolment, subject, constants, metaData);
-        OpenMRSUuidHolder patient = patientEncounter.getValue0();
-        OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 
-        if (patient != null && encounter == null) {
-            logger.debug(String.format("Creating new Bahmni Enrolment for Avni enrolment %s", enrolment.getUuid()));
-            enrolmentService.createCommunityEnrolment(enrolment, patient, constants);
-        } else if (patient != null && encounter != null) {
-            logger.debug(String.format("Updating existing Bahmni encounter %s", encounter.getUuid()));
-            enrolmentService.updateCommunityEnrolment(encounter, enrolment, constants);
-        } else if (patient == null && encounter == null) {
+        var patient = patientService.findPatient(subject, constants, metaData);
+        if (patient == null) {
             logger.debug(String.format("Patient with identifier %s not found", subject.getId(metaData)));
             enrolmentService.processPatientNotFound(enrolment);
+        } else {
+            var encounter = enrolmentService.findCommunityEnrolment(enrolment, patient);
+            if (encounter == null) {
+                logger.debug(String.format("Creating new Bahmni enrolment for Avni enrolment %s", enrolment.getUuid()));
+                enrolmentService.createCommunityEnrolment(enrolment, patient, constants);
+            } else {
+                logger.debug(String.format("Updating existing Bahmni enrolment encounter %s", encounter.getUuid()));
+                enrolmentService.updateCommunityEnrolment(encounter, enrolment, constants);
+            }
+            if (enrolment.isExited()) {
+                processExitedEnrolment(constants, enrolment, patient, encounter);
+            }
+            errorService.successfullyProcessed(enrolment);
         }
 
         entityStatusService.saveEntityStatus(enrolment);
         if (!continueAfterOneRecord.test(enrolment)) return true;
         return false;
+    }
+
+    private void processExitedEnrolment(Constants constants, Enrolment enrolment, OpenMRSUuidHolder patient, OpenMRSFullEncounter encounter) {
+        var exitEncounter = enrolmentService.findCommunityExitEnrolment(enrolment, patient);
+        if (exitEncounter == null) {
+            logger.debug(String.format("Creating new Bahmni exit enrolment for Avni enrolment %s", enrolment.getUuid()));
+            enrolmentService.createCommunityExitEnrolment(enrolment, patient, constants);
+        } else {
+            logger.debug(String.format("Updating existing Bahmni exit enrolment Encounter %s", encounter.getUuid()));
+            enrolmentService.updateCommunityExitEnrolment(encounter, enrolment, constants);
+        }
     }
 
     public void processEnrolments(Constants constants) {

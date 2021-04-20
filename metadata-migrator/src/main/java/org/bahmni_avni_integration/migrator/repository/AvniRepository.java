@@ -152,7 +152,7 @@ public class AvniRepository {
 
     public List<AvniForm> getForms() throws SQLException {
         try (Connection connection = connectionFactory.getAvniConnection()) {
-            return fetchForms(connection).stream().filter(form -> form.getFormType().equals(ProgramExit)).collect(Collectors.toList());
+            return fetchForms(connection);
         }
     }
 

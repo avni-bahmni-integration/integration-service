@@ -8,12 +8,15 @@ import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.repository.MultipleResultsFoundException;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
@@ -34,8 +37,18 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&obsConcept=%s&obsValues=%s", getResourcePath("encounter"), patientUuid, conceptUuid, encode(value))));
         SearchResults<OpenMRSUuidHolder> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSUuidHolder>>() {
         });
-        OpenMRSUuidHolder encounterReference = pickAndExpectOne(searchResults, String.format("%s-%s-%s", patientUuid, conceptUuid, value));
+        OpenMRSUuidHolder encounterReference = pickAndExpectOne(searchResults, String.format("More than one entity found with params %s %s %s", patientUuid, conceptUuid, value));
         return encounterReference == null ? null : getEncounterByUuid(encounterReference.getUuid());
+    }
+
+    public OpenMRSFullEncounter getEncounterByPatientAndObservationAndEncType(String patientUuid, String conceptUuid, String value, String encounterTypeUuid) {
+        String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&obsConcept=%s&obsValues=%s&v=full", getResourcePath("encounter"), patientUuid, conceptUuid, encode(value))));
+        SearchResults<OpenMRSFullEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSFullEncounter>>() {
+        });
+        List<OpenMRSFullEncounter> filteredByEncType = searchResults.getResults().stream().filter(e -> e.getEncounterType().getUuid().equals(encounterTypeUuid)).collect(Collectors.toList());
+        if(filteredByEncType.size() == 0) return null;
+        if(filteredByEncType.size() == 1) return filteredByEncType.get(0);
+        throw new MultipleResultsFoundException(String.format("More than one entity found with params %s %s %s %s", patientUuid, conceptUuid, value, encounterTypeUuid));
     }
 
     public OpenMRSFullEncounter createEncounter(OpenMRSEncounter encounter) {

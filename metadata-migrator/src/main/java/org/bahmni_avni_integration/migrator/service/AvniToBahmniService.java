@@ -53,7 +53,7 @@ public class AvniToBahmniService {
     private void createForms(List<AvniForm> forms, Connection connection) throws SQLException {
         for (var form : forms) {
             String bahmniFormConceptUuid = UUID.randomUUID().toString();
-            var conceptResult = openMRSRepository.createSetConcept(connection, bahmniFormConceptUuid, form.getName());
+            var conceptResult = openMRSRepository.createSetConcept(connection, bahmniFormConceptUuid, getConceptSetName(form));
             if (!conceptResult.conceptExists()) {
                 int formConceptId = conceptResult.conceptId();
                 logger.debug("Form: %s Concept Id: %d".formatted(form.getName(), formConceptId));
@@ -190,6 +190,17 @@ public class AvniToBahmniService {
             case ProgramEncounter -> String.format("%s-%s", avniForm.getProgram(), avniForm.getEncounterType());
             case Encounter -> avniForm.getEncounterType();
             case ProgramEnrolment, ProgramExit -> avniForm.getProgram();
+        };
+    }
+
+    private String getConceptSetName(AvniForm avniForm) {
+        var formType = avniForm.getFormType();
+        return switch (formType) {
+            case IndividualProfile -> String.format("%s Registration", avniForm.getSubjectType());
+            case ProgramEncounter -> String.format("%s-%s Encounter", avniForm.getProgram(), avniForm.getEncounterType());
+            case Encounter -> String.format("%s Encounter", avniForm.getEncounterType());
+            case ProgramEnrolment -> String.format("%s Enrolment", avniForm.getProgram());
+            case ProgramExit -> String.format("%s Exit", avniForm.getProgram());
         };
     }
 

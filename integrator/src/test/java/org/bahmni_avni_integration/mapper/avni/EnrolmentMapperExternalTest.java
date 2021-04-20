@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class EnrolmentMapperExternalTest {
         enrolment.set("observations", avniObservations);
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
         var entityUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
-        var openMRSEncounter = enrolmentMapper.mapEnrolmentToEncounter(enrolment,
+        var openMRSEncounter = enrolmentMapper.mapEnrolmentToEnrolmentEncounter(enrolment,
                 "cc0369c8-748c-42cc-a534-5ab40855c3f8",
                 constantsRepository.findAllConstants());
         var groupObs = openMRSEncounter.getObservations().get(0);
@@ -71,7 +70,7 @@ public class EnrolmentMapperExternalTest {
         avniObservations.put("Number of babies", numberOfBabies);
         enrolment.set("observations", avniObservations);
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
-        var openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEncounter(getExistingEncounter(), enrolment,
+        var openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentEncounter(getExistingEncounter(), enrolment,
                 constantsRepository.findAllConstants());
         var observations = openMRSEncounter.getObservations();
         var groupObs = observations.get(0);

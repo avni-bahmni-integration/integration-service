@@ -39,4 +39,14 @@ public class Enrolment extends AvniBaseContract {
     public Date getEnrolmentDateTime() {
         return FormatAndParseUtil.fromAvniDateTime((String) map.get("Enrolment datetime"));
     }
+
+    @JsonIgnore
+    public String getExitDateTime() {
+        return (String) map.get("Exit datetime");
+    }
+
+    @JsonIgnore
+    public boolean isExited() {
+        return getExitDateTime() != null;
+    }
 }
