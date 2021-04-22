@@ -6,7 +6,11 @@ import java.util.Date;
 
 public class GeneralEncounter extends AvniBaseContract {
     public void setEncounterDateTime(Date date) {
-        map.put("Encounter datetime", date);
+        map.put("Encounter date time", date);
+    }
+
+    public void setEncounterDateTime(String date) {
+        map.put("Encounter date time", date);
     }
 
     public void setEncounterType(String encounterType) {
@@ -17,7 +21,7 @@ public class GeneralEncounter extends AvniBaseContract {
         map.put("Subject ID", uuid);
     }
 
-    public String getSubjectExternalId() {
+    public String getSubjectId() {
         return (String) map.get("Subject ID");
     }
 

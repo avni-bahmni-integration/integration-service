@@ -216,7 +216,7 @@
         ]
       },
       "dosingType": "org.openmrs.module.bahmniemrapi.drugorder.dosinginstructions.FlexibleDosingInstructions",
-      "dose": 1.0,
+      "dose": 1.5,
       "doseUnits": {
         "uuid": "86239663-7b04-4563-b877-d7efc4fe6c46",
         "display": "Tablet(s)",

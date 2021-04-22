@@ -29,7 +29,7 @@ public class ProgramEncounter extends AvniBaseContract {
 
     @JsonIgnore
     public String getEncounterDateTime() {
-        return (String) get("Encounter datetime");
+        return (String) get("Encounter date time");
     }
 
     @JsonIgnore
@@ -43,7 +43,7 @@ public class ProgramEncounter extends AvniBaseContract {
     }
 
     public void setEncounterDateTime(Date date) {
-        map.put("Encounter datetime", date);
+        map.put("Encounter date time", date);
     }
 
     public void setEncounterType(String encounterType) {

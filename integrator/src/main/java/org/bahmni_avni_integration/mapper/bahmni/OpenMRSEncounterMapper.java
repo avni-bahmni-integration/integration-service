@@ -26,7 +26,7 @@ public class OpenMRSEncounterMapper {
         GeneralEncounter encounter = new GeneralEncounter();
         encounter.setEncounterDateTime(FormatAndParseUtil.fromIsoDateString(splitEncounter.getOpenMRSEncounterDateTime()));
         encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getAvniMappedName(splitEncounter.getFormConceptSetUuid()));
-        encounter.setSubjectId(avniPatient.getSubjectExternalId());
+        encounter.setSubjectId(avniPatient.getSubjectId());
         addObservations(splitEncounter, encounter, bahmniEncounterToAvniEncounterMetaData);
         encounter.setEmptyCancelObservations();
         encounter.setVoided(splitEncounter.isVoided());
@@ -37,7 +37,7 @@ public class OpenMRSEncounterMapper {
         GeneralEncounter encounter = new GeneralEncounter();
         encounter.setEncounterDateTime(FormatAndParseUtil.fromIsoDateString(openMRSFullEncounter.getEncounterDatetime()));
         encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getLabEncounterTypeMapping().getAvniValue());
-        encounter.setSubjectId(avniPatient.getSubjectExternalId());
+        encounter.setSubjectId(avniPatient.getSubjectId());
         addObservations(openMRSFullEncounter.getLeafObservations(), encounter, bahmniEncounterToAvniEncounterMetaData, openMRSFullEncounter.getUuid());
         encounter.setEmptyCancelObservations();
         encounter.setVoided(openMRSFullEncounter.isVoided());
@@ -48,10 +48,10 @@ public class OpenMRSEncounterMapper {
         GeneralEncounter encounter = new GeneralEncounter();
         encounter.setEncounterDateTime(FormatAndParseUtil.fromIsoDateString(openMRSFullEncounter.getEncounterDatetime()));
         encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getDrugOrderEncounterTypeMapping().getAvniValue());
-        encounter.setSubjectId(avniPatient.getSubjectExternalId());
+        encounter.setSubjectId(avniPatient.getSubjectId());
         List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
         encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getBahmniEntityUuidConcept(), openMRSFullEncounter.getUuid());
-        encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getDrugOrderConceptMapping().getAvniValue(), String.join("\n", drugOrders));
+        encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getDrugOrderConceptMapping().getAvniValue(), String.join(";   ", drugOrders));
         encounter.setEmptyCancelObservations();
         encounter.setVoided(openMRSFullEncounter.isVoided());
         return encounter;
@@ -78,7 +78,7 @@ public class OpenMRSEncounterMapper {
 
     public Enrolment mapToAvniEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
         Enrolment enrolment = new Enrolment();
-        enrolment.setSubjectId(avniPatient.getSubjectExternalId());
+        enrolment.setSubjectId(avniPatient.getSubjectId());
         enrolment.setEnrolmentDateTime(FormatAndParseUtil.fromIsoDateString(splitEncounter.getOpenMRSEncounterDateTime()));
         enrolment.setProgram(metaData.getAvniMappedName(splitEncounter.getFormConceptSetUuid()));
         enrolment.setEmptyExitObservations();
@@ -98,7 +98,7 @@ public class OpenMRSEncounterMapper {
 
     public Enrolment mapToEmptyAvniEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
         Enrolment enrolment = new Enrolment();
-        enrolment.setSubjectId(avniPatient.getSubjectExternalId());
+        enrolment.setSubjectId(avniPatient.getSubjectId());
         enrolment.setEnrolmentDateTime(FormatAndParseUtil.fromIsoDateString(splitEncounter.getOpenMRSEncounterDateTime()));
         enrolment.setProgram(metaData.getAvniProgramName(splitEncounter.getFormConceptSetUuid()));
         enrolment.setEmptyExitObservations();

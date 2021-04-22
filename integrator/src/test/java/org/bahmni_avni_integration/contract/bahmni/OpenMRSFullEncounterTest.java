@@ -51,5 +51,6 @@ public class OpenMRSFullEncounterTest {
         assertNotNull(openMRSFullEncounter);
         List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
         assertEquals(5, drugOrders.size());
+        assertTrue(openMRSFullEncounter.hasDrugOrders());
     }
 }

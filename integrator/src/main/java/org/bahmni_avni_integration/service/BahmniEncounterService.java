@@ -42,6 +42,6 @@ public class BahmniEncounterService {
     }
 
     public boolean isProcessablePrescriptionEncounter(BahmniEncounter bahmniEncounter, Constants constants) {
-        return isOutpatientEncounter(bahmniEncounter, constants);
+        return isOutpatientEncounter(bahmniEncounter, constants) && bahmniEncounter.getOpenMRSEncounter().hasDrugOrders();
     }
 }

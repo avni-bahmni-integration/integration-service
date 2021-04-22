@@ -18,9 +18,9 @@ public class OpenMRSPatientMapper {
         LinkedHashMap<String, Object> observations = mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData);
 
         GeneralEncounter encounterRequest = new GeneralEncounter();
-        encounterRequest.set("Subject ID", subject.getUuid());
-        encounterRequest.set("Encounter type", patientToSubjectMetaData.patientEncounterType());
-        encounterRequest.set("Encounter date time", FormatAndParseUtil.now());
+        encounterRequest.setSubjectId(subject.getUuid());
+        encounterRequest.setEncounterType(patientToSubjectMetaData.patientEncounterType());
+        encounterRequest.setEncounterDateTime(FormatAndParseUtil.now());
         encounterRequest.set("observations", observations);
         encounterRequest.set("cancelObservations", new HashMap<>());
         return encounterRequest;

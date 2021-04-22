@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,8 @@ public class OpenMRSFullEncounter {
     private OpenMRSUuidHolder location;
     private final Map<String, Object> map = new HashMap<>();
     private boolean voided;
+
+    private static final DecimalFormat doseFormat = new DecimalFormat("###.#");
 
     public OpenMRSUuidHolder getPatient() {
         return patient;
@@ -125,24 +128,31 @@ public class OpenMRSFullEncounter {
         }).collect(Collectors.toList());
     }
 
-    public List<String> getDrugOrders() {
-        ArrayList<String> list = new ArrayList<>();
+    private List<Map<String, Object>> getDrugOrderList() {
         List<Map<String, Object>> orders = (List<Map<String, Object>>) map.get("orders");
-        if (orders == null || orders.size() == 0) return list;
+        if (orders == null || orders.size() == 0) return new ArrayList<>();
         return orders.stream().filter(stringObjectMap -> {
             Map<String, Object> orderType = (Map<String, Object>) stringObjectMap.get("orderType");
             return "Drug Order".equals(orderType.get("name"));
-        }).map(stringObjectMap -> {
+        }).collect(Collectors.toList());
+    }
+
+    public List<String> getDrugOrders() {
+        List<Map<String, Object>> drugOrderList = getDrugOrderList();
+        return drugOrderList.stream().map(stringObjectMap -> {
             Map<String, Object> drug = (Map<String, Object>) stringObjectMap.get("drug");
             Map<String, Object> doseUnits = (Map<String, Object>) stringObjectMap.get("doseUnits");
-            Double dose = stringObjectMap.get("dose") == null ? null : (Double) stringObjectMap.get("dose");
+
+            String dose = stringObjectMap.get("dose") == null ? "" : doseFormat.format(stringObjectMap.get("dose"));
             int duration = (int) stringObjectMap.get("duration");
             boolean asNeeded = (boolean) stringObjectMap.get("asNeeded");
             String scheduledDate = (String) stringObjectMap.get("scheduledDate");
             Date date = FormatAndParseUtil.fromIsoDateString(scheduledDate);
             String humanReadableDate = FormatAndParseUtil.toHumanReadableFormat(date);
 
-            return asNeeded ? String.format("%s %s - as needed - starting %s", drug.get("display"), doseUnits.get("display"), humanReadableDate) : String.format("%s %s - %f for %d days - starting %s", drug.get("display"), doseUnits.get("display"), dose, duration, humanReadableDate);
+            return asNeeded ?
+                    String.format("%s %s - as needed - starting %s", drug.get("display"), doseUnits.get("display"), humanReadableDate) :
+                    String.format("%s %s - %s for %d days - starting %s", drug.get("display"), doseUnits.get("display"), dose, duration, humanReadableDate);
         }).collect(Collectors.toList());
     }
 
@@ -154,5 +164,9 @@ public class OpenMRSFullEncounter {
 
     public boolean isVoided() {
         return voided;
+    }
+
+    public boolean hasDrugOrders() {
+        return getDrugOrderList().size() != 0;
     }
 }

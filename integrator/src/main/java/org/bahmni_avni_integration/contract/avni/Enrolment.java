@@ -23,7 +23,7 @@ public class Enrolment extends AvniBaseContract {
 
     @JsonIgnore
     public void setEnrolmentDateTime(Date enrolmentDateTime) {
-        map.put("Enrolment datetime", enrolmentDateTime);
+        map.put("Enrolment date time", enrolmentDateTime);
     }
 
     @JsonIgnore
