@@ -6,6 +6,7 @@ import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
+import org.bahmni_avni_integration.integration_data.repository.IgnoredBahmniConceptRepository;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class IntegrationDataService {
     private ConstantsRepository constantsRepository;
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
+    @Autowired
+    private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
 
     private static final Logger logger = Logger.getLogger(IntegrationDataService.class);
 
@@ -49,6 +52,7 @@ public class IntegrationDataService {
     }
 
     public void cleanup() {
+        ignoredBahmniConceptRepository.deleteAll();
         mappingMetaDataRepository.deleteAll();
         cleanupConstants();
         logger.info("Integration metadata cleaned up");

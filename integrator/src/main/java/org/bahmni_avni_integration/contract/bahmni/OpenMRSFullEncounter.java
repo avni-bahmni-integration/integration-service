@@ -72,7 +72,6 @@ public class OpenMRSFullEncounter {
     }
 
     public List<OpenMRSObservation> getLeafObservations(String form) {
-        List<Map<String, Object>> observations = (List<Map<String, Object>>) map.get("obs");
         Map<String, Object> formObservationNode = findForm(form);
 
         List<OpenMRSObservation> leafObservations = new ArrayList<>();
