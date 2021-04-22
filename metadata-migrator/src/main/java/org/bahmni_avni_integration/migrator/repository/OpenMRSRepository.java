@@ -256,6 +256,9 @@ public class OpenMRSRepository {
         while (resultSet.next()) {
             form.addTerm(OpenMRSConcept.forFormExtract(resultSet.getString(1), resultSet.getString(2)));
         }
+        if (form.getOpenMRSTerminologies().size() == 0) {
+            throw new RuntimeException(String.format("No terminologies found for the form: %d", form.getFormId()));
+        }
     }
 
     public void cleanup() throws SQLException {

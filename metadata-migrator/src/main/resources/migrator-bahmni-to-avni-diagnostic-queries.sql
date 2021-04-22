@@ -86,3 +86,24 @@ where c.is_set = false
   and cn.name not like '%[Avni]';
 -- Integration db
 select count(*) from ignored_bahmni_concept;
+
+-- All new forms should have only one form_element_group and more than one form element in each group
+-- Avni
+select form.name, count(*) from form
+    join audit on form.audit_id = audit.id
+    left outer join form_element_group feg on form.id = feg.form_id
+where audit.created_by_id = 360 and feg.id is null
+group by form.name;
+--
+select feg.name, count(*)
+from form
+         join form_element_group feg on form.id = feg.form_id
+         join audit on form.audit_id = audit.id
+         left outer join form_element fe on feg.id = fe.form_element_group_id
+where audit.created_by_id = 360 and fe.id is null
+group by feg.name;
+--
+select form_mapping.id from form_mapping
+    join audit on form_mapping.audit_id = audit.id
+    left outer join form f on form_mapping.form_id = f.id
+where audit.created_by_id = 360 and f.id is null;
