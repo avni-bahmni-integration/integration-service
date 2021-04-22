@@ -11,6 +11,7 @@ import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
+import org.bahmni_avni_integration.integration_data.repository.MultipleResultsFoundException;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.EntityStatusService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
@@ -56,7 +57,13 @@ public class SubjectWorker implements ErrorRecordWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processSubject(Constants constants, Predicate<Subject> continueAfterOneRecord, SubjectToPatientMetaData metaData, Subject subject) {
-        Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
+        Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter;
+        try {
+            patientEncounter = patientService.findSubject(subject, constants, metaData);
+        } catch (MultipleResultsFoundException e) {
+            patientService.processMultipleSubjectsFound(subject);
+            return !continueAfterOneRecord.test(subject);
+        }
         OpenMRSUuidHolder patient = patientEncounter.getValue0();
         OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 

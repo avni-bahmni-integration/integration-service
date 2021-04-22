@@ -25,7 +25,7 @@ public class MappingMetaDataService {
 
         String encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.Subject_EncounterType);
 
-        String subjectUuidConceptUuid = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
+        String subjectUuidConceptUuid = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
 
         return new SubjectToPatientMetaData(avniIdentifierConcept, encounterTypeUuid, subjectUuidConceptUuid);
     }

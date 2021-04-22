@@ -4,7 +4,6 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
@@ -87,7 +86,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
                 enrolmentService.updateCommunityEnrolment(encounter, enrolment, constants);
             }
             if (enrolment.isExited()) {
-                processExitedEnrolment(constants, enrolment, patient, encounter);
+                processExitedEnrolment(constants, enrolment, patient);
             }
             errorService.successfullyProcessed(enrolment);
         }
@@ -97,14 +96,14 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         return false;
     }
 
-    private void processExitedEnrolment(Constants constants, Enrolment enrolment, OpenMRSUuidHolder patient, OpenMRSFullEncounter encounter) {
+    private void processExitedEnrolment(Constants constants, Enrolment enrolment, OpenMRSUuidHolder patient) {
         var exitEncounter = enrolmentService.findCommunityExitEnrolment(enrolment, patient);
         if (exitEncounter == null) {
             logger.debug(String.format("Creating new Bahmni exit enrolment for Avni enrolment %s", enrolment.getUuid()));
             enrolmentService.createCommunityExitEnrolment(enrolment, patient, constants);
         } else {
-            logger.debug(String.format("Updating existing Bahmni exit enrolment Encounter %s", encounter.getUuid()));
-            enrolmentService.updateCommunityExitEnrolment(encounter, enrolment, constants);
+            logger.debug(String.format("Updating existing Bahmni exit enrolment Encounter %s", exitEncounter.getUuid()));
+            enrolmentService.updateCommunityExitEnrolment(exitEncounter, enrolment, constants);
         }
     }
 

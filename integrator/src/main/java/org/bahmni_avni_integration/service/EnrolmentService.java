@@ -1,16 +1,13 @@
 package org.bahmni_avni_integration.service;
 
 import org.bahmni_avni_integration.contract.avni.Enrolment;
-import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
-import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.mapper.avni.EnrolmentMapper;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
-import org.javatuples.Pair;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,7 +38,7 @@ public class EnrolmentService {
     }
 
     private OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder patient, MappingType mappingType) {
-        String bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
+        String bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
         OpenMRSFullEncounter encounter = openMRSEncounterRepository
                 .getEncounterByPatientAndObservationAndEncType(patient.getUuid(), bahmniValueForAvniUuidConcept, enrolment.getUuid(), encounterTypeUuid);

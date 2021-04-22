@@ -17,11 +17,21 @@ public class ObservationMapper {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
     }
 
-    public List<OpenMRSSaveObservation> updateOpenMRSObservationsFromAvniObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, List<String> exclude) {
+    public List<OpenMRSSaveObservation> updateOpenMRSObservationsFromAvniObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, List<String> hardcodedConcepts) {
         List<OpenMRSSaveObservation> updateObservations = new ArrayList<>();
         MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
-        updateObservations.addAll(voidedObservations(openMRSObservations, avniObservations, conceptMappings, exclude));
+        updateObservations.addAll(voidedObservations(openMRSObservations, avniObservations, conceptMappings, hardcodedConcepts));
         updateObservations.addAll(updatedObservations(openMRSObservations, avniObservations, conceptMappings));
+        for (var hardcodedConcept : hardcodedConcepts) {
+            Optional<OpenMRSObservation> hardCodedObs = openMRSObservations.stream().filter(o -> o.getConceptUuid().equals(hardcodedConcept)).findFirst();
+            hardCodedObs.ifPresent(existing -> {
+                OpenMRSSaveObservation openMRSSaveObservation = new OpenMRSSaveObservation();
+                openMRSSaveObservation.setUuid(existing.getObsUuid());
+                openMRSSaveObservation.setConcept(existing.getConceptUuid());
+                openMRSSaveObservation.setValue(existing.getValue());
+                updateObservations.add(openMRSSaveObservation);
+            });
+        }
         return updateObservations;
     }
 

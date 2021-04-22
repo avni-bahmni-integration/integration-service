@@ -46,7 +46,7 @@ public class SubjectMapperExternalTest {
         avniObservations.put("Number of babies", numberOfBabies);
         subject.set("observations", avniObservations);
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
-        var entityUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
+        var entityUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
         var openMRSEncounter = subjectMapper.mapSubjectToEncounter(subject,
                 "cc0369c8-748c-42cc-a534-5ab40855c3f8",
                 "f39ce690-d1c4-4bb3-aa4b-893bdd73e5a1",

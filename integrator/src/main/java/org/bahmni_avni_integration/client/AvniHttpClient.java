@@ -50,6 +50,7 @@ public class AvniHttpClient {
 
     private <T> ResponseEntity<T> getResponseEntity(Class<T> returnType, URI uri, HttpMethod method, String json) {
         try {
+            logger.debug("%s %s".formatted(method.name(), uri.toString()));
             return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {

@@ -74,7 +74,7 @@ public class MainJob implements Job {
                 subjectWorker.processSubjects(allConstants);
             if (hasTask(tasks, IntegrationTask.AvniEnrolment))
                 enrolmentWorker.processEnrolments(allConstants);
-            if (hasTask(tasks, IntegrationTask.AvniEnrolment))
+            if (hasTask(tasks, IntegrationTask.AvniProgramEncounter))
                 programEncounterWorker.processProgramEncounters(allConstants);
             if (hasTask(tasks, IntegrationTask.BahmniPatient))
                 getPatientWorker().processPatients(allConstants);

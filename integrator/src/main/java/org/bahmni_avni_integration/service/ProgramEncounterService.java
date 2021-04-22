@@ -38,7 +38,7 @@ public class ProgramEncounterService {
         if (patient == null) {
             return new Pair<>(null, null);
         }
-        String entityUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
+        String entityUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
         OpenMRSFullEncounter encounter = openMRSEncounterRepository
                 .getEncounterByPatientAndObservation(patient.getUuid(), entityUuidConcept, programEncounter.getUuid());
         return new Pair<>(patient, encounter);

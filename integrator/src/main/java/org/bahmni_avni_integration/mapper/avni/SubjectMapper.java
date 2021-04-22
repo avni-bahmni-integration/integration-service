@@ -1,11 +1,9 @@
 package org.bahmni_avni_integration.mapper.avni;
 
-import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
-import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -22,7 +20,6 @@ public class SubjectMapper {
 
     public OpenMRSEncounter mapSubjectToEncounter(Subject subject, String patientUuid, String encounterTypeUuid, Constants constants) {
         var openMRSEncounter = new OpenMRSEncounter();
-        openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(new Date()));
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
@@ -51,7 +48,7 @@ public class SubjectMapper {
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) subject.get("observations"),
-                List.of(mappingMetaDataRepository.getBahmniValueForAvniUuidConcept()));
+                List.of(mappingMetaDataRepository.getBahmniValueForAvniIdConcept()));
         openMRSEncounter.setObservations(existingGroupObs(existingEncounter, observations));
         return openMRSEncounter;
     }
@@ -75,7 +72,7 @@ public class SubjectMapper {
     }
 
     private OpenMRSSaveObservation avniUuidObs(String avniEntityUuid) {
-        var bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniUuidConcept();
+        var bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, avniEntityUuid, ObsDataType.Text);
     }
 }

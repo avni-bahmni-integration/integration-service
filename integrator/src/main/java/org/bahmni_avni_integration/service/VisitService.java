@@ -36,8 +36,11 @@ public class VisitService {
     }
 
     public OpenMRSUuidHolder getOrCreateVisit(OpenMRSUuidHolder patient) {
-        OpenMRSUuidHolder visit = getVisit(patient.getUuid());
-        if (visit == null) visit = createVisit(patient.getUuid());
+        var visit = getVisit(patient.getUuid());
+        if (visit == null) {
+            return createVisit(patient.getUuid());
+        }
+        logger.debug("Retrieved existing visit with uuid %s".formatted(visit.getUuid()));
         return visit;
     }
 

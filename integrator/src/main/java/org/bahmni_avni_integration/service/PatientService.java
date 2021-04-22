@@ -11,12 +11,11 @@ import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSPatientRepository;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSPersonRepository;
-import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.javatuples.Pair;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,6 +79,10 @@ public class PatientService {
 
     public void processPatientIdChanged(Subject subject, SubjectToPatientMetaData metaData) {
         errorService.errorOccurred(subject, ErrorType.PatientIdChanged);
+    }
+
+    public void processMultipleSubjectsFound(Subject subject) {
+        errorService.errorOccurred(subject, ErrorType.MultipleSubjectsWithId);
     }
 
     public void processPatientNotFound(Subject subject, SubjectToPatientMetaData metaData) {

@@ -27,7 +27,7 @@ class ProgramEncounterWorkerExternalTest {
 
     //Useful when testing things like update
     @Test
-    public void processSpecificSubject() {
+    public void processSpecificEncounter() {
         Constants constants = constantsRepository.findAllConstants();
         Predicate<ProgramEncounter> continueAfterOneRecord = subject -> false;
         var subjectToPatientMetaData = mappingMetaDataService.getForSubjectToPatient();

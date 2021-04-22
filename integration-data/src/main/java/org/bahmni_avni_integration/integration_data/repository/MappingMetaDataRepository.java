@@ -80,7 +80,7 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
         return save(mappingMetaData);
     }
 
-    default String getBahmniValueForAvniUuidConcept() {
+    default String getBahmniValueForAvniIdConcept() {
         return getBahmniValue(MappingGroup.Common, MappingType.AvniUUID_Concept);
     }
 }
