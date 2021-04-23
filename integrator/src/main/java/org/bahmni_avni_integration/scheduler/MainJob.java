@@ -1,10 +1,12 @@
 package org.bahmni_avni_integration.scheduler;
 
+import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
+import org.bahmni_avni_integration.worker.ErrorRecordsWorker;
 import org.bahmni_avni_integration.worker.avni.EnrolmentWorker;
 import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
@@ -55,6 +57,12 @@ public class MainJob implements Job {
     @Autowired
     private FailedEventRepository failedEventRepository;
 
+    @Autowired
+    private ErrorRecordsWorker errorRecordsWorker;
+
+    @Autowired
+    private Bugsnag bugsnag;
+
     public void execute(JobExecutionContext context) {
         logger.info(String.format("Job ** {%s} ** fired @ {%s}", context.getJobDetail().getKey().getName(), context.getFireTime()));
         try {
@@ -72,8 +80,11 @@ public class MainJob implements Job {
                 getPatientWorker().processPatients(allConstants);
             if (hasTask(tasks, IntegrationTask.BahmniEncounter))
                 getPatientEncounterWorker().processEncounters(allConstants, mappingMetaDataService.getForBahmniEncounterToAvniEntities());
+            if (hasTask(tasks, IntegrationTask.ErrorRecords))
+                errorRecordsWorker.process();
         } catch (Exception e) {
-            logger.error("Error calling API", e);
+            logger.error(e);
+            bugsnag.notify(e);
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }

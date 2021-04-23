@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.worker;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
@@ -29,6 +30,8 @@ public class ErrorRecordsWorker {
     @Autowired
     private PatientEncounterEventWorker patientEncounterEventWorker;
 
+    private static final Logger logger = Logger.getLogger(ErrorRecordsWorker.class);
+
     private static final int pageSize = 20;
 
     public void process() {
@@ -51,7 +54,7 @@ public class ErrorRecordsWorker {
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.Subject)) return subjectWorker;
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.Enrolment)) return enrolmentWorker;
         } else if (errorRecord.getBahmniEntityType() != null) {
-            if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Patient)) return subjectWorker;
+            if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Patient)) return patientEventWorker;
             if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Encounter)) return patientEncounterEventWorker;
         }
         throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s and BahmniEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getBahmniEntityType()));
