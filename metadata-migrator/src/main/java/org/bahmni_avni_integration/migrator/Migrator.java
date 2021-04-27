@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.migrator;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
 import org.bahmni_avni_integration.migrator.service.AvniToBahmniService;
 import org.bahmni_avni_integration.migrator.service.BahmniToAvniService;
 import org.bahmni_avni_integration.migrator.service.IntegrationDataService;
@@ -89,9 +90,12 @@ public class Migrator implements CommandLineRunner {
         }
     }
 
-    private void runAdhoc() {
-        integrationDataService.cleanupConstants();
-        integrationDataService.createConstants();
+    private void runAdhoc() throws SQLException {
+        OpenMRSForm openMRSForm = new OpenMRSForm();
+        openMRSForm.setFormId(13);
+        openMRSForm.setFormName("Diagnosis (Hospital)");
+        openMRSForm.setType("Encounter");
+        bahmniToAvniService.migrateForms(Arrays.asList(openMRSForm));
         System.exit(0);
     }
 }

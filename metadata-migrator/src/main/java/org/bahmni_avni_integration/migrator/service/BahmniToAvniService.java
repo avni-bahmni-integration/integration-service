@@ -40,6 +40,10 @@ public class BahmniToAvniService {
     public void migrateForms() throws SQLException {
         List<OpenMRSForm> forms = implementationConfigurationRepository.getForms();
         logger.info(String.format("Found %d forms", forms.size()));
+        migrateForms(forms);
+    }
+
+    public void migrateForms(List<OpenMRSForm> forms) throws SQLException {
         openMRSRepository.populateForms(forms);
         avniRepository.createForms(forms);
         for (OpenMRSForm form : forms) {

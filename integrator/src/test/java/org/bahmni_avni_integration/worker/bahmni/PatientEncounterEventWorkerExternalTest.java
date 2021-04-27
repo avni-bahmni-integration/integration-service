@@ -33,6 +33,14 @@ public class PatientEncounterEventWorkerExternalTest extends BaseExternalTest {
     }
 
     @Test
+    public void processEncounterWithCodedDiagnosis() {
+//        visit diagnosis
+        patientEncounterEventWorker.process(encounterEvent("bc29306a-db5c-417c-9a94-315bd2bbb6d5"));
+//        chief complaint
+//        patientEncounterEventWorker.process(encounterEvent("dcfbdffa-e99d-4f7d-9dd0-8988e6add305"));
+    }
+
+    @Test
     public void processLabEncounter() {
         patientEventWorker.process(patientEvent("9312db47-73eb-452c-9f0b-800bf0c4cbf4"));
         patientEncounterEventWorker.process(encounterEvent("a605cfe6-92e1-4bee-9f02-bded7ee385a2"));
