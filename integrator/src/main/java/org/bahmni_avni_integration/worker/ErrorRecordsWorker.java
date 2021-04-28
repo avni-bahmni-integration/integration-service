@@ -3,10 +3,12 @@ package org.bahmni_avni_integration.worker;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
+import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
 import org.bahmni_avni_integration.worker.avni.EnrolmentWorker;
+import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEventWorker;
@@ -25,6 +27,8 @@ public class ErrorRecordsWorker {
     private SubjectWorker subjectWorker;
     @Autowired
     private EnrolmentWorker enrolmentWorker;
+    @Autowired
+    private ProgramEncounterWorker programEncounterWorker;
     @Autowired
     private PatientEventWorker patientEventWorker;
     @Autowired
@@ -53,10 +57,19 @@ public class ErrorRecordsWorker {
         if (errorRecord.getAvniEntityType() != null) {
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.Subject)) return subjectWorker;
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.Enrolment)) return enrolmentWorker;
+            if (errorRecord.getAvniEntityType().equals(AvniEntityType.ProgramEncounter)) return programEncounterWorker;
         } else if (errorRecord.getBahmniEntityType() != null) {
             if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Patient)) return patientEventWorker;
             if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Encounter)) return patientEncounterEventWorker;
         }
         throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s and BahmniEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getBahmniEntityType()));
+    }
+
+    public void cacheRunImmutables(Constants constants) {
+        subjectWorker.cacheRunImmutables(constants);
+        enrolmentWorker.cacheRunImmutables(constants);
+        programEncounterWorker.cacheRunImmutables(constants);
+        patientEventWorker.cacheRunImmutables(constants);
+        patientEncounterEventWorker.cacheRunImmutables(constants);
     }
 }

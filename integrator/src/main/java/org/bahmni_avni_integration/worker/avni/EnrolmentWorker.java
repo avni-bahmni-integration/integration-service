@@ -1,6 +1,5 @@
 package org.bahmni_avni_integration.worker.avni;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.EnrolmentsResponse;
@@ -9,6 +8,7 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniEnrolmentRepository;
@@ -18,8 +18,6 @@ import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.function.Predicate;
 
 @Component
 public class EnrolmentWorker implements ErrorRecordWorker {
@@ -33,6 +31,8 @@ public class EnrolmentWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(EnrolmentWorker.class);
     private final AvniSubjectRepository avniSubjectRepository;
     private final MappingMetaDataService mappingMetaDataService;
+    private SubjectToPatientMetaData metaData;
+    private Constants constants;
 
     public EnrolmentWorker(AvniEntityStatusRepository avniEntityStatusRepository,
                            MappingMetaDataService mappingMetaDataService,
@@ -52,9 +52,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         this.avniSubjectRepository = avniSubjectRepository;
     }
 
-    public void processEnrolments(Constants constants, Predicate<Enrolment> continueAfterOneRecord) {
-        SubjectToPatientMetaData subjectToPatientMetaData = mappingMetaDataService.getForSubjectToPatient();
-        mainLoop:
+    public void processEnrolments() {
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
             EnrolmentsResponse response = avniEnrolmentRepository.getEnrolments(status.getReadUpto());
@@ -64,15 +62,20 @@ public class EnrolmentWorker implements ErrorRecordWorker {
             logger.info(String.format("Found %d enrolments that are newer than %s", enrolments.length, status.getReadUpto()));
             if (enrolments.length == 0) break;
             for (Enrolment enrolment : enrolments) {
-                if (processEnrolment(constants, continueAfterOneRecord, subjectToPatientMetaData, enrolment))
-                    break mainLoop;
+                processEnrolment(enrolment);
             }
             if (totalElements == 1 && totalPages == 1) break;
         }
     }
 
+    public void processEnrolment() {
+        AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
+        EnrolmentsResponse enrolments = avniEnrolmentRepository.getEnrolments(status.getReadUpto());
+        processEnrolment(enrolments.getContent()[0]);
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected boolean processEnrolment(Constants constants, Predicate<Enrolment> continueAfterOneRecord, SubjectToPatientMetaData metaData, Enrolment enrolment) {
+    protected void processEnrolment(Enrolment enrolment) {
         logger.debug(String.format("Processing avni %s enrolment %s", enrolment.getProgram(), enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
@@ -97,8 +100,6 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         }
 
         entityStatusService.saveEntityStatus(enrolment);
-        if (!continueAfterOneRecord.test(enrolment)) return true;
-        return false;
     }
 
     private void processExitedEnrolment(Constants constants, Enrolment enrolment, OpenMRSUuidHolder patient) {
@@ -112,12 +113,20 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         }
     }
 
-    public void processEnrolments(Constants constants) {
-        this.processEnrolments(constants, enrolment -> true);
-    }
-
     @Override
     public void processError(String entityUuid) {
-        throw new NotImplementedException();
+        Enrolment enrolment = avniEnrolmentRepository.getEnrolment(entityUuid);
+        if (enrolment == null) {
+            logger.warn(String.format("Enrolment has been deleted now: %s", entityUuid));
+            errorService.errorOccurred(entityUuid, ErrorType.EntityIsDeleted, AvniEntityType.Enrolment);
+            return;
+        }
+
+        processEnrolment(enrolment);
+    }
+
+    public void cacheRunImmutables(Constants constants) {
+        this.constants = constants;
+        metaData = mappingMetaDataService.getForSubjectToPatient();
     }
 }

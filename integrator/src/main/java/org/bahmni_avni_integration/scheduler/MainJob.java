@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
-import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.worker.ErrorRecordsWorker;
 import org.bahmni_avni_integration.worker.avni.EnrolmentWorker;
 import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
@@ -34,9 +33,6 @@ public class MainJob implements Job {
     private PatientEncounterWorker patientEncounterWorker;
     @Autowired
     private PatientEncounterFirstRunWorker patientEncounterFirstRunWorker;
-
-    @Autowired
-    private MappingMetaDataService mappingMetaDataService;
 
     @Autowired
     private SubjectWorker subjectWorker;
@@ -70,18 +66,26 @@ public class MainJob implements Job {
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
             Constants allConstants = constantsRepository.findAllConstants();
 
-            if (hasTask(tasks, IntegrationTask.AvniSubject))
-                subjectWorker.processSubjects(allConstants);
-            if (hasTask(tasks, IntegrationTask.AvniEnrolment))
-                enrolmentWorker.processEnrolments(allConstants);
-            if (hasTask(tasks, IntegrationTask.AvniProgramEncounter))
-                programEncounterWorker.processProgramEncounters(allConstants);
+            if (hasTask(tasks, IntegrationTask.AvniSubject)) {
+                subjectWorker.cacheRunImmutables(allConstants);
+                subjectWorker.processSubjects();
+            }
+            if (hasTask(tasks, IntegrationTask.AvniEnrolment)) {
+                enrolmentWorker.cacheRunImmutables(allConstants);
+                enrolmentWorker.processEnrolments();
+            }
+            if (hasTask(tasks, IntegrationTask.AvniEnrolment)) {
+                programEncounterWorker.cacheRunImmutables(allConstants);
+                programEncounterWorker.processProgramEncounters();
+            }
             if (hasTask(tasks, IntegrationTask.BahmniPatient))
-                getPatientWorker().processPatients(allConstants);
+                getPatientWorker(allConstants).processPatients();
             if (hasTask(tasks, IntegrationTask.BahmniEncounter))
-                getPatientEncounterWorker().processEncounters(allConstants, mappingMetaDataService.getForBahmniEncounterToAvniEntities());
-            if (hasTask(tasks, IntegrationTask.ErrorRecords))
+                getPatientEncounterWorker(allConstants).processEncounters();
+            if (hasTask(tasks, IntegrationTask.ErrorRecords)) {
+                errorRecordsWorker.cacheRunImmutables(allConstants);
                 errorRecordsWorker.process();
+            }
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
@@ -89,12 +93,24 @@ public class MainJob implements Job {
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }
 
-    private PatientEncountersProcessor getPatientEncounterWorker() {
-        return isFirstRun ? patientEncounterFirstRunWorker : patientEncounterWorker;
+    private PatientEncountersProcessor getPatientEncounterWorker(Constants constants) {
+        if (isFirstRun) {
+            patientEncounterFirstRunWorker.cacheRunImmutables(constants);
+            return patientEncounterFirstRunWorker;
+        } else {
+            patientEncounterWorker.cacheRunImmutables(constants);
+            return patientEncounterWorker;
+        }
     }
 
-    private PatientsProcessor getPatientWorker() {
-        return isFirstRun ? patientFirstRunWorker : patientWorker;
+    private PatientsProcessor getPatientWorker(Constants constants) {
+        if (isFirstRun) {
+            patientFirstRunWorker.cacheRunImmutables(constants);
+            return patientFirstRunWorker;
+        } else {
+            patientWorker.cacheRunImmutables(constants);
+            return patientWorker;
+        }
     }
 
     private boolean hasTask(List<IntegrationTask> tasks, IntegrationTask task) {

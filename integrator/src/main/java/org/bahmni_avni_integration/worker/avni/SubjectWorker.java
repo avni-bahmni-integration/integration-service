@@ -24,8 +24,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.function.Predicate;
-
 @Component
 public class SubjectWorker implements ErrorRecordWorker {
     @Autowired
@@ -40,11 +38,10 @@ public class SubjectWorker implements ErrorRecordWorker {
     private EntityStatusService entityStatusService;
 
     private static final Logger logger = Logger.getLogger(SubjectWorker.class);
+    private SubjectToPatientMetaData metaData;
+    private Constants constants;
 
-    public void processSubjects(Constants constants, Predicate<Subject> continueAfterOneRecord) {
-        SubjectToPatientMetaData metaData = mappingMetaDataService.getForSubjectToPatient();
-
-        mainLoop:
+    public void processSubjects() {
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
             SubjectsResponse response = avniSubjectRepository.getSubjects(status.getReadUpto(), constants.getValue(ConstantKey.IntegrationAvniSubjectType));
@@ -54,21 +51,22 @@ public class SubjectWorker implements ErrorRecordWorker {
             logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUpto()));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {
-                if (processSubject(constants, continueAfterOneRecord, metaData, subject)) break mainLoop;
+                processSubject(subject);
             }
             if (totalElements == 1 && totalPages == 1) break;
         }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected boolean processSubject(Constants constants, Predicate<Subject> continueAfterOneRecord, SubjectToPatientMetaData metaData, Subject subject) {
+    protected void processSubject(Subject subject) {
         Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter;
         try {
             patientEncounter = patientService.findSubject(subject, constants, metaData);
         } catch (MultipleResultsFoundException e) {
             patientService.processMultipleSubjectsFound(subject);
-            return !continueAfterOneRecord.test(subject);
+            return;
         }
+
         OpenMRSUuidHolder patient = patientEncounter.getValue0();
         OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 
@@ -88,16 +86,15 @@ public class SubjectWorker implements ErrorRecordWorker {
             patientService.createSubject(subject, patient, metaData, constants);
         }
         entityStatusService.saveEntityStatus(subject);
-
-        return !continueAfterOneRecord.test(subject);
-    }
-
-    public void processSubjects(Constants constants) {
-        this.processSubjects(constants, subjects -> true);
     }
 
     @Override
     public void processError(String entityUuid) {
         throw new NotImplementedException();
+    }
+
+    public void cacheRunImmutables(Constants constants) {
+        this.constants = constants;
+        metaData = mappingMetaDataService.getForSubjectToPatient();
     }
 }

@@ -26,25 +26,24 @@ class SubjectWorkerExternalTest {
     @Test
     void processOneSubject() {
         Constants constants = constantsRepository.findAllConstants();
-        Predicate<Subject> continueAfterOneRecord = subject -> false;
-        subjectWorker.processSubjects(constants, continueAfterOneRecord);
+        subjectWorker.cacheRunImmutables(constants);
+        subjectWorker.processSubjects();
     }
 
     @Test
     @Disabled("Useful when giving full run")
     public void processSubjects() {
         Constants constants = constantsRepository.findAllConstants();
-        Predicate<Subject> continueAfterOneRecord = subject -> true;
-        subjectWorker.processSubjects(constants, continueAfterOneRecord);
+        subjectWorker.cacheRunImmutables(constants);
+        subjectWorker.processSubjects();
     }
 
     //Useful when testing things like update
     @Test
     public void processSpecificSubject() {
         Constants constants = constantsRepository.findAllConstants();
-        Predicate<Subject> continueAfterOneRecord = subject -> false;
-        var subjectToPatientMetaData = mappingMetaDataService.getForSubjectToPatient();
+        subjectWorker.cacheRunImmutables(constants);
         var subject = avniSubjectRepository.getSubject("b04d4edf-46cb-422b-be58-8df0bff11666");
-        subjectWorker.processSubject(constants, continueAfterOneRecord, subjectToPatientMetaData, subject);
+        subjectWorker.processSubject(subject);
     }
 }

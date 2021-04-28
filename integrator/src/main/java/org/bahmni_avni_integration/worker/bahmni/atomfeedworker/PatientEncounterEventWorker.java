@@ -37,6 +37,8 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
     private AvniProgramEncounterService programEncounterService;
     @Autowired
     private ErrorService errorService;
+    @Autowired
+    private MappingMetaDataService mappingMetaDataService;
 
     private BahmniEncounterToAvniEncounterMetaData metaData;
     private Constants constants;
@@ -172,13 +174,9 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
     public void cleanUp(Event event) {
     }
 
-    //    to avoid loading for every event
-    public void setMetaData(BahmniEncounterToAvniEncounterMetaData metaData) {
-        this.metaData = metaData;
-    }
-
-    public void setConstants(Constants constants) {
+    public void cacheRunImmutables(Constants constants) {
         this.constants = constants;
+        this.metaData = mappingMetaDataService.getForBahmniEncounterToAvniEntities();
     }
 
     @Override

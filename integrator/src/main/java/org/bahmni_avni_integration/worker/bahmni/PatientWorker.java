@@ -23,8 +23,11 @@ public class PatientWorker extends BaseBahmniWorker implements PatientsProcessor
         this.eventWorker = eventWorker;
     }
 
-    public void processPatients(Constants allConstants) {
-        eventWorker.setConstants(allConstants);
+    public void processPatients() {
         process(patientFeedLink, eventWorker);
+    }
+
+    public void cacheRunImmutables(Constants constants) {
+        eventWorker.cacheRunImmutables(constants);
     }
 }

@@ -30,8 +30,7 @@ public class PatientFirstRunWorker implements PatientsProcessor {
 
     private static final Logger logger = Logger.getLogger(PatientFirstRunWorker.class);
 
-    public void processPatients(Constants allConstants) {
-        eventWorker.setConstants(allConstants);
+    public void processPatients() {
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(implementationConfigurationRepository.getFirstRunPatientSql());
             BahmniEntityStatus bahmniEntityStatus = bahmniEntityStatusRepository.findByEntityType(BahmniEntityType.Patient);
@@ -49,5 +48,9 @@ public class PatientFirstRunWorker implements PatientsProcessor {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void cacheRunImmutables(Constants constants) {
+        eventWorker.cacheRunImmutables(constants);
     }
 }

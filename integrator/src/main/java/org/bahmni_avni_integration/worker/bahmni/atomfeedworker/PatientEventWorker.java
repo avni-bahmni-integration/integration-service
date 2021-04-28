@@ -34,7 +34,9 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
 
     @Autowired
     private SubjectService subjectService;
+
     private Constants constants;
+    private PatientToSubjectMetaData metaData;
 
     @Value("${app.first.run}")
     private boolean isFirstRun;
@@ -56,7 +58,6 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
 
     private void processPatient(OpenMRSPatient patient) {
         logger.debug(String.format("Processing patient: name %s || uuid %s", patient.getName(), patient.getUuid()));
-        PatientToSubjectMetaData metaData = mappingMetaDataService.getForPatientToSubject();
 
         GeneralEncounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
         if (isFirstRun) {
@@ -107,7 +108,8 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
     }
 
     //    avoid loading of constants for every event
-    public void setConstants(Constants constants) {
+    public void cacheRunImmutables(Constants constants) {
         this.constants = constants;
+        metaData = mappingMetaDataService.getForPatientToSubject();
     }
 }

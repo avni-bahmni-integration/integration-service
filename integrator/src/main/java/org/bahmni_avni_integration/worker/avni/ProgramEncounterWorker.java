@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.function.Predicate;
-
 @Component
 public class ProgramEncounterWorker implements ErrorRecordWorker {
     private final AvniEntityStatusRepository avniEntityStatusRepository;
@@ -32,8 +30,10 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
     private final AvniSubjectRepository avniSubjectRepository;
     private final ProgramEncounterService programEncounterService;
 
-    private static Logger logger = Logger.getLogger(ProgramEncounterWorker.class);
-    private EntityStatusService entityStatusService;
+    private static final Logger logger = Logger.getLogger(ProgramEncounterWorker.class);
+    private final EntityStatusService entityStatusService;
+    private Constants constants;
+    private SubjectToPatientMetaData metaData;
 
     public ProgramEncounterWorker(AvniEntityStatusRepository avniEntityStatusRepository,
                                   MappingMetaDataService mappingMetaDataService,
@@ -47,9 +47,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
         this.entityStatusService = entityStatusService;
     }
 
-    public void processProgramEncounters(Constants constants, Predicate<ProgramEncounter> continueAfterOneRecord) {
-        SubjectToPatientMetaData subjectToPatientMetaData = mappingMetaDataService.getForSubjectToPatient();
-        mainLoop:
+    public void processProgramEncounters() {
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.ProgramEncounter);
             ProgramEncountersResponse response = avniProgramEncounterRepository.getProgramEncounters(status.getReadUpto());
@@ -59,25 +57,23 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
             logger.info(String.format("Found %d program encounters that are newer than %s", programEncounters.length, status.getReadUpto()));
             if (programEncounters.length == 0) break;
             for (ProgramEncounter programEncounter : programEncounters) {
-                if (processProgramEncounter(constants, continueAfterOneRecord, programEncounter, subjectToPatientMetaData))
-                    break mainLoop;
+                processProgramEncounter(programEncounter);
             }
             if (totalElements == 1 && totalPages == 1) break;
         }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected boolean processProgramEncounter(Constants constants, Predicate<ProgramEncounter> continueAfterOneRecord, ProgramEncounter programEncounter, SubjectToPatientMetaData subjectToPatientMetaData) {
+    protected void processProgramEncounter(ProgramEncounter programEncounter) {
         logger.debug(String.format("Processing avni program encounter %s", programEncounter.getUuid()));
 
         if (programEncounterService.shouldFilterEncounter(programEncounter)) {
             logger.warn(String.format("Program encounter should be filtered out: %s", programEncounter.getUuid()));
-            return !continueAfterOneRecord.test(programEncounter);
         }
 
         var subject = avniSubjectRepository.getSubject(programEncounter.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
-        Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter = programEncounterService.findCommunityEncounter(programEncounter, subject, constants, subjectToPatientMetaData);
+        Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter = programEncounterService.findCommunityEncounter(programEncounter, subject, constants, metaData);
         var patient = patientEncounter.getValue0();
         var encounter = patientEncounter.getValue1();
 
@@ -88,21 +84,20 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
             logger.debug(String.format("Updating existing Bahmni Program Encounter %s", encounter.getUuid()));
             programEncounterService.updateCommunityEncounter(encounter, programEncounter, constants);
         } else if (patient != null && encounter == null) {
-            logger.debug(String.format("Patient with identifier %s not found", subject.getId(subjectToPatientMetaData)));
+            logger.debug(String.format("Patient with identifier %s not found", subject.getId(metaData)));
             programEncounterService.processPatientNotFound(programEncounter);
         }
 
         entityStatusService.saveEntityStatus(programEncounter);
-
-        return !continueAfterOneRecord.test(programEncounter);
-    }
-
-    public void processProgramEncounters(Constants constants) {
-        this.processProgramEncounters(constants, programEncounter -> true);
     }
 
     @Override
     public void processError(String entityUuid) {
         throw new NotImplementedException();
+    }
+
+    public void cacheRunImmutables(Constants constants) {
+        this.constants = constants;
+        metaData = mappingMetaDataService.getForSubjectToPatient();
     }
 }

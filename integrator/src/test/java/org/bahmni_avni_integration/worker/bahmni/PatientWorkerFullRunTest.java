@@ -17,11 +17,13 @@ public class PatientWorkerFullRunTest extends BaseExternalTest {
 
     @Test
     public void processPatients() {
-        patientWorker.processPatients(getConstants());
+        patientWorker.cacheRunImmutables(getConstants());
+        patientWorker.processPatients();
     }
 
     @Test
     public void processEncounters() {
-        patientEncounterWorker.processEncounters(getConstants(), mappingMetaDataService.getForBahmniEncounterToAvniEntities());
+        patientEncounterWorker.cacheRunImmutables(getConstants());
+        patientEncounterWorker.processEncounters();
     }
 }

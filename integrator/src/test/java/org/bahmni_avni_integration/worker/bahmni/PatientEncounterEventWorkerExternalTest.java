@@ -15,15 +15,11 @@ public class PatientEncounterEventWorkerExternalTest extends BaseExternalTest {
     private PatientEventWorker patientEventWorker;
     @Autowired
     private PatientEncounterEventWorker patientEncounterEventWorker;
-    @Autowired
-    private MappingMetaDataService mappingMetaDataService;
 
     @BeforeEach
     public void beforeEach() {
-        patientEventWorker.setConstants(getConstants());
-
-        patientEncounterEventWorker.setConstants(getConstants());
-        patientEncounterEventWorker.setMetaData(mappingMetaDataService.getForBahmniEncounterToAvniEntities());
+        patientEventWorker.cacheRunImmutables(getConstants());
+        patientEncounterEventWorker.cacheRunImmutables(getConstants());
     }
 
     @Test

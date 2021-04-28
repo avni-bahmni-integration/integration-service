@@ -12,16 +12,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EnrolmentService {
-
-    private final PatientService patientService;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final OpenMRSEncounterRepository openMRSEncounterRepository;
     private final EnrolmentMapper enrolmentMapper;
     private final ErrorService errorService;
     private final VisitService visitService;
 
-    public EnrolmentService(PatientService patientService, MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, EnrolmentMapper enrolmentMapper, ErrorService errorService, VisitService visitService) {
-        this.patientService = patientService;
+    public EnrolmentService(MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, EnrolmentMapper enrolmentMapper, ErrorService errorService, VisitService visitService) {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.openMRSEncounterRepository = openMRSEncounterRepository;
         this.enrolmentMapper = enrolmentMapper;

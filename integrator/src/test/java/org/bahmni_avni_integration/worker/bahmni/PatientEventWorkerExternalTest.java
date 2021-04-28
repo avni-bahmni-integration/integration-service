@@ -20,14 +20,14 @@ class PatientEventWorkerExternalTest {
     @Test
     void process() {
         Constants constants = constantsRepository.findAllConstants();
-        openMrsPatientEventWorker.setConstants(constants);
+        openMrsPatientEventWorker.cacheRunImmutables(constants);
         openMrsPatientEventWorker.process(new Event("0", "/openmrs/ws/rest/v1/patient/42baa8d4-145d-4d76-b4de-6aad19cb3f2a?v=full"));
     }
 
     @Test
     public void duplicateTest() {
         Constants constants = constantsRepository.findAllConstants();
-        openMrsPatientEventWorker.setConstants(constants);
+        openMrsPatientEventWorker.cacheRunImmutables(constants);
         openMrsPatientEventWorker.process(new Event("0", "/openmrs/ws/rest/v1/patient/866dea68-7d64-4a5f-bad0-18ee43d1736e?v=full"));
     }
 }

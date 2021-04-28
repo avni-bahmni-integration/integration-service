@@ -26,9 +26,11 @@ public class PatientEncounterWorker extends BaseBahmniWorker implements PatientE
         this.eventWorker = eventWorker;
     }
 
-    public void processEncounters(Constants constants, BahmniEncounterToAvniEncounterMetaData metaData) {
-        eventWorker.setConstants(constants);
-        eventWorker.setMetaData(metaData);
+    public void processEncounters() {
         process(patientFeedLink, eventWorker);
+    }
+
+    public void cacheRunImmutables(Constants constants) {
+        eventWorker.cacheRunImmutables(constants);
     }
 }

@@ -61,6 +61,10 @@ public class ErrorService {
         return saveBahmniError(entityUuid, errorType, bahmniEntityType);
     }
 
+    public void errorOccurred(String entityUuid, ErrorType errorType, AvniEntityType avniEntityType) {
+        saveAvniError(entityUuid, errorType, avniEntityType);
+    }
+
     public void errorOccurred(Enrolment enrolment, ErrorType errorType) {
         saveAvniError(enrolment.getUuid(), errorType, AvniEntityType.Enrolment);
     }

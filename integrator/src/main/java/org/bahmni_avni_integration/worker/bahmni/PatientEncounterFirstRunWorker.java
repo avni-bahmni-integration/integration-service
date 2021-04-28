@@ -32,10 +32,7 @@ public class PatientEncounterFirstRunWorker implements PatientEncountersProcesso
 
     private static final Logger logger = Logger.getLogger(PatientEncounterFirstRunWorker.class);
 
-    public void processEncounters(Constants constants, BahmniEncounterToAvniEncounterMetaData metaData) {
-        eventWorker.setConstants(constants);
-        eventWorker.setMetaData(metaData);
-
+    public void processEncounters() {
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(implementationConfigurationRepository.getFirstRunEncounterSql());
             BahmniEntityStatus bahmniEntityStatus = bahmniEntityStatusRepository.findByEntityType(BahmniEntityType.Encounter);
@@ -53,5 +50,9 @@ public class PatientEncounterFirstRunWorker implements PatientEncountersProcesso
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void cacheRunImmutables(Constants constants) {
+        eventWorker.cacheRunImmutables(constants);
     }
 }
