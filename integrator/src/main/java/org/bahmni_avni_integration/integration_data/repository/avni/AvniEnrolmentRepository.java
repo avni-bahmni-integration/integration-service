@@ -18,12 +18,12 @@ public class AvniEnrolmentRepository extends BaseAvniRepository {
     @Autowired
     private AvniHttpClient avniHttpClient;
 
-    public Enrolment[] getEnrolments(Date lastModifiedDateTime) {
+    public EnrolmentsResponse getEnrolments(Date lastModifiedDateTime) {
         Map<String, String> queryParams = Map.of("lastModifiedDateTime",
                 FormatAndParseUtil.toISODateString(lastModifiedDateTime));
         ResponseEntity<EnrolmentsResponse> responseEntity = avniHttpClient.get("/api/programEnrolments", queryParams, EnrolmentsResponse.class);
         EnrolmentsResponse enrolmentsResponse = responseEntity.getBody();
-        return enrolmentsResponse.getContent();
+        return enrolmentsResponse;
     }
 
     public Enrolment getEnrolment(String id) {

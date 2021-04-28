@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.worker.avni;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Subject;
+import org.bahmni_avni_integration.contract.avni.SubjectsResponse;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
@@ -46,12 +47,16 @@ public class SubjectWorker implements ErrorRecordWorker {
         mainLoop:
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
-            Subject[] subjects = avniSubjectRepository.getSubjects(status.getReadUpto(), constants.getValue(ConstantKey.IntegrationAvniSubjectType));
+            SubjectsResponse response = avniSubjectRepository.getSubjects(status.getReadUpto(), constants.getValue(ConstantKey.IntegrationAvniSubjectType));
+            Subject[] subjects = response.getContent();
+            int totalElements = response.getTotalElements();
+            int totalPages = response.getTotalPages();
             logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUpto()));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {
                 if (processSubject(constants, continueAfterOneRecord, metaData, subject)) break mainLoop;
             }
+            if (totalElements == 1 && totalPages == 1) break;
         }
     }
 
@@ -78,7 +83,9 @@ public class SubjectWorker implements ErrorRecordWorker {
             patientService.createSubject(subject, patient, metaData, constants);
         } else if (encounter == null && patient == null) {
             logger.debug(String.format("Creating new patient for subject %s", subject.getUuid()));
-            patientService.createPatient(subject, metaData, constants);
+            patient = patientService.createPatient(subject, metaData, constants);
+            logger.debug(String.format("Creating new encounter for subject %s", subject.getUuid()));
+            patientService.createSubject(subject, patient, metaData, constants);
         }
         entityStatusService.saveEntityStatus(subject);
 

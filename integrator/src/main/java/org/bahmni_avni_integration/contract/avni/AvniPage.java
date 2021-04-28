@@ -1,32 +1,32 @@
 package org.bahmni_avni_integration.contract.avni;
 
 public class AvniPage <T> {
-    private String totalElements;
-    private String totalPages;
-    private String pageSize;
+    private int totalElements;
+    private int totalPages;
+    private int pageSize;
     private T[] content;
 
-    public String getTotalElements() {
+    public int getTotalElements() {
         return totalElements;
     }
 
-    public void setTotalElements(String totalElements) {
+    public void setTotalElements(int totalElements) {
         this.totalElements = totalElements;
     }
 
-    public String getTotalPages() {
+    public int getTotalPages() {
         return totalPages;
     }
 
-    public void setTotalPages(String totalPages) {
+    public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
     }
 
-    public String getPageSize() {
+    public int getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(String pageSize) {
+    public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
 

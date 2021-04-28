@@ -17,14 +17,14 @@ public class AvniSubjectRepository extends BaseAvniRepository {
     @Autowired
     private AvniHttpClient avniHttpClient;
 
-    public Subject[] getSubjects(Date lastModifiedDateTime, String subjectType) {
+    public SubjectsResponse getSubjects(Date lastModifiedDateTime, String subjectType) {
         String fromTime = FormatAndParseUtil.toISODateString(lastModifiedDateTime);
         HashMap<String, String> queryParams = new HashMap<>(1);
         queryParams.put("lastModifiedDateTime", fromTime);
         queryParams.put("subjectType", subjectType);
-        ResponseEntity<SubjectsResponse> subjectsResponse = avniHttpClient.get("/api/subjects", queryParams, SubjectsResponse.class);
-        SubjectsResponse subjects = subjectsResponse.getBody();
-        return subjects.getContent();
+        ResponseEntity<SubjectsResponse> responseEntity = avniHttpClient.get("/api/subjects", queryParams, SubjectsResponse.class);
+        SubjectsResponse subjectsResponse = responseEntity.getBody();
+        return subjectsResponse;
     }
 
     public Subject[] getSubjects(Date lastModifiedDateTime, String subjectType, HashMap<String, Object> concepts) {

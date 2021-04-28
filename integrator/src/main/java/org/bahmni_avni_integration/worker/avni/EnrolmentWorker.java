@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.worker.avni;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
+import org.bahmni_avni_integration.contract.avni.EnrolmentsResponse;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
@@ -56,19 +57,23 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         mainLoop:
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
-            Enrolment[] enrolments = avniEnrolmentRepository.getEnrolments(status.getReadUpto());
+            EnrolmentsResponse response = avniEnrolmentRepository.getEnrolments(status.getReadUpto());
+            int totalElements = response.getTotalElements();
+            int totalPages = response.getTotalPages();
+            Enrolment[] enrolments = response.getContent();
             logger.info(String.format("Found %d enrolments that are newer than %s", enrolments.length, status.getReadUpto()));
             if (enrolments.length == 0) break;
             for (Enrolment enrolment : enrolments) {
                 if (processEnrolment(constants, continueAfterOneRecord, subjectToPatientMetaData, enrolment))
                     break mainLoop;
             }
+            if (totalElements == 1 && totalPages == 1) break;
         }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected boolean processEnrolment(Constants constants, Predicate<Enrolment> continueAfterOneRecord, SubjectToPatientMetaData metaData, Enrolment enrolment) {
-        logger.debug(String.format("Processing avni enrolment %s", enrolment.getUuid()));
+        logger.debug(String.format("Processing avni %s enrolment %s", enrolment.getProgram(), enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
 

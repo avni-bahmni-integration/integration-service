@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.worker.avni;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
+import org.bahmni_avni_integration.contract.avni.ProgramEncountersResponse;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
@@ -51,13 +52,17 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
         mainLoop:
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.ProgramEncounter);
-            ProgramEncounter[] programEncounters = avniProgramEncounterRepository.getProgramEncounters(status.getReadUpto());
+            ProgramEncountersResponse response = avniProgramEncounterRepository.getProgramEncounters(status.getReadUpto());
+            ProgramEncounter[] programEncounters = response.getContent();
+            int totalElements = response.getTotalElements();
+            int totalPages = response.getTotalPages();
             logger.info(String.format("Found %d program encounters that are newer than %s", programEncounters.length, status.getReadUpto()));
             if (programEncounters.length == 0) break;
             for (ProgramEncounter programEncounter : programEncounters) {
                 if (processProgramEncounter(constants, continueAfterOneRecord, programEncounter, subjectToPatientMetaData))
                     break mainLoop;
             }
+            if (totalElements == 1 && totalPages == 1) break;
         }
     }
 

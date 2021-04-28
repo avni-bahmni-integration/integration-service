@@ -173,7 +173,8 @@ public class AuthenticationHelper {
                 authResult = result.getAuthenticationResult();
             }
         } catch (final Exception ex) {
-            System.out.println("Exception" + ex);
+            logger.error("Could not get token", ex);
+            throw ex;
         }
         return authResult;
     }

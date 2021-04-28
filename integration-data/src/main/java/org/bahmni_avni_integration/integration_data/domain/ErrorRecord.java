@@ -18,7 +18,7 @@ public class ErrorRecord extends BaseEntity {
     @Column
     private String entityId;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "errorRecord")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "errorRecord")
     private Set<ErrorRecordLog> errorRecordLogs = new HashSet<>();
 
     public AvniEntityType getAvniEntityType() {

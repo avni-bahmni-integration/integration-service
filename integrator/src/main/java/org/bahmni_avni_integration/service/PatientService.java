@@ -89,9 +89,9 @@ public class PatientService {
         errorService.errorOccurred(subject, ErrorType.NoPatientWithId);
     }
 
-    public void createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
+    public OpenMRSUuidHolder createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
         if (subject.getVoided())
-            return;
+            return null;
 
         OpenMRSSavePerson person = new OpenMRSSavePerson();
         person.setNames(List.of(new OpenMRSSaveName(
@@ -109,7 +109,7 @@ public class PatientService {
                 constants.getValue(ConstantKey.IntegrationBahmniLocation),
                 true
         )));
-        openMRSPatientRepository.createPatient(patient);
+        return openMRSPatientRepository.createPatient(patient);
     }
 
     //    doesn't work
