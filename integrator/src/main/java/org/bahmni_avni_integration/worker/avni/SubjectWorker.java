@@ -6,15 +6,14 @@ import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.avni.SubjectsResponse;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
-import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
-import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
-import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
-import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.BahmniEntityType;
+import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.MultipleResultsFoundException;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.EntityStatusService;
+import org.bahmni_avni_integration.service.ErrorService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.PatientService;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
@@ -36,6 +35,8 @@ public class SubjectWorker implements ErrorRecordWorker {
     private PatientService patientService;
     @Autowired
     private EntityStatusService entityStatusService;
+    @Autowired
+    private ErrorService errorService;
 
     private static final Logger logger = Logger.getLogger(SubjectWorker.class);
     private SubjectToPatientMetaData metaData;
@@ -90,7 +91,14 @@ public class SubjectWorker implements ErrorRecordWorker {
 
     @Override
     public void processError(String entityUuid) {
-        throw new NotImplementedException();
+        Subject subject = avniSubjectRepository.getSubject(entityUuid);
+        if (subject == null) {
+            logger.warn(String.format("Subject has been deleted now: %s", entityUuid));
+            errorService.errorOccurred(entityUuid, ErrorType.EntityIsDeleted, AvniEntityType.Subject);
+            return;
+        }
+
+        processSubject(subject);
     }
 
     public void cacheRunImmutables(Constants constants) {

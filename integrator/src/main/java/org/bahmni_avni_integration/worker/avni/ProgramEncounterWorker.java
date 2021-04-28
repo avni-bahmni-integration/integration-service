@@ -1,6 +1,5 @@
 package org.bahmni_avni_integration.worker.avni;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncountersResponse;
@@ -9,11 +8,13 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniProgramEncounterRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.EntityStatusService;
+import org.bahmni_avni_integration.service.ErrorService;
 import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.service.ProgramEncounterService;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
@@ -34,17 +35,19 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
     private final EntityStatusService entityStatusService;
     private Constants constants;
     private SubjectToPatientMetaData metaData;
+    private final ErrorService errorService;
 
     public ProgramEncounterWorker(AvniEntityStatusRepository avniEntityStatusRepository,
                                   MappingMetaDataService mappingMetaDataService,
                                   AvniProgramEncounterRepository avniProgramEncounterRepository,
-                                  AvniSubjectRepository avniSubjectRepository, ProgramEncounterService programEncounterService, EntityStatusService entityStatusService) {
+                                  AvniSubjectRepository avniSubjectRepository, ProgramEncounterService programEncounterService, EntityStatusService entityStatusService, ErrorService errorService) {
         this.avniEntityStatusRepository = avniEntityStatusRepository;
         this.mappingMetaDataService = mappingMetaDataService;
         this.avniProgramEncounterRepository = avniProgramEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.programEncounterService = programEncounterService;
         this.entityStatusService = entityStatusService;
+        this.errorService = errorService;
     }
 
     public void processProgramEncounters() {
@@ -93,7 +96,14 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
     @Override
     public void processError(String entityUuid) {
-        throw new NotImplementedException();
+        ProgramEncounter programEncounter = avniProgramEncounterRepository.getProgramEncounter(entityUuid);
+        if (programEncounter == null) {
+            logger.warn(String.format("ProgramEncounter has been deleted now: %s", entityUuid));
+            errorService.errorOccurred(entityUuid, ErrorType.EntityIsDeleted, AvniEntityType.ProgramEncounter);
+            return;
+        }
+
+        processProgramEncounter(programEncounter);
     }
 
     public void cacheRunImmutables(Constants constants) {
