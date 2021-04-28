@@ -45,6 +45,8 @@ public class ProgramEncounterService {
     }
 
     public OpenMRSFullEncounter createCommunityEncounter(ProgramEncounter programEncounter, OpenMRSUuidHolder patient, Constants constants) {
+        if (programEncounter.getVoided()) return null;
+
         OpenMRSUuidHolder visit = visitService.getOrCreateVisit(patient);
         OpenMRSEncounter encounter = programEncounterMapper.mapEncounter(programEncounter, patient.getUuid(), constants);
         encounter.setVisit(visit.getUuid());
@@ -63,8 +65,12 @@ public class ProgramEncounterService {
     }
 
     public void updateCommunityEncounter(OpenMRSFullEncounter existingEncounter, ProgramEncounter programEncounter, Constants constants) {
-        OpenMRSEncounter openMRSEncounter = programEncounterMapper.mapProgramEncounterToExistingEncounter(existingEncounter, programEncounter, constants);
-        openMRSEncounterRepository.updateEncounter(openMRSEncounter);
-        errorService.successfullyProcessed(programEncounter);
+        if (programEncounter.getVoided()) {
+            openMRSEncounterRepository.voidEncounter(existingEncounter);
+        } else {
+            OpenMRSEncounter openMRSEncounter = programEncounterMapper.mapProgramEncounterToExistingEncounter(existingEncounter, programEncounter, constants);
+            openMRSEncounterRepository.updateEncounter(openMRSEncounter);
+            errorService.successfullyProcessed(programEncounter);
+        }
     }
 }

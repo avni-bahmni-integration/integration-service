@@ -83,7 +83,7 @@ public class MainJob implements Job {
             if (hasTask(tasks, IntegrationTask.ErrorRecords))
                 errorRecordsWorker.process();
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("Failed", e);
             bugsnag.notify(e);
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));

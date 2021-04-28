@@ -63,6 +63,10 @@ public class AvniBaseContract {
     }
 
     public void setVoided(boolean voided) {
-        set("voided", voided);
+        set("Voided", voided);
+    }
+
+    public Boolean getVoided() {
+        return (Boolean) get("Voided");
     }
 }

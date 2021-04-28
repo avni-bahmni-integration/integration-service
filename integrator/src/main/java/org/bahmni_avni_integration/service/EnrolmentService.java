@@ -53,6 +53,7 @@ public class EnrolmentService {
     }
 
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
+        if (enrolment.getVoided()) return null;
         OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToEnrolmentEncounter(enrolment, openMRSPatient.getUuid(), constants);
         OpenMRSUuidHolder visit = visitService.getOrCreateVisit(openMRSPatient);
         encounter.setVisit(visit.getUuid());
@@ -61,6 +62,8 @@ public class EnrolmentService {
     }
 
     public OpenMRSFullEncounter createCommunityExitEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
+        if (enrolment.getVoided()) return null;
+
         OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToExitEncounter(enrolment, openMRSPatient.getUuid(), constants);
         OpenMRSUuidHolder visit = visitService.getOrCreateVisit(openMRSPatient);
         encounter.setVisit(visit.getUuid());
@@ -69,12 +72,20 @@ public class EnrolmentService {
     }
 
     public void updateCommunityEnrolment(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
-        OpenMRSEncounter openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentEncounter(existingEncounter, enrolment, constants);
-        openMRSEncounterRepository.updateEncounter(openMRSEncounter);
+        if (enrolment.getVoided()) {
+            openMRSEncounterRepository.voidEncounter(existingEncounter);
+        } else {
+            OpenMRSEncounter openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentEncounter(existingEncounter, enrolment, constants);
+            openMRSEncounterRepository.updateEncounter(openMRSEncounter);
+        }
     }
 
     public void updateCommunityExitEnrolment(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
-        OpenMRSEncounter openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentExitEncounter(existingEncounter, enrolment, constants);
-        openMRSEncounterRepository.updateEncounter(openMRSEncounter);
+        if (enrolment.getVoided()) {
+            openMRSEncounterRepository.voidEncounter(existingEncounter);
+        } else {
+            OpenMRSEncounter openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentExitEncounter(existingEncounter, enrolment, constants);
+            openMRSEncounterRepository.updateEncounter(openMRSEncounter);
+        }
     }
 }

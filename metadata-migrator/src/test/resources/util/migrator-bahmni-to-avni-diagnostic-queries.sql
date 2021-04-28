@@ -1,6 +1,6 @@
 -- List of concepts which are marked as concept set but they have observations but no set members in them
 -- OpenMRS
-select cn.name, concept.uuid, concept_set.*
+select cd.name, concept_class.name, concept.is_set, cn.name
 from concept
          join concept_datatype cd on concept.datatype_id = cd.concept_datatype_id
          join concept_name cn on concept.concept_id = cn.concept_id
@@ -10,7 +10,15 @@ where concept.is_set = true
   and cn.concept_name_type = 'FULLY_SPECIFIED'
   and concept_set.concept_set_id is null
 group by cn.name
-order by 1;
+union
+select cd.name, concept_class.name, concept.is_set, cn.name
+from concept
+         join concept_name cn on concept.concept_id = cn.concept_id
+         join concept_datatype cd on concept.datatype_id = cd.concept_datatype_id
+         join concept_class on concept.class_id = concept_class.concept_class_id
+         join obs on concept.concept_id = obs.value_coded
+where concept.is_set = true and cn.concept_name_type = 'FULLY_SPECIFIED'
+group by cn.name;
 
 -- Concepts in avni which are of type N/A but they are associated to a form element
 -- Avni

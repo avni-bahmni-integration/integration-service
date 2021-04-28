@@ -15,7 +15,6 @@ import org.bahmni_avni_integration.integration_data.repository.avni.AvniEnrolmen
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.*;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
-import org.javatuples.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +30,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
     private final PatientService patientService;
     private final ErrorService errorService;
 
-    private static Logger logger = Logger.getLogger(EnrolmentWorker.class);
+    private static final Logger logger = Logger.getLogger(EnrolmentWorker.class);
     private final AvniSubjectRepository avniSubjectRepository;
     private final MappingMetaDataService mappingMetaDataService;
 

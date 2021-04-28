@@ -40,13 +40,19 @@ public class PatientService {
     }
 
     public void updateSubject(OpenMRSFullEncounter existingEncounter, OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
-        OpenMRSEncounter encounter = subjectMapper.mapSubjectToExistingEncounter(existingEncounter, subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
-        openMRSEncounterRepository.updateEncounter(encounter);
-
-        errorService.successfullyProcessed(subject);
+        if (subject.getVoided()) {
+            openMRSEncounterRepository.voidEncounter(existingEncounter);
+        } else {
+            OpenMRSEncounter encounter = subjectMapper.mapSubjectToExistingEncounter(existingEncounter, subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
+            openMRSEncounterRepository.updateEncounter(encounter);
+            errorService.successfullyProcessed(subject);
+        }
     }
 
     public OpenMRSFullEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+        if (subject.getVoided())
+            return null;
+
         OpenMRSUuidHolder visit = visitService.getOrCreateVisit(patient);
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
         encounter.setVisit(visit.getUuid());
@@ -81,6 +87,9 @@ public class PatientService {
     }
 
     public void createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
+        if (subject.getVoided())
+            return;
+
         OpenMRSSavePerson person = new OpenMRSSavePerson();
         person.setNames(List.of(new OpenMRSSaveName(
                 subject.getFirstName(),

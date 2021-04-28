@@ -20,6 +20,7 @@ public class AvniProgramEncounterService {
 
     public void update(BahmniSplitEncounter bahmniSplitEncounter, ProgramEncounter existingAvniEncounter, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, Enrolment enrolment) {
         ProgramEncounter encounter = openMRSEncounterMapper.mapToAvniProgramEncounter(bahmniSplitEncounter, bahmniEncounterToAvniEncounterMetaData, enrolment);
+        encounter.setVoided(bahmniSplitEncounter.isVoided());
         avniProgramEncounterRepository.update(existingAvniEncounter.getUuid(), encounter);
     }
 
@@ -30,6 +31,8 @@ public class AvniProgramEncounterService {
     }
 
     public void create(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, Enrolment enrolment) {
+        if (splitEncounter.isVoided()) return;
+
         ProgramEncounter encounter = openMRSEncounterMapper.mapToAvniProgramEncounter(splitEncounter, metaData, enrolment);
         avniProgramEncounterRepository.create(encounter);
     }
