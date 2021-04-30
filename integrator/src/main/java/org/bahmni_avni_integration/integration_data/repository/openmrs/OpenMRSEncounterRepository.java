@@ -68,6 +68,11 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         return ObjectJsonMapper.readValue(json, OpenMRSFullEncounter.class);
     }
 
+    public OpenMRSDefaultEncounter getDefaultEncounter(String uuid) {
+        String json = openMRSWebClient.get(URI.create(String.format("%s/ws/rest/v1/encounter/%s",urlPrefix, uuid)));
+        return ObjectJsonMapper.readValue(json, OpenMRSDefaultEncounter.class);
+    }
+
     public void voidEncounter(OpenMRSFullEncounter existingEncounter) {
         openMRSWebClient.delete(URI.create(String.format("%s/%s?purge=false", getResourcePath("encounter"), existingEncounter.getUuid())));
     }

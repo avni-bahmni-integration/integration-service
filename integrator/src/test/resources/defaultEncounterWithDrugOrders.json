@@ -1,0 +1,129 @@
+{
+  "uuid": "00026702-c617-4af3-850f-e8bfc138804f",
+  "display": "Consultation 08/27/2017",
+  "encounterDatetime": "2017-08-27T12:18:30.000+0530",
+  "patient": {
+    "uuid": "dc906a5e-9bad-4f4a-8ee9-4d429ff925e9",
+    "display": "TRI11341705 - AABCCDDEE FFGGHHII",
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/patient/dc906a5e-9bad-4f4a-8ee9-4d429ff925e9"
+      }
+    ]
+  },
+  "location": {
+    "uuid": "c58e12ed-3f12-11e4-adec-0800271c1b75",
+    "display": "OPD",
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/location/c58e12ed-3f12-11e4-adec-0800271c1b75"
+      }
+    ]
+  },
+  "form": null,
+  "encounterType": {
+    "uuid": "81852aee-3f10-11e4-adec-0800271c1b75",
+    "display": "Consultation",
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encountertype/81852aee-3f10-11e4-adec-0800271c1b75"
+      }
+    ]
+  },
+  "obs": [],
+  "orders": [
+    {
+      "uuid": "cd480235-750d-4917-ab9a-09fab639aae7",
+      "display": "(NEW) Aspirin 75Mg: null",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/cd480235-750d-4917-ab9a-09fab639aae7"
+        }
+      ],
+      "type": "drugorder",
+      "voided": true
+    },
+    {
+      "uuid": "aa589c3a-2f68-48be-a9b1-9fea0640e259",
+      "display": "(NEW) Betamethasone crème: null",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/aa589c3a-2f68-48be-a9b1-9fea0640e259"
+        }
+      ],
+      "type": "drugorder"
+    },
+    {
+      "uuid": "db09fea1-323c-4dec-91ca-2dd5d0028ddc",
+      "display": "(NEW) Salbutamol 2Mg: null",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/db09fea1-323c-4dec-91ca-2dd5d0028ddc"
+        }
+      ],
+      "type": "drugorder"
+    },
+    {
+      "uuid": "e53bfc6a-ca62-4521-8851-6307aced4d84",
+      "display": "(NEW) Cetirizine  10Mg: null",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/e53bfc6a-ca62-4521-8851-6307aced4d84"
+        }
+      ],
+      "type": "drugorder"
+    },
+    {
+      "uuid": "4bda9710-9fb6-4227-a847-335d61c7ad20",
+      "display": "(NEW) Atorvastatin 10Mg: null",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/order/4bda9710-9fb6-4227-a847-335d61c7ad20"
+        }
+      ],
+      "type": "drugorder"
+    }
+  ],
+  "voided": false,
+  "visit": {
+    "uuid": "5c044da3-08ac-4686-a3d8-7c71425b3a57",
+    "display": "OPD @ Registration Desk - 08/27/2017 11:18 AM",
+    "links": [
+      {
+        "rel": "self",
+        "uri": "http://143.110.188.91/openmrs/ws/rest/v1/visit/5c044da3-08ac-4686-a3d8-7c71425b3a57"
+      }
+    ]
+  },
+  "encounterProviders": [
+    {
+      "uuid": "c5b19417-391d-4051-8114-41911c34f492",
+      "display": "AABCCDDEE FFGGHHII: Unknown",
+      "links": [
+        {
+          "rel": "self",
+          "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f/encounterprovider/c5b19417-391d-4051-8114-41911c34f492"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f"
+    },
+    {
+      "rel": "full",
+      "uri": "http://143.110.188.91/openmrs/ws/rest/v1/encounter/00026702-c617-4af3-850f-e8bfc138804f?v=full"
+    }
+  ],
+  "resourceVersion": "1.9"
+}

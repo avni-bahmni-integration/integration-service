@@ -14,7 +14,7 @@ public class OpenMRSFullEncounterTest {
         OpenMRSFullEncounter openMRSFullEncounter = TestUtils.readResource("fullEncounter.json", OpenMRSFullEncounter.class);
         assertNotNull(openMRSFullEncounter);
         List<OpenMRSObservation> leafObservations = openMRSFullEncounter.getLeafObservations();
-        assertNotEquals(0, leafObservations.size());
+        assertEquals(8, leafObservations.size());
         assertFalse(openMRSFullEncounter.isVoided());
     }
 
@@ -48,9 +48,10 @@ public class OpenMRSFullEncounterTest {
     @Test
     public void getDrugOrders() {
         OpenMRSFullEncounter openMRSFullEncounter = TestUtils.readResource("encounterWithDrugOrders.json", OpenMRSFullEncounter.class);
+        OpenMRSDefaultEncounter openMRSDefaultEncounter = TestUtils.readResource("defaultEncounterWithDrugOrders.json", OpenMRSDefaultEncounter.class);
         assertNotNull(openMRSFullEncounter);
-        List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
-        assertEquals(5, drugOrders.size());
+        List<String> drugOrders = openMRSFullEncounter.getDrugOrders(openMRSDefaultEncounter);
+        assertEquals(4, drugOrders.size());
         assertTrue(openMRSFullEncounter.hasDrugOrders());
     }
 }

@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.contract.avni.AvniBaseContract;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSDefaultEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSObservation;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
@@ -44,12 +45,12 @@ public class OpenMRSEncounterMapper {
         return encounter;
     }
 
-    public GeneralEncounter mapDrugOrderEncounterToAvniEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, GeneralEncounter avniPatient) {
+    public GeneralEncounter mapDrugOrderEncounterToAvniEncounter(OpenMRSFullEncounter openMRSFullEncounter, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, GeneralEncounter avniPatient, OpenMRSDefaultEncounter defaultEncounter) {
         GeneralEncounter encounter = new GeneralEncounter();
         encounter.setEncounterDateTime(FormatAndParseUtil.fromIsoDateString(openMRSFullEncounter.getEncounterDatetime()));
         encounter.setEncounterType(bahmniEncounterToAvniEncounterMetaData.getDrugOrderEncounterTypeMapping().getAvniValue());
         encounter.setSubjectId(avniPatient.getSubjectId());
-        List<String> drugOrders = openMRSFullEncounter.getDrugOrders();
+        List<String> drugOrders = openMRSFullEncounter.getDrugOrders(defaultEncounter);
         encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getBahmniEntityUuidConcept(), openMRSFullEncounter.getUuid());
         encounter.addObservation(bahmniEncounterToAvniEncounterMetaData.getDrugOrderConceptMapping().getAvniValue(), String.join(";   ", drugOrders));
         encounter.setEmptyCancelObservations();

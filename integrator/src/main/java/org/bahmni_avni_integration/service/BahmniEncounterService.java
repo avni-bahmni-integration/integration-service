@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.service;
 
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSDefaultEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.*;
@@ -43,5 +44,9 @@ public class BahmniEncounterService {
 
     public boolean isProcessablePrescriptionEncounter(BahmniEncounter bahmniEncounter, Constants constants) {
         return isOutpatientEncounter(bahmniEncounter, constants) && bahmniEncounter.getOpenMRSEncounter().hasDrugOrders();
+    }
+
+    public OpenMRSDefaultEncounter getDefaultEncounter(String uuid) {
+        return encounterRepository.getDefaultEncounter(uuid);
     }
 }

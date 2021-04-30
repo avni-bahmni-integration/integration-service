@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSDefaultEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
@@ -86,12 +87,14 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
     private void processDrugOrderEncounter(OpenMRSFullEncounter openMRSEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {
         GeneralEncounter existingAvniEncounter = avniEncounterService.getDrugOrderGeneralEncounter(openMRSEncounter, metaData);
         if (existingAvniEncounter != null && avniPatient != null) {
-            avniEncounterService.updateDrugOrderEncounter(openMRSEncounter, existingAvniEncounter, metaData, avniPatient);
+            OpenMRSDefaultEncounter defaultEncounter = encounterService.getDefaultEncounter(openMRSEncounter.getUuid());
+            avniEncounterService.updateDrugOrderEncounter(openMRSEncounter, existingAvniEncounter, metaData, avniPatient, defaultEncounter);
             logger.info("Updated drug order encounter");
         } else if (existingAvniEncounter != null && avniPatient == null) {
             throw new SubjectIdChangedException();
         } else if (existingAvniEncounter == null && avniPatient != null) {
-            avniEncounterService.createDrugOrderEncounter(openMRSEncounter, metaData, avniPatient);
+            OpenMRSDefaultEncounter defaultEncounter = encounterService.getDefaultEncounter(openMRSEncounter.getUuid());
+            avniEncounterService.createDrugOrderEncounter(openMRSEncounter, metaData, avniPatient, defaultEncounter);
             logger.info("Created drug order encounter");
         } else if (existingAvniEncounter == null && avniPatient == null) {
             throw new NoSubjectWithIdException();

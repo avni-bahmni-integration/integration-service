@@ -85,7 +85,8 @@ public class OpenMRSFullEncounter {
             groupMembers.forEach(groupMember -> addLeafObservation(leafObservations, groupMember));
         } else {
             OpenMRSObservation openMRSObservation = getOpenMRSObservation(observation);
-            leafObservations.add(openMRSObservation);
+            if (!openMRSObservation.isVoided())
+                leafObservations.add(openMRSObservation);
         }
     }
 
@@ -100,6 +101,7 @@ public class OpenMRSFullEncounter {
             value = ((Map) value).get("uuid");
         }
         openMRSObservation.setValue(value);
+        openMRSObservation.setVoided((Boolean) observation.get("voided"));
         return openMRSObservation;
     }
 
@@ -136,9 +138,9 @@ public class OpenMRSFullEncounter {
         }).collect(Collectors.toList());
     }
 
-    public List<String> getDrugOrders() {
+    public List<String> getDrugOrders(OpenMRSDefaultEncounter defaultEncounter) {
         List<Map<String, Object>> drugOrderList = getDrugOrderList();
-        return drugOrderList.stream().map(stringObjectMap -> {
+        return drugOrderList.stream().filter(stringObjectMap -> defaultEncounter.isNotVoided((String) stringObjectMap.get("uuid"))).map(stringObjectMap -> {
             Map<String, Object> drug = (Map<String, Object>) stringObjectMap.get("drug");
             Map<String, Object> doseUnits = (Map<String, Object>) stringObjectMap.get("doseUnits");
 

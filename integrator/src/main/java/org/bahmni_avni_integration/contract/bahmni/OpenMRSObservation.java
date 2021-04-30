@@ -4,6 +4,7 @@ public class OpenMRSObservation {
     private String conceptUuid;
     private Object value;
     private String obsUuid;
+    private boolean voided;
 
     public String getConceptUuid() {
         return conceptUuid;
@@ -35,5 +36,13 @@ public class OpenMRSObservation {
                 "conceptUuid='" + conceptUuid + '\'' +
                 ", value=" + value +
                 '}';
+    }
+
+    public void setVoided(boolean voided) {
+        this.voided = voided;
+    }
+
+    public boolean isVoided() {
+        return voided;
     }
 }
