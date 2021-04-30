@@ -37,7 +37,7 @@ public class OpenMRSPatientRepository extends BaseOpenMRSRepository {
     }
 
     public OpenMRSPatient getPatient(String patientUuid) {
-        String patientJSON = openMRSWebClient.get(URI.create(String.format("%s/ws/rest/v1/patient/%s?v=full", urlPrefix, patientUuid)));
+        String patientJSON = openMRSWebClient.get(URI.create(String.format("%s/%s/patient/%s?v=full", urlPrefix, BaseOpenMRSRepository.OPENMRS_BASE_PATH, patientUuid)));
         return ObjectJsonMapper.readValue(patientJSON, OpenMRSPatient.class);
     }
 }

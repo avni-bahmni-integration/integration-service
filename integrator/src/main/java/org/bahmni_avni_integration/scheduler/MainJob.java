@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.scheduler;
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
+import org.bahmni_avni_integration.integration_data.domain.SyncDirection;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
 import org.bahmni_avni_integration.worker.ErrorRecordsWorker;
@@ -82,15 +83,20 @@ public class MainJob implements Job {
                 getPatientWorker(allConstants).processPatients();
             if (hasTask(tasks, IntegrationTask.BahmniEncounter))
                 getPatientEncounterWorker(allConstants).processEncounters();
-            if (hasTask(tasks, IntegrationTask.ErrorRecords)) {
-                errorRecordsWorker.cacheRunImmutables(allConstants);
-                errorRecordsWorker.process();
-            }
+            if (hasTask(tasks, IntegrationTask.AvniErrorRecords))
+                processErrorRecords(allConstants, SyncDirection.AvniToBahmni);
+            if (hasTask(tasks, IntegrationTask.BahmniErrorRecords))
+                processErrorRecords(allConstants, SyncDirection.BahmniToAvni);
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
+    }
+
+    private void processErrorRecords(Constants allConstants, SyncDirection avniToBahmni) {
+        errorRecordsWorker.cacheRunImmutables(allConstants);
+        errorRecordsWorker.process(avniToBahmni);
     }
 
     private PatientEncountersProcessor getPatientEncounterWorker(Constants constants) {

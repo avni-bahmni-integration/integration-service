@@ -7,6 +7,7 @@ import org.bahmni_avni_integration.integration_data.domain.BahmniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.bahmni_avni_integration.integration_data.repository.BahmniEntityStatusRepository;
+import org.bahmni_avni_integration.integration_data.repository.openmrs.BaseOpenMRSRepository;
 import org.bahmni_avni_integration.repository.openmrs.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.ict4h.atomfeed.client.domain.Event;
@@ -42,7 +43,7 @@ public class PatientEncounterFirstRunWorker implements PatientEncountersProcesso
             while (resultSet.next()) {
                 int encounterId = resultSet.getInt(1);
                 String encounterUuid = resultSet.getString(2);
-                eventWorker.process(new Event("0", String.format("/openmrs/ws/rest/v1/encounter/%s?v=full", encounterUuid)));
+                eventWorker.process(new Event("0", String.format("/%s/encounter/%s?v=full", BaseOpenMRSRepository.OPENMRS_BASE_PATH, encounterUuid)));
                 bahmniEntityStatus.setReadUpto(encounterId);
                 bahmniEntityStatusRepository.save(bahmniEntityStatus);
                 logger.info(String.format("Completed encounter id=%d, uuid:%s", encounterId, encounterUuid));

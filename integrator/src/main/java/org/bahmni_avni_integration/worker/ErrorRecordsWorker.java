@@ -2,10 +2,7 @@ package org.bahmni_avni_integration.worker;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.integration_data.BahmniEntityType;
-import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
-import org.bahmni_avni_integration.integration_data.domain.Constants;
-import org.bahmni_avni_integration.integration_data.domain.ErrorRecord;
-import org.bahmni_avni_integration.integration_data.domain.ErrorType;
+import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
 import org.bahmni_avni_integration.worker.avni.EnrolmentWorker;
 import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
@@ -38,18 +35,24 @@ public class ErrorRecordsWorker {
 
     private static final int pageSize = 20;
 
-    public void process() {
+    public void process(SyncDirection syncDirection) {
         Page<ErrorRecord> errorRecordPage;
         int pageNumber = 0;
         do {
+            logger.info(String.format("Starting page number: %d for sync direction: %s", pageNumber, syncDirection.name()));
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-            errorRecordPage = errorRecordRepository.findAllByErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+            if (syncDirection.equals(SyncDirection.AvniToBahmni))
+                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+            else
+                errorRecordPage = errorRecordRepository.findAllByBahmniEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+
             pageNumber++;
             List<ErrorRecord> errorRecords = errorRecordPage.getContent();
             for (ErrorRecord errorRecord : errorRecords) {
                 ErrorRecordWorker errorRecordWorker = getErrorRecordWorker(errorRecord);
                 errorRecordWorker.processError(errorRecord.getEntityId());
             }
+            logger.info(String.format("Completed page number: %d for sync direction: %s", pageNumber, syncDirection.name()));
         } while (errorRecordPage.getNumberOfElements() == pageSize);
     }
 

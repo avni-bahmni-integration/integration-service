@@ -6,6 +6,7 @@ import org.bahmni_avni_integration.integration_data.ConnectionFactory;
 import org.bahmni_avni_integration.integration_data.domain.BahmniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.repository.BahmniEntityStatusRepository;
+import org.bahmni_avni_integration.integration_data.repository.openmrs.BaseOpenMRSRepository;
 import org.bahmni_avni_integration.repository.openmrs.ImplementationConfigurationRepository;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEventWorker;
 import org.ict4h.atomfeed.client.domain.Event;
@@ -40,7 +41,7 @@ public class PatientFirstRunWorker implements PatientsProcessor {
             while (resultSet.next()) {
                 int patientId = resultSet.getInt(1);
                 String patientUuid = resultSet.getString(2);
-                eventWorker.process(new Event("0", String.format("/openmrs/ws/rest/v1/patient/%s?v=full", patientUuid)));
+                eventWorker.process(new Event("0", String.format("/%s/patient/%s?v=full", BaseOpenMRSRepository.OPENMRS_BASE_PATH, patientUuid)));
                 bahmniEntityStatus.setReadUpto(patientId);
                 bahmniEntityStatusRepository.save(bahmniEntityStatus);
                 logger.info(String.format("Completed patient id=%d, uuid:%s", patientId, patientUuid));
