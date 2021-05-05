@@ -40,7 +40,7 @@ public class ObservationMapper {
         avniObservations.forEach((question, answer) -> {
             MappingMetaData questionMapping = conceptMappings.getMappingForAvniValue(question);
             if (questionMapping != null) {
-                if (ObsDataType.Coded.equals(questionMapping.getDataTypeHint())) {
+                if (questionMapping.isCoded()) {
                     if (answer instanceof String) {
                         MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue((String) answer);
                         OpenMRSObservation openMRSObservation = openMRSObservations.stream()
@@ -95,7 +95,7 @@ public class ObservationMapper {
 
             if (avniObsValue == null) {
                 voidedObservations.add(createVoidedObs(openMRSObservation.getObsUuid(), openMRSObservation.getConceptUuid()));
-            } else if (ObsDataType.Coded.equals(questionMapping.getDataTypeHint())) {
+            } else if (questionMapping.isCoded()) {
                 if (avniObsValue instanceof List<?>) {
                     List<String> avniObsValueList = (List<String>) avniObsValue;
                     String openMRSAnswerName = conceptMappings.getAvniValueForBahmniValue((String) openMRSObservation.getValue());
@@ -120,7 +120,7 @@ public class ObservationMapper {
         avniObservations.forEach((key, value) -> {
             MappingMetaData questionMapping = conceptMappings.getMappingForAvniValue(key);
             if (questionMapping != null) {
-                if (ObsDataType.Coded.equals(questionMapping.getDataTypeHint())) {
+                if (questionMapping.isCoded()) {
                     if (value instanceof String) {
                         MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue((String) value);
                         openMRSObservations.add(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));

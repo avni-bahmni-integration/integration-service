@@ -92,11 +92,11 @@ public class HttpClient {
         logger.debug(String.format("Posting to: %s Data: %s", path, json));
         HttpResponse httpResponse = httpClientInternal.post(authenticator.getRequestDetails(URI.create(path)), httpHeaders, json);
         int statusCode = httpResponse.getStatusLine().getStatusCode();
-        if (statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_OK) {
-            logger.error(asString(httpResponse));
+        String message = asString(httpResponse);
+        if (statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_OK) { logger.error(message);
             throw new RuntimeException("Post failed");
         }
-        return asString(httpResponse);
+        return message;
     }
 
     public void delete(URI uri) {

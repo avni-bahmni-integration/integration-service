@@ -225,7 +225,7 @@ public class OpenMRSRepository {
         return resultSet.next();
     }
 
-    private int getConceptIdByFullySpecifiedName(Connection connection, String conceptFullName) throws SQLException {
+    public int getConceptIdByFullySpecifiedName(Connection connection, String conceptFullName) throws SQLException {
         var getConceptPS = connection.prepareStatement("SELECT concept_id from concept_name where name = BINARY ? and concept_name_type='FULLY_SPECIFIED'");
         getConceptPS.setString(1, conceptFullName);
         var resultSet = getConceptPS.executeQuery();
@@ -313,6 +313,11 @@ public class OpenMRSRepository {
         deleteTxData("delete from visit_attribute where creator = ?", connection, "visit_attribute");
         deleteTxData("delete from encounter where creator = ?", connection, "encounter");
         deleteTxData("delete from visit where creator = ?", connection, "visit");
+        deleteTxData("delete from patient_identifier where creator = ?", connection, "patient_identifier");
+        deleteTxData("delete from person_name where creator = ?", connection, "person_name");
+        deleteTxData("delete from patient where creator = ?", connection, "patient");
+        deleteTxData("delete from person where creator = ?", connection, "person");
+
     }
 
     private void deleteTxData(String sql, Connection connection, String entityType) throws SQLException {

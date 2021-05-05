@@ -67,7 +67,7 @@ public class OpenMRSEncounterMapper {
             MappingMetaData conceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid(), bahmniEncounterToAvniEncounterMetaData, true);
             if (conceptMapping == null) return;
 
-            if (ObsDataType.Coded.equals(conceptMapping.getDataTypeHint())) {
+            if (conceptMapping.isCoded()) {
                 MappingMetaData answerConceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept((String) openMRSObservation.getValue(), bahmniEncounterToAvniEncounterMetaData, false);
                 avniBaseContract.addObservation(conceptMapping.getAvniValue(), answerConceptMapping.getAvniValue());
             } else {

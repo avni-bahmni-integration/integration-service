@@ -1,16 +1,15 @@
 package org.bahmni_avni_integration.worker.avni;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.avni.SubjectsResponse;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
-import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.MultipleResultsFoundException;
+import org.bahmni_avni_integration.integration_data.repository.avni.AvniIgnoredConceptsRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.EntityStatusService;
 import org.bahmni_avni_integration.service.ErrorService;
@@ -22,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedHashMap;
 
 @Component
 public class SubjectWorker implements ErrorRecordWorker {
@@ -37,6 +38,8 @@ public class SubjectWorker implements ErrorRecordWorker {
     private EntityStatusService entityStatusService;
     @Autowired
     private ErrorService errorService;
+    @Autowired
+    private AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
 
     private static final Logger logger = Logger.getLogger(SubjectWorker.class);
     private SubjectToPatientMetaData metaData;
@@ -58,8 +61,15 @@ public class SubjectWorker implements ErrorRecordWorker {
         }
     }
 
+    private void removeIgnoredObservations(Subject subject) {
+        var observations = (LinkedHashMap<String, Object>) subject.get("observations");
+        avniIgnoredConceptsRepository.getIgnoredConcepts().forEach(observations::remove);
+        subject.set("observations", observations);
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processSubject(Subject subject) {
+        removeIgnoredObservations(subject);
         Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter;
         try {
             patientEncounter = patientService.findSubject(subject, constants, metaData);

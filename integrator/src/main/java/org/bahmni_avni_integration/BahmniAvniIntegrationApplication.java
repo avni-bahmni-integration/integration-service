@@ -24,12 +24,6 @@ public class BahmniAvniIntegrationApplication {
 	}
 
 	@Bean
-	public Boolean isTest() {
-		String[] activeProfiles = environment.getActiveProfiles();
-		return activeProfiles.length == 1 && activeProfiles[0].equals("test");
-	}
-
-	@Bean
 	public RestTemplate restTemplate() {
         return new RestTemplate();
 	}

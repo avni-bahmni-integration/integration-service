@@ -12,12 +12,15 @@ import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniEnrolmentRepository;
+import org.bahmni_avni_integration.integration_data.repository.avni.AvniIgnoredConceptsRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.*;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedHashMap;
 
 @Component
 public class EnrolmentWorker implements ErrorRecordWorker {
@@ -27,6 +30,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
     private final EnrolmentService enrolmentService;
     private final PatientService patientService;
     private final ErrorService errorService;
+    private final AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
 
     private static final Logger logger = Logger.getLogger(EnrolmentWorker.class);
     private final AvniSubjectRepository avniSubjectRepository;
@@ -41,7 +45,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
                            EnrolmentService enrolmentService,
                            PatientService patientService,
                            ErrorService errorService,
-                           AvniSubjectRepository avniSubjectRepository) {
+                           AvniIgnoredConceptsRepository avniIgnoredConceptsRepository, AvniSubjectRepository avniSubjectRepository) {
         this.avniEntityStatusRepository = avniEntityStatusRepository;
         this.mappingMetaDataService = mappingMetaDataService;
         this.avniEnrolmentRepository = avniEnrolmentRepository;
@@ -49,6 +53,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         this.enrolmentService = enrolmentService;
         this.patientService = patientService;
         this.errorService = errorService;
+        this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
         this.avniSubjectRepository = avniSubjectRepository;
     }
 
@@ -64,8 +69,26 @@ public class EnrolmentWorker implements ErrorRecordWorker {
             for (Enrolment enrolment : enrolments) {
                 processEnrolment(enrolment);
             }
-            if (totalElements == 1 && totalPages == 1) break;
+            if (isLastPage(totalElements, totalPages)) {
+                logger.info("Finished processing all pages");
+                break;
+            }
         }
+    }
+
+    private boolean isLastPage(int totalElements, int totalPages) {
+        return totalElements == 1 && totalPages == 1;
+    }
+
+    private void removeIgnoredObservations(Enrolment enrolment) {
+        var observations = (LinkedHashMap<String, Object>) enrolment.get("observations");
+        var exitObservations = (LinkedHashMap<String, Object>) enrolment.get("exitObservations");
+        for (var ignoredConcept : avniIgnoredConceptsRepository.getIgnoredConcepts()) {
+            observations.remove(ignoredConcept);
+            exitObservations.remove(ignoredConcept);
+        }
+        enrolment.set("observations", observations);
+        enrolment.set("exitObservations", exitObservations);
     }
 
     public void processEnrolment() {
@@ -76,6 +99,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processEnrolment(Enrolment enrolment) {
+        removeIgnoredObservations(enrolment);
         logger.debug(String.format("Processing avni %s enrolment %s", enrolment.getProgram(), enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));

@@ -150,6 +150,34 @@ public class AvniRepository {
         logger.info(String.format("Created form elements for form: %s with %d form elements", form.getFormName(), form.getOpenMRSTerminologies().size()));
     }
 
+    public List<AvniConcept> getConcepts() throws SQLException {
+        String conceptSelect  = "select id, name, data_type from concept where name not like ?\n" +
+                                "  and name not like ?\n" +
+                                "  and name not like ?";
+
+        List<AvniConcept> concepts = new ArrayList<>();
+        try (Connection connection = connectionFactory.getAvniConnection()) {
+            try (PreparedStatement conceptPS = connection.prepareStatement(conceptSelect)) {
+                conceptPS.setString(1, "%"+NameMapping.BAHMNI_CONCEPT_SUFFIX);
+                conceptPS.setString(2, "%"+NameMapping.BAHMNI_PERSON_ATTRIBUTE_SUFFIX);
+                conceptPS.setString(3, "%"+NameMapping.BAHMNI_SUFFIX);
+                ResultSet conceptResult = conceptPS.executeQuery();
+                while (conceptResult.next()) {
+                    var concept = new AvniConcept();
+                    concept.setId(conceptResult.getLong("id"));
+                    concept.setName(conceptResult.getString("name"));
+                    concept.setDataType(AvniConceptDataType.valueOf(conceptResult.getString("data_type")));
+
+                    if (concept.isCoded()) {
+                        concept.setAnswerConcepts(fetchAnswerConcepts(connection, concept.getId()));
+                    }
+                    concepts.add(concept);
+                }
+            }
+        }
+        return concepts;
+    }
+
     public List<AvniForm> getForms() throws SQLException {
         try (Connection connection = connectionFactory.getAvniConnection()) {
             return fetchForms(connection);
@@ -169,7 +197,6 @@ public class AvniRepository {
                  and form.name not ilike '% (Hospital)'
                  and form.name <> ?
                  and form_type IN (?, ?, ?, ?, ?)
-                 and form.is_voided = false
                 """;
         List<AvniForm> forms = new ArrayList<>();
         try (PreparedStatement formPS = connection.prepareStatement(formSelect)) {
@@ -196,7 +223,7 @@ public class AvniRepository {
     }
 
     private List<AvniFormElementGroup> fetchFormElementGroups(Connection connection, long formId) throws SQLException {
-        String fegSelect = "select id, name from form_element_group where form_id = ? and is_voided = false order by display_order";
+        String fegSelect = "select id, name from form_element_group where form_id = ? order by display_order";
         List<AvniFormElementGroup> formElementGroups = new ArrayList<>();
         try (PreparedStatement fegPS = connection.prepareStatement(fegSelect)) {
             fegPS.setLong(1, formId);
@@ -213,7 +240,7 @@ public class AvniRepository {
     }
 
     private List<AvniFormElement> fetchFormElements(Connection connection, long fegId) throws SQLException {
-        String feSelect = "select id, name, concept_id from form_element where form_element_group_id = ? and is_voided = false order by display_order";
+        String feSelect = "select id, name, concept_id from form_element where form_element_group_id = ? order by display_order";
         List<AvniFormElement> formElements = new ArrayList<>();
         try (PreparedStatement fePS = connection.prepareStatement(feSelect)) {
             fePS.setLong(1, fegId);
@@ -230,7 +257,7 @@ public class AvniRepository {
 
     private AvniConcept fetchConcept(Connection connection, long conceptId) throws SQLException {
         AvniConcept concept = new AvniConcept();
-        String conceptSelect = "select id, name, data_type from concept where id = ? and is_voided = false";
+        String conceptSelect = "select id, name, data_type from concept where id = ?";
 
         try (PreparedStatement conceptPS = connection.prepareStatement(conceptSelect)) {
             conceptPS.setLong(1, conceptId);
@@ -238,7 +265,7 @@ public class AvniRepository {
             conceptResult.next();
             concept.setId(conceptResult.getLong("id"));
             concept.setName(conceptResult.getString("name"));
-            concept.setDataType(conceptResult.getString("data_type"));
+            concept.setDataType(AvniConceptDataType.valueOf(conceptResult.getString("data_type")));
         }
 
         if (concept.isCoded()) {
@@ -250,7 +277,9 @@ public class AvniRepository {
 
     private List<AvniConcept> fetchAnswerConcepts(Connection connection, long conceptId) throws SQLException {
         List<AvniConcept> answerConcepts = new ArrayList<>();
-        String answersSelect = "select answer.id, answer.name from concept_answer ca join concept answer on answer.id=ca.answer_concept_id where ca.concept_id = ? and ca.is_voided = false and answer.is_voided=false";
+        String answersSelect = "select answer.id, answer.name, answer.data_type from concept_answer ca " +
+                               "join concept answer on answer.id=ca.answer_concept_id " +
+                               "where ca.concept_id = ?";
         try (PreparedStatement answersPS = connection.prepareStatement(answersSelect)) {
             answersPS.setLong(1, conceptId);
             ResultSet answersResult = answersPS.executeQuery();
@@ -258,6 +287,7 @@ public class AvniRepository {
                 AvniConcept answerConcept = new AvniConcept();
                 answerConcept.setId(answersResult.getLong("id"));
                 answerConcept.setName(answersResult.getString("name"));
+                answerConcept.setDataType(AvniConceptDataType.valueOf(answersResult.getString("data_type")));
                 answerConcepts.add(answerConcept);
             }
         }

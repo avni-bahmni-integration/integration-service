@@ -6,7 +6,7 @@ import java.util.Objects;
 public final class AvniConcept {
     private long id;
     private String name;
-    private String dataType;
+    private AvniConceptDataType dataType;
     private List<AvniConcept> answerConcepts;
 
     public long getId() {
@@ -25,11 +25,11 @@ public final class AvniConcept {
         this.name = name;
     }
 
-    public String getDataType() {
+    public AvniConceptDataType getDataType() {
         return dataType;
     }
 
-    public void setDataType(String dataType) {
+    public void setDataType(AvniConceptDataType dataType) {
         this.dataType = dataType;
     }
 

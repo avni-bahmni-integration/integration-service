@@ -21,7 +21,7 @@ public class ProgramEncounterMapper {
     public OpenMRSEncounter mapEncounter(ProgramEncounter programEncounter, String patientUuid, Constants constants) {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
                 MappingType.CommunityProgramEncounter_EncounterType,
-                avniValueForEncounterType(programEncounter.getProgram(), programEncounter.getEncounterType()));
+                programEncounter.getEncounterType());
         var openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
@@ -46,7 +46,7 @@ public class ProgramEncounterMapper {
     private String formConcept(ProgramEncounter programEncounter) {
         return mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
                     MappingType.CommunityProgramEncounter_BahmniForm,
-                    avniValueForEncounterType(programEncounter.getProgram(), programEncounter.getEncounterType()));
+                programEncounter.getEncounterType());
     }
 
     private OpenMRSSaveObservation avniUuidObs(ProgramEncounter programEncounter) {
@@ -54,14 +54,10 @@ public class ProgramEncounterMapper {
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, programEncounter.getUuid(), ObsDataType.Text);
     }
 
-    private String avniValueForEncounterType(String programName, String encounterTypeName) {
-        return String.format("%s-%s", programName, encounterTypeName);
-    }
-
     public OpenMRSEncounter mapProgramEncounterToExistingEncounter(OpenMRSFullEncounter existingEncounter, ProgramEncounter programEncounter, Constants constants) {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
                 MappingType.CommunityProgramEncounter_EncounterType,
-                avniValueForEncounterType(programEncounter.getProgram(), programEncounter.getEncounterType()));
+                programEncounter.getEncounterType());
 
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setUuid(existingEncounter.getUuid());

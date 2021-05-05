@@ -75,7 +75,7 @@ public class MainJob implements Job {
                 enrolmentWorker.cacheRunImmutables(allConstants);
                 enrolmentWorker.processEnrolments();
             }
-            if (hasTask(tasks, IntegrationTask.AvniEnrolment)) {
+            if (hasTask(tasks, IntegrationTask.AvniProgramEncounter)) {
                 programEncounterWorker.cacheRunImmutables(allConstants);
                 programEncounterWorker.processProgramEncounters();
             }

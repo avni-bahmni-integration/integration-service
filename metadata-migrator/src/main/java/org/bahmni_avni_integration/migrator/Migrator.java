@@ -62,12 +62,10 @@ public class Migrator implements CommandLineRunner {
         avniToBahmniService.cleanup();
         integrationDataService.cleanup();
 
-        avniToBahmniService.createStandardMetadata();
-        avniToBahmniService.migrateForms();
+        avniToBahmniService.migrate();
 
         integrationDataService.createConstants();
         integrationDataService.createStandardMappings();
-
         System.exit(0);
     }
 
