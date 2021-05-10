@@ -97,5 +97,8 @@ configure-integration-db: configure-env-var
 run-server-standalone-incremental: configure-env-var
 	java --enable-preview -jar integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar
 
+debug-server-standalone-incremental: configure-env-var
+	java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 --enable-preview -jar integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar
+
 run-server-standalone-first-time: configure-integration-db run-server-standalone-incremental
 #######
