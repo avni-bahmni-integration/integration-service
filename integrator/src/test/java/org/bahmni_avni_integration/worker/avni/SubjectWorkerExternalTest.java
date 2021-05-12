@@ -43,7 +43,7 @@ class SubjectWorkerExternalTest {
     public void processSpecificSubject() {
         Constants constants = constantsRepository.findAllConstants();
         subjectWorker.cacheRunImmutables(constants);
-        var subject = avniSubjectRepository.getSubject("b04d4edf-46cb-422b-be58-8df0bff11666");
+        var subject = avniSubjectRepository.getSubject("fb73250c-6669-a6bb-326a-a49a806b1d9a");
         subjectWorker.processSubject(subject);
     }
 }

@@ -68,14 +68,17 @@ public class MainJob implements Job {
             Constants allConstants = constantsRepository.findAllConstants();
 
             if (hasTask(tasks, IntegrationTask.AvniSubject)) {
+                logger.info("Processing AvniSubject");
                 subjectWorker.cacheRunImmutables(allConstants);
                 subjectWorker.processSubjects();
             }
             if (hasTask(tasks, IntegrationTask.AvniEnrolment)) {
+                logger.info("Processing AvniEnrolment");
                 enrolmentWorker.cacheRunImmutables(allConstants);
                 enrolmentWorker.processEnrolments();
             }
             if (hasTask(tasks, IntegrationTask.AvniProgramEncounter)) {
+                logger.info("Processing AvniProgramEncounter");
                 programEncounterWorker.cacheRunImmutables(allConstants);
                 programEncounterWorker.processProgramEncounters();
             }
