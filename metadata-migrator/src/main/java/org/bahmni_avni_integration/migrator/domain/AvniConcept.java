@@ -42,6 +42,6 @@ public final class AvniConcept {
     }
 
     public boolean isCoded() {
-        return Objects.equals(dataType, "Coded");
+        return dataType == AvniConceptDataType.Coded;
     }
 }

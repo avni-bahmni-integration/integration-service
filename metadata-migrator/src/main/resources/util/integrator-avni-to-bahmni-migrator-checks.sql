@@ -1,6 +1,6 @@
 -- 1.1 Check concepts migrated properly
 -- 1.1 *******START**************************
--- 1.1 Avni
+-- 1.1 Avni DB
 select data_type, count(*)
 from concept c
 where 1 = 1
@@ -9,7 +9,7 @@ where 1 = 1
   and name not like '%[Bahmni]'
 group by data_type;
 
--- 1.1 Integration
+-- 1.1 Integration DB
 select data_type_hint, count(*)
 from mapping_metadata
 where 1 = 1
@@ -24,16 +24,17 @@ group by data_type_hint;
 
 -- 1.2 Check forms migrated properly
 -- 1.2 Check count of concepts grouped by a form
--- 1.2 Bahmni
+-- 1.2 Bahmni DB
 select concept_set, cn.name, count(*)
 from concept_set
+         join users u on concept_set.creator = u.user_id
          join concept_name cn on concept_set.concept_set = cn.concept_id
 where cn.concept_name_type = 'FULLY_SPECIFIED'
-  and concept_set.creator = 78
+  and u.username='avni_integration_refdata_admin'
 group by concept_set.concept_set, cn.name
 order by 3 desc, cn.name;
 
--- 1.2 Avni
+-- 1.2 Avni DB
 select form_type, st_name, p_name, et_name, form_name, coalesce(count_wo_dups, q_count)
 from (
          with dup_counts as (
@@ -67,3 +68,12 @@ from (
                   order by count(*) desc) as q
                   left join dup_counts on dup_counts.form_name = q.form_name) form_counts
 order by 6 desc, p_name, form_name;
+
+-- 1.3 Check number of concept answers
+-- Bahmni DB
+select count(*) from concept_answer
+                         join users u on concept_answer.creator = u.user_id
+where u.username='avni_integration_refdata_admin';
+
+-- Avni DB
+select count(*) from concept_answer;
