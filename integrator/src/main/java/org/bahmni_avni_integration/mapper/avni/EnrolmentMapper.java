@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -28,7 +29,8 @@ public class EnrolmentMapper {
                 formGroupObservation,
                 patientUuid,
                 encounterTypeUuid,
-                constants);
+                constants,
+                false);
     }
 
     public OpenMRSEncounter mapEnrolmentToExitEncounter(Enrolment enrolment, String patientUuid, Constants constants) {
@@ -40,7 +42,8 @@ public class EnrolmentMapper {
                 formGroupObservation,
                 patientUuid,
                 encounterTypeUuid,
-                constants);
+                constants,
+                true);
     }
 
     private OpenMRSEncounter mapEnrolmentToEncounter(Enrolment enrolment,
@@ -48,10 +51,13 @@ public class EnrolmentMapper {
                                                      OpenMRSSaveObservation formGroupObservation,
                                                      String patientUuid,
                                                      String encounterTypeUuid,
-                                                     Constants constants) {
+                                                     Constants constants,
+                                                     boolean isExit) {
+        var encounterDateTime = isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime();
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
+        openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(encounterDateTime));
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
         List<OpenMRSSaveObservation> observations = observationMapper.mapObservations(avniObservations);

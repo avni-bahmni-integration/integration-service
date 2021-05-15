@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -25,6 +26,8 @@ public class ProgramEncounterMapper {
         var openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
+        String encounterDateTime = programEncounter.getEncounterDateTime();
+        openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(FormatAndParseUtil.fromAvniDateTime(encounterDateTime)));
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider),
                 constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
