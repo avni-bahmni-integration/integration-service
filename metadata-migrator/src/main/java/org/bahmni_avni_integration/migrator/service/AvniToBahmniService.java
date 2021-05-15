@@ -251,7 +251,7 @@ public class AvniToBahmniService {
 
     private void createCommunityVisitTypeAndMapping(Connection connection, Map<String, Object> constants) throws SQLException {
         var integrationBahmniVisitTypeUuid = (String) constants.get(ConstantKey.IntegrationBahmniVisitType.name());
-        openMRSRepository.createVisitType(connection, "Community", integrationBahmniVisitTypeUuid);
+        openMRSRepository.createVisitType(connection, "Community - DO NOT OPEN", integrationBahmniVisitTypeUuid);
     }
 
     private void createCommunityLocationAndMapping(Connection connection, Map<String, Object> constants) throws SQLException {
