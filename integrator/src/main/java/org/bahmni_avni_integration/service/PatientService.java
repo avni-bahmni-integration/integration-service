@@ -38,7 +38,7 @@ public class PatientService {
         this.visitService = visitService;
     }
 
-    public void updateSubject(OpenMRSFullEncounter existingEncounter, OpenMRSUuidHolder patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+    public void updateSubject(OpenMRSFullEncounter existingEncounter, OpenMRSPatient patient, Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
         if (subject.getVoided()) {
             openMRSEncounterRepository.voidEncounter(existingEncounter);
         } else {
@@ -48,7 +48,7 @@ public class PatientService {
         }
     }
 
-    public OpenMRSFullEncounter createSubject(Subject subject, OpenMRSUuidHolder patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+    public OpenMRSFullEncounter createSubject(Subject subject, OpenMRSPatient patient, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
         if (subject.getVoided())
             return null;
 
@@ -61,9 +61,9 @@ public class PatientService {
         return savedEncounter;
     }
 
-    public Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
+    public Pair<OpenMRSPatient, OpenMRSFullEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
         String subjectId = subject.getUuid();
-        OpenMRSUuidHolder patient = findPatient(subject, constants, subjectToPatientMetaData);
+        OpenMRSPatient patient = findPatient(subject, constants, subjectToPatientMetaData);
         if (patient == null) {
             return new Pair<>(null, null);
         }
@@ -71,9 +71,9 @@ public class PatientService {
         return new Pair<>(patient, encounter);
     }
 
-    public OpenMRSUuidHolder findPatient(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
+    public OpenMRSPatient findPatient(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
         String patientIdentifier = constants.getValue(ConstantKey.BahmniIdentifierPrefix) + subject.getId(subjectToPatientMetaData);
-        OpenMRSUuidHolder patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
+        OpenMRSPatient patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
         return patient;
     }
 
@@ -89,7 +89,7 @@ public class PatientService {
         errorService.errorOccurred(subject, ErrorType.NoPatientWithId);
     }
 
-    public OpenMRSUuidHolder createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
+    public OpenMRSPatient createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
         if (subject.getVoided())
             return null;
 

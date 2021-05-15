@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.avni.SubjectsResponse;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
@@ -70,7 +71,7 @@ public class SubjectWorker implements ErrorRecordWorker {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processSubject(Subject subject) {
         removeIgnoredObservations(subject);
-        Pair<OpenMRSUuidHolder, OpenMRSFullEncounter> patientEncounter;
+        Pair<OpenMRSPatient, OpenMRSFullEncounter> patientEncounter;
         try {
             patientEncounter = patientService.findSubject(subject, constants, metaData);
         } catch (MultipleResultsFoundException e) {
@@ -78,7 +79,7 @@ public class SubjectWorker implements ErrorRecordWorker {
             return;
         }
 
-        OpenMRSUuidHolder patient = patientEncounter.getValue0();
+        OpenMRSPatient patient = patientEncounter.getValue0();
         OpenMRSFullEncounter encounter = patientEncounter.getValue1();
 
         if (encounter != null && patient != null) {

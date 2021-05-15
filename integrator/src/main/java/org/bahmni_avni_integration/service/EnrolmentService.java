@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.service;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.mapper.avni.EnrolmentMapper;
@@ -26,15 +27,15 @@ public class EnrolmentService {
         this.visitService = visitService;
     }
 
-    public OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder patient) {
+    public OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSPatient patient) {
         return findCommunityEnrolment(enrolment, patient, MappingType.CommunityEnrolment_EncounterType);
     }
 
-    public OpenMRSFullEncounter findCommunityExitEnrolment(Enrolment enrolment, OpenMRSUuidHolder patient) {
+    public OpenMRSFullEncounter findCommunityExitEnrolment(Enrolment enrolment, OpenMRSPatient patient) {
         return findCommunityEnrolment(enrolment, patient, MappingType.CommunityEnrolmentExit_EncounterType);
     }
 
-    private OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder patient, MappingType mappingType) {
+    private OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSPatient patient, MappingType mappingType) {
         String bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
         OpenMRSFullEncounter encounter = openMRSEncounterRepository
@@ -46,7 +47,7 @@ public class EnrolmentService {
         errorService.errorOccurred(enrolment, ErrorType.NoPatientWithId);
     }
 
-    public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
+    public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSPatient openMRSPatient, Constants constants) {
         if (enrolment.getVoided()) return null;
         OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToEnrolmentEncounter(enrolment, openMRSPatient.getUuid(), constants);
         OpenMRSUuidHolder visit = visitService.getOrCreateVisit(openMRSPatient);
@@ -55,7 +56,7 @@ public class EnrolmentService {
         return savedEncounter;
     }
 
-    public OpenMRSFullEncounter createCommunityExitEnrolment(Enrolment enrolment, OpenMRSUuidHolder openMRSPatient, Constants constants) {
+    public OpenMRSFullEncounter createCommunityExitEnrolment(Enrolment enrolment, OpenMRSPatient openMRSPatient, Constants constants) {
         if (enrolment.getVoided()) return null;
 
         OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToExitEncounter(enrolment, openMRSPatient.getUuid(), constants);

@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.integration_data.repository.openmrs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ class OpenMRSPatientRepositoryExternalTest {
 
     @Test
     public void findPatientByIdentifier() throws JsonProcessingException {
-        OpenMRSUuidHolder patient = openMRSPatientRepository.getPatientByIdentifier("TRI08121601");
+        OpenMRSPatient patient = openMRSPatientRepository.getPatientByIdentifier("TRI08121601");
         assertNotNull(patient);
         assertNotNull(patient.getUuid());
     }

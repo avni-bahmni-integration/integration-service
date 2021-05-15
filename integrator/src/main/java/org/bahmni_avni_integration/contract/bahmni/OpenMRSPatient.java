@@ -12,6 +12,7 @@ public class OpenMRSPatient {
     private OpenMRSPerson person;
     private List<OpenMRSPatientIdentifier> identifiers;
     private boolean voided;
+    private OpenMRSAuditInfo auditInfo;
 
     public OpenMRSPatient(OpenMRSPerson person) {
         this.person = person;
@@ -80,5 +81,13 @@ public class OpenMRSPatient {
 
     public void setVoided(boolean voided) {
         this.voided = voided;
+    }
+
+    public OpenMRSAuditInfo getAuditInfo() {
+        return auditInfo;
+    }
+
+    public void setAuditInfo(OpenMRSAuditInfo auditInfo) {
+        this.auditInfo = auditInfo;
     }
 }

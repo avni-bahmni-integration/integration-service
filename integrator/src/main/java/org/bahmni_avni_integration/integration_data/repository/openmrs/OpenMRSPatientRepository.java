@@ -22,18 +22,18 @@ public class OpenMRSPatientRepository extends BaseOpenMRSRepository {
         return ObjectJsonMapper.readValue(patientJSON, OpenMRSPatient.class);
     }
 
-    public OpenMRSUuidHolder getPatientByIdentifier(String identifier) {
-        String patientJSON = openMRSWebClient.get(URI.create(String.format("%s?identifier=%s", getResourcePath("patient"), identifier)));
-        SearchResults<OpenMRSUuidHolder> searchResults = ObjectJsonMapper.readValue(patientJSON, new TypeReference<SearchResults<OpenMRSUuidHolder>>() {
+    public OpenMRSPatient getPatientByIdentifier(String identifier) {
+        String patientJSON = openMRSWebClient.get(URI.create(String.format("%s?identifier=%s&v=full", getResourcePath("patient"), identifier)));
+        SearchResults<OpenMRSPatient> searchResults = ObjectJsonMapper.readValue(patientJSON, new TypeReference<SearchResults<OpenMRSPatient>>() {
         });
         // story-todo do full run after changing it
         return pickAndExpectOne(searchResults.removeDuplicates(), identifier);
     }
 
-    public OpenMRSUuidHolder createPatient(OpenMRSSavePatient openMRSSavePatient) {
+    public OpenMRSPatient createPatient(OpenMRSSavePatient openMRSSavePatient) {
         String json = ObjectJsonMapper.writeValueAsString(openMRSSavePatient);
         String outputJson = openMRSWebClient.post(getResourcePath("patient"), json);
-        return ObjectJsonMapper.readValue(outputJson, OpenMRSUuidHolder.class);
+        return ObjectJsonMapper.readValue(outputJson, OpenMRSPatient.class);
     }
 
     public OpenMRSPatient getPatient(String patientUuid) {

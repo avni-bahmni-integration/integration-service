@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.EnrolmentsResponse;
 import org.bahmni_avni_integration.contract.avni.Subject;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
@@ -126,7 +127,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         entityStatusService.saveEntityStatus(enrolment);
     }
 
-    private void processExitedEnrolment(Constants constants, Enrolment enrolment, OpenMRSUuidHolder patient) {
+    private void processExitedEnrolment(Constants constants, Enrolment enrolment, OpenMRSPatient patient) {
         var exitEncounter = enrolmentService.findCommunityExitEnrolment(enrolment, patient);
         if (exitEncounter == null) {
             logger.debug(String.format("Creating new Bahmni exit enrolment for Avni enrolment %s", enrolment.getUuid()));

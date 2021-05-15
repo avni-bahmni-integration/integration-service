@@ -9,6 +9,7 @@ public class OpenMRSSaveVisit {
     private String patient;
     private String visitType;
     private String location;
+    private String startDatetime;
 
     public String getPatient() {
         return patient;
@@ -32,5 +33,13 @@ public class OpenMRSSaveVisit {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getStartDatetime() {
+        return startDatetime;
+    }
+
+    public void setStartDatetime(String startDatetime) {
+        this.startDatetime = startDatetime;
     }
 }

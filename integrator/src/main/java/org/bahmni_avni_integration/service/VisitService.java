@@ -18,27 +18,28 @@ public class VisitService {
         this.openMRSVisitRepository = openMRSVisitRepository;
     }
 
-    public OpenMRSUuidHolder getVisit(String patientUuid) {
+    private OpenMRSUuidHolder getVisit(String patientUuid) {
         String locationUuid = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation);
         return openMRSVisitRepository.getVisit(patientUuid, locationUuid);
     }
 
-    public OpenMRSUuidHolder createVisit(String patientUuid) {
+    private OpenMRSUuidHolder createVisit(OpenMRSPatient patient) {
         String location = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation);
         String visitType = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniVisitType);
         OpenMRSSaveVisit openMRSSaveVisit = new OpenMRSSaveVisit();
         openMRSSaveVisit.setLocation(location);
         openMRSSaveVisit.setVisitType(visitType);
-        openMRSSaveVisit.setPatient(patientUuid);
+        openMRSSaveVisit.setPatient(patient.getUuid());
+        openMRSSaveVisit.setStartDatetime(patient.getAuditInfo().getDateCreated());
         OpenMRSUuidHolder visit = openMRSVisitRepository.createVisit(openMRSSaveVisit);
         logger.debug("Created new visit with uuid %s".formatted(visit.getUuid()));
         return visit;
     }
 
-    public OpenMRSUuidHolder getOrCreateVisit(OpenMRSUuidHolder patient) {
+    public OpenMRSUuidHolder getOrCreateVisit(OpenMRSPatient patient) {
         var visit = getVisit(patient.getUuid());
         if (visit == null) {
-            return createVisit(patient.getUuid());
+            return createVisit(patient);
         }
         logger.debug("Retrieved existing visit with uuid %s".formatted(visit.getUuid()));
         return visit;
