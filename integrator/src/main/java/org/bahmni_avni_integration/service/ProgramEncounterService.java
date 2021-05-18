@@ -48,10 +48,9 @@ public class ProgramEncounterService {
     public OpenMRSFullEncounter createCommunityEncounter(ProgramEncounter programEncounter, OpenMRSPatient patient, Constants constants) {
         if (programEncounter.getVoided()) return null;
 
-        OpenMRSUuidHolder visit = visitService.getOrCreateVisit(patient);
-        OpenMRSEncounter encounter = programEncounterMapper.mapEncounter(programEncounter, patient.getUuid(), constants);
-        encounter.setVisit(visit.getUuid());
-        OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
+        var visit = visitService.getOrCreateVisit(patient);
+        var encounter = programEncounterMapper.mapEncounter(programEncounter, patient.getUuid(), constants, visit);
+        var savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
         errorService.successfullyProcessed(programEncounter);
         return savedEncounter;

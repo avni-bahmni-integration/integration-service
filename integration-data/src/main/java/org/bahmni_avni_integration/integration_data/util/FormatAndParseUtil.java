@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.integration_data.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -50,6 +51,13 @@ public class FormatAndParseUtil {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Date addSeconds(Date date, int seconds) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.SECOND, seconds);
+        return c.getTime();
     }
 
     public static String fromAvniToOpenMRSDate(String dateString) {

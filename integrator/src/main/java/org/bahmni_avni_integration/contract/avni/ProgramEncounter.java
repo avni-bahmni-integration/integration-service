@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.contract.avni;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.bahmni_avni_integration.util.Empty;
 
 import java.util.Date;
@@ -28,8 +29,9 @@ public class ProgramEncounter extends AvniBaseContract {
     }
 
     @JsonIgnore
-    public String getEncounterDateTime() {
-        return (String) get("Encounter date time");
+    public Date getEncounterDateTime() {
+        var encounterDateTime = (String) map.get("Encounter date time");
+        return encounterDateTime == null ? null : FormatAndParseUtil.fromAvniDateTime(encounterDateTime);
     }
 
     @JsonIgnore

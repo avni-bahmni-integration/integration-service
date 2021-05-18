@@ -79,8 +79,8 @@ public class SubjectWorker implements ErrorRecordWorker {
             return;
         }
 
-        OpenMRSPatient patient = patientEncounter.getValue0();
-        OpenMRSFullEncounter encounter = patientEncounter.getValue1();
+        var patient = patientEncounter.getValue0();
+        var encounter = patientEncounter.getValue1();
 
         if (encounter != null && patient != null) {
             logger.debug(String.format("Updating existing encounter %s for subject %s", encounter.getUuid(), subject.getUuid()));
@@ -93,9 +93,10 @@ public class SubjectWorker implements ErrorRecordWorker {
             patientService.createSubject(subject, patient, metaData, constants);
         } else if (encounter == null && patient == null) {
             logger.debug(String.format("Creating new patient for subject %s", subject.getUuid()));
-            patient = patientService.createPatient(subject, metaData, constants);
+            var newPatient = patientService.createPatient(subject, metaData, constants);
+            var fullPatientObject = patientService.getPatient(newPatient.getUuid());
             logger.debug(String.format("Creating new encounter for subject %s", subject.getUuid()));
-            patientService.createSubject(subject, patient, metaData, constants);
+            patientService.createSubject(subject, fullPatientObject, metaData, constants);
         }
         entityStatusService.saveEntityStatus(subject);
     }

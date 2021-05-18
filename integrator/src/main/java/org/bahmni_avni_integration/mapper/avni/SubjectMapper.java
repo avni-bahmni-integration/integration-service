@@ -1,9 +1,11 @@
 package org.bahmni_avni_integration.mapper.avni;
 
+import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -18,7 +20,7 @@ public class SubjectMapper {
         this.observationMapper = observationMapper;
     }
 
-    public OpenMRSEncounter mapSubjectToEncounter(Subject subject, String patientUuid, String encounterTypeUuid, Constants constants) {
+    public OpenMRSEncounter mapSubjectToEncounter(Subject subject, String patientUuid, String encounterTypeUuid, Constants constants, OpenMRSVisit visit) {
         var openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
@@ -31,9 +33,20 @@ public class SubjectMapper {
         var observations = observationMapper.mapObservations((LinkedHashMap<String, Object>) subject.get("observations"));
         observations.add(avniUuidObs(subject.getUuid()));
         openMRSEncounter.setObservations(groupObs(observations));
+        openMRSEncounter.setEncounterDatetime(getRegistrationDate(subject, visit));
+        openMRSEncounter.setVisit(visit.getUuid());
 //        story-todo - map audit observations
         var avniAuditObservations = (LinkedHashMap<String, Object>) subject.get("audit");
         return openMRSEncounter;
+    }
+
+    private String getRegistrationDate(Subject subject, OpenMRSVisit visit) {
+        var registrationDate = subject.getRegistrationDate();
+        var visitStartDateTime = visit.getStartDatetime();
+        if (registrationDate.before(visitStartDateTime)) {
+            registrationDate = FormatAndParseUtil.addSeconds(visitStartDateTime, 1);
+        }
+        return FormatAndParseUtil.toISODateStringWithTimezone(registrationDate);
     }
 
     public OpenMRSEncounter mapSubjectToExistingEncounter(OpenMRSFullEncounter existingEncounter, Subject subject, String patientUuid, String encounterTypeUuid, Constants constants) {

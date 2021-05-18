@@ -4,14 +4,17 @@ import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveObservation;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSVisit;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +52,14 @@ public class EnrolmentMapperExternalTest {
         enrolment.set("observations", avniObservations);
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
 
+        enrolment.set("Enrolment datetime", FormatAndParseUtil.toISODateString(new Date()));
+
+        OpenMRSVisit openMRSVisit = new OpenMRSVisit();
+        openMRSVisit.setStartDatetime(FormatAndParseUtil.toISODateString(new Date()));
+
         var openMRSEncounter = enrolmentMapper.mapEnrolmentToEnrolmentEncounter(enrolment,
                 patientUuid,
+                openMRSVisit,
                 constantsRepository.findAllConstants());
 
         var groupObs = openMRSEncounter.getObservations().get(0);
@@ -106,6 +115,7 @@ public class EnrolmentMapperExternalTest {
         encounter.setAny("obs", List.of(
                 Map.of("uuid", existingGroupUuid,
                         "concept", Map.of("uuid", formConceptUuid),
+                        "voided", false,
                         "groupMembers", List.of(createPrimitiveObservation(avniIdObsUuid, avniIdConcept, enrolmentUuid)))));
         return encounter;
     }
@@ -119,7 +129,8 @@ public class EnrolmentMapperExternalTest {
         Map<String, Object> observation = Map.of(
                 "uuid", uuid,
                 "concept", Map.of("uuid", conceptUuid),
-                "value", value
+                "value", value,
+                "voided", false
         );
         return observation;
     }

@@ -2,6 +2,7 @@ package org.bahmni_avni_integration.contract.bahmni;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -10,6 +11,9 @@ import java.util.List;
 public class OpenMRSSavePerson {
     private List<OpenMRSSaveName> names;
     private String gender;
+
+    @JsonProperty("birthdate")
+    private String birthDate;
 
     public List<OpenMRSSaveName> getNames() {
         return names;
@@ -25,5 +29,13 @@ public class OpenMRSSavePerson {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
 }

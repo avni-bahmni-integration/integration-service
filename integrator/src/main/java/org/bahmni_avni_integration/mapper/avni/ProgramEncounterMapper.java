@@ -19,15 +19,14 @@ public class ProgramEncounterMapper {
         this.observationMapper = observationMapper;
     }
 
-    public OpenMRSEncounter mapEncounter(ProgramEncounter programEncounter, String patientUuid, Constants constants) {
+    public OpenMRSEncounter mapEncounter(ProgramEncounter programEncounter, String patientUuid, Constants constants, OpenMRSVisit visit) {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
                 MappingType.CommunityProgramEncounter_EncounterType,
                 programEncounter.getEncounterType());
         var openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
-        String encounterDateTime = programEncounter.getEncounterDateTime();
-        openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(FormatAndParseUtil.fromAvniDateTime(encounterDateTime)));
+        openMRSEncounter.setEncounterDatetime(getEncounterDateTime(programEncounter, visit));
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider),
                 constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
@@ -37,7 +36,17 @@ public class ProgramEncounterMapper {
         OpenMRSSaveObservation formGroupObservation = formGroupObservation(programEncounter);
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));
+        openMRSEncounter.setVisit(visit.getUuid());
         return openMRSEncounter;
+    }
+
+    private String getEncounterDateTime(ProgramEncounter programEncounter, OpenMRSVisit visit) {
+        var encounterDateTime = programEncounter.getEncounterDateTime();
+        var visitStartDateTime = visit.getStartDatetime();
+        if (encounterDateTime.before(visitStartDateTime)) {
+            encounterDateTime = FormatAndParseUtil.addSeconds(visitStartDateTime, 1);
+        }
+        return FormatAndParseUtil.toISODateStringWithTimezone(encounterDateTime);
     }
 
     private OpenMRSSaveObservation formGroupObservation(ProgramEncounter programEncounter) {

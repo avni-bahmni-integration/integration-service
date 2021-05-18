@@ -38,7 +38,7 @@ class EnrolmentWorkerExternalTest {
     void processSpecificEnrolment() {
         Constants constants = constantsRepository.findAllConstants();
         enrolmentWorker.cacheRunImmutables(constants);
-        Enrolment enrolment = avniEnrolmentRepository.getEnrolment("cec8b907-31d2-4eba-b725-b1b607c10c9e");
+        Enrolment enrolment = avniEnrolmentRepository.getEnrolment("83bede87-68db-2edc-771b-d214f64d08f0");
         enrolmentWorker.processEnrolment(enrolment);
     }
 }

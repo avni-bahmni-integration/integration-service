@@ -49,20 +49,19 @@ public class EnrolmentService {
 
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSPatient openMRSPatient, Constants constants) {
         if (enrolment.getVoided()) return null;
-        OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToEnrolmentEncounter(enrolment, openMRSPatient.getUuid(), constants);
-        OpenMRSUuidHolder visit = visitService.getOrCreateVisit(openMRSPatient);
+        var visit = visitService.getOrCreateVisit(openMRSPatient);
+        var encounter = enrolmentMapper.mapEnrolmentToEnrolmentEncounter(enrolment, openMRSPatient.getUuid(), visit, constants);
         encounter.setVisit(visit.getUuid());
-        OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
+        var savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
         return savedEncounter;
     }
 
     public OpenMRSFullEncounter createCommunityExitEnrolment(Enrolment enrolment, OpenMRSPatient openMRSPatient, Constants constants) {
         if (enrolment.getVoided()) return null;
-
-        OpenMRSEncounter encounter = enrolmentMapper.mapEnrolmentToExitEncounter(enrolment, openMRSPatient.getUuid(), constants);
-        OpenMRSUuidHolder visit = visitService.getOrCreateVisit(openMRSPatient);
+        var visit = visitService.getOrCreateVisit(openMRSPatient);
+        var encounter = enrolmentMapper.mapEnrolmentToExitEncounter(enrolment, openMRSPatient.getUuid(), visit, constants);
         encounter.setVisit(visit.getUuid());
-        OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
+        var savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
         return savedEncounter;
     }
 

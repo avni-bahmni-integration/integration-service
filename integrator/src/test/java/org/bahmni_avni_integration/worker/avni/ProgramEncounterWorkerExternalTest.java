@@ -30,7 +30,7 @@ class ProgramEncounterWorkerExternalTest {
     public void processProgramEncountersOfAnEnrolment() {
         Constants constants = constantsRepository.findAllConstants();
         programEncounterWorker.cacheRunImmutables(constants);
-        var enrolment = avniEnrolmentRepository.getEnrolment("cec8b907-31d2-4eba-b725-b1b607c10c9e");
+        var enrolment = avniEnrolmentRepository.getEnrolment("83bede87-68db-2edc-771b-d214f64d08f0");
         var encounters = (List<String>) enrolment.get("encounters");
         for (String encounterUuid : encounters) {
             var programEncounter = programEncounterRepository.getProgramEncounter(encounterUuid);

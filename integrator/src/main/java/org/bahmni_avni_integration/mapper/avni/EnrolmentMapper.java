@@ -7,6 +7,7 @@ import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRe
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -20,7 +21,7 @@ public class EnrolmentMapper {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
     }
 
-    public OpenMRSEncounter mapEnrolmentToEnrolmentEncounter(Enrolment enrolment, String patientUuid, Constants constants) {
+    public OpenMRSEncounter mapEnrolmentToEnrolmentEncounter(Enrolment enrolment, String patientUuid, OpenMRSVisit visit, Constants constants) {
         var encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_EncounterType);
         var encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
         var formGroupObservation = formGroupObservation(enrolment, MappingType.CommunityEnrolment_BahmniForm);
@@ -30,10 +31,11 @@ public class EnrolmentMapper {
                 patientUuid,
                 encounterTypeUuid,
                 constants,
+                visit,
                 false);
     }
 
-    public OpenMRSEncounter mapEnrolmentToExitEncounter(Enrolment enrolment, String patientUuid, Constants constants) {
+    public OpenMRSEncounter mapEnrolmentToExitEncounter(Enrolment enrolment, String patientUuid, OpenMRSVisit visit, Constants constants) {
         var encounterTypes = mappingMetaDataRepository.findAll(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolmentExit_EncounterType);
         var encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
         var formGroupObservation = formGroupObservation(enrolment, MappingType.CommunityEnrolmentExit_BahmniForm);
@@ -43,6 +45,7 @@ public class EnrolmentMapper {
                 patientUuid,
                 encounterTypeUuid,
                 constants,
+                visit,
                 true);
     }
 
@@ -52,12 +55,12 @@ public class EnrolmentMapper {
                                                      String patientUuid,
                                                      String encounterTypeUuid,
                                                      Constants constants,
+                                                     OpenMRSVisit visit,
                                                      boolean isExit) {
-        var encounterDateTime = isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime();
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
-        openMRSEncounter.setEncounterDatetime(FormatAndParseUtil.toISODateStringWithTimezone(encounterDateTime));
+        openMRSEncounter.setEncounterDatetime(getEncounterDateTime(enrolment, visit, isExit));
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
         List<OpenMRSSaveObservation> observations = observationMapper.mapObservations(avniObservations);
@@ -65,6 +68,15 @@ public class EnrolmentMapper {
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));
         return openMRSEncounter;
+    }
+
+    private String getEncounterDateTime(Enrolment enrolment, OpenMRSVisit visit, boolean isExit) {
+        var encounterDateTime = isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime();
+        var visitStartDateTime = visit.getStartDatetime();
+        if (encounterDateTime.before(visitStartDateTime)) {
+           encounterDateTime = FormatAndParseUtil.addSeconds(visitStartDateTime, 1);
+        }
+        return FormatAndParseUtil.toISODateStringWithTimezone(encounterDateTime);
     }
 
 

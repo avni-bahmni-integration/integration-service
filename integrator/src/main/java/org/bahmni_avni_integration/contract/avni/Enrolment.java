@@ -21,6 +21,9 @@ public class Enrolment extends AvniBaseContract {
         map.put("Subject ID", uuid);
     }
 
+    //TODO: Use separate contracts for read and write.
+    // Why? When using for read, enrolmentDateTime is a string but for write we are adding a date object.
+    // This makes the code confusing to others who read it later
     @JsonIgnore
     public void setEnrolmentDateTime(Date enrolmentDateTime) {
         map.put("Enrolment datetime", enrolmentDateTime);
@@ -37,14 +40,14 @@ public class Enrolment extends AvniBaseContract {
 
     @JsonIgnore
     public Date getEnrolmentDateTime() {
-        return FormatAndParseUtil.fromAvniDateTime((String) map.get("Enrolment datetime"));
+        var enrolmentDateTime = (String) map.get("Enrolment datetime");
+        return enrolmentDateTime == null ? null : FormatAndParseUtil.fromAvniDateTime(enrolmentDateTime);
     }
 
     @JsonIgnore
     public Date getExitDateTime() {
         var exitDateTime = (String) map.get("Exit datetime");
-        if (exitDateTime == null) return null;
-        return FormatAndParseUtil.fromAvniDateTime(exitDateTime);
+        return exitDateTime == null ? null : FormatAndParseUtil.fromAvniDateTime(exitDateTime);
     }
 
     @JsonIgnore

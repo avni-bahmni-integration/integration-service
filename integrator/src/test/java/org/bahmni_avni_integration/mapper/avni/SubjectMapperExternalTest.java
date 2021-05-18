@@ -4,15 +4,18 @@ import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveObservation;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSVisit;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,12 +48,16 @@ public class SubjectMapperExternalTest {
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
         subject.set("observations", avniObservations);
+        subject.set("Registration date", FormatAndParseUtil.toISODateString(new Date()));
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
         var entityUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
+        OpenMRSVisit openMRSVisit = new OpenMRSVisit();
+        openMRSVisit.setStartDatetime(FormatAndParseUtil.toISODateString(new Date()));
         var openMRSEncounter = subjectMapper.mapSubjectToEncounter(subject,
                 "cc0369c8-748c-42cc-a534-5ab40855c3f8",
                 "f39ce690-d1c4-4bb3-aa4b-893bdd73e5a1",
-                constantsRepository.findAllConstants());
+                constantsRepository.findAllConstants(),
+                openMRSVisit);
         var groupObs = openMRSEncounter.getObservations().get(0);
         assertEquals(formConcept, groupObs.getConcept());
         var entityUuidObs = getGroupMember(entityUuidConcept, groupObs);
@@ -93,7 +100,8 @@ public class SubjectMapperExternalTest {
         encounter.setAny("obs", List.of(
                 Map.of("uuid", existingGroupUuid,
                         "concept", Map.of("uuid", formConceptUuid),
-                        "groupMembers", List.of())));
+                        "groupMembers", List.of(),
+                        "voided", false)));
         return encounter;
     }
 

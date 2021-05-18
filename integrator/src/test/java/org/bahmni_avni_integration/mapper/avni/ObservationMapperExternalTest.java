@@ -254,7 +254,8 @@ public class ObservationMapperExternalTest {
         Map<String, Object> observation = Map.of(
                 "uuid", uuid.toString(),
                 "concept", Map.of("uuid", conceptUuid),
-                "value", Map.of("uuid", answerUuid)
+                "value", Map.of("uuid", answerUuid),
+                "voided", false
         );
         return observation;
     }
@@ -263,7 +264,8 @@ public class ObservationMapperExternalTest {
         Map<String, Object> observation = Map.of(
                 "uuid", uuid.toString(),
                 "concept", Map.of("uuid", conceptUuid),
-                "value", value
+                "value", value,
+                "voided", false
         );
         return observation;
     }

@@ -52,9 +52,8 @@ public class PatientService {
         if (subject.getVoided())
             return null;
 
-        OpenMRSUuidHolder visit = visitService.getOrCreateVisit(patient);
-        OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
-        encounter.setVisit(visit.getUuid());
+        var visit = visitService.getOrCreateVisit(patient);
+        OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants, visit);
         OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
         errorService.successfullyProcessed(subject);
@@ -99,6 +98,7 @@ public class PatientService {
                 subject.getLastName(),
                 true
         )));
+        person.setBirthDate(subject.getDateOfBirth());
         person.setGender(FormatAndParseUtil.fromAvniToOpenMRSGender((String) subject.getObservation("Gender")));
         OpenMRSUuidHolder uuidHolder = openMRSPersonRepository.createPerson(person);
         OpenMRSSavePatient patient = new OpenMRSSavePatient();

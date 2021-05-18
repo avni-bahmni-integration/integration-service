@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.bahmni_avni_integration.client.OpenMRSWebClient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSSaveVisit;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
+import org.bahmni_avni_integration.contract.bahmni.OpenMRSVisit;
 import org.bahmni_avni_integration.contract.bahmni.SearchResults;
 import org.bahmni_avni_integration.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +20,17 @@ public class OpenMRSVisitRepository extends BaseOpenMRSRepository {
         super(openMRSWebClient);
     }
 
-    public OpenMRSUuidHolder getVisit(String patientUuid, String locationUuid) {
-        String json = openMRSWebClient.get("%s?patient=%s&location=%s".formatted(resourcePath(), patientUuid, locationUuid));
-        SearchResults<OpenMRSUuidHolder> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSUuidHolder>>() {
+    public OpenMRSVisit getVisit(String patientUuid, String locationUuid) {
+        String json = openMRSWebClient.get("%s?patient=%s&location=%s&v=full".formatted(resourcePath(), patientUuid, locationUuid));
+        SearchResults<OpenMRSVisit> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSVisit>>() {
         });
         return pickAndExpectOne(searchResults, String.format("%s-%s", patientUuid, locationUuid));
     }
 
-    public OpenMRSUuidHolder createVisit(OpenMRSSaveVisit openMRSSaveVisit) {
+    public OpenMRSVisit createVisit(OpenMRSSaveVisit openMRSSaveVisit) {
         String json = ObjectJsonMapper.writeValueAsString(openMRSSaveVisit);
         String outputJson = openMRSWebClient.post(resourcePath(), json);
-        return ObjectJsonMapper.readValue(outputJson, OpenMRSUuidHolder.class);
+        return ObjectJsonMapper.readValue(outputJson, OpenMRSVisit.class);
     }
 
     public void deleteVisit(String visitUuid) {
