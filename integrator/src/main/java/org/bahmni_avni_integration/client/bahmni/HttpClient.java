@@ -93,7 +93,8 @@ public class HttpClient {
         HttpResponse httpResponse = httpClientInternal.post(authenticator.getRequestDetails(URI.create(path)), httpHeaders, json);
         int statusCode = httpResponse.getStatusLine().getStatusCode();
         String message = asString(httpResponse);
-        if (statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_OK) { logger.error(message);
+        if (statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_OK) {
+            logger.error(message);
             throw new RuntimeException("Post failed");
         }
         return message;

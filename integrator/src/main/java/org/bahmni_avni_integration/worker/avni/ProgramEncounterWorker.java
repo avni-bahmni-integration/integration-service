@@ -89,6 +89,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
         if (programEncounterService.shouldFilterEncounter(programEncounter)) {
             logger.warn(String.format("Program encounter should be filtered out: %s", programEncounter.getUuid()));
+            return;
         }
 
         var subject = avniSubjectRepository.getSubject(programEncounter.getSubjectId());
@@ -98,12 +99,10 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
         var encounter = patientEncounter.getValue1();
 
         if (patient != null && encounter == null) {
-            logger.debug(String.format("Creating new Bahmni Program Encounter for Avni program encounter %s", programEncounter.getUuid()));
             programEncounterService.createCommunityEncounter(programEncounter, patient, constants);
         } else if (patient != null && encounter != null) {
-            logger.debug(String.format("Updating existing Bahmni Program Encounter %s", encounter.getUuid()));
             programEncounterService.updateCommunityEncounter(encounter, programEncounter, constants);
-        } else if (patient != null && encounter == null) {
+        } else if (patient == null && encounter == null) {
             logger.debug(String.format("Patient with identifier %s not found", subject.getId(metaData)));
             programEncounterService.processPatientNotFound(programEncounter);
         }

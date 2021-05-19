@@ -85,6 +85,10 @@ public class HttpClientInternal {
     }
 
     public void delete(HttpRequestDetails requestDetails, HttpHeaders httpHeaders) {
+        defaultHttpClient = (connectionManager == null) ? new DefaultHttpClient() : new DefaultHttpClient(connectionManager);
+        defaultHttpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, readTimeout);
+        defaultHttpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectTimeout);
+
         HttpDelete httpDelete = new HttpDelete(requestDetails.getUri());
         requestDetails.addDetailsTo(httpDelete);
         httpHeaders.addTo(httpDelete);

@@ -60,6 +60,15 @@ public class PatientService {
         return savedEncounter;
     }
 
+    public OpenMRSFullEncounter createPatientAndSubject(Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+        if (subject.getVoided())
+            return null;
+
+        var newPatient = createPatient(subject, subjectToPatientMetaData, constants);
+        var fullPatientObject = getPatient(newPatient.getUuid());
+        return createSubject(subject, fullPatientObject, subjectToPatientMetaData, constants);
+    }
+
     public Pair<OpenMRSPatient, OpenMRSFullEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
         String subjectId = subject.getUuid();
         OpenMRSPatient patient = findPatient(subject, constants, subjectToPatientMetaData);
@@ -88,10 +97,7 @@ public class PatientService {
         errorService.errorOccurred(subject, ErrorType.NoPatientWithId);
     }
 
-    public OpenMRSPatient createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
-        if (subject.getVoided())
-            return null;
-
+    private OpenMRSPatient createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
         OpenMRSSavePerson person = new OpenMRSSavePerson();
         person.setNames(List.of(new OpenMRSSaveName(
                 subject.getFirstName(),

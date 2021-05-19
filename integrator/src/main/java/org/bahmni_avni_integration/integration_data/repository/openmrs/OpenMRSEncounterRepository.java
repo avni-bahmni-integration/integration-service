@@ -74,6 +74,6 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
     }
 
     public void voidEncounter(OpenMRSFullEncounter existingEncounter) {
-        openMRSWebClient.delete(URI.create(String.format("%s/%s?purge=false", getResourcePath("encounter"), existingEncounter.getUuid())));
+        openMRSWebClient.delete(URI.create(String.format("%s/%s", getResourcePath("encounter"), existingEncounter.getUuid())));
     }
 }

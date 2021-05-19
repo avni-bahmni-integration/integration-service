@@ -92,11 +92,8 @@ public class SubjectWorker implements ErrorRecordWorker {
             logger.debug(String.format("Creating new encounter for subject %s", subject.getUuid()));
             patientService.createSubject(subject, patient, metaData, constants);
         } else if (encounter == null && patient == null) {
-            logger.debug(String.format("Creating new patient for subject %s", subject.getUuid()));
-            var newPatient = patientService.createPatient(subject, metaData, constants);
-            var fullPatientObject = patientService.getPatient(newPatient.getUuid());
-            logger.debug(String.format("Creating new encounter for subject %s", subject.getUuid()));
-            patientService.createSubject(subject, fullPatientObject, metaData, constants);
+            logger.debug(String.format("Creating new patient and new encounter for subject %s", subject.getUuid()));
+            patientService.createPatientAndSubject(subject, metaData, constants);
         }
         entityStatusService.saveEntityStatus(subject);
     }

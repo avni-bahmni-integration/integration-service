@@ -92,12 +92,6 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         enrolment.set("exitObservations", exitObservations);
     }
 
-    public void processEnrolment() {
-        AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
-        EnrolmentsResponse enrolments = avniEnrolmentRepository.getEnrolments(status.getReadUpto());
-        processEnrolment(enrolments.getContent()[0]);
-    }
-
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processEnrolment(Enrolment enrolment) {
         removeIgnoredObservations(enrolment);

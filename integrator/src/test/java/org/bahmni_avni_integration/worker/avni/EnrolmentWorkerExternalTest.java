@@ -26,13 +26,6 @@ class EnrolmentWorkerExternalTest {
     @Autowired
     AvniEnrolmentRepository avniEnrolmentRepository;
 
-    @Test
-    void processAllEnrolments() {
-        Constants constants = constantsRepository.findAllConstants();
-        enrolmentWorker.cacheRunImmutables(constants);
-        enrolmentWorker.processEnrolment();
-    }
-
     //Useful when testing things like update
     @Test
     void processSpecificEnrolment() {

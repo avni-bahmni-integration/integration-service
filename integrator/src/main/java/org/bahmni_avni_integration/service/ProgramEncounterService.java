@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.service;
 
+import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
@@ -12,6 +13,7 @@ import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMet
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.mapper.avni.ProgramEncounterMapper;
+import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
 import org.javatuples.Pair;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ public class ProgramEncounterService {
     private final VisitService visitService;
     private final ProgramEncounterMapper programEncounterMapper;
     private final ErrorService errorService;
+    private static final Logger logger = Logger.getLogger(ProgramEncounterService.class);
 
     public ProgramEncounterService(PatientService patientService, MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, VisitService visitService, ProgramEncounterMapper programEncounterMapper, ErrorService errorService) {
         this.patientService = patientService;
@@ -46,8 +49,12 @@ public class ProgramEncounterService {
     }
 
     public OpenMRSFullEncounter createCommunityEncounter(ProgramEncounter programEncounter, OpenMRSPatient patient, Constants constants) {
-        if (programEncounter.getVoided()) return null;
+        if (programEncounter.getVoided()) {
+            logger.debug(String.format("Skipping voided Avni encounter %s", programEncounter.getUuid()));
+            return null;
+        }
 
+        logger.debug(String.format("Creating new Bahmni Encounter for Avni encounter %s", programEncounter.getUuid()));
         var visit = visitService.getOrCreateVisit(patient);
         var encounter = programEncounterMapper.mapEncounter(programEncounter, patient.getUuid(), constants, visit);
         var savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
@@ -66,9 +73,15 @@ public class ProgramEncounterService {
 
     public void updateCommunityEncounter(OpenMRSFullEncounter existingEncounter, ProgramEncounter programEncounter, Constants constants) {
         if (programEncounter.getVoided()) {
+            logger.debug(String.format("Voiding Bahmni Encounter %s because the Avni encounter %s is voided",
+                    existingEncounter.getUuid(),
+                    programEncounter.getUuid()));
             openMRSEncounterRepository.voidEncounter(existingEncounter);
         } else {
-            OpenMRSEncounter openMRSEncounter = programEncounterMapper.mapProgramEncounterToExistingEncounter(existingEncounter, programEncounter, constants);
+            logger.debug(String.format("Updating existing Bahmni Encounter %s", existingEncounter.getUuid()));
+            var openMRSEncounter = programEncounterMapper.mapProgramEncounterToExistingEncounter(existingEncounter,
+                    programEncounter,
+                    constants);
             openMRSEncounterRepository.updateEncounter(openMRSEncounter);
             errorService.successfullyProcessed(programEncounter);
         }
