@@ -22,8 +22,7 @@ public class AvniProgramEncounterRepository extends BaseAvniRepository {
 
     public ProgramEncountersResponse getProgramEncounters(Date lastModifiedDateTime) {
         Map<String, String> queryParams = Map.of(
-                "lastModifiedDateTime", FormatAndParseUtil.toISODateString(lastModifiedDateTime),
-                "size", "1000");
+                "lastModifiedDateTime", FormatAndParseUtil.toISODateString(lastModifiedDateTime));
         ResponseEntity<ProgramEncountersResponse> responseEntity = avniHttpClient.get("/api/programEncounters", queryParams, ProgramEncountersResponse.class);
         ProgramEncountersResponse enrolmentsResponse = responseEntity.getBody();
         return enrolmentsResponse;
