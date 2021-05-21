@@ -7,6 +7,7 @@ import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.integration_data.internal.BahmniToAvniMetaData;
 import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.integration_data.domain.*;
+import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.mapper.bahmni.OpenMRSPatientMapper;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniEncounterRepository;
@@ -36,6 +37,16 @@ public class SubjectService {
         String prefix = constants.getValue(ConstantKey.BahmniIdentifierPrefix);
         subjectCriteria.put(patientToSubjectMetaData.avniIdentifierConcept(), identifier.replace(prefix, ""));
         return avniSubjectRepository.getSubject(
+                new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime(),
+                constants.getValue(ConstantKey.IntegrationAvniSubjectType),
+                subjectCriteria
+        );
+    }
+
+    public Subject[] findSubjects(Subject subject, SubjectToPatientMetaData subjectToPatientMetaData, Constants constants) {
+        LinkedHashMap<String, Object> subjectCriteria = new LinkedHashMap<>();
+        subjectCriteria.put(subjectToPatientMetaData.avniIdentifierConcept(), subject.getId(subjectToPatientMetaData));
+        return avniSubjectRepository.getSubjects(
                 new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime(),
                 constants.getValue(ConstantKey.IntegrationAvniSubjectType),
                 subjectCriteria

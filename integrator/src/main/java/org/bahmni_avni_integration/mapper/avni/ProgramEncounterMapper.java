@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.mapper.avni;
 
+import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
@@ -33,6 +34,7 @@ public class ProgramEncounterMapper {
 
         List<OpenMRSSaveObservation> observations = observationMapper.mapObservations((LinkedHashMap<String, Object>) programEncounter.get("observations"));
         observations.add(avniUuidObs(programEncounter));
+        observations.add(encounterDateObs(programEncounter));
         OpenMRSSaveObservation formGroupObservation = formGroupObservation(programEncounter);
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));
@@ -66,6 +68,11 @@ public class ProgramEncounterMapper {
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, programEncounter.getUuid(), ObsDataType.Text);
     }
 
+    private OpenMRSSaveObservation encounterDateObs(ProgramEncounter programEncounter) {
+        var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEncounterDate_Concept);
+        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, programEncounter.get("Encounter date time"), ObsDataType.Date);
+    }
+
     public OpenMRSEncounter mapProgramEncounterToExistingEncounter(OpenMRSFullEncounter existingEncounter, ProgramEncounter programEncounter, Constants constants) {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
                 MappingType.CommunityProgramEncounter_EncounterType,
@@ -80,10 +87,11 @@ public class ProgramEncounterMapper {
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
 
         String avniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
+        String encounterDateConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEncounterDate_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) programEncounter.get("observations"),
-                List.of(avniUuidConcept));
+                List.of(avniUuidConcept, encounterDateConcept));
         OpenMRSSaveObservation formGroupObservation = existingGroupObs(programEncounter, existingEncounter);
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));

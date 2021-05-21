@@ -5,17 +5,12 @@ import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.avni.SubjectsResponse;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
-import org.bahmni_avni_integration.integration_data.repository.MultipleResultsFoundException;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniIgnoredConceptsRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
-import org.bahmni_avni_integration.service.EntityStatusService;
-import org.bahmni_avni_integration.service.ErrorService;
-import org.bahmni_avni_integration.service.MappingMetaDataService;
-import org.bahmni_avni_integration.service.PatientService;
+import org.bahmni_avni_integration.service.*;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +18,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class SubjectWorker implements ErrorRecordWorker {
@@ -41,6 +39,8 @@ public class SubjectWorker implements ErrorRecordWorker {
     private ErrorService errorService;
     @Autowired
     private AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
+    @Autowired
+    private SubjectService subjectService;
 
     private static final Logger logger = Logger.getLogger(SubjectWorker.class);
     private SubjectToPatientMetaData metaData;
@@ -70,15 +70,18 @@ public class SubjectWorker implements ErrorRecordWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processSubject(Subject subject) {
-        removeIgnoredObservations(subject);
-        Pair<OpenMRSPatient, OpenMRSFullEncounter> patientEncounter;
-        try {
-            patientEncounter = patientService.findSubject(subject, constants, metaData);
-        } catch (MultipleResultsFoundException e) {
-            patientService.processMultipleSubjectsFound(subject);
+        logger.debug("Processing subject %s".formatted(subject.getUuid()));
+        if (hasDuplicates(subject)) {
+            if(!subject.getVoided()) {
+                logger.error("Create multiple subjects found error for subject %s identifier %s".formatted(subject.getUuid(), subject.getId(metaData)));
+                patientService.processMultipleSubjectsFound(subject);
+            } else {
+                logger.debug("Skip voided subject %s because of having non voided duplicates".formatted(subject.getUuid()));
+            }
             return;
-        }
-
+        };
+        removeIgnoredObservations(subject);
+        Pair<OpenMRSPatient, OpenMRSFullEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
         var patient = patientEncounter.getValue0();
         var encounter = patientEncounter.getValue1();
 
@@ -96,6 +99,20 @@ public class SubjectWorker implements ErrorRecordWorker {
             patientService.createPatientAndSubject(subject, metaData, constants);
         }
         entityStatusService.saveEntityStatus(subject);
+    }
+
+    private boolean hasDuplicates(Subject subject) {
+        Subject[] subjects = subjectService.findSubjects(subject, metaData, constants);
+        int sizeOfNonVoidedOtherThanSelf = Arrays.stream(subjects)
+                .filter(s -> !s.getUuid().equals(subject.getUuid()))
+                .filter(s -> !s.getVoided())
+                .collect(Collectors.toList())
+                .size();
+        boolean hasDuplicates = sizeOfNonVoidedOtherThanSelf > 0;
+        logger.debug("Duplicate subjects found for subject %s identifier %s voided %s".formatted(subject.getUuid(),
+                subject.getId(metaData),
+                subject.getVoided()));
+        return hasDuplicates;
     }
 
     @Override

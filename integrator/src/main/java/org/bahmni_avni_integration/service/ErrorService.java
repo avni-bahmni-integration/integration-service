@@ -39,6 +39,15 @@ public class ErrorService {
         return errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, entityId) != null;
     }
 
+    public boolean hasError(String entityId, AvniEntityType avniEntityType, ErrorType errorType) {
+        ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(avniEntityType, entityId);
+        return errorRecord != null && errorRecord.hasThisAsLastErrorType(errorType);
+    }
+
+    public boolean hasAvniMultipleSubjectsError(String subjectId) {
+        return hasError(subjectId, AvniEntityType.Subject, ErrorType.MultipleSubjectsWithId);
+    }
+
     private ErrorRecord saveBahmniError(String uuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
         ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, uuid);
         if (errorRecord != null && errorRecord.hasThisAsLastErrorType(errorType)) {

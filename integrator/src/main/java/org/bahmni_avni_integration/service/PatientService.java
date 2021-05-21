@@ -89,10 +89,6 @@ public class PatientService {
         errorService.errorOccurred(subject, ErrorType.PatientIdChanged);
     }
 
-    public void processMultipleSubjectsFound(Subject subject) {
-        errorService.errorOccurred(subject, ErrorType.MultipleSubjectsWithId);
-    }
-
     public void processPatientNotFound(Subject subject, SubjectToPatientMetaData metaData) {
         errorService.errorOccurred(subject, ErrorType.NoPatientWithId);
     }
@@ -156,5 +152,9 @@ public class PatientService {
 
     public void notACommunityMember(OpenMRSPatient patient) {
         errorService.errorOccurred(patient, ErrorType.NotACommunityMember);
+    }
+
+    public void processMultipleSubjectsFound(Subject subject) {
+        errorService.errorOccurred(subject, ErrorType.MultipleSubjectsWithId);
     }
 }

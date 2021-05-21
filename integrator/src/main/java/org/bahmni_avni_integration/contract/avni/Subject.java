@@ -23,8 +23,7 @@ public class Subject extends AvniBaseContract {
         return (String) getObservation("Date of birth");
     }
 
-    public Date getRegistrationDate() {
-        var registrationDate = (String) map.get("Registration date");
-        return registrationDate == null ? null : FormatAndParseUtil.fromAvniDate(registrationDate);
+    public String getRegistrationDate() {
+        return (String) map.get("Registration date");
     }
 }

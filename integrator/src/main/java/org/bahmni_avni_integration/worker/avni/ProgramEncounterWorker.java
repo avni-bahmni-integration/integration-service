@@ -84,6 +84,10 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processProgramEncounter(ProgramEncounter programEncounter) {
+        if (errorService.hasAvniMultipleSubjectsError(programEncounter.getSubjectId())) {
+            logger.error(String.format("Skipping Avni encounter %s because of multiple subjects with same id error", programEncounter.getUuid()));
+            return;
+        }
         removeIgnoredObservations(programEncounter);
         logger.debug(String.format("Processing avni program encounter %s", programEncounter.getUuid()));
 

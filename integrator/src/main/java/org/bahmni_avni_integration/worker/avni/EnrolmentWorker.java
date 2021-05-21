@@ -94,6 +94,10 @@ public class EnrolmentWorker implements ErrorRecordWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processEnrolment(Enrolment enrolment) {
+        if (errorService.hasAvniMultipleSubjectsError(enrolment.getSubjectId())) {
+            logger.error(String.format("Skipping Avni enrolment %s because of multiple subjects with same id error", enrolment.getUuid()));
+            return;
+        }
         removeIgnoredObservations(enrolment);
         logger.debug(String.format("Processing avni %s enrolment %s", enrolment.getProgram(), enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
