@@ -249,6 +249,39 @@ public class ObservationMapperExternalTest {
         assertEquals(obsHistoryNoProblem.get("uuid"), obsHistoryNoProblemResult.getUuid());
     }
 
+    @Test
+    public void checkUpdateOfEmptyTextObservations() {
+        MappingMetaDataCollection metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
+
+        OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
+        openMRSFullEncounter.setAny("obs", List.of());
+
+        var avniObservations = new LinkedHashMap<String, Object>();
+        String avniTextConcept = "Reason for skipping height capture.";
+        avniObservations.put(avniTextConcept, "  ");
+        var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
+                openMRSFullEncounter.getLeafObservations(),
+                avniObservations, List.of());
+        OpenMRSSaveObservation observation = observations.stream()
+                .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue(avniTextConcept))).findFirst().orElse(null);
+
+        assertNull(observation);
+    }
+
+    @Test
+    public void checkAddingOfEmptyTextObservations() {
+        MappingMetaDataCollection metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
+        var avniObservations = new LinkedHashMap<String, Object>();
+        String avniTextConcept = "Reason for skipping height capture.";
+        avniObservations.put(avniTextConcept, "  ");
+
+        var observations = observationMapper.mapObservations(avniObservations);
+
+        OpenMRSSaveObservation observation = observations.stream()
+                .filter(o -> o.getConcept().equals(metaData.getBahmniValueForAvniValue(avniTextConcept))).findFirst().orElse(null);
+        assertNull(observation);
+    }
+
 
     private Map<String, Object> createCodedObservation(UUID uuid, String conceptUuid, String answerUuid) {
         Map<String, Object> observation = Map.of(

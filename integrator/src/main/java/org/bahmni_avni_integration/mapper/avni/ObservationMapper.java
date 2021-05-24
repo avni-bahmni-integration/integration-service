@@ -22,6 +22,12 @@ public class ObservationMapper {
         MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
         updateObservations.addAll(voidedObservations(openMRSObservations, avniObservations, conceptMappings, hardcodedConcepts));
         updateObservations.addAll(updatedObservations(openMRSObservations, avniObservations, conceptMappings));
+        updateObservations.addAll(hardcodedObservations(openMRSObservations, hardcodedConcepts));
+        return updateObservations;
+    }
+
+    private List<OpenMRSSaveObservation> hardcodedObservations(List<OpenMRSObservation> openMRSObservations, List<String> hardcodedConcepts) {
+        List<OpenMRSSaveObservation> updateObservations = new ArrayList<>();
         for (var hardcodedConcept : hardcodedConcepts) {
             Optional<OpenMRSObservation> hardCodedObs = openMRSObservations.stream().filter(o -> o.getConceptUuid().equals(hardcodedConcept)).findFirst();
             hardCodedObs.ifPresent(existing -> {
@@ -37,7 +43,9 @@ public class ObservationMapper {
 
     private List<OpenMRSSaveObservation> updatedObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, MappingMetaDataCollection conceptMappings) {
         List<OpenMRSSaveObservation> updatedObservations = new ArrayList<>();
-        avniObservations.forEach((question, answer) -> {
+        for (Map.Entry<String, Object> entry : avniObservations.entrySet()) {
+            String question = entry.getKey();
+            Object answer = entry.getValue();
             MappingMetaData questionMapping = conceptMappings.getMappingForAvniValue(question);
             if (questionMapping != null) {
                 if (questionMapping.isCoded()) {
@@ -51,10 +59,13 @@ public class ObservationMapper {
                         });
                     }
                 } else {
+                    if (questionMapping.isText() && answer instanceof String && ((String) answer).isBlank()) {
+                        continue;
+                    }
                     updatedObservations.add(updatedPrimitiveObs(openMRSObservations, conceptMappings, question, questionMapping, answer));
                 }
             }
-        });
+        }
         return updatedObservations;
 
     }
@@ -116,7 +127,9 @@ public class ObservationMapper {
     public List<OpenMRSSaveObservation> mapObservations(LinkedHashMap<String, Object> avniObservations) {
         List<OpenMRSSaveObservation> openMRSObservations = new ArrayList<>();
         MappingMetaDataCollection conceptMappings = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
-        avniObservations.forEach((key, value) -> {
+        for (Map.Entry<String, Object> entry : avniObservations.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
             MappingMetaData questionMapping = conceptMappings.getMappingForAvniValue(key);
             if (questionMapping != null) {
                 if (questionMapping.isCoded()) {
@@ -131,10 +144,13 @@ public class ObservationMapper {
                         });
                     }
                 } else {
+                    if (questionMapping.isText() && value instanceof String && ((String)value).isBlank()) {
+                        continue;
+                    }
                     openMRSObservations.add(OpenMRSSaveObservation.createPrimitiveObs(questionMapping.getBahmniValue(), value, questionMapping.getDataTypeHint()));
                 }
             }
-        });
+        }
         return openMRSObservations;
     }
 

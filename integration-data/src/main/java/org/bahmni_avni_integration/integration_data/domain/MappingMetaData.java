@@ -74,6 +74,10 @@ public class MappingMetaData extends BaseEntity {
         return ObsDataType.Coded.equals(getDataTypeHint());
     }
 
+    public boolean isText() {
+        return ObsDataType.Text.equals(getDataTypeHint());
+    }
+
     public void setDataTypeHint(ObsDataType dataTypeHint) {
         this.dataTypeHint = dataTypeHint;
     }
