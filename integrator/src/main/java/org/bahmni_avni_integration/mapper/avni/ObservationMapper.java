@@ -42,48 +42,47 @@ public class ObservationMapper {
             if (questionMapping != null) {
                 if (questionMapping.isCoded()) {
                     if (answer instanceof String) {
-                        MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue((String) answer);
-                        OpenMRSObservation openMRSObservation = openMRSObservations.stream()
-                                .filter(o -> o.getConceptUuid().equals(conceptMappings.getBahmniValueForAvniValue(question)) &&
-                                        o.getValue().equals(conceptMappings.getBahmniValueForAvniValue((String) answer)))
-                                .findFirst()
-                                .orElse(null);
-                        if (openMRSObservation != null) {
-                            updatedObservations.add(OpenMRSSaveObservation.createCodedObs(openMRSObservation.getObsUuid(), questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
-                        } else {
-                            updatedObservations.add(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
-                        }
+                        var avniAnswer = (String) answer;
+                        updatedObservations.add(updatedCodedObs(openMRSObservations, conceptMappings, question, questionMapping, avniAnswer));
                     } else if (answer instanceof List<?>) {
                         List<String> valueList = (List<String>) answer;
-                        valueList.forEach(s -> {
-                            MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue(s);
-                            OpenMRSObservation openMRSObservation = openMRSObservations.stream()
-                                    .filter(o -> o.getConceptUuid().equals(conceptMappings.getBahmniValueForAvniValue(question)) &&
-                                            o.getValue().equals(conceptMappings.getBahmniValueForAvniValue(s)))
-                                    .findFirst()
-                                    .orElse(null);
-                            if (openMRSObservation != null) {
-                                updatedObservations.add(OpenMRSSaveObservation.createCodedObs(openMRSObservation.getObsUuid(), questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
-                            } else {
-                                updatedObservations.add(OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
-                            }
+                        valueList.forEach(avniAnswer -> {
+                            updatedObservations.add(updatedCodedObs(openMRSObservations, conceptMappings, question, questionMapping, avniAnswer));
                         });
                     }
                 } else {
-                    OpenMRSObservation openMRSObservation = openMRSObservations.stream()
-                            .filter(o -> o.getConceptUuid().equals(conceptMappings.getBahmniValueForAvniValue(question)))
-                            .findFirst()
-                            .orElse(null);
-                    if (openMRSObservation != null) {
-                        updatedObservations.add(OpenMRSSaveObservation.createPrimitiveObs(openMRSObservation.getObsUuid(), openMRSObservation.getConceptUuid(), answer, questionMapping.getDataTypeHint()));
-                    } else {
-                        updatedObservations.add(OpenMRSSaveObservation.createPrimitiveObs(questionMapping.getBahmniValue(), answer, questionMapping.getDataTypeHint()));
-                    }
+                    updatedObservations.add(updatedPrimitiveObs(openMRSObservations, conceptMappings, question, questionMapping, answer));
                 }
             }
         });
         return updatedObservations;
 
+    }
+
+    private OpenMRSSaveObservation updatedPrimitiveObs(List<OpenMRSObservation> openMRSObservations, MappingMetaDataCollection conceptMappings, String question, MappingMetaData questionMapping, Object answer) {
+        OpenMRSObservation openMRSObservation = openMRSObservations.stream()
+                .filter(o -> o.getConceptUuid().equals(conceptMappings.getBahmniValueForAvniValue(question)))
+                .findFirst()
+                .orElse(null);
+        if (openMRSObservation != null) {
+            return (OpenMRSSaveObservation.createPrimitiveObs(openMRSObservation.getObsUuid(), openMRSObservation.getConceptUuid(), answer, questionMapping.getDataTypeHint()));
+        } else {
+            return (OpenMRSSaveObservation.createPrimitiveObs(questionMapping.getBahmniValue(), answer, questionMapping.getDataTypeHint()));
+        }
+    }
+
+    private OpenMRSSaveObservation updatedCodedObs(List<OpenMRSObservation> openMRSObservations, MappingMetaDataCollection conceptMappings, String question, MappingMetaData questionMapping, String avniAnswerConcept) {
+        MappingMetaData answerMapping = conceptMappings.getMappingForAvniValue(avniAnswerConcept);
+        OpenMRSObservation openMRSObservation = openMRSObservations.stream()
+                .filter(o -> o.getConceptUuid().equals(conceptMappings.getBahmniValueForAvniValue(question)) &&
+                             o.getValue().equals(conceptMappings.getBahmniValueForAvniValue(avniAnswerConcept)))
+                .findFirst()
+                .orElse(null);
+        if (openMRSObservation != null) {
+            return (OpenMRSSaveObservation.createCodedObs(openMRSObservation.getObsUuid(), questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+        } else {
+            return (OpenMRSSaveObservation.createCodedObs(questionMapping.getBahmniValue(), answerMapping.getBahmniValue()));
+        }
     }
 
     private List<OpenMRSSaveObservation> voidedObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, MappingMetaDataCollection conceptMappings, List<String> exclude) {
