@@ -75,11 +75,7 @@ public class EnrolmentMapper {
 
     private String getEncounterDateTime(Enrolment enrolment, OpenMRSVisit visit, boolean isExit) {
         var encounterDateTime = isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime();
-        var visitStartDateTime = visit.getStartDatetime();
-        if (encounterDateTime.before(visitStartDateTime)) {
-           encounterDateTime = FormatAndParseUtil.addSeconds(visitStartDateTime, 1);
-        }
-        return FormatAndParseUtil.toISODateStringWithTimezone(encounterDateTime);
+        return MapperUtils.getEntityDateTime(encounterDateTime, visit);
     }
 
 

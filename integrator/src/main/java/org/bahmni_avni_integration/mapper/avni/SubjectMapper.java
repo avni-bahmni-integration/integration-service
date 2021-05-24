@@ -43,11 +43,7 @@ public class SubjectMapper {
 
     private String getRegistrationDate(Subject subject, OpenMRSVisit visit) {
         var registrationDate = FormatAndParseUtil.fromAvniDate(subject.getRegistrationDate());
-        var visitStartDateTime = visit.getStartDatetime();
-        if (registrationDate.before(visitStartDateTime)) {
-            registrationDate = FormatAndParseUtil.addSeconds(visitStartDateTime, 1);
-        }
-        return FormatAndParseUtil.toISODateStringWithTimezone(registrationDate);
+        return MapperUtils.getEntityDateTime(registrationDate, visit);
     }
 
     public OpenMRSEncounter mapSubjectToExistingEncounter(OpenMRSFullEncounter existingEncounter, Subject subject, String patientUuid, String encounterTypeUuid, Constants constants) {

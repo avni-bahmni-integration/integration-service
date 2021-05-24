@@ -1,11 +1,9 @@
 package org.bahmni_avni_integration.mapper.avni;
 
-import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
-import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -27,7 +25,7 @@ public class ProgramEncounterMapper {
         var openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
-        openMRSEncounter.setEncounterDatetime(getEncounterDateTime(programEncounter, visit));
+        openMRSEncounter.setEncounterDatetime(MapperUtils.getEntityDateTime(programEncounter.getEncounterDateTime(), visit));
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider),
                 constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
@@ -40,15 +38,6 @@ public class ProgramEncounterMapper {
         openMRSEncounter.setObservations(List.of(formGroupObservation));
         openMRSEncounter.setVisit(visit.getUuid());
         return openMRSEncounter;
-    }
-
-    private String getEncounterDateTime(ProgramEncounter programEncounter, OpenMRSVisit visit) {
-        var encounterDateTime = programEncounter.getEncounterDateTime();
-        var visitStartDateTime = visit.getStartDatetime();
-        if (encounterDateTime.before(visitStartDateTime)) {
-            encounterDateTime = FormatAndParseUtil.addSeconds(visitStartDateTime, 1);
-        }
-        return FormatAndParseUtil.toISODateStringWithTimezone(encounterDateTime);
     }
 
     private OpenMRSSaveObservation formGroupObservation(ProgramEncounter programEncounter) {
