@@ -65,14 +65,16 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.ProgramEncounter);
             ProgramEncountersResponse response = avniProgramEncounterRepository.getProgramEncounters(status.getReadUpto());
             ProgramEncounter[] programEncounters = response.getContent();
-            int totalElements = response.getTotalElements();
             int totalPages = response.getTotalPages();
             logger.info(String.format("Found %d program encounters that are newer than %s", programEncounters.length, status.getReadUpto()));
             if (programEncounters.length == 0) break;
             for (ProgramEncounter programEncounter : programEncounters) {
                 processProgramEncounter(programEncounter);
             }
-            if (totalElements == 1 && totalPages == 1) break;
+            if (totalPages == 1) {
+                logger.info("Finished processing all pages");
+                break;
+            };
         }
     }
 

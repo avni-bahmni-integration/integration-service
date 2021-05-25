@@ -5,7 +5,6 @@ import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.EnrolmentsResponse;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.contract.bahmni.OpenMRSUuidHolder;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
@@ -62,7 +61,6 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         while (true) {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
             EnrolmentsResponse response = avniEnrolmentRepository.getEnrolments(status.getReadUpto());
-            int totalElements = response.getTotalElements();
             int totalPages = response.getTotalPages();
             Enrolment[] enrolments = response.getContent();
             logger.info(String.format("Found %d enrolments that are newer than %s", enrolments.length, status.getReadUpto()));
@@ -70,15 +68,11 @@ public class EnrolmentWorker implements ErrorRecordWorker {
             for (Enrolment enrolment : enrolments) {
                 processEnrolment(enrolment);
             }
-            if (isLastPage(totalElements, totalPages)) {
+            if (totalPages == 1) {
                 logger.info("Finished processing all pages");
                 break;
             }
         }
-    }
-
-    private boolean isLastPage(int totalElements, int totalPages) {
-        return totalElements == 1 && totalPages == 1;
     }
 
     private void removeIgnoredObservations(Enrolment enrolment) {

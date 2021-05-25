@@ -51,14 +51,16 @@ public class SubjectWorker implements ErrorRecordWorker {
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
             SubjectsResponse response = avniSubjectRepository.getSubjects(status.getReadUpto(), constants.getValue(ConstantKey.IntegrationAvniSubjectType));
             Subject[] subjects = response.getContent();
-            int totalElements = response.getTotalElements();
             int totalPages = response.getTotalPages();
             logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUpto()));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {
                 processSubject(subject);
             }
-            if (totalElements == 1 && totalPages == 1) break;
+            if (totalPages == 1) {
+                logger.info("Finished processing all pages");
+                break;
+            }
         }
     }
 
