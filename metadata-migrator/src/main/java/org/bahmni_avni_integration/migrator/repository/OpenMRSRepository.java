@@ -315,6 +315,7 @@ public class OpenMRSRepository {
         deleteTxData("delete from visit where creator = ?", connection, "visit");
         deleteTxData("delete from patient_identifier where creator = ?", connection, "patient_identifier");
         deleteTxData("delete from person_name where creator = ?", connection, "person_name");
+        deleteTxData("delete from audit_log where patient_id in (select patient_id from patient where creator = ?)", connection, "audit_log");
         deleteTxData("delete from patient where creator = ?", connection, "patient");
         deleteTxData("delete from person where creator = ?", connection, "person");
 

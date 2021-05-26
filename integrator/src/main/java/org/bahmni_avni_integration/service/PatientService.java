@@ -157,4 +157,8 @@ public class PatientService {
     public void processMultipleSubjectsFound(Subject subject) {
         errorService.errorOccurred(subject, ErrorType.MultipleSubjectsWithId);
     }
+
+    public void processSubjectIdNull(Subject subject) {
+        errorService.errorOccurred(subject, ErrorType.SubjectIdNull);
+    }
 }

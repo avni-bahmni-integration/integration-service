@@ -232,7 +232,7 @@ public class AvniToBahmniService {
         Map<String, Object> constants = implementationConfigurationRepository.getConstants();
         openMRSRepository.createAddConceptProcedure(connection);
         createEntityConceptAndMapping(connection);
-        createProgramNameConceptAndMapping(connection);
+        createProgramDataConceptAndMapping(connection);
         createEntityDateConceptsAndMapping(connection);
         createStandardConceptsAndMappings(connection);
         createCommunityLocationAndMapping(connection, constants);
@@ -287,16 +287,16 @@ public class AvniToBahmniService {
                 null));
     }
 
-    private void createProgramNameConceptAndMapping(Connection connection) throws SQLException {
+    private void createProgramDataConceptAndMapping(Connection connection) throws SQLException {
         var entityConceptUuid = UUID.randomUUID().toString();
         openMRSRepository.createConcept(connection,
                 entityConceptUuid,
-                Names.AvniProgramConceptName,
+                Names.AvniProgramDataConceptName,
                 "Text",
                 "Misc",
                 false);
         mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
-                MappingType.AvniProgramName_Concept,
+                MappingType.AvniProgramData_Concept,
                 entityConceptUuid,
                 null,
                 "Program Name",
@@ -307,7 +307,8 @@ public class AvniToBahmniService {
         var conceptMap = Map.of(
                 Names.AvniRegistrationDateConceptName, MappingType.AvniRegistrationDate_Concept,
                 Names.AvniEnrolmentDateConceptName, MappingType.AvniEnrolmentDate_Concept,
-                Names.AvniEncounterDateConceptName, MappingType.AvniEncounterDate_Concept);
+                Names.AvniEncounterDateConceptName, MappingType.AvniEncounterDate_Concept,
+                Names.AvniExitDateConceptName, MappingType.AvniExitDate_Concept);
         for (var entry : conceptMap.entrySet()) {
             var conceptUuid = UUID.randomUUID().toString();
             String conceptName = entry.getKey();

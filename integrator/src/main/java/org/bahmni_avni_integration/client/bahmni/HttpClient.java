@@ -72,7 +72,8 @@ public class HttpClient {
     private void checkSanityOfResponse(HttpResponse httpResponse, URI uri) {
         StatusLine statusLine = httpResponse.getStatusLine();
         int statusCode = statusLine.getStatusCode();
-        if (statusCode < 200 || statusCode >= 300) throw WebClientsException.CustomError(statusCode, "Error reported on call");
+        if (statusCode < 200 || statusCode >= 300)
+            throw WebClientsException.CustomError(statusCode, "Error reported on call");
 
         HttpEntity entity = httpResponse.getEntity();
         if (entity == null) throw new WebClientsException("Cannot read response");

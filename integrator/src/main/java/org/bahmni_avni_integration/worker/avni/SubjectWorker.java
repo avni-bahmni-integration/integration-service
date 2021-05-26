@@ -73,6 +73,13 @@ public class SubjectWorker implements ErrorRecordWorker {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processSubject(Subject subject) {
         logger.debug("Processing subject %s".formatted(subject.getUuid()));
+
+        if(subject.getId(metaData) == null) {
+            logger.debug("Skip subject %s because of having null identifier".formatted(subject.getUuid()));
+            patientService.processSubjectIdNull(subject);
+            return;
+        }
+
         if (hasDuplicates(subject)) {
             if(!subject.getVoided()) {
                 logger.error("Create multiple subjects found error for subject %s identifier %s".formatted(subject.getUuid(), subject.getId(metaData)));

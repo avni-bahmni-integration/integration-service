@@ -7,13 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MapperUtils {
-
     public static String getEntityDateTime(Date avniEntityDateTime, OpenMRSVisit visit) {
-        var encounterDateTime = avniEntityDateTime;
-        var visitStartDateTime = visit.getStartDatetime();
-        if (encounterDateTime.before(visitStartDateTime) || encounterDateTime.after(Calendar.getInstance().getTime())) {
-            encounterDateTime = FormatAndParseUtil.addSeconds(visitStartDateTime, 1);
-        }
-        return FormatAndParseUtil.toISODateStringWithTimezone(encounterDateTime);
+        var entityDateTime = (avniEntityDateTime.before(visit.getStartDatetime()) ||
+                              avniEntityDateTime.after(Calendar.getInstance().getTime()))
+                ? visit.getStartDatetime()
+                : avniEntityDateTime;
+        return FormatAndParseUtil.toISODateStringWithTimezone(entityDateTime);
     }
 }
