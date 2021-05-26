@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/")
@@ -35,5 +36,12 @@ public class UserController {
         }
         user.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
         return userRepository.save(user);
+    }
+
+    @RequestMapping(value = "currentUser", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public User loggedInUser(Principal principal) {
+        String email = principal.getName();
+        return userRepository.findByEmail(email);
     }
 }
