@@ -34,6 +34,8 @@ define _run_migrator
 endef
 
 ######## DATABASE
+# hashed password when password is password = $2a$10$RipvsoEJg4PtXOExTjg7Eu2WzHH1SBntIkuR.bzmZeU2TrbQoFtMW
+# kept here for emergency purposes as we are not developing the entire login functionality
 rebuild-db: drop-db build-db
 
 build-db:

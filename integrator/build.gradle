@@ -66,6 +66,9 @@ dependencies {
     compile "org.javatuples:javatuples:1.2"
 
     implementation 'com.bugsnag:bugsnag-spring:3.+'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-test'
 }
 
 sourceSets {
