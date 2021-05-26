@@ -26,7 +26,7 @@ public class UserController {
 
     @RequestMapping(value = "user", method = {RequestMethod.POST, RequestMethod.PUT})
     @Transactional
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     public User save(@RequestBody User userRequest) {
         User user = userRepository.findByEmail(userRequest.getEmail());
         if (user == null) {
