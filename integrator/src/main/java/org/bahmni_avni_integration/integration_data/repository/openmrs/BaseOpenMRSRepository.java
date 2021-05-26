@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 public abstract class BaseOpenMRSRepository {
     @Value("${openmrs.uri.prefix}")
@@ -48,9 +49,11 @@ public abstract class BaseOpenMRSRepository {
     }
 
     protected <T> T pickAndExpectOne(SearchResults<T> searchResults, String searchParam) {
-        if (searchResults.getResults().size() == 0) return null;
-        if (searchResults.getResults().size() > 1) throw new MultipleResultsFoundException(String.format("More than one entity found with name: %s", searchParam));
-        return searchResults.getResults().get(0);
+        SearchResults<T> searchResultsWithoutNull = new SearchResults<>();
+        searchResultsWithoutNull.setResults(searchResults.getResults().stream().filter(r -> r != null).collect(Collectors.toList()));
+        if (searchResultsWithoutNull.getResults().size() == 0) return null;
+        if (searchResultsWithoutNull.getResults().size() > 1) throw new MultipleResultsFoundException(String.format("More than one entity found with name: %s", searchParam));
+        return searchResultsWithoutNull.getResults().get(0);
     }
 
     protected <T> T pickOne(SearchResults<T> searchResults, String searchParam) {
