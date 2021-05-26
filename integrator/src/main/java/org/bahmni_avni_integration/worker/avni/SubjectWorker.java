@@ -111,9 +111,11 @@ public class SubjectWorker implements ErrorRecordWorker {
                 .collect(Collectors.toList())
                 .size();
         boolean hasDuplicates = sizeOfNonVoidedOtherThanSelf > 0;
-        logger.debug("Duplicate subjects found for subject %s identifier %s voided %s".formatted(subject.getUuid(),
-                subject.getId(metaData),
-                subject.getVoided()));
+        if (hasDuplicates) {
+            logger.debug("Duplicate subjects found for subject %s identifier %s voided %s".formatted(subject.getUuid(),
+                    subject.getId(metaData),
+                    subject.getVoided()));
+        }
         return hasDuplicates;
     }
 
