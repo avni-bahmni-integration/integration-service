@@ -47,4 +47,14 @@ public class PatientEncounterEventWorkerExternalTest extends BaseExternalTest {
         patientEventWorker.process(patientEvent("00052bd1-4e72-45ee-9c8f-b711685aae89"));
         patientEncounterEventWorker.process(encounterEvent("42269eee-4d3f-45df-bdbf-b37af98290f9"));
     }
+
+    @Test
+    public void processProgramEncounter() {
+        patientEventWorker.process(patientEvent("999b1bda-e7a2-4601-ab76-79e09a1ef890"));
+        patientEncounterEventWorker.process(encounterEvent("30791204-694e-4473-8c9a-7dc8e12cbfba"));
+        patientEncounterEventWorker.process(encounterEvent("89dac55e-811f-4334-80c4-6c57f60fa64e"));
+        patientEncounterEventWorker.process(encounterEvent("af660d4b-baf5-4a2e-bf4f-3a1cc5348d4e"));
+        patientEncounterEventWorker.process(encounterEvent("b4a34014-10a2-42d3-a2db-553cb0153753"));
+//        30791204-694e-4473-8c9a-7dc8e12cbfba, 89dac55e-811f-4334-80c4-6c57f60fa64e, af660d4b-baf5-4a2e-bf4f-3a1cc5348d4e, b4a34014-10a2-42d3-a2db-553cb0153753
+    }
 }
