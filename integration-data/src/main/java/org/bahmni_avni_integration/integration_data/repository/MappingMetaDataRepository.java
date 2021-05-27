@@ -2,6 +2,8 @@ package org.bahmni_avni_integration.integration_data.repository;
 
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +22,9 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     List<MappingMetaData> findAllByMappingGroupAndMappingTypeIn(MappingGroup mappingGroup, List<MappingType> mappingTypes);
 
     List<MappingMetaData> findAllByMappingType(MappingType mappingType);
+    Page<MappingMetaData> findAllByAvniValueContains(String avniValue, Pageable pageable);
+    Page<MappingMetaData> findAllByBahmniValueContains(String bahmniValue, Pageable pageable);
+    Page<MappingMetaData> findAllByAvniValueContainsAndBahmniValueContains(String avniValue, String bahmniValue, Pageable pageable);
 
     MappingMetaData findByMappingType(MappingType mappingType);
 
