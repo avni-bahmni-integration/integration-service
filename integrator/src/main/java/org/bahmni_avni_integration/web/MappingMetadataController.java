@@ -6,7 +6,7 @@ import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.domain.ObsDataType;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.util.EnumUtil;
-import org.bahmni_avni_integration.web.request.MappingMetadataWebRequest;
+import org.bahmni_avni_integration.web.contract.MappingMetadataWebContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,33 +20,45 @@ public class MappingMetadataController {
     private MappingMetaDataRepository mappingMetaDataRepository;
 
     @RequestMapping(value = "/mappingMetadata", method = {RequestMethod.GET})
-    public Page<MappingMetaData> getPage(Pageable pageable) {
-        return mappingMetaDataRepository.findAll(pageable);
+    public Page<MappingMetadataWebContract> getPage(Pageable pageable) {
+        return toContractPage(mappingMetaDataRepository.findAll(pageable));
+    }
+
+    private Page<MappingMetadataWebContract> toContractPage(Page<MappingMetaData> page) {
+        return page.map(mappingMetaData -> getOne(mappingMetaData.getId()));
     }
 
     @RequestMapping(value = "/mappingMetadata/{id}", method = {RequestMethod.GET})
-    public MappingMetaData getOne(@PathVariable("id") int id) {
-        return mappingMetaDataRepository.findById(id).get();
+    public MappingMetadataWebContract getOne(@PathVariable("id") int id) {
+        MappingMetaData mappingMetaData = mappingMetaDataRepository.findById(id).get();
+        MappingMetadataWebContract mappingMetadataWebContract = new MappingMetadataWebContract();
+        mappingMetadataWebContract.setMappingGroup(mappingMetaData.getMappingGroup().getValue());
+        mappingMetadataWebContract.setMappingType(mappingMetaData.getMappingType().getValue());
+        mappingMetadataWebContract.setBahmniValue(mappingMetaData.getBahmniValue());
+        mappingMetadataWebContract.setAvniValue(mappingMetaData.getAvniValue());
+        mappingMetadataWebContract.setId(mappingMetaData.getId());
+        mappingMetadataWebContract.setCoded(mappingMetaData.isCoded());
+        return mappingMetadataWebContract;
     }
 
     @RequestMapping(value = "/mappingMetadata/search/findByAvniValue", method = {RequestMethod.GET})
-    public Page<MappingMetaData> findByAvniValue(@RequestParam("avniValue") String avniValue, Pageable pageable) {
-        return mappingMetaDataRepository.findAllByAvniValueContains(avniValue, pageable);
+    public Page<MappingMetadataWebContract> findByAvniValue(@RequestParam("avniValue") String avniValue, Pageable pageable) {
+        return toContractPage(mappingMetaDataRepository.findAllByAvniValueContains(avniValue, pageable));
     }
 
     @RequestMapping(value = "/mappingMetadata/search/findByBahmniValue")
-    public Page<MappingMetaData> findByBahmniValue(@RequestParam("bahmniValue") String bahmniValue, Pageable pageable) {
-        return mappingMetaDataRepository.findAllByBahmniValueContains(bahmniValue, pageable);
+    public Page<MappingMetadataWebContract> findByBahmniValue(@RequestParam("bahmniValue") String bahmniValue, Pageable pageable) {
+        return toContractPage(mappingMetaDataRepository.findAllByBahmniValueContains(bahmniValue, pageable));
     }
 
     @RequestMapping(value = "/mappingMetadata/search/find", method = {RequestMethod.GET})
-    public Page<MappingMetaData> find(@RequestParam("avniValue") String avniValue, @RequestParam("bahmniValue") String bahmniValue, Pageable pageable) {
-        return mappingMetaDataRepository.findAllByAvniValueContainsAndBahmniValueContains(avniValue, bahmniValue, pageable);
+    public Page<MappingMetadataWebContract> find(@RequestParam("avniValue") String avniValue, @RequestParam("bahmniValue") String bahmniValue, Pageable pageable) {
+        return toContractPage(mappingMetaDataRepository.findAllByAvniValueContainsAndBahmniValueContains(avniValue, bahmniValue, pageable));
     }
 
-    @RequestMapping(value = "/mappingMetadata", method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(value = "/mappingMetadata", method = {RequestMethod.POST})
     @PreAuthorize("hasRole('USER')")
-    public MappingMetaData save(@RequestBody MappingMetadataWebRequest request) {
+    public MappingMetadataWebContract create(@RequestBody MappingMetadataWebContract request) {
         MappingMetaData mappingMetaData;
         if (request.getId() == 0) {
             mappingMetaData = new MappingMetaData();
@@ -58,7 +70,14 @@ public class MappingMetadataController {
         mappingMetaData.setBahmniValue(request.getBahmniValue());
         mappingMetaData.setAvniValue(request.getAvniValue());
         mappingMetaData.setDataTypeHint(request.isCoded() ? ObsDataType.Coded : null);
-        return mappingMetaDataRepository.save(mappingMetaData);
+        MappingMetaData saved = mappingMetaDataRepository.save(mappingMetaData);
+        return getOne(saved.getId());
+    }
+
+    @RequestMapping(value = "/mappingMetadata/{id}", method = {RequestMethod.PUT})
+    @PreAuthorize("hasRole('USER')")
+    public MappingMetadataWebContract update(@RequestBody MappingMetadataWebContract request) {
+        return create(request);
     }
 
     @RequestMapping(value = "/", method = {RequestMethod.DELETE})

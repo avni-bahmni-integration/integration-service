@@ -1,12 +1,12 @@
-package org.bahmni_avni_integration.web.request;
+package org.bahmni_avni_integration.web.contract;
 
-public class MappingMetadataWebRequest {
+public class MappingMetadataWebContract {
     private int id;
     private int mappingGroup;
     private int mappingType;
     private String avniValue;
     private String bahmniValue;
-    private boolean isCoded;
+    private boolean coded;
 
     public int getMappingGroup() {
         return mappingGroup;
@@ -41,11 +41,11 @@ public class MappingMetadataWebRequest {
     }
 
     public boolean isCoded() {
-        return isCoded;
+        return coded;
     }
 
     public void setCoded(boolean coded) {
-        isCoded = coded;
+        this.coded = coded;
     }
 
     public int getId() {
