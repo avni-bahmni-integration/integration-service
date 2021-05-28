@@ -32,4 +32,12 @@ public class ErrorRecordLog extends BaseEntity {
     public void setErrorRecord(ErrorRecord errorRecord) {
         this.errorRecord = errorRecord;
     }
+
+    public ErrorRecord getErrorRecord() {
+        return errorRecord;
+    }
+
+    public Date getLoggedAt() {
+        return loggedAt;
+    }
 }

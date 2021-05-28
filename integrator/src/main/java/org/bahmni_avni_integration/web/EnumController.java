@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.web;
 
 import org.bahmni_avni_integration.integration_data.domain.BaseEnum;
+import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
 import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.web.response.EnumResponse;
@@ -29,5 +30,10 @@ public class EnumController {
     @RequestMapping(value = "/mappingType", method = {RequestMethod.GET})
     public List<EnumResponse> getMappingTypes(Pageable pageable) {
         return getEnumResponses(MappingType.values());
+    }
+
+    @RequestMapping(value = "/errorType", method = {RequestMethod.GET})
+    public List<EnumResponse> getErrorTypes(Pageable pageable) {
+        return getEnumResponses(ErrorType.values());
     }
 }

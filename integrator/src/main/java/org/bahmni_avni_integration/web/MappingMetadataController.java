@@ -80,8 +80,8 @@ public class MappingMetadataController {
         return create(request);
     }
 
-    @RequestMapping(value = "/", method = {RequestMethod.DELETE})
-    public void delete(int id) {
+    @RequestMapping(value = "/mappingMetadata/{id}", method = {RequestMethod.DELETE})
+    public void delete(@PathVariable("id") int id) {
         mappingMetaDataRepository.delete(mappingMetaDataRepository.findById(id).get());
     }
 }

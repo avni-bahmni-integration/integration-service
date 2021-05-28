@@ -1,0 +1,60 @@
+package org.bahmni_avni_integration.web.response;
+
+import java.util.Date;
+
+public class ErrorWebContract {
+    private int id;
+    private int errorType;
+    private Date errorLoggedAt;
+    private String bahmniEntityType;
+    private String avniEntityType;
+    private String entityUuid;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getErrorType() {
+        return errorType;
+    }
+
+    public void setErrorType(int errorType) {
+        this.errorType = errorType;
+    }
+
+    public Date getErrorLoggedAt() {
+        return errorLoggedAt;
+    }
+
+    public void setErrorLoggedAt(Date errorLoggedAt) {
+        this.errorLoggedAt = errorLoggedAt;
+    }
+
+    public String getBahmniEntityType() {
+        return bahmniEntityType;
+    }
+
+    public void setBahmniEntityType(String bahmniEntityType) {
+        this.bahmniEntityType = bahmniEntityType;
+    }
+
+    public String getAvniEntityType() {
+        return avniEntityType;
+    }
+
+    public void setAvniEntityType(String avniEntityType) {
+        this.avniEntityType = avniEntityType;
+    }
+
+    public String getEntityUuid() {
+        return entityUuid;
+    }
+
+    public void setEntityUuid(String entityUuid) {
+        this.entityUuid = entityUuid;
+    }
+}
