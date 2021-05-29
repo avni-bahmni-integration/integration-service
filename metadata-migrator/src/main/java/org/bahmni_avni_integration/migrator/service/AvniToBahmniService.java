@@ -233,7 +233,7 @@ public class AvniToBahmniService {
         openMRSRepository.createAddConceptProcedure(connection);
         createEntityConceptAndMapping(connection);
         createProgramDataConceptAndMapping(connection);
-        createEntityDateConceptsAndMapping(connection);
+        createEventDateConceptAndMapping(connection);
         createStandardConceptsAndMappings(connection);
         createCommunityLocationAndMapping(connection, constants);
         createCommunityVisitTypeAndMapping(connection, constants);
@@ -303,29 +303,20 @@ public class AvniToBahmniService {
                 null));
     }
 
-    private void createEntityDateConceptsAndMapping(Connection connection) throws SQLException {
-        var conceptMap = Map.of(
-                Names.AvniRegistrationDateConceptName, MappingType.AvniRegistrationDate_Concept,
-                Names.AvniEnrolmentDateConceptName, MappingType.AvniEnrolmentDate_Concept,
-                Names.AvniEncounterDateConceptName, MappingType.AvniEncounterDate_Concept,
-                Names.AvniExitDateConceptName, MappingType.AvniExitDate_Concept);
-        for (var entry : conceptMap.entrySet()) {
-            var conceptUuid = UUID.randomUUID().toString();
-            String conceptName = entry.getKey();
-            MappingType mappingType = entry.getValue();
-            openMRSRepository.createConcept(connection,
-                    conceptUuid,
-                    conceptName,
-                    "Date",
-                    "Misc",
-                    false);
-            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
-                    mappingType,
-                    conceptUuid,
-                    null,
-                    conceptName,
-                    null));
-        }
+    private void createEventDateConceptAndMapping(Connection connection) throws SQLException {
+        var conceptUuid = UUID.randomUUID().toString();
+        openMRSRepository.createConcept(connection,
+                conceptUuid,
+                Names.AvniEventDateConceptName,
+                "Date",
+                "Misc",
+                false);
+        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
+                MappingType.AvniEventDate_Concept,
+                conceptUuid,
+                null,
+                Names.AvniEventDateConceptName,
+                null));
     }
 
     private void createStandardConceptAndMapping(Connection connection, String conceptUuid, String conceptName, String conceptDataType, String avniValue, String about) throws SQLException {

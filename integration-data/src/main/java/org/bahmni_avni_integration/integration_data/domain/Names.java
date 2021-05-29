@@ -7,5 +7,6 @@ public class Names {
     public static final String AvniEnrolmentDateConceptName = "Enrolment Date";
     public static final String AvniEncounterDateConceptName = "Encounter Date";
     public static final String AvniExitDateConceptName = "Exit Date";
+    public static final String AvniEventDateConceptName = "Event Date";
     public static final String AvniProgramDataConceptName = "Program Data";
 }

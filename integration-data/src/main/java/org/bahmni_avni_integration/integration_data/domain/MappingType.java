@@ -13,19 +13,16 @@ public enum MappingType implements BaseEnum {
     CommunityProgramEncounter_EncounterType(10),
     CommunityEncounter_EncounterType(11),
     AvniUUID_Concept(12),
-    AvniRegistrationDate_Concept(13),
-    AvniEnrolmentDate_Concept(14),
-    AvniExitDate_Concept(15),
-    AvniEncounterDate_Concept(16),
-    AvniProgramData_Concept(17),
-    BahmniUUID_Concept(18),
-    BahmniForm_CommunityProgram(19),
-    CommunityRegistration_BahmniForm(20),
-    CommunityEnrolment_BahmniForm(21),
-    CommunityEnrolmentExit_BahmniForm(22),
-    CommunityProgramEncounter_BahmniForm(23),
-    CommunityEncounter_BahmniForm(24),
-    PatientIdentifier_Concept(25);
+    AvniEventDate_Concept(13),
+    AvniProgramData_Concept(14),
+    BahmniUUID_Concept(15),
+    BahmniForm_CommunityProgram(16),
+    CommunityRegistration_BahmniForm(17),
+    CommunityEnrolment_BahmniForm(18),
+    CommunityEnrolmentExit_BahmniForm(19),
+    CommunityProgramEncounter_BahmniForm(20),
+    CommunityEncounter_BahmniForm(21),
+    PatientIdentifier_Concept(22);
 
     private final int value;
     MappingType(int value) {

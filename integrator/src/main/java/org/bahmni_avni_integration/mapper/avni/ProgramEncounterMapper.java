@@ -25,14 +25,14 @@ public class ProgramEncounterMapper {
         var openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
-        openMRSEncounter.setEncounterDatetime(MapperUtils.getEntityDateTime(programEncounter.getEncounterDateTime(), visit));
+        openMRSEncounter.setEncounterDatetime(MapperUtils.getEventDateTime(programEncounter.getEncounterDateTime(), visit));
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider),
                 constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
 
         List<OpenMRSSaveObservation> observations = observationMapper.mapObservations((LinkedHashMap<String, Object>) programEncounter.get("observations"));
         observations.add(avniUuidObs(programEncounter));
-        observations.add(encounterDateObs(programEncounter));
+        observations.add(eventDateObs(programEncounter));
         OpenMRSSaveObservation formGroupObservation = formGroupObservation(programEncounter);
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));
@@ -57,8 +57,8 @@ public class ProgramEncounterMapper {
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, programEncounter.getUuid(), ObsDataType.Text);
     }
 
-    private OpenMRSSaveObservation encounterDateObs(ProgramEncounter programEncounter) {
-        var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEncounterDate_Concept);
+    private OpenMRSSaveObservation eventDateObs(ProgramEncounter programEncounter) {
+        var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, programEncounter.get("Encounter date time"), ObsDataType.Date);
     }
 
@@ -76,11 +76,11 @@ public class ProgramEncounterMapper {
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
 
         String avniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
-        String encounterDateConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEncounterDate_Concept);
+        String eventDateConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) programEncounter.get("observations"),
-                List.of(avniUuidConcept, encounterDateConcept));
+                List.of(avniUuidConcept, eventDateConcept));
         OpenMRSSaveObservation formGroupObservation = existingGroupObs(programEncounter, existingEncounter);
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));

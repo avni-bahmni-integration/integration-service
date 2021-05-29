@@ -64,7 +64,7 @@ public class EnrolmentMapper {
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
         List<OpenMRSSaveObservation> observations = observationMapper.mapObservations(avniObservations);
         observations.add(avniUuidObs(enrolment.getUuid()));
-        observations.add(enrolmentDateObs(enrolment));
+        observations.add(eventDateObs(enrolment, isExit));
         observations.add(programDataObs(enrolment, isExit));
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));
@@ -72,8 +72,7 @@ public class EnrolmentMapper {
     }
 
     private String getEncounterDateTime(Enrolment enrolment, OpenMRSVisit visit, boolean isExit) {
-        var encounterDateTime = isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime();
-        return MapperUtils.getEntityDateTime(encounterDateTime, visit);
+        return MapperUtils.getEventDateTime(isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime(), visit);
     }
 
 
@@ -132,12 +131,12 @@ public class EnrolmentMapper {
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
 
         String avniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
-        String enrolmentDateConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEnrolmentDate_Concept);
+        String eventDateConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
         String programDataConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniProgramData_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 avniObservations,
-                List.of(avniUuidConcept, enrolmentDateConcept, programDataConcept));
+                List.of(avniUuidConcept, eventDateConcept, programDataConcept));
         formGroupObservation.setGroupMembers(observations);
         openMRSEncounter.setObservations(List.of(formGroupObservation));
         return openMRSEncounter;
@@ -148,9 +147,9 @@ public class EnrolmentMapper {
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, enrolmentUuid, ObsDataType.Text);
     }
 
-    private OpenMRSSaveObservation enrolmentDateObs(Enrolment enrolment) {
-        var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEnrolmentDate_Concept);
-        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, enrolment.get("Enrolment datetime"), ObsDataType.Date);
+    private OpenMRSSaveObservation eventDateObs(Enrolment enrolment, boolean isExit) {
+        var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
+        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, enrolment.get(isExit ? "Exit datetime" : "Enrolment datetime"), ObsDataType.Date);
     }
 
     private OpenMRSSaveObservation programDataObs(Enrolment enrolment, boolean isExit) {

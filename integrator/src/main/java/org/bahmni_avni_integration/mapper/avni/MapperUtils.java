@@ -7,11 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MapperUtils {
-    public static String getEntityDateTime(Date avniEntityDateTime, OpenMRSVisit visit) {
-        var entityDateTime = (avniEntityDateTime.before(visit.getStartDatetime()) ||
-                              avniEntityDateTime.after(Calendar.getInstance().getTime()))
+    public static String getEventDateTime(Date avniDateTime, OpenMRSVisit visit) {
+        var eventDateTime = (avniDateTime.before(visit.getStartDatetime()) ||
+                              avniDateTime.after(Calendar.getInstance().getTime()))
                 ? visit.getStartDatetime()
-                : avniEntityDateTime;
-        return FormatAndParseUtil.toISODateStringWithTimezone(entityDateTime);
+                : avniDateTime;
+        return FormatAndParseUtil.toISODateStringWithTimezone(eventDateTime);
     }
 }
