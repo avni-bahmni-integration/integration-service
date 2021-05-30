@@ -12,7 +12,7 @@ public class FormatUtilTest {
     @Test
     public void toISODateString() {
         GregorianCalendar gregorianCalendar = new GregorianCalendar(2020, 2, 3);
-        assertEquals("2020-03-03T00:00:00.000Z", FormatAndParseUtil.toISODateString(gregorianCalendar.getTime()));
+        assertEquals("2020-03-03T00:00:00.000Z", FormatAndParseUtil.toISODateTimeString(gregorianCalendar.getTime()));
     }
 
     @Test

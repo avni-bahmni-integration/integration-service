@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 
 import java.util.Date;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenMRSVisit {
     private String uuid;
+    private List<OpenMRSVisitAttribute> attributes;
+    private OpenMRSUuidHolder visitType;
 
     @JsonProperty("startDatetime")
     private String startDatetime;
@@ -27,5 +30,21 @@ public class OpenMRSVisit {
 
     public void setStartDatetime(String startDatetime) {
         this.startDatetime = startDatetime;
+    }
+
+    public List<OpenMRSVisitAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<OpenMRSVisitAttribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    public OpenMRSUuidHolder getVisitType() {
+        return visitType;
+    }
+
+    public void setVisitType(OpenMRSUuidHolder visitType) {
+        this.visitType = visitType;
     }
 }

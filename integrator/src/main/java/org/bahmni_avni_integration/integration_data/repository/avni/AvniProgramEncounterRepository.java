@@ -1,8 +1,6 @@
 package org.bahmni_avni_integration.integration_data.repository.avni;
 
 import org.bahmni_avni_integration.client.AvniHttpClient;
-import org.bahmni_avni_integration.contract.avni.Enrolment;
-import org.bahmni_avni_integration.contract.avni.EnrolmentsResponse;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncountersResponse;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
@@ -22,7 +20,7 @@ public class AvniProgramEncounterRepository extends BaseAvniRepository {
 
     public ProgramEncountersResponse getProgramEncounters(Date lastModifiedDateTime) {
         Map<String, String> queryParams = Map.of(
-                "lastModifiedDateTime", FormatAndParseUtil.toISODateString(lastModifiedDateTime),
+                "lastModifiedDateTime", FormatAndParseUtil.toISODateTimeString(lastModifiedDateTime),
                 "size", "1000");
         ResponseEntity<ProgramEncountersResponse> responseEntity = avniHttpClient.get("/api/programEncounters", queryParams, ProgramEncountersResponse.class);
         ProgramEncountersResponse enrolmentsResponse = responseEntity.getBody();

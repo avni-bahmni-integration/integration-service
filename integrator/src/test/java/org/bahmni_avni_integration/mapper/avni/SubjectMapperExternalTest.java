@@ -48,11 +48,11 @@ public class SubjectMapperExternalTest {
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
         subject.set("observations", avniObservations);
-        subject.set("Registration date", FormatAndParseUtil.toISODateString(new Date()));
+        subject.set("Registration date", FormatAndParseUtil.toISODateTimeString(new Date()));
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
         var entityUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
         OpenMRSVisit openMRSVisit = new OpenMRSVisit();
-        openMRSVisit.setStartDatetime(FormatAndParseUtil.toISODateString(new Date()));
+        openMRSVisit.setStartDatetime(FormatAndParseUtil.toISODateTimeString(new Date()));
         var openMRSEncounter = subjectMapper.mapSubjectToEncounter(subject,
                 "cc0369c8-748c-42cc-a534-5ab40855c3f8",
                 "f39ce690-d1c4-4bb3-aa4b-893bdd73e5a1",

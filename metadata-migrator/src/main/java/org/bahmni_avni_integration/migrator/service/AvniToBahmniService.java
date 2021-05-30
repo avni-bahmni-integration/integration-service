@@ -55,6 +55,7 @@ public class AvniToBahmniService {
                 }
             }
             createEncounterTypeAndMapping(connection, form);
+            createEnrolmentVisitTypeAndMapping(connection, form);
         }
     }
 
@@ -124,6 +125,18 @@ public class AvniToBahmniService {
                     form.getEncounterType(),
                     "Encounter type in OpenMRS for encounter type in Avni",
                     null));
+
+        }
+    }
+
+    private void createEnrolmentVisitTypeAndMapping(Connection connection, AvniForm form) throws SQLException {
+        if (form.getFormType().equals(ProgramEnrolment)) {
+            createVisitTypeAndMapping(connection,
+                    NameMapping.fromAvniNameToBahmni(String.format("%s Enrolment", form.getProgram())),
+                    MappingGroup.ProgramEnrolment,
+                    MappingType.CommunityEnrolment_VisitType,
+                    form.getProgram(),
+                    "Visit type in OpenMRS for program enrolment data in Avni");
 
         }
     }
@@ -231,6 +244,7 @@ public class AvniToBahmniService {
     private void migrateStandardMetadata(Connection connection) throws SQLException {
         Map<String, Object> constants = implementationConfigurationRepository.getConstants();
         openMRSRepository.createAddConceptProcedure(connection);
+        createStandardVisitTypeAttributesAndMapping(connection);
         createEntityConceptAndMapping(connection);
         createProgramDataConceptAndMapping(connection);
         createEventDateConceptAndMapping(connection);
@@ -238,6 +252,23 @@ public class AvniToBahmniService {
         createCommunityLocationAndMapping(connection, constants);
         createCommunityVisitTypeAndMapping(connection, constants);
         createRegistrationEncounterTypeAndMapping(connection);
+    }
+
+    private void createStandardVisitTypeAttributesAndMapping(Connection connection) throws SQLException {
+        createVisitTypeAttributeAndMapping(connection,
+                Names.AvniEntityUuidConceptName,
+                MappingGroup.Common,
+                MappingType.AvniUUID_VisitAttributeType,
+                null,
+                "Visit Attribute Type for Avni Entity Uuid"
+                );
+        createVisitTypeAttributeAndMapping(connection,
+                Names.AvniEventDateConceptName,
+                MappingGroup.Common,
+                MappingType.AvniEventDate_VisitAttributeType,
+                null,
+                "Visit Attribute Type for Avni Event Date"
+        );
     }
 
     private void createRegistrationEncounterTypeAndMapping(Connection connection) throws SQLException {
@@ -316,6 +347,47 @@ public class AvniToBahmniService {
                 conceptUuid,
                 null,
                 Names.AvniEventDateConceptName,
+                null));
+    }
+
+    private void createVisitTypeAttributeAndMapping(Connection connection,
+                                           String visitTypeAttributeName,
+                                           MappingGroup mappingGroup,
+                                           MappingType mappingType,
+                                           String avniValue,
+                                           String about) throws SQLException {
+        var visitTypeAttributeUuid = UUID.randomUUID().toString();
+
+        openMRSRepository.createVisitTypeAttribute(connection,
+                visitTypeAttributeName,
+                visitTypeAttributeUuid,
+                "org.openmrs.customdatatype.datatype.FreeTextDatatype",
+                0,
+                1
+                );
+        mappingMetaDataRepository.save(mappingMetadata(mappingGroup,
+                mappingType,
+                visitTypeAttributeUuid,
+                avniValue,
+                about,
+                null));
+
+    }
+
+    private void createVisitTypeAndMapping(Connection connection,
+                                           String visitTypeName,
+                                           MappingGroup mappingGroup,
+                                           MappingType mappingType,
+                                           String avniValue,
+                                           String about) throws SQLException {
+        var visitTypeUuid = UUID.randomUUID().toString();
+
+        openMRSRepository.createVisitType(connection, visitTypeName, visitTypeUuid);
+        mappingMetaDataRepository.save(mappingMetadata(mappingGroup,
+                mappingType,
+                visitTypeUuid,
+                avniValue,
+                about,
                 null));
     }
 

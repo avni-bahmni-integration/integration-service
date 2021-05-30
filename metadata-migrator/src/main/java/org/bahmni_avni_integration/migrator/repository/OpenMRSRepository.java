@@ -377,6 +377,22 @@ public class OpenMRSRepository {
         }
     }
 
+    public void createVisitTypeAttribute(Connection connection, String name, String uuid, String dataType, int minOccurs, int maxOccurs) throws SQLException {
+        var insertVisitType = """
+                insert into visit_attribute_type (name, uuid, datatype, min_occurs, max_occurs, creator, date_created)
+                values (?, ?, ?, ?, ?, ?, curdate())
+                """;
+        try (var ps = connection.prepareStatement(insertVisitType)) {
+            ps.setString(1, name);
+            ps.setString(2, uuid);
+            ps.setString(3, dataType);
+            ps.setInt(4, minOccurs);
+            ps.setInt(5, maxOccurs);
+            ps.setInt(6, refDataAdminId);
+            ps.executeUpdate();
+        }
+    }
+
     public void createAddConceptProcedure(Connection connection) throws SQLException {
         try (var ps = connection.prepareStatement(fileUtil.readConfigFile("create_add_concept_abi_func.sql"))) {
             ps.executeUpdate();

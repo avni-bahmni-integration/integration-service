@@ -52,10 +52,10 @@ public class EnrolmentMapperExternalTest {
         enrolment.set("observations", avniObservations);
         var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
 
-        enrolment.set("Enrolment datetime", FormatAndParseUtil.toISODateString(new Date()));
+        enrolment.set("Enrolment datetime", FormatAndParseUtil.toISODateTimeString(new Date()));
 
         OpenMRSVisit openMRSVisit = new OpenMRSVisit();
-        openMRSVisit.setStartDatetime(FormatAndParseUtil.toISODateString(new Date()));
+        openMRSVisit.setStartDatetime(FormatAndParseUtil.toISODateTimeString(new Date()));
 
         var openMRSEncounter = enrolmentMapper.mapEnrolmentToEnrolmentEncounter(enrolment,
                 patientUuid,

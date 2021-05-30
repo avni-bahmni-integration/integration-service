@@ -43,7 +43,15 @@ class SubjectWorkerExternalTest {
     public void processSpecificSubject() {
         Constants constants = constantsRepository.findAllConstants();
         subjectWorker.cacheRunImmutables(constants);
-        subjectWorker.processSubject(avniSubjectRepository.getSubject("85645dd8-7b18-4531-241f-0e1cea091ddc"));
-        subjectWorker.processSubject(avniSubjectRepository.getSubject("5c67e7fc-1347-4436-ae58-d2425c70c106"));
+        // Demo non existing patient
+//        subjectWorker.processSubject(avniSubjectRepository.getSubject("3f908d5b-d336-4604-896a-e7481bfe5972"));
+        // Demo existing patient
+//        subjectWorker.processSubject(avniSubjectRepository.getSubject("9197245a-541f-4d1b-be47-a96f8843e727"));
+
+        // Test date greater than current issue
+//        subjectWorker.processSubject(avniSubjectRepository.getSubject("372233b3-a381-9333-34ad-ca34f86f6b17"));
+
+        //Test identifier null issue
+        subjectWorker.processSubject(avniSubjectRepository.getSubject("fa6ba4bf-2772-0545-2a9f-09bcb0828174"));
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class OpenMRSVisitRepository extends BaseOpenMRSRepository {
@@ -25,6 +27,15 @@ public class OpenMRSVisitRepository extends BaseOpenMRSRepository {
         SearchResults<OpenMRSVisit> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSVisit>>() {
         });
         return pickAndExpectOne(searchResults, String.format("%s-%s", patientUuid, locationUuid));
+    }
+
+    public List<OpenMRSVisit> getVisits(String patientUuid, String locationUuid, String visitTypeUuid) {
+        String json = openMRSWebClient.get("%s?patient=%s&location=%s&v=full".formatted(resourcePath(), patientUuid, locationUuid));
+        SearchResults<OpenMRSVisit> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSVisit>>() {
+        });
+        return searchResults.getResults().stream()
+                .filter(visit -> visit.getVisitType().getUuid().equals(visitTypeUuid))
+                .collect(Collectors.toList());
     }
 
     public OpenMRSVisit createVisit(OpenMRSSaveVisit openMRSSaveVisit) {

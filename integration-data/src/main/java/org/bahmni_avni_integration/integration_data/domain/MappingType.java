@@ -22,7 +22,10 @@ public enum MappingType implements BaseEnum {
     CommunityEnrolmentExit_BahmniForm(19),
     CommunityProgramEncounter_BahmniForm(20),
     CommunityEncounter_BahmniForm(21),
-    PatientIdentifier_Concept(22);
+    PatientIdentifier_Concept(22),
+    CommunityEnrolment_VisitType(23),
+    AvniEventDate_VisitAttributeType(24),
+    AvniUUID_VisitAttributeType(25);
 
     private final int value;
     MappingType(int value) {

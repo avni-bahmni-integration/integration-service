@@ -49,7 +49,7 @@ public class EnrolmentService {
 
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSPatient openMRSPatient, Constants constants) {
         if (enrolment.getVoided()) return null;
-        var visit = visitService.getOrCreateVisit(openMRSPatient);
+        var visit = visitService.getOrCreateVisit(openMRSPatient, enrolment);
         var encounter = enrolmentMapper.mapEnrolmentToEnrolmentEncounter(enrolment, openMRSPatient.getUuid(), visit, constants);
         encounter.setVisit(visit.getUuid());
         var savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
@@ -58,7 +58,7 @@ public class EnrolmentService {
 
     public OpenMRSFullEncounter createCommunityExitEnrolment(Enrolment enrolment, OpenMRSPatient openMRSPatient, Constants constants) {
         if (enrolment.getVoided()) return null;
-        var visit = visitService.getOrCreateVisit(openMRSPatient);
+        var visit = visitService.getOrCreateVisit(openMRSPatient, enrolment);
         var encounter = enrolmentMapper.mapEnrolmentToExitEncounter(enrolment, openMRSPatient.getUuid(), visit, constants);
         encounter.setVisit(visit.getUuid());
         var savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
