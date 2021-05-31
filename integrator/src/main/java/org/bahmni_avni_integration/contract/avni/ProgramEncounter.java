@@ -14,6 +14,11 @@ public class ProgramEncounter extends AvniBaseContract {
     }
 
     @JsonIgnore
+    public String getEnrolmentId() {
+        return (String) get("Enrolment ID");
+    }
+
+    @JsonIgnore
     public String getSubjectType() {
         return (String) get("Subject type");
     }

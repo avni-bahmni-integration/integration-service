@@ -148,8 +148,9 @@ public class EnrolmentMapper {
     }
 
     private OpenMRSSaveObservation eventDateObs(Enrolment enrolment, boolean isExit) {
-        var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
-        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, enrolment.get(isExit ? "Exit datetime" : "Enrolment datetime"), ObsDataType.Date);
+        var obsConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
+        var obsValue = FormatAndParseUtil.toISODateString(isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime());
+        return OpenMRSSaveObservation.createPrimitiveObs(obsConcept, obsValue, ObsDataType.Date);
     }
 
     private OpenMRSSaveObservation programDataObs(Enrolment enrolment, boolean isExit) {

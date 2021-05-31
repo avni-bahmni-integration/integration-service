@@ -4,6 +4,7 @@ import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.bahmni.*;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -59,7 +60,7 @@ public class ProgramEncounterMapper {
 
     private OpenMRSSaveObservation eventDateObs(ProgramEncounter programEncounter) {
         var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
-        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, programEncounter.get("Encounter date time"), ObsDataType.Date);
+        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(programEncounter.getEncounterDateTime()), ObsDataType.Date);
     }
 
     public OpenMRSEncounter mapProgramEncounterToExistingEncounter(OpenMRSFullEncounter existingEncounter, ProgramEncounter programEncounter, Constants constants) {

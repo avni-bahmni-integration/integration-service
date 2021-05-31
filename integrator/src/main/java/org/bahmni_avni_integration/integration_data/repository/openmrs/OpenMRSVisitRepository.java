@@ -22,11 +22,15 @@ public class OpenMRSVisitRepository extends BaseOpenMRSRepository {
         super(openMRSWebClient);
     }
 
-    public OpenMRSVisit getVisit(String patientUuid, String locationUuid) {
+    public OpenMRSVisit getVisit(String patientUuid, String locationUuid, String visitTypeUuid) {
         String json = openMRSWebClient.get("%s?patient=%s&location=%s&v=full".formatted(resourcePath(), patientUuid, locationUuid));
         SearchResults<OpenMRSVisit> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSVisit>>() {
         });
-        return pickAndExpectOne(searchResults, String.format("%s-%s", patientUuid, locationUuid));
+        var filteredByVisitType = new SearchResults<OpenMRSVisit>();
+        filteredByVisitType.setResults(searchResults.getResults().stream()
+                .filter(visit -> visit.getVisitType().getUuid().equals(visitTypeUuid))
+                .collect(Collectors.toList()));
+        return pickAndExpectOne(filteredByVisitType, String.format("%s-%s", patientUuid, locationUuid));
     }
 
     public List<OpenMRSVisit> getVisits(String patientUuid, String locationUuid, String visitTypeUuid) {

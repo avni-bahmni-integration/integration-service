@@ -33,16 +33,11 @@ public class SubjectMapper {
         observations.add(avniUuidObs(subject.getUuid()));
         observations.add(eventDateObs(subject));
         openMRSEncounter.setObservations(groupObs(observations));
-        openMRSEncounter.setEncounterDatetime(getRegistrationDate(subject, visit));
+        openMRSEncounter.setEncounterDatetime(MapperUtils.getEventDateTime(subject.getRegistrationDate(), visit));
         openMRSEncounter.setVisit(visit.getUuid());
 //        story-todo - map audit observations
         var avniAuditObservations = (LinkedHashMap<String, Object>) subject.get("audit");
         return openMRSEncounter;
-    }
-
-    private String getRegistrationDate(Subject subject, OpenMRSVisit visit) {
-        var registrationDate = FormatAndParseUtil.fromAvniDate(subject.getRegistrationDate());
-        return MapperUtils.getEventDateTime(registrationDate, visit);
     }
 
     public OpenMRSEncounter mapSubjectToExistingEncounter(OpenMRSFullEncounter existingEncounter, Subject subject, String patientUuid, String encounterTypeUuid, Constants constants) {
@@ -88,6 +83,6 @@ public class SubjectMapper {
 
     private OpenMRSSaveObservation eventDateObs(Subject subject) {
         var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
-        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, subject.getRegistrationDate(), ObsDataType.Date);
+        return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(subject.getRegistrationDate()), ObsDataType.Date);
     }
 }

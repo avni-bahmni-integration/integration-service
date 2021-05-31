@@ -330,7 +330,7 @@ public class AvniToBahmniService {
                 MappingType.AvniProgramData_Concept,
                 entityConceptUuid,
                 null,
-                "Program Name",
+                "Program Data",
                 null));
     }
 
@@ -359,7 +359,7 @@ public class AvniToBahmniService {
         var visitTypeAttributeUuid = UUID.randomUUID().toString();
 
         openMRSRepository.createVisitTypeAttribute(connection,
-                visitTypeAttributeName,
+                NameMapping.fromAvniNameToBahmni(visitTypeAttributeName),
                 visitTypeAttributeUuid,
                 "org.openmrs.customdatatype.datatype.FreeTextDatatype",
                 0,

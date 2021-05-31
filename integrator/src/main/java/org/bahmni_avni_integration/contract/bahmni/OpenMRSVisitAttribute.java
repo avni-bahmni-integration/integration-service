@@ -1,5 +1,8 @@
 package org.bahmni_avni_integration.contract.bahmni;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenMRSVisitAttribute {
     private OpenMRSUuidHolder attributeType;
     private String value;

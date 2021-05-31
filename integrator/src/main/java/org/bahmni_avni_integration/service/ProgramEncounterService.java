@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.service;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSEncounter;
@@ -11,6 +12,7 @@ import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.repository.avni.AvniEnrolmentRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.mapper.avni.ProgramEncounterMapper;
 import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
@@ -26,15 +28,23 @@ public class ProgramEncounterService {
     private final VisitService visitService;
     private final ProgramEncounterMapper programEncounterMapper;
     private final ErrorService errorService;
+    private final AvniEnrolmentRepository avniEnrolmentRepository;
     private static final Logger logger = Logger.getLogger(ProgramEncounterService.class);
 
-    public ProgramEncounterService(PatientService patientService, MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, VisitService visitService, ProgramEncounterMapper programEncounterMapper, ErrorService errorService) {
+    public ProgramEncounterService(PatientService patientService,
+                                   MappingMetaDataRepository mappingMetaDataRepository,
+                                   OpenMRSEncounterRepository openMRSEncounterRepository,
+                                   VisitService visitService,
+                                   ProgramEncounterMapper programEncounterMapper,
+                                   ErrorService errorService,
+                                   AvniEnrolmentRepository avniEnrolmentRepository) {
         this.patientService = patientService;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.openMRSEncounterRepository = openMRSEncounterRepository;
         this.visitService = visitService;
         this.programEncounterMapper = programEncounterMapper;
         this.errorService = errorService;
+        this.avniEnrolmentRepository = avniEnrolmentRepository;
     }
 
     public Pair<OpenMRSPatient, OpenMRSFullEncounter> findCommunityEncounter(ProgramEncounter programEncounter, Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
@@ -55,7 +65,8 @@ public class ProgramEncounterService {
         }
 
         logger.debug(String.format("Creating new Bahmni Encounter for Avni encounter %s", programEncounter.getUuid()));
-        var visit = visitService.getOrCreateVisit(patient);
+        var enrolment = avniEnrolmentRepository.getEnrolment(programEncounter.getEnrolmentId());
+        var visit = visitService.getOrCreateVisit(patient, enrolment);
         var encounter = programEncounterMapper.mapEncounter(programEncounter, patient.getUuid(), constants, visit);
         var savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
