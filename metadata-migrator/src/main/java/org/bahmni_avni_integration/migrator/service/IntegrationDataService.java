@@ -1,13 +1,9 @@
 package org.bahmni_avni_integration.migrator.service;
 
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.integration_data.domain.Constant;
-import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
-import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
-import org.bahmni_avni_integration.integration_data.domain.MappingType;
-import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
-import org.bahmni_avni_integration.integration_data.repository.IgnoredBahmniConceptRepository;
-import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
+import org.bahmni_avni_integration.integration_data.domain.*;
+import org.bahmni_avni_integration.integration_data.repository.*;
+import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.bahmni_avni_integration.migrator.repository.ImplementationConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +23,10 @@ public class IntegrationDataService {
     private MappingMetaDataRepository mappingMetaDataRepository;
     @Autowired
     private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
+    @Autowired
+    private AvniEntityStatusRepository avniEntityStatusRepository;
+    @Autowired
+    private ErrorRecordRepository errorRecordRepository;
 
     private static final Logger logger = Logger.getLogger(IntegrationDataService.class);
 
@@ -51,11 +51,21 @@ public class IntegrationDataService {
         logger.info("Standard mappings created in integration database");
     }
 
-    public void cleanup() {
+    public void cleanupMetadata() {
         ignoredBahmniConceptRepository.deleteAll();
         mappingMetaDataRepository.deleteAll();
         cleanupConstants();
         logger.info("Integration metadata cleaned up");
+    }
+
+    public void cleanupAvniToBahmniTxData() {
+        Iterable<AvniEntityStatus> all = avniEntityStatusRepository.findAll();
+        all.forEach(avniEntityStatus -> {
+            avniEntityStatus.setReadUpto(FormatAndParseUtil.fromAvniDate("1900-01-01"));
+            avniEntityStatusRepository.save(avniEntityStatus);
+        });
+
+        errorRecordRepository.findAllByAvniEntityTypeNotNull().forEach(errorRecord -> errorRecordRepository.delete(errorRecord));
     }
 
     public void cleanupConstants() {

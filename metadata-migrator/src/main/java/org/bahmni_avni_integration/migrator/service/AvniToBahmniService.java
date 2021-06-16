@@ -27,7 +27,7 @@ public class AvniToBahmniService {
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final ConnectionFactory connectionFactory;
     private final ImplementationConfigurationRepository implementationConfigurationRepository;
-    private static Logger logger = Logger.getLogger(AvniToBahmniService.class);
+    private static final Logger logger = Logger.getLogger(AvniToBahmniService.class);
 
     public AvniToBahmniService(OpenMRSRepository openMRSRepository,
                                AvniRepository avniRepository,
@@ -221,6 +221,10 @@ public class AvniToBahmniService {
         openMRSRepository.cleanup();
     }
 
+    public void cleanupTxData() throws SQLException {
+        openMRSRepository.cleanupTxData();
+    }
+
     public void migrate() {
         try (var connection = connectionFactory.getOpenMRSDbConnection()) {
             connection.setAutoCommit(false);
@@ -238,7 +242,6 @@ public class AvniToBahmniService {
         } catch (SQLException sqlException) {
             logger.error("Avni to Bahmni migration failed", sqlException);
         }
-
     }
 
     private void migrateStandardMetadata(Connection connection) throws SQLException {

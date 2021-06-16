@@ -1,7 +1,6 @@
 package org.bahmni_avni_integration.migrator;
 
 import org.apache.log4j.Logger;
-import org.bahmni_avni_integration.migrator.domain.OpenMRSForm;
 import org.bahmni_avni_integration.migrator.service.AvniToBahmniService;
 import org.bahmni_avni_integration.migrator.service.BahmniToAvniService;
 import org.bahmni_avni_integration.migrator.service.IntegrationDataService;
@@ -11,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -40,60 +38,54 @@ public class Migrator implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        List<String> nonSpringArguments = Arrays.stream(args).filter(s -> !s.startsWith("--")).collect(Collectors.toList());
-        if (nonSpringArguments.size() == 0) return;
-        switch (MigratorDirection.valueOf(nonSpringArguments.get(0))) {
-            case Adhoc -> {
-                runAdhoc();
+    public void run(String... args) {
+        try {
+            List<String> nonSpringArguments = Arrays.stream(args).filter(s -> !s.startsWith("--")).collect(Collectors.toList());
+            if (nonSpringArguments.size() == 0) return;
+            switch (MigratorDirection.valueOf(nonSpringArguments.get(0))) {
+                case Adhoc -> {
+                    runAdhoc();
+                }
+                case BahmniToAvni -> {
+                    bahmniToAvni();
+                }
+                case AvniToBahmni -> {
+                    avniToBahmni();
+                }
             }
-            case BahmniToAvni -> {
-                bahmniToAvni();
-            }
-            case AvniToBahmni -> {
-                avniToBahmni();
-            }
+        } catch (Exception e) {
+            logger.error("Migrator failed", e);
+            System.exit(1);
         }
-
+        System.exit(0);
     }
 
     private void avniToBahmni() throws SQLException {
         logger.debug("Migrating metadata from Avni to Bahmni");
         avniToBahmniService.cleanup();
-        integrationDataService.cleanup();
+        integrationDataService.cleanupMetadata();
 
         avniToBahmniService.migrate();
 
         integrationDataService.createConstants();
         integrationDataService.createStandardMappings();
-        System.exit(0);
     }
 
-    private void bahmniToAvni() {
-        try {
-            bahmniToAvniService.cleanup();
-            integrationDataService.cleanup();
+    private void bahmniToAvni() throws SQLException {
+        bahmniToAvniService.cleanup();
+        integrationDataService.cleanupMetadata();
 
-            bahmniToAvniService.migratePatientAttributes();
-            bahmniToAvniService.migrateConcepts();
-            bahmniToAvniService.createStandardMetadata();
-            bahmniToAvniService.migrateForms();
+        bahmniToAvniService.migratePatientAttributes();
+        bahmniToAvniService.migrateConcepts();
+        bahmniToAvniService.createStandardMetadata();
+        bahmniToAvniService.migrateForms();
 
-            integrationDataService.createConstants();
-            integrationDataService.createStandardMappings();
-            System.exit(0);
-        } catch (Exception e) {
-            logger.error("Migrator failed", e);
-            System.exit(1);
-        }
+        integrationDataService.createConstants();
+        integrationDataService.createStandardMappings();
     }
 
     private void runAdhoc() throws SQLException {
-        OpenMRSForm openMRSForm = new OpenMRSForm();
-        openMRSForm.setFormId(13);
-        openMRSForm.setFormName("Diagnosis (Hospital)");
-        openMRSForm.setType("Encounter");
-        bahmniToAvniService.migrateForms(Arrays.asList(openMRSForm));
-        System.exit(0);
+        avniToBahmniService.cleanupTxData();
+        integrationDataService.cleanupAvniToBahmniTxData();
     }
 }

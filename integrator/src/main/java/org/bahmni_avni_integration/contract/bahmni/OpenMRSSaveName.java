@@ -19,7 +19,9 @@ public class OpenMRSSaveName {
     }
 
     public String getGivenName() {
-        return givenName;
+        if (givenName != null)
+            return givenName.replace("'", "");
+        return null;
     }
 
     public void setGivenName(String givenName) {

@@ -38,6 +38,16 @@ public class AvniRepository {
     private static final String encounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(?), (select id from organisation))";
     private static final String programEncounterFormMappingInsert = "insert into form_mapping (form_id, uuid, version, observations_type_entity_id, subject_type_id, audit_id, organisation_id, entity_id) values ((select id from form where name = ?), uuid_generate_v4(), 0, (select id from encounter_type where name = ?), (select id from subject_type where name = 'Individual'), create_audit(?), (select id from organisation), (select id from program where name = ?))";
 
+    private static final String deleteFormsMappings = "delete from form_mapping e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+    private static final String deleteFormElements = "delete from form_element e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+    private static final String deleteForms = "delete from form e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+    private static final String deleteFormElementGroups = "delete from form_element_group e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+    private static final String deleteOperationalEncounterTypes = "delete from operational_encounter_type e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+    private static final String deleteEncounterTypes = "delete from encounter_type e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+    private static final String deleteConceptAnswers = "delete from concept_answer e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+    private static final String deleteConcepts = "delete from concept e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
+    private static final String deleteAudits = "delete from audit where id in (select id from audit where created_by_id = ? limit 30)";
+
     @Autowired
     public AvniRepository(ConnectionFactory connectionFactory, AvniConfig avniConfig) {
         this.connectionFactory = connectionFactory;
@@ -45,16 +55,6 @@ public class AvniRepository {
     }
 
     public void cleanup() throws SQLException {
-        String deleteFormsMappings = "delete from form_mapping e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteFormElements = "delete from form_element e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteForms = "delete from form e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteFormElementGroups = "delete from form_element_group e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteOperationalEncounterTypes = "delete from operational_encounter_type e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteEncounterTypes = "delete from encounter_type e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteConceptAnswers = "delete from concept_answer e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteConcepts = "delete from concept e using audit where e.audit_id = audit.id and audit.created_by_id = ?";
-        String deleteAudits = "delete from audit where id in (select id from audit where created_by_id = ? limit 30)";
-
         try (Connection connection = connectionFactory.getAvniConnection()) {
             delete(deleteFormsMappings, connection, "Form Mapping");
             delete(deleteFormElements, connection, "Form Element");

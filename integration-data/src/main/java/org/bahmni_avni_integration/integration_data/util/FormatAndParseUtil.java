@@ -34,6 +34,10 @@ public class FormatAndParseUtil {
     }
 
     public static Date fromAvniDate(String dateString) {
+        return FormatAndParseUtil.fromIsoDate(dateString);
+    }
+
+    public static Date fromIsoDate(String dateString) {
         try {
             return isoDateFormat.parse(dateString);
         } catch (ParseException e) {
@@ -55,13 +59,6 @@ public class FormatAndParseUtil {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static Date addSeconds(Date date, int seconds) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        c.add(Calendar.SECOND, seconds);
-        return c.getTime();
     }
 
     public static String fromAvniToOpenMRSDate(String dateString) {

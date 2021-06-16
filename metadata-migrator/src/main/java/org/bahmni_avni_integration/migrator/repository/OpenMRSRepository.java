@@ -177,8 +177,8 @@ public class OpenMRSRepository {
     }
 
     public CreateConceptResult createSetConcept(Connection connection,
-                                             String conceptUuid,
-                                             String conceptName) throws SQLException {
+                                                String conceptUuid,
+                                                String conceptName) throws SQLException {
         String dataTypeName = "N/A";
         String className = "Misc";
         boolean isSet = true;
@@ -262,33 +262,35 @@ public class OpenMRSRepository {
     }
 
     public void cleanup() throws SQLException {
-        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
-            cleanupFunctions(connection);
-            cleanupTxData(connection);
-            cleanupRefData(connection);
-        }
+        cleanupFunctions();
+        cleanupTxData();
+        cleanupRefData();
     }
 
-    private void cleanupFunctions(Connection connection) throws SQLException {
-        try (var ps = connection.prepareStatement("DROP FUNCTION IF EXISTS add_concept_abi_func")) {
+    private void cleanupFunctions() throws SQLException {
+        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
+            var ps = connection.prepareStatement("DROP FUNCTION IF EXISTS add_concept_abi_func");
             ps.executeUpdate();
         }
     }
 
-    private void cleanupRefData(Connection connection) throws SQLException {
-        deleteRefData("delete from concept_numeric where concept_id in (select concept_id from concept where creator = ?)", connection, "concept_numeric");
-        deleteRefData("delete from concept_name where creator = ?", connection, "concept_name");
-        deleteRefData("delete from concept_answer where creator = ?", connection, "concept_answer");
-        deleteRefData("delete from concept_set where creator = ?", connection, "concept_set");
-        deleteRefData("delete from concept where creator = ?", connection, "concept");
-        deleteRefData("delete from encounter_type where creator = ?", connection, "encounter_type");
-        deleteRefData("delete from location where creator = ?", connection, "location");
-        deleteRefData("delete from visit_type where creator = ?", connection, "visit_type");
+    public void cleanupRefData() throws SQLException {
+        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
+            deleteRefData("delete from concept_numeric where concept_id in (select concept_id from concept where creator = ?)", connection, "concept_numeric");
+            deleteRefData("delete from concept_name where creator = ?", connection, "concept_name");
+            deleteRefData("delete from concept_answer where creator = ?", connection, "concept_answer");
+            deleteRefData("delete from concept_set where creator = ?", connection, "concept_set");
+            deleteRefData("delete from concept where creator = ?", connection, "concept");
+            deleteRefData("delete from encounter_type where creator = ?", connection, "encounter_type");
+            deleteRefData("delete from location where creator = ?", connection, "location");
+            deleteRefData("delete from visit_type where creator = ?", connection, "visit_type");
+        }
     }
 
-    private void cleanupTxData(Connection connection) throws SQLException {
-        deleteTxData("delete from obs where creator = ? and previous_version is not null", connection, "Obs");
-        deleteTxData("""
+    public void cleanupTxData() throws SQLException {
+        try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
+            deleteTxData("delete from obs where creator = ? and previous_version is not null", connection, "Obs");
+            deleteTxData("""
                 delete
                 from obs
                 where obs_group_id in (select *
@@ -301,24 +303,24 @@ public class OpenMRSRepository {
                                                           where creator = ?
                                                             and obs_group_id is not null) as temp)) as temp2)
                 """, connection, "Obs");
-        deleteTxData("""
+            deleteTxData("""
                 delete
                 from obs
                 where obs_group_id in
                       (select * from (select obs_id from obs where creator = ? and obs_group_id is not null) as temp)
                 """, connection, "Obs");
-        deleteTxData("delete from obs where creator = ? and obs_group_id is not null", connection, "Obs");
-        deleteTxData("delete from obs where creator = ?", connection, "Obs");
-        deleteTxData("delete from encounter_provider where creator = ?", connection, "encounter_provider");
-        deleteTxData("delete from visit_attribute where creator = ?", connection, "visit_attribute");
-        deleteTxData("delete from encounter where creator = ?", connection, "encounter");
-        deleteTxData("delete from visit where creator = ?", connection, "visit");
-        deleteTxData("delete from patient_identifier where creator = ?", connection, "patient_identifier");
-        deleteTxData("delete from person_name where creator = ?", connection, "person_name");
-        deleteTxData("delete from audit_log where patient_id in (select patient_id from patient where creator = ?)", connection, "audit_log");
-        deleteTxData("delete from patient where creator = ?", connection, "patient");
-        deleteTxData("delete from person where creator = ?", connection, "person");
-
+            deleteTxData("delete from obs where creator = ? and obs_group_id is not null", connection, "Obs");
+            deleteTxData("delete from obs where creator = ?", connection, "Obs");
+            deleteTxData("delete from encounter_provider where creator = ?", connection, "encounter_provider");
+            deleteTxData("delete from visit_attribute where creator = ?", connection, "visit_attribute");
+            deleteTxData("delete from encounter where creator = ?", connection, "encounter");
+            deleteTxData("delete from visit where creator = ?", connection, "visit");
+            deleteTxData("delete from patient_identifier where creator = ?", connection, "patient_identifier");
+            deleteTxData("delete from person_name where creator = ?", connection, "person_name");
+            deleteTxData("delete from audit_log where patient_id in (select patient_id from patient where creator = ?)", connection, "audit_log");
+            deleteTxData("delete from patient where creator = ?", connection, "patient");
+            deleteTxData("delete from person where creator = ?", connection, "person");
+        }
     }
 
     private void deleteTxData(String sql, Connection connection, String entityType) throws SQLException {
