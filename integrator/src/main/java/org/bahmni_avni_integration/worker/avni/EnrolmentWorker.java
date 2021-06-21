@@ -90,6 +90,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
     protected void processEnrolment(Enrolment enrolment) {
         if (errorService.hasAvniMultipleSubjectsError(enrolment.getSubjectId())) {
             logger.error(String.format("Skipping Avni enrolment %s because of multiple subjects with same id error", enrolment.getUuid()));
+            entityStatusService.saveEntityStatus(enrolment);
             return;
         }
         removeIgnoredObservations(enrolment);

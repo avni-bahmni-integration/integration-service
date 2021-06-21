@@ -88,6 +88,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
     protected void processProgramEncounter(ProgramEncounter programEncounter) {
         if (errorService.hasAvniMultipleSubjectsError(programEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni encounter %s because of multiple subjects with same id error", programEncounter.getUuid()));
+            entityStatusService.saveEntityStatus(programEncounter);
             return;
         }
         removeIgnoredObservations(programEncounter);
@@ -95,6 +96,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
         if (programEncounterService.shouldFilterEncounter(programEncounter)) {
             logger.warn(String.format("Program encounter should be filtered out: %s", programEncounter.getUuid()));
+            entityStatusService.saveEntityStatus(programEncounter);
             return;
         }
 

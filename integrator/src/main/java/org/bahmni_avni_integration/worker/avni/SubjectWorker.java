@@ -77,6 +77,7 @@ public class SubjectWorker implements ErrorRecordWorker {
         if(subject.getId(metaData) == null) {
             logger.debug("Skip subject %s because of having null identifier".formatted(subject.getUuid()));
             patientService.processSubjectIdNull(subject);
+            entityStatusService.saveEntityStatus(subject);
             return;
         }
 
@@ -87,6 +88,7 @@ public class SubjectWorker implements ErrorRecordWorker {
             } else {
                 logger.debug("Skip voided subject %s because of having non voided duplicates".formatted(subject.getUuid()));
             }
+            entityStatusService.saveEntityStatus(subject);
             return;
         };
         removeIgnoredObservations(subject);
