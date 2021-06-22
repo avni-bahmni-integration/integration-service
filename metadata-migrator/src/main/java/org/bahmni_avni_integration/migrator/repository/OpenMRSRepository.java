@@ -263,7 +263,6 @@ public class OpenMRSRepository {
 
     public void cleanup() throws SQLException {
         cleanupFunctions();
-        cleanupTxData();
         cleanupRefData();
     }
 
