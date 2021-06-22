@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.migrator;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.migrator.service.AvniToBahmniService;
 import org.bahmni_avni_integration.migrator.service.BahmniToAvniService;
 import org.bahmni_avni_integration.migrator.service.IntegrationDataService;
@@ -24,13 +25,15 @@ public class Migrator implements CommandLineRunner {
     private final BahmniToAvniService bahmniToAvniService;
     private final IntegrationDataService integrationDataService;
     private final AvniToBahmniService avniToBahmniService;
+    private final MappingMetaDataRepository mappingMetaDataRepository;
 
     private static final Logger logger = Logger.getLogger(Migrator.class);
 
-    public Migrator(BahmniToAvniService bahmniToAvniService, IntegrationDataService integrationDataService, AvniToBahmniService avniToBahmniService) {
+    public Migrator(BahmniToAvniService bahmniToAvniService, IntegrationDataService integrationDataService, AvniToBahmniService avniToBahmniService, MappingMetaDataRepository mappingMetaDataRepository, MappingMetaDataRepository mappingMetaDataRepository1) {
         this.bahmniToAvniService = bahmniToAvniService;
         this.integrationDataService = integrationDataService;
         this.avniToBahmniService = avniToBahmniService;
+        this.mappingMetaDataRepository = mappingMetaDataRepository1;
     }
 
     public static void main(String[] args) {
@@ -85,7 +88,6 @@ public class Migrator implements CommandLineRunner {
     }
 
     private void runAdhoc() throws SQLException {
-        avniToBahmniService.cleanupTxData();
-        integrationDataService.cleanupAvniToBahmniTxData();
+        logger.info(mappingMetaDataRepository.findById(1));
     }
 }
