@@ -8,7 +8,8 @@ import java.util.StringTokenizer;
 public enum IntegrationTask {
     AvniSubject, AvniEnrolment, AvniProgramEncounter, AvniEncounter,
     BahmniPatient, BahmniEncounter,
-    AvniErrorRecords, BahmniErrorRecords;
+    AvniErrorRecords, BahmniErrorRecords,
+    BahmniVisitDateFix;
 
     public static List<IntegrationTask> getTasks(String taskNames) {
         if (taskNames.equals("all"))

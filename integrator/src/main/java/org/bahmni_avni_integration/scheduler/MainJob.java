@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Component
@@ -58,6 +59,9 @@ public class MainJob implements Job {
     private ErrorRecordsWorker errorRecordsWorker;
 
     @Autowired
+    private BahmniVisitDateWorker bahmniVisitDateWorker;
+
+    @Autowired
     private Bugsnag bugsnag;
 
     public void execute(JobExecutionContext context) {
@@ -88,13 +92,17 @@ public class MainJob implements Job {
                 getPatientEncounterWorker(allConstants).processEncounters();
             if (hasTask(tasks, IntegrationTask.AvniErrorRecords))
                 processErrorRecords(allConstants, SyncDirection.AvniToBahmni);
-            if (hasTask(tasks, IntegrationTask.BahmniErrorRecords))
-                processErrorRecords(allConstants, SyncDirection.BahmniToAvni);
+            if (hasTask(tasks, IntegrationTask.BahmniVisitDateFix))
+                fixBahmniVisitDates();
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
+    }
+
+    private void fixBahmniVisitDates() throws SQLException {
+        bahmniVisitDateWorker.fixVisitDates();
     }
 
     private void processErrorRecords(Constants allConstants, SyncDirection avniToBahmni) {
