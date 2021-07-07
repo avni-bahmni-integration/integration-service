@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 @Component
@@ -59,11 +60,14 @@ public class EnrolmentWorker implements ErrorRecordWorker {
 
     public void processEnrolments() {
         while (true) {
+            AvniEntityStatus subjectStatus = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
             EnrolmentsResponse response = avniEnrolmentRepository.getEnrolments(status.getReadUpto());
             int totalPages = response.getTotalPages();
             Enrolment[] enrolments = response.getContent();
             logger.info(String.format("Found %d enrolments that are newer than %s", enrolments.length, status.getReadUpto()));
+            enrolments = Arrays.stream(enrolments).filter(enrolment -> enrolment.getLastModifiedDate().before(subjectStatus.getReadUpto())).toArray(Enrolment[]::new);
+            logger.info(String.format("Found %d enrolments that are newer than %s and before last subject read %s", enrolments.length, status.getReadUpto(), subjectStatus.getReadUpto()));
             if (enrolments.length == 0) break;
             for (Enrolment enrolment : enrolments) {
                 processEnrolment(enrolment);

@@ -1,6 +1,7 @@
 package org.bahmni_avni_integration.worker.avni;
 
 import org.apache.log4j.Logger;
+import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.avni.ProgramEncountersResponse;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 @Component
@@ -62,11 +64,14 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
     public void processProgramEncounters() {
         while (true) {
+            AvniEntityStatus enrolmentStatus = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.ProgramEncounter);
             ProgramEncountersResponse response = avniProgramEncounterRepository.getProgramEncounters(status.getReadUpto());
             ProgramEncounter[] programEncounters = response.getContent();
             int totalPages = response.getTotalPages();
             logger.info(String.format("Found %d program encounters that are newer than %s", programEncounters.length, status.getReadUpto()));
+            programEncounters = Arrays.stream(programEncounters).filter(programEncounter -> programEncounter.getLastModifiedDate().before(enrolmentStatus.getReadUpto())).toArray(ProgramEncounter[]::new);
+            logger.info(String.format("Found %d program encounters that are newer than %s and before %s", programEncounters.length, status.getReadUpto(), enrolmentStatus.getReadUpto()));
             if (programEncounters.length == 0) break;
             for (ProgramEncounter programEncounter : programEncounters) {
                 processProgramEncounter(programEncounter);
