@@ -65,9 +65,6 @@ public class Migrator implements CommandLineRunner {
 
     private void avniToBahmni() throws SQLException {
         logger.debug("Migrating metadata from Avni to Bahmni");
-        avniToBahmniService.cleanup();
-        integrationDataService.cleanupMetadata();
-
         avniToBahmniService.migrate();
 
         integrationDataService.createConstants();
@@ -75,9 +72,6 @@ public class Migrator implements CommandLineRunner {
     }
 
     private void bahmniToAvni() throws SQLException {
-        bahmniToAvniService.cleanup();
-        integrationDataService.cleanupMetadata();
-
         bahmniToAvniService.migratePatientAttributes();
         bahmniToAvniService.migrateConcepts();
         bahmniToAvniService.createStandardMetadata();
