@@ -49,11 +49,11 @@ public class Migrator implements CommandLineRunner {
                 case Adhoc -> {
                     runAdhoc();
                 }
-                case BahmniToAvni -> {
-                    bahmniToAvni();
-                }
                 case AvniToBahmni -> {
                     avniToBahmni();
+                }
+                case BahmniToAvni -> {
+                    bahmniToAvni();
                 }
             }
         } catch (Exception e) {

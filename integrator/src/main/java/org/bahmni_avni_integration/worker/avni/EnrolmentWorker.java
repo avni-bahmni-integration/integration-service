@@ -101,6 +101,11 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         logger.debug(String.format("Processing avni %s enrolment %s", enrolment.getProgram(), enrolment.getUuid()));
         Subject subject = avniSubjectRepository.getSubject(enrolment.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
+        if (subject.getVoided()) {
+            logger.debug(String.format("Avni subject is voided. Skipping. %s", subject.getUuid()));
+            entityStatusService.saveEntityStatus(enrolment);
+            return;
+        }
 
         var patient = patientService.findPatient(subject, constants, metaData);
         if (patient == null) {

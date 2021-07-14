@@ -107,6 +107,11 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
         var subject = avniSubjectRepository.getSubject(programEncounter.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
+        if (subject.getVoided()) {
+            logger.debug(String.format("Avni subject is voided. Skipping. %s", subject.getUuid()));
+            entityStatusService.saveEntityStatus(programEncounter);
+            return;
+        }
         Pair<OpenMRSPatient, OpenMRSFullEncounter> patientEncounter = programEncounterService.findCommunityEncounter(programEncounter, subject, constants, metaData);
         var patient = patientEncounter.getValue0();
         var encounter = patientEncounter.getValue1();
