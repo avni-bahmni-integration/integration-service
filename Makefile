@@ -104,3 +104,10 @@ debug-server-standalone-incremental: configure-env-var
 
 run-server-standalone-first-time: configure-integration-db run-server-standalone-incremental
 #######
+
+tag-release:
+ifndef version
+	$(error ERROR: version not provided.)
+endif
+	git tag -a v$(version) -m "version $(version)"
+	git push origin --tags

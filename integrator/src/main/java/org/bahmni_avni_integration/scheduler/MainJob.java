@@ -59,7 +59,7 @@ public class MainJob implements Job {
     private ErrorRecordsWorker errorRecordsWorker;
 
     @Autowired
-    private BahmniVisitDateWorker bahmniVisitDateWorker;
+    private BahmniEntityDateWorker bahmniEntityDateWorker;
 
     @Autowired
     private Bugsnag bugsnag;
@@ -93,7 +93,7 @@ public class MainJob implements Job {
             if (hasTask(tasks, IntegrationTask.AvniErrorRecords))
                 processErrorRecords(allConstants, SyncDirection.AvniToBahmni);
             if (hasTask(tasks, IntegrationTask.BahmniVisitDateFix))
-                fixBahmniVisitDates();
+                fixBahmniVisitAndEncounterDates();
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
@@ -101,8 +101,8 @@ public class MainJob implements Job {
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }
 
-    private void fixBahmniVisitDates() throws SQLException {
-        bahmniVisitDateWorker.fixVisitDates();
+    private void fixBahmniVisitAndEncounterDates() throws SQLException {
+        bahmniEntityDateWorker.fixVisitDates();
     }
 
     private void processErrorRecords(Constants allConstants, SyncDirection avniToBahmni) {
