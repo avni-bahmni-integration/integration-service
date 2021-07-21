@@ -13,13 +13,13 @@ public class BahmniEntityDateWorker {
     private ConnectionFactory connectionFactory;
 
     private static final String UPDATE_VISIT_START_DATE_SQL = """
-            update visit
+            update ignore visit
                     join visit_attribute va on visit.visit_id = va.visit_id
                     join visit_type on visit.visit_type_id = visit_type.visit_type_id
                     join visit_attribute_type on va.attribute_type_id = visit_attribute_type.visit_attribute_type_id
                 set visit.date_started = date(va.value_reference)
                 where visit.voided = false and visit_type.name like '%Enrolment [Avni]' and visit_attribute_type.name = 'Event Date [Avni]'
-                and abs(datediff(va.value_reference, visit.date_started)) > 1
+                and abs(datediff(date(va.value_reference), visit.date_started)) > 1
                 """;
 
     private static final String UPDATE_ENCOUNTER_START_DATE_SQL = """

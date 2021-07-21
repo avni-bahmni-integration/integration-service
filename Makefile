@@ -103,6 +103,9 @@ debug-server-standalone-incremental: configure-env-var
 	java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 --enable-preview -jar integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar
 
 run-server-standalone-first-time: configure-integration-db run-server-standalone-incremental
+
+tunnel-server-debug-vagrant:
+	ssh -p 2222 -i ~/.vagrant.d/insecure_private_key vagrant@127.0.0.1 -L 6031:localhost:6031
 #######
 
 tag-release:
@@ -114,6 +117,10 @@ endif
 
 # Deployment
 deploy-to-vagrant-only:
-	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar root@127.0.0.1:/root/abi-host/
+	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar root@127.0.0.1:/root/source/abi-host/
 
 deploy-to-vagrant: build-server deploy-to-vagrant-only
+
+deploy-to-ashwini-prod:
+	scp integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/
+	ssh dspace-auto "scp /tmp/integrator-0.0.1-SNAPSHOT.jar ashwini:/root/source/abi-host/"
