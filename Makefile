@@ -111,3 +111,9 @@ ifndef version
 endif
 	git tag -a v$(version) -m "version $(version)"
 	git push origin --tags
+
+# Deployment
+deploy-to-vagrant-only:
+	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar root@127.0.0.1:/root/abi-host/
+
+deploy-to-vagrant: build-server deploy-to-vagrant-only
