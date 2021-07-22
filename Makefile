@@ -33,7 +33,7 @@ define _run_migrator
 	java -jar --enable-preview metadata-migrator/build/libs/metadata-migrator-0.0.1-SNAPSHOT.jar run
 endef
 
-######## DATABASE
+######## DATABASE LOCAL
 # hashed password when password is password = $2a$10$RipvsoEJg4PtXOExTjg7Eu2WzHH1SBntIkuR.bzmZeU2TrbQoFtMW
 # kept here for emergency purposes as we are not developing the entire login functionality
 rebuild-db: drop-db build-db
@@ -89,33 +89,24 @@ open-test-results: ## To be used when test-server-all is run
 	open integrator/build/reports/tests/test/index.html
 #######
 
-####### RUN STANDALONE
-configure-env-var:
-	. conf/env.conf
 
-configure-integration-db: configure-env-var
-	cat $(CONFIG_LOCATION)/integration/markers.sql | psql -h localhost -d bahmni_avni bahmni_avni_admin -1
-
-run-server-standalone-incremental: configure-env-var
-	java --enable-preview -jar integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar
-
-debug-server-standalone-incremental: configure-env-var
-	java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 --enable-preview -jar integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar
-
-run-server-standalone-first-time: configure-integration-db run-server-standalone-incremental
-
+####### RUN IN ENVIRONMENT
 tunnel-server-debug-vagrant:
 	ssh -p 2222 -i ~/.vagrant.d/insecure_private_key vagrant@127.0.0.1 -L 6031:localhost:6031
 #######
 
+
+####### SOURCE CONTROL
 tag-release:
 ifndef version
 	$(error ERROR: version not provided.)
 endif
 	git tag -a v$(version) -m "version $(version)"
 	git push origin --tags
+#######
 
-# Deployment
+
+####### Deployment
 deploy-to-vagrant-only:
 	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar root@127.0.0.1:/root/source/abi-host/
 
@@ -124,3 +115,14 @@ deploy-to-vagrant: build-server deploy-to-vagrant-only
 deploy-to-ashwini-prod:
 	scp integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/
 	ssh dspace-auto "scp /tmp/integrator-0.0.1-SNAPSHOT.jar ashwini:/root/source/abi-host/"
+#######
+
+
+####### DATABASE ENVIRONMENT
+download-ashwini-backup:
+	ssh dspace-auto "scp ashwini:/root/source/abi-host/backup/backup.sql /tmp/"
+	scp dspace-auto:/tmp/backup.sql /tmp/abi-backup.sql
+
+copy-backup-to-vagrant:
+	scp -P 2222 -i ~/.vagrant.d/insecure_private_key /tmp/abi-backup.sql root@127.0.0.1:/tmp/
+#######
