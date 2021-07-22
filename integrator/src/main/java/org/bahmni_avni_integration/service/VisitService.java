@@ -11,7 +11,6 @@ import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSVi
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,20 +26,17 @@ public class VisitService {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
     }
 
-    private OpenMRSVisit getVisit(String patientUuid) {
+    public OpenMRSVisit getAvniRegistrationVisit(String patientUuid) {
         Constants allConstants = constantsRepository.findAllConstants();
         String locationUuid = allConstants.getValue(ConstantKey.IntegrationBahmniLocation);
         String visitTypeUuid = allConstants.getValue(ConstantKey.IntegrationBahmniVisitType);
         return openMRSVisitRepository.getVisit(patientUuid, locationUuid, visitTypeUuid);
     }
 
-    private OpenMRSVisit getVisit(String patientUuid, Enrolment enrolment) {
-        String locationUuid = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation);
-        var visitTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment,
-                MappingType.CommunityEnrolment_VisitType,
-                enrolment.getProgram());
+    private OpenMRSVisit getAvniRegistrationVisit(String patientUuid, Enrolment enrolment, String visitTypeUuid) {
         var avniUuidVisitAttributeTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common,
                 MappingType.AvniUUID_VisitAttributeType);
+        String locationUuid = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation);
         var visits = openMRSVisitRepository.getVisits(patientUuid, locationUuid, visitTypeUuid);
         return visits.stream()
                 .filter(visit -> matchesEnrolmentId(visit, enrolment, avniUuidVisitAttributeTypeUuid))
@@ -106,7 +102,7 @@ public class VisitService {
     }
 
     public OpenMRSVisit getOrCreateVisit(OpenMRSPatient patient, Subject subject) {
-        var visit = getVisit(patient.getUuid());
+        var visit = getAvniRegistrationVisit(patient.getUuid());
         if (visit == null) {
             return createVisit(patient, subject);
         }
@@ -115,7 +111,10 @@ public class VisitService {
     }
 
     public OpenMRSVisit getOrCreateVisit(OpenMRSPatient patient, Enrolment enrolment) {
-        var visit = getVisit(patient.getUuid(), enrolment);
+        var visitTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment,
+                MappingType.CommunityEnrolment_VisitType,
+                enrolment.getProgram());
+        var visit = getAvniRegistrationVisit(patient.getUuid(), enrolment, visitTypeUuid);
         if (visit == null) {
             return createVisit(patient, enrolment);
         }
@@ -128,5 +127,4 @@ public class VisitService {
                 visitAttribute.getAttributeType().getUuid().equals(avniUuidVisitAttributeTypeUuid)
                 && visitAttribute.getValue().equals(enrolment.getUuid()));
     }
-
 }

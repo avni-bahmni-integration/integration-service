@@ -1,9 +1,6 @@
 package org.bahmni_avni_integration.service;
 
-import org.bahmni_avni_integration.contract.avni.AvniBaseContract;
-import org.bahmni_avni_integration.contract.avni.Enrolment;
-import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
-import org.bahmni_avni_integration.contract.avni.Subject;
+import org.bahmni_avni_integration.contract.avni.*;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
@@ -25,6 +22,10 @@ public class EntityStatusService {
 
     public void saveEntityStatus(ProgramEncounter programEncounter) {
         saveEntityStatus(AvniEntityType.ProgramEncounter, programEncounter);
+    }
+
+    public void saveEntityStatus(GeneralEncounter generalEncounter) {
+        saveEntityStatus(AvniEntityType.ProgramEncounter, generalEncounter);
     }
 
     private void saveEntityStatus(AvniEntityType avniEntityType, AvniBaseContract avniBaseContract) {
