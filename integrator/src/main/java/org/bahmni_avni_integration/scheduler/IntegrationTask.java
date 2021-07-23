@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public enum IntegrationTask {
-    AvniSubject, AvniEnrolment, AvniProgramEncounter, AvniEncounter,
+    AvniSubject, AvniEnrolment, AvniProgramEncounter, AvniGeneralEncounter,
     BahmniPatient, BahmniEncounter,
     AvniErrorRecords, BahmniErrorRecords,
     BahmniVisitDateFix;

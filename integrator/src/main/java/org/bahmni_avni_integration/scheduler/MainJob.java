@@ -8,6 +8,7 @@ import org.bahmni_avni_integration.integration_data.repository.ConstantsReposito
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
 import org.bahmni_avni_integration.worker.ErrorRecordsWorker;
 import org.bahmni_avni_integration.worker.avni.EnrolmentWorker;
+import org.bahmni_avni_integration.worker.avni.GeneralEncounterWorker;
 import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.bahmni_avni_integration.worker.bahmni.*;
@@ -44,6 +45,9 @@ public class MainJob implements Job {
 
     @Autowired
     private ProgramEncounterWorker programEncounterWorker;
+
+    @Autowired
+    private GeneralEncounterWorker generalEncounterWorker;
 
     @Autowired
     private ConstantsRepository constantsRepository;
@@ -85,6 +89,11 @@ public class MainJob implements Job {
                 logger.info("Processing AvniProgramEncounter");
                 programEncounterWorker.cacheRunImmutables(allConstants);
                 programEncounterWorker.processProgramEncounters();
+            }
+            if (hasTask(tasks, IntegrationTask.AvniGeneralEncounter)) {
+                logger.info("Processing AvniGeneralEncounter");
+                generalEncounterWorker.cacheRunImmutables(allConstants);
+                generalEncounterWorker.processEncounters();
             }
             if (hasTask(tasks, IntegrationTask.BahmniPatient))
                 getPatientWorker(allConstants).processPatients();
