@@ -18,6 +18,9 @@ public class ErrorRecord extends BaseEntity {
     @Column
     private String entityId;
 
+    @Column
+    private boolean processingDisabled;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "errorRecord")
     private Set<ErrorRecordLog> errorRecordLogs = new HashSet<>();
 
@@ -56,5 +59,13 @@ public class ErrorRecord extends BaseEntity {
         errorRecordLog.setLoggedAt(new Date());
         errorRecordLogs.add(errorRecordLog);
         errorRecordLog.setErrorRecord(this);
+    }
+
+    public boolean isProcessingDisabled() {
+        return processingDisabled;
+    }
+
+    public void setProcessingDisabled(boolean processingDisabled) {
+        this.processingDisabled = processingDisabled;
     }
 }

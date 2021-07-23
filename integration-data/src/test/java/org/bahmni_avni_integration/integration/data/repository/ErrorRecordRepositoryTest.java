@@ -14,6 +14,6 @@ public class ErrorRecordRepositoryTest extends AbstractSpringTest {
 
     @Test
     public void findAllByErrorRecordLogsErrorTypeIn() {
-        errorRecordRepository.findAllByAvniEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), PageRequest.of(1, 20));
+        errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), PageRequest.of(1, 20));
     }
 }

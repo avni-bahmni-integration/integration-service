@@ -32,6 +32,7 @@ public class ErrorService {
         errorRecord.setAvniEntityType(avniEntityType);
         errorRecord.setEntityId(uuid);
         errorRecord.addErrorType(errorType);
+        errorRecord.setProcessingDisabled(false);
         errorRecordRepository.save(errorRecord);
     }
 
@@ -59,6 +60,7 @@ public class ErrorService {
         errorRecord.setBahmniEntityType(bahmniEntityType);
         errorRecord.setEntityId(uuid);
         errorRecord.addErrorType(errorType);
+        errorRecord.setProcessingDisabled(false);
         return errorRecordRepository.save(errorRecord);
     }
 
