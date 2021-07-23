@@ -42,17 +42,17 @@ public class ErrorRecordsWorker {
             logger.info(String.format("Starting page number: %d for sync direction: %s", pageNumber, syncDirection.name()));
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
             if (syncDirection.equals(SyncDirection.AvniToBahmni))
-                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
             else
                 errorRecordPage = errorRecordRepository.findAllByBahmniEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
 
-            pageNumber++;
             List<ErrorRecord> errorRecords = errorRecordPage.getContent();
             for (ErrorRecord errorRecord : errorRecords) {
                 ErrorRecordWorker errorRecordWorker = getErrorRecordWorker(errorRecord);
                 errorRecordWorker.processError(errorRecord.getEntityId());
             }
-            logger.info(String.format("Completed page number: %d for sync direction: %s", pageNumber, syncDirection.name()));
+            logger.info(String.format("Completed page number: %d with number of errors: %d, for sync direction: %s", pageNumber, errorRecords.size(), syncDirection.name()));
+            pageNumber++;
         } while (errorRecordPage.getNumberOfElements() == pageSize);
     }
 
