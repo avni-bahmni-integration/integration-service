@@ -43,13 +43,15 @@ public class ProgramEncounterMapper {
 
     private OpenMRSSaveObservation formGroupObservation(ProgramEncounter programEncounter) {
         var groupObservation = new OpenMRSSaveObservation();
-        groupObservation.setConcept(formConcept(programEncounter));
+        String concept = formConcept(programEncounter);
+        if (concept == null) throw new RuntimeException(String.format("No form mapping setup for program encounter of type: %s", programEncounter.getEncounterType()));
+        groupObservation.setConcept(concept);
         return groupObservation;
     }
 
     private String formConcept(ProgramEncounter programEncounter) {
         return mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
-                    MappingType.CommunityProgramEncounter_BahmniForm,
+                MappingType.CommunityProgramEncounter_BahmniForm,
                 programEncounter.getEncounterType());
     }
 
