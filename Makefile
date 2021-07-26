@@ -112,7 +112,7 @@ deploy-to-vagrant-only:
 
 deploy-to-vagrant: build-server deploy-to-vagrant-only
 
-deploy-to-ashwini-prod:
+deploy-to-ashwini-prod: build-server
 	scp integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/
 	ssh dspace-auto "scp /tmp/integrator-0.0.1-SNAPSHOT.jar ashwini:/root/source/abi-host/"
 #######
