@@ -34,7 +34,7 @@ public class EncounterMapper {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
                 MappingType.CommunityProgramEncounter_EncounterType,
                 programEncounter.getEncounterType());
-        String formConceptUuid = mappingMetaDataRepository.getBahmniFormUuidForGeneralEncounter(programEncounter.getEncounterType());
+        String formConceptUuid = mappingMetaDataRepository.getBahmniFormUuidForProgramEncounter(programEncounter.getEncounterType());
         if (formConceptUuid == null) throw new RuntimeException(String.format("No form mapping setup for program encounter of type: %s", programEncounter.getEncounterType()));
         return mapEncounter(programEncounter, patientUuid, constants, visit, encounterTypeUuid, formConceptUuid);
     }
