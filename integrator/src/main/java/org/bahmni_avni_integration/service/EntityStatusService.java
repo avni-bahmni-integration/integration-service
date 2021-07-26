@@ -25,7 +25,7 @@ public class EntityStatusService {
     }
 
     public void saveEntityStatus(GeneralEncounter generalEncounter) {
-        saveEntityStatus(AvniEntityType.ProgramEncounter, generalEncounter);
+        saveEntityStatus(AvniEntityType.GeneralEncounter, generalEncounter);
     }
 
     private void saveEntityStatus(AvniEntityType avniEntityType, AvniBaseContract avniBaseContract) {

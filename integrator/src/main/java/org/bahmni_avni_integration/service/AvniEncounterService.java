@@ -2,7 +2,6 @@ package org.bahmni_avni_integration.service;
 
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
-import org.bahmni_avni_integration.contract.avni.ProgramEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSDefaultEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;

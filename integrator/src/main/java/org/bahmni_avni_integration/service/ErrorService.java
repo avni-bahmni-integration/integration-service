@@ -86,7 +86,7 @@ public class ErrorService {
     }
 
     public void errorOccurred(GeneralEncounter generalEncounter, ErrorType errorType) {
-        saveAvniError(generalEncounter.getUuid(), errorType, AvniEntityType.ProgramEncounter);
+        saveAvniError(generalEncounter.getUuid(), errorType, AvniEntityType.GeneralEncounter);
     }
 
     public void errorOccurred(OpenMRSPatient patient, ErrorType errorType) {

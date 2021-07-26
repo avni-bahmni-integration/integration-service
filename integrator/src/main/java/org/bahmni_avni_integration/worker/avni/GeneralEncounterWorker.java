@@ -33,7 +33,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
     private final AvniEncounterRepository avniEncounterRepository;
     private final MappingMetaDataService mappingMetaDataService;
     private final AvniSubjectRepository avniSubjectRepository;
-    private AvniEncounterService encounterService;
+    private final AvniEncounterService encounterService;
     private final AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
 
     private static final Logger logger = Logger.getLogger(GeneralEncounterWorker.class);
@@ -62,14 +62,11 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
 
     public void processEncounters() {
         while (true) {
-            AvniEntityStatus subjectStatus = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
             AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.GeneralEncounter);
             GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(status.getReadUpto());
             GeneralEncounter[] generalEncounters = response.getContent();
             int totalPages = response.getTotalPages();
             logger.info(String.format("Found %d encounters that are newer than %s", generalEncounters.length, status.getReadUpto()));
-            generalEncounters = Arrays.stream(generalEncounters).filter(generalEncounter -> generalEncounter.getLastModifiedDate().before(subjectStatus.getReadUpto())).toArray(GeneralEncounter[]::new);
-            logger.info(String.format("Found %d encounters that are newer than %s and before %s", generalEncounters.length, status.getReadUpto(), subjectStatus.getReadUpto()));
             if (generalEncounters.length == 0) break;
             for (GeneralEncounter generalEncounter : generalEncounters) {
                 processGeneralEncounter(generalEncounter);

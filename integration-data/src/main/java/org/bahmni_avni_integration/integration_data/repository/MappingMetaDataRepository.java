@@ -88,4 +88,16 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     default String getBahmniValueForAvniIdConcept() {
         return getBahmniValue(MappingGroup.Common, MappingType.AvniUUID_Concept);
     }
+
+    default String getBahmniFormUuidForProgramEncounter(String encounterType) {
+        return getBahmniValue(MappingGroup.ProgramEncounter,
+                MappingType.CommunityProgramEncounter_BahmniForm,
+                encounterType);
+    }
+
+    default String getBahmniFormUuidForGeneralEncounter(String encounterType) {
+        return getBahmniValue(MappingGroup.GeneralEncounter,
+                MappingType.CommunityEncounter_BahmniForm,
+                encounterType);
+    }
 }
