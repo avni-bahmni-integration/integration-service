@@ -90,7 +90,7 @@ public class HttpClient {
     public String post(String path, String json) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.put("Accept", "application/json");
-        logger.debug(String.format("Posting to: %s Data: %s", path, json));
+        logger.trace(String.format("Posting to: %s Data: %s", path, json));
         HttpResponse httpResponse = httpClientInternal.post(authenticator.getRequestDetails(URI.create(path)), httpHeaders, json);
         int statusCode = httpResponse.getStatusLine().getStatusCode();
         String message = asString(httpResponse);

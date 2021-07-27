@@ -55,7 +55,7 @@ public class SubjectWorker implements ErrorRecordWorker {
             logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUpto()));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {
-                processSubject(subject);
+                processSubject(subject, true);
             }
             if (totalPages == 1) {
                 logger.info("Finished processing all pages");
@@ -70,14 +70,19 @@ public class SubjectWorker implements ErrorRecordWorker {
         subject.set("observations", observations);
     }
 
+    private void updateSyncStatus(Subject subject, boolean updateSyncStatus) {
+        if (updateSyncStatus)
+            entityStatusService.saveEntityStatus(subject);
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected void processSubject(Subject subject) {
+    protected void processSubject(Subject subject, boolean updateSyncStatus) {
         logger.debug("Processing subject %s".formatted(subject.getUuid()));
 
         if(subject.getId(metaData) == null) {
             logger.debug("Skip subject %s because of having null identifier".formatted(subject.getUuid()));
             patientService.processSubjectIdNull(subject);
-            entityStatusService.saveEntityStatus(subject);
+            updateSyncStatus(subject, updateSyncStatus);
             return;
         }
 
@@ -88,7 +93,7 @@ public class SubjectWorker implements ErrorRecordWorker {
             } else {
                 logger.debug("Skip voided subject %s because of having non voided duplicates".formatted(subject.getUuid()));
             }
-            entityStatusService.saveEntityStatus(subject);
+            updateSyncStatus(subject, updateSyncStatus);
             return;
         };
         removeIgnoredObservations(subject);
@@ -109,7 +114,8 @@ public class SubjectWorker implements ErrorRecordWorker {
             logger.debug(String.format("Creating new patient and new encounter for subject %s", subject.getUuid()));
             patientService.createPatientAndSubject(subject, metaData, constants);
         }
-        entityStatusService.saveEntityStatus(subject);
+        logger.debug(String.format("Saving entity status for subject %s", subject.getLastModifiedDate()));
+        updateSyncStatus(subject, updateSyncStatus);
     }
 
     private boolean hasDuplicates(Subject subject) {
@@ -137,7 +143,7 @@ public class SubjectWorker implements ErrorRecordWorker {
             return;
         }
 
-        processSubject(subject);
+        processSubject(subject, false);
     }
 
     public void cacheRunImmutables(Constants constants) {

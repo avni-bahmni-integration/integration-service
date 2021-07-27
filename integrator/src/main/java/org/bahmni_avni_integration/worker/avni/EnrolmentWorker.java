@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 @Component
@@ -67,7 +66,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
             logger.info(String.format("Found %d enrolments that are newer than %s", enrolments.length, status.getReadUpto()));
             if (enrolments.length == 0) break;
             for (Enrolment enrolment : enrolments) {
-                processEnrolment(enrolment);
+                processEnrolment(enrolment, true);
             }
             if (totalPages == 1) {
                 logger.info("Finished processing all pages");
@@ -87,11 +86,16 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         enrolment.set("exitObservations", exitObservations);
     }
 
+    private void updateSyncStatus(Enrolment enrolment, boolean updateSyncStatus) {
+        if (updateSyncStatus)
+            entityStatusService.saveEntityStatus(enrolment);
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected void processEnrolment(Enrolment enrolment) {
+    protected void processEnrolment(Enrolment enrolment, boolean updateSyncStatus) {
         if (errorService.hasAvniMultipleSubjectsError(enrolment.getSubjectId())) {
             logger.error(String.format("Skipping Avni enrolment %s because of multiple subjects with same id error", enrolment.getUuid()));
-            entityStatusService.saveEntityStatus(enrolment);
+            updateSyncStatus(enrolment, updateSyncStatus);
             return;
         }
         removeIgnoredObservations(enrolment);
@@ -100,7 +104,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
         if (subject.getVoided()) {
             logger.debug(String.format("Avni subject is voided. Skipping. %s", subject.getUuid()));
-            entityStatusService.saveEntityStatus(enrolment);
+            updateSyncStatus(enrolment, updateSyncStatus);
             return;
         }
 
@@ -123,7 +127,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
             errorService.successfullyProcessed(enrolment);
         }
 
-        entityStatusService.saveEntityStatus(enrolment);
+        updateSyncStatus(enrolment, updateSyncStatus);
     }
 
     private void processExitedEnrolment(Constants constants, Enrolment enrolment, OpenMRSPatient patient) {
@@ -146,7 +150,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
             return;
         }
 
-        processEnrolment(enrolment);
+        processEnrolment(enrolment, false);
     }
 
     public void cacheRunImmutables(Constants constants) {

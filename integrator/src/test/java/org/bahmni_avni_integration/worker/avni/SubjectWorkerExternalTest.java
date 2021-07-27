@@ -52,6 +52,6 @@ class SubjectWorkerExternalTest {
 //        subjectWorker.processSubject(avniSubjectRepository.getSubject("372233b3-a381-9333-34ad-ca34f86f6b17"));
 
         //Test identifier null issue
-        subjectWorker.processSubject(avniSubjectRepository.getSubject("fa6ba4bf-2772-0545-2a9f-09bcb0828174"));
+        subjectWorker.processSubject(avniSubjectRepository.getSubject("fa6ba4bf-2772-0545-2a9f-09bcb0828174"), true);
     }
 }
