@@ -3,6 +3,7 @@ package org.bahmni_avni_integration.worker.avni;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.GeneralEncountersResponse;
+import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
@@ -69,7 +70,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
             logger.info(String.format("Found %d encounters that are newer than %s", generalEncounters.length, status.getReadUpto()));
             if (generalEncounters.length == 0) break;
             for (GeneralEncounter generalEncounter : generalEncounters) {
-                processGeneralEncounter(generalEncounter);
+                processGeneralEncounter(generalEncounter, true);
             }
             if (totalPages == 1) {
                 logger.info("Finished processing all pages");
@@ -84,11 +85,16 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
         generalEncounter.set("observations", observations);
     }
 
+    private void updateSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
+        if (updateSyncStatus)
+            entityStatusService.saveEntityStatus(generalEncounter);
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected void processGeneralEncounter(GeneralEncounter generalEncounter) {
+    protected void processGeneralEncounter(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
         if (errorService.hasAvniMultipleSubjectsError(generalEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni general encounter %s because of multiple subjects with same id error", generalEncounter.getUuid()));
-            entityStatusService.saveEntityStatus(generalEncounter);
+            updateSyncStatus(generalEncounter, updateSyncStatus);
             return;
         }
         removeIgnoredObservations(generalEncounter);
@@ -96,7 +102,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
 
         if (encounterService.shouldFilterEncounter(generalEncounter)) {
             logger.warn(String.format("General encounter should be filtered out: %s", generalEncounter.getUuid()));
-            entityStatusService.saveEntityStatus(generalEncounter);
+            updateSyncStatus(generalEncounter, updateSyncStatus);
             return;
         }
 
@@ -104,7 +110,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
         if (subject.getVoided()) {
             logger.debug(String.format("Avni subject is voided. Skipping. %s", subject.getUuid()));
-            entityStatusService.saveEntityStatus(generalEncounter);
+            updateSyncStatus(generalEncounter, updateSyncStatus);
             return;
         }
         Pair<OpenMRSPatient, OpenMRSFullEncounter> patientEncounter = encounterService.findCommunityEncounter(generalEncounter, subject, constants, metaData);
@@ -120,7 +126,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
             encounterService.processPatientNotFound(generalEncounter);
         }
 
-        entityStatusService.saveEntityStatus(generalEncounter);
+        updateSyncStatus(generalEncounter, updateSyncStatus);
     }
 
     @Override
@@ -132,7 +138,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
             return;
         }
 
-        processGeneralEncounter(generalEncounter);
+        processGeneralEncounter(generalEncounter, false);
     }
 
     public void cacheRunImmutables(Constants constants) {
