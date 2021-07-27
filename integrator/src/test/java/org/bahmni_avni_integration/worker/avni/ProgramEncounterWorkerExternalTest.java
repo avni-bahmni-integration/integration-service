@@ -42,15 +42,15 @@ class ProgramEncounterWorkerExternalTest {
 
         for (var s : subjects) {
             var subject = avniSubjectRepository.getSubject(s);
-            subjectWorker.processSubject(subject);
+            subjectWorker.processSubject(subject, true);
             var enrolments = (List<String>) subject.get("enrolments");
             for (var enl : enrolments) {
                 var enrolment = avniEnrolmentRepository.getEnrolment(enl);
-                enrolmentWorker.processEnrolment(enrolment);
+                enrolmentWorker.processEnrolment(enrolment, true);
                 var encounters = (List<String>) enrolment.get("encounters");
                 for (var encounterUuid : encounters) {
                     var programEncounter = programEncounterRepository.getProgramEncounter(encounterUuid);
-                    programEncounterWorker.processProgramEncounter(programEncounter);
+                    programEncounterWorker.processProgramEncounter(programEncounter, true);
                 }
             }
         }
@@ -62,7 +62,7 @@ class ProgramEncounterWorkerExternalTest {
         programEncounterWorker.cacheRunImmutables(constants);
 
         var programEncounter = programEncounterRepository.getProgramEncounter("c9add1fd-0be6-49db-a4a3-181e49f82a30");
-        programEncounterWorker.processProgramEncounter(programEncounter);
+        programEncounterWorker.processProgramEncounter(programEncounter, true);
 
     }
 }

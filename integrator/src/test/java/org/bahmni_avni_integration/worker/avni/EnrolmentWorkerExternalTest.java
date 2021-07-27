@@ -32,10 +32,10 @@ class EnrolmentWorkerExternalTest {
         Constants constants = constantsRepository.findAllConstants();
         enrolmentWorker.cacheRunImmutables(constants);
         Enrolment enrolment = avniEnrolmentRepository.getEnrolment("4f48966e-06ec-4d62-9822-068699b55942");
-        enrolmentWorker.processEnrolment(enrolment);
+        enrolmentWorker.processEnrolment(enrolment, true);
         enrolment = avniEnrolmentRepository.getEnrolment("c9c18e86-df00-4e84-a867-869a7134bb76");
-        enrolmentWorker.processEnrolment(enrolment);
+        enrolmentWorker.processEnrolment(enrolment, true);
         enrolment = avniEnrolmentRepository.getEnrolment("0f61c57c-0535-4635-a513-c168e6007a72");
-        enrolmentWorker.processEnrolment(enrolment);
+        enrolmentWorker.processEnrolment(enrolment, true);
     }
 }
