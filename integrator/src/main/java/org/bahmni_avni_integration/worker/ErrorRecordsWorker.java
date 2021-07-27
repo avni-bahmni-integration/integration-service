@@ -5,6 +5,7 @@ import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
 import org.bahmni_avni_integration.worker.avni.EnrolmentWorker;
+import org.bahmni_avni_integration.worker.avni.GeneralEncounterWorker;
 import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
 import org.bahmni_avni_integration.worker.avni.SubjectWorker;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
@@ -26,6 +27,8 @@ public class ErrorRecordsWorker {
     private EnrolmentWorker enrolmentWorker;
     @Autowired
     private ProgramEncounterWorker programEncounterWorker;
+    @Autowired
+    private GeneralEncounterWorker generalEncounterWorker;
     @Autowired
     private PatientEventWorker patientEventWorker;
     @Autowired
@@ -61,6 +64,7 @@ public class ErrorRecordsWorker {
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.Subject)) return subjectWorker;
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.Enrolment)) return enrolmentWorker;
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.ProgramEncounter)) return programEncounterWorker;
+            if (errorRecord.getAvniEntityType().equals(AvniEntityType.GeneralEncounter)) return generalEncounterWorker;
         } else if (errorRecord.getBahmniEntityType() != null) {
             if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Patient)) return patientEventWorker;
             if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Encounter)) return patientEncounterEventWorker;
@@ -72,6 +76,7 @@ public class ErrorRecordsWorker {
         subjectWorker.cacheRunImmutables(constants);
         enrolmentWorker.cacheRunImmutables(constants);
         programEncounterWorker.cacheRunImmutables(constants);
+        generalEncounterWorker.cacheRunImmutables(constants);
         patientEventWorker.cacheRunImmutables(constants);
         patientEncounterEventWorker.cacheRunImmutables(constants);
     }
