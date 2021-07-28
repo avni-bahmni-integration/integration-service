@@ -92,6 +92,12 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processGeneralEncounter(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
+        if (mappingMetaDataService.isBahmniEncounterInAvni(generalEncounter.getEncounterType())) {
+            logger.debug(String.format("Skipping Avni general encounter %s because it was created from Bahmni", generalEncounter.getEncounterType()));
+            updateSyncStatus(generalEncounter, updateSyncStatus);
+            return;
+        }
+
         if (errorService.hasAvniMultipleSubjectsError(generalEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni general encounter %s because of multiple subjects with same id error", generalEncounter.getUuid()));
             updateSyncStatus(generalEncounter, updateSyncStatus);

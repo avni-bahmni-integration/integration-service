@@ -91,6 +91,12 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processProgramEncounter(ProgramEncounter programEncounter, boolean updateSyncStatus) {
+        if (mappingMetaDataService.isBahmniEncounterInAvni(programEncounter.getEncounterType())) {
+            logger.debug(String.format("Skipping Avni program encounter %s because it was created from Bahmni", programEncounter.getEncounterType()));
+            updateSyncStatus(programEncounter, updateSyncStatus);
+            return;
+        }
+
         if (errorService.hasAvniMultipleSubjectsError(programEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni encounter %s because of multiple subjects with same id error", programEncounter.getUuid()));
             updateSyncStatus(programEncounter, updateSyncStatus);

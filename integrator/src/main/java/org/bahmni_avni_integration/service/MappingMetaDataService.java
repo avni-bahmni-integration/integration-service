@@ -55,4 +55,8 @@ public class MappingMetaDataService {
         metaData.setIgnoredConcepts(ignoredBahmniConcepts);
         return metaData;
     }
+
+    public boolean isBahmniEncounterInAvni(String encounterType) {
+        return mappingMetaDataRepository.findAllByMappingTypeAndAvniValue(MappingType.EncounterType, encounterType).size() != 0;
+    }
 }

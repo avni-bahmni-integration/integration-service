@@ -100,4 +100,6 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
                 MappingType.CommunityEncounter_BahmniForm,
                 encounterType);
     }
+
+    List<MappingMetaData> findAllByMappingTypeAndAvniValue(MappingType mappingType, String avniValue);
 }
