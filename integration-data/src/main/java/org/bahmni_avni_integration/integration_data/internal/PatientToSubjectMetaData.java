@@ -34,5 +34,4 @@ public final class PatientToSubjectMetaData implements BahmniToAvniMetaData {
     public String patientIdentifierName() {
         return patientIdentifierName;
     }
-
 }

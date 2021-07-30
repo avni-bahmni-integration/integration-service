@@ -4,17 +4,30 @@ import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPersonAttribute;
+import org.bahmni_avni_integration.integration_data.domain.MappingGroup;
+import org.bahmni_avni_integration.integration_data.domain.MappingType;
 import org.bahmni_avni_integration.integration_data.internal.PatientToSubjectMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaData;
 import org.bahmni_avni_integration.integration_data.domain.MappingMetaDataCollection;
+import org.bahmni_avni_integration.integration_data.repository.MappingMetaDataRepository;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Component
 public class OpenMRSPatientMapper {
-    public static GeneralEncounter mapToAvniEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData, MappingMetaDataCollection conceptMetaData) {
+    private final MappingMetaDataRepository mappingMetaDataRepository;
+
+    @Autowired
+    public OpenMRSPatientMapper(MappingMetaDataRepository mappingMetaDataRepository) {
+        this.mappingMetaDataRepository = mappingMetaDataRepository;
+    }
+
+    public GeneralEncounter mapToAvniEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData, MappingMetaDataCollection conceptMetaData) {
         LinkedHashMap<String, Object> observations = mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData);
 
         GeneralEncounter encounterRequest = new GeneralEncounter();
@@ -26,7 +39,7 @@ public class OpenMRSPatientMapper {
         return encounterRequest;
     }
 
-    public static LinkedHashMap<String, Object> mapToAvniObservations(OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData, MappingMetaDataCollection conceptMetaData) {
+    public LinkedHashMap<String, Object> mapToAvniObservations(OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData, MappingMetaDataCollection conceptMetaData) {
         LinkedHashMap<String, Object> observations = new LinkedHashMap<>();
         for (OpenMRSPersonAttribute openMRSPersonAttribute : openMRSPatient.getPerson().getAttributes()) {
             String attributeTypeUuid = openMRSPersonAttribute.getAttributeType().getUuid();
@@ -38,7 +51,8 @@ public class OpenMRSPatientMapper {
             if (attributeValue instanceof Map) {
                 Map<String, String> attributeValueMap = (Map<String, String>) attributeValue;
                 String attributeUuid = attributeValueMap.get("uuid");
-                MappingMetaData answerMapping = conceptMetaData.getMappingForBahmniValue(attributeUuid);
+                MappingMetaData answerMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, attributeUuid);
+                conceptMetaData.getMappingForBahmniValue(attributeUuid);
                 observations.put(questionMapping.getAvniValue(), answerMapping.getAvniValue());
             } else {
                 observations.put(questionMapping.getAvniValue(), attributeValue);

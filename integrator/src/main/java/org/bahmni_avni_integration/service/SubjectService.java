@@ -23,12 +23,14 @@ public class SubjectService {
     private final AvniSubjectRepository avniSubjectRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final ErrorService errorService;
+    private OpenMRSPatientMapper openMRSPatientMapper;
 
-    public SubjectService(AvniEncounterRepository avniEncounterRepository, AvniSubjectRepository avniSubjectRepository, MappingMetaDataRepository mappingMetaDataRepository, ErrorService errorService) {
+    public SubjectService(AvniEncounterRepository avniEncounterRepository, AvniSubjectRepository avniSubjectRepository, MappingMetaDataRepository mappingMetaDataRepository, ErrorService errorService, OpenMRSPatientMapper openMRSPatientMapper) {
         this.avniEncounterRepository = avniEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.errorService = errorService;
+        this.openMRSPatientMapper = openMRSPatientMapper;
     }
 
     public Subject findSubject(OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData, Constants constants) {
@@ -57,7 +59,7 @@ public class SubjectService {
         if (openMRSPatient.isVoided()) return;
 
         MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
-        GeneralEncounter encounterRequest = OpenMRSPatientMapper.mapToAvniEncounter(openMRSPatient, subject, patientToSubjectMetaData, conceptMetaData);
+        GeneralEncounter encounterRequest = openMRSPatientMapper.mapToAvniEncounter(openMRSPatient, subject, patientToSubjectMetaData, conceptMetaData);
         avniEncounterRepository.create(encounterRequest);
 
         errorService.successfullyProcessed(openMRSPatient);
@@ -65,7 +67,7 @@ public class SubjectService {
 
     public void updateRegistrationEncounter(GeneralEncounter encounterRequest, OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
         MappingMetaDataCollection conceptMetaData = mappingMetaDataRepository.findAll(MappingGroup.PatientSubject, MappingType.PersonAttributeConcept);
-        encounterRequest.set("observations", OpenMRSPatientMapper.mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData));
+        encounterRequest.set("observations", openMRSPatientMapper.mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData));
         encounterRequest.setVoided(openMRSPatient.isVoided());
         avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);
 
