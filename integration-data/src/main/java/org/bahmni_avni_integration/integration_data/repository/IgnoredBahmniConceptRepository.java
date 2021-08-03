@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IgnoredBahmniConceptRepository extends CrudRepository<IgnoredBahmniConcept, Integer> {
+    IgnoredBahmniConcept findByConceptUuid(String conceptUuid);
 }

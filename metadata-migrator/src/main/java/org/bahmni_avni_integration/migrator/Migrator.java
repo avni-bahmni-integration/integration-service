@@ -82,6 +82,6 @@ public class Migrator implements CommandLineRunner {
     }
 
     private void runAdhoc() throws SQLException {
-        logger.info(mappingMetaDataRepository.findById(1));
+        bahmniToAvniService.createOrUpdateConceptMapping();
     }
 }

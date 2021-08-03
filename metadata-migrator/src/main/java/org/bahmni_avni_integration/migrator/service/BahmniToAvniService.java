@@ -68,16 +68,28 @@ public class BahmniToAvniService {
     }
 
     public void migrateConcepts() throws SQLException {
+        createAvniConcepts();
+        createOrUpdateConceptMapping();
+    }
+
+    public void createAvniConcepts() throws SQLException {
         List<OpenMRSConcept> concepts = openMRSRepository.getConcepts();
         avniRepository.saveConcepts(concepts, implementationConfigurationRepository.getConstants());
+    }
+
+    public void createOrUpdateConceptMapping() throws SQLException {
+        List<OpenMRSConcept> concepts = openMRSRepository.getConcepts();
         for (OpenMRSConcept openMRSConcept : concepts) {
             ObsDataType dataTypeHint = openMRSConcept.getAvniDataType().equals(ObsDataType.Coded.name()) ? ObsDataType.Coded : null;
-            mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);
+            if (mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid()) == null) {
+                mappingMetaDataRepository.saveMapping(MappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);
+            }
         }
         List<String> ignoredConcepts = implementationConfigurationRepository.getIgnoredConcepts();
-        for (String ignoredConcept : ignoredConcepts)
-            ignoredBahmniConceptRepository.save(new IgnoredBahmniConcept(ignoredConcept));
-        logger.info("Saved mapping for concepts");
+        for (String ignoredConcept : ignoredConcepts) {
+            if (ignoredBahmniConceptRepository.findByConceptUuid(ignoredConcept) == null)
+                ignoredBahmniConceptRepository.save(new IgnoredBahmniConcept(ignoredConcept));
+        }
     }
 
     public void createStandardMetadata() throws SQLException {

@@ -52,6 +52,9 @@ public class OpenMRSPatientMapper {
                 Map<String, String> attributeValueMap = (Map<String, String>) attributeValue;
                 String attributeUuid = attributeValueMap.get("uuid");
                 MappingMetaData answerMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, attributeUuid);
+                if (answerMapping == null) {
+                    throw new RuntimeException(String.format("Could not find concept mapped for OpenMRS concept: %s while finding answer to OpenMRS concept/person-attribute: %s which is Avni Concept %s", attributeUuid, attributeTypeUuid, questionMapping.getAvniValue()));
+                }
                 conceptMetaData.getMappingForBahmniValue(attributeUuid);
                 observations.put(questionMapping.getAvniValue(), answerMapping.getAvniValue());
             } else {
