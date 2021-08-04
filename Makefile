@@ -90,7 +90,7 @@ open-test-results: ## To be used when test-server-all is run
 #######
 
 
-####### RUN IN ENVIRONMENT
+####### Tunnels
 tunnel-server-debug-vagrant:
 	ssh -p 2222 -i ~/.vagrant.d/insecure_private_key vagrant@127.0.0.1 -L 6031:localhost:6031
 #######
@@ -112,9 +112,15 @@ deploy-to-vagrant-only:
 
 deploy-to-vagrant: build-server deploy-to-vagrant-only
 
-deploy-to-ashwini-prod: build-server
+deploy-to-ashwini-prod: deploy-integrator-to-ashwini-prod deploy-migrator-to-ashwini-prod
+
+deploy-integrator-to-ashwini-prod: build-server
 	scp integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/
 	ssh dspace-auto "scp /tmp/integrator-0.0.1-SNAPSHOT.jar ashwini:/root/source/abi-host/"
+
+deploy-migrator-to-ashwini-prod: build-server
+	scp metadata-migrator/build/libs/metadata-migrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/
+	ssh dspace-auto "scp /tmp/metadata-migrator-0.0.1-SNAPSHOT.jar ashwini:/root/source/abi-host/"
 #######
 
 

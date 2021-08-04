@@ -6,10 +6,7 @@ import org.bahmni_avni_integration.contract.avni.GeneralEncountersResponse;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSFullEncounter;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
-import org.bahmni_avni_integration.integration_data.domain.AvniEntityStatus;
-import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
-import org.bahmni_avni_integration.integration_data.domain.Constants;
-import org.bahmni_avni_integration.integration_data.domain.ErrorType;
+import org.bahmni_avni_integration.integration_data.domain.*;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.AvniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniEncounterRepository;
@@ -75,7 +72,8 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
             if (totalPages == 1) {
                 logger.info("Finished processing all pages");
                 break;
-            };
+            }
+            ;
         }
     }
 
@@ -92,7 +90,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processGeneralEncounter(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
-        if (mappingMetaDataService.isBahmniEncounterInAvni(generalEncounter.getEncounterType())) {
+        if (mappingMetaDataService.isBahmniEncounterInAvni(generalEncounter.getEncounterType()) || generalEncounter.getEncounterType().equals(Names.AvniPatientRegistrationEncounter)) {
             logger.debug(String.format("Skipping Avni general encounter %s because it was created from Bahmni", generalEncounter.getEncounterType()));
             updateSyncStatus(generalEncounter, updateSyncStatus);
             return;
