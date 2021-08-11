@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -35,7 +36,9 @@ public class AvniSubjectRepository extends BaseAvniRepository {
         queryParams.put("subjectType", subjectType);
         queryParams.put("concepts", ObjectJsonMapper.writeValueAsString(concepts));
         ResponseEntity<SubjectsResponse> responseEntity = avniHttpClient.get("/api/subjects", queryParams, SubjectsResponse.class);
-        return responseEntity.getBody().getContent();
+        Subject[] subjects = responseEntity.getBody().getContent();
+        if (subjects.length == 1) return subjects;
+        return Arrays.stream(subjects).filter(subject -> !subject.getVoided()).toArray(Subject[]::new);
     }
 
     public Subject getSubject(Date lastModifiedDateTime, String subjectType, HashMap<String, Object> concepts) {
