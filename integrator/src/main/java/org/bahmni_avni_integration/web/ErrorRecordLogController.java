@@ -5,9 +5,8 @@ import org.bahmni_avni_integration.integration_data.domain.AvniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ErrorRecordLog;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
 import org.bahmni_avni_integration.integration_data.repository.ErrorRecordLogRepository;
-import org.bahmni_avni_integration.integration_data.util.EnumUtil;
+import org.bahmni_avni_integration.integration_data.repository.ErrorRecordRepository;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
-import org.bahmni_avni_integration.web.contract.MappingMetadataWebContract;
 import org.bahmni_avni_integration.web.response.ErrorWebContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,16 +14,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/")
 public class ErrorRecordLogController {
     private final ErrorRecordLogRepository errorRecordLogRepository;
+    private final ErrorRecordRepository errorRecordRepository;
 
     @Autowired
-    public ErrorRecordLogController(ErrorRecordLogRepository errorRecordLogRepository) {
+    public ErrorRecordLogController(ErrorRecordLogRepository errorRecordLogRepository, ErrorRecordRepository errorRecordRepository) {
         this.errorRecordLogRepository = errorRecordLogRepository;
+        this.errorRecordRepository = errorRecordRepository;
     }
 
     @RequestMapping(value = {"/errorRecordLog"}, method = {RequestMethod.GET})
@@ -32,21 +33,36 @@ public class ErrorRecordLogController {
         return toContractPage(errorRecordLogRepository.findAll(pageable));
     }
 
+    @RequestMapping(value = "errorRecordLog/{id}", method = {RequestMethod.PUT})
+    @Transactional
+    @PreAuthorize("hasRole('USER')")
+    public ErrorWebContract update(@PathVariable("id") Integer id, @RequestBody ErrorWebContract errorWebContract) {
+        ErrorRecordLog errorRecordLog = errorRecordLogRepository.findById(id).get();
+        errorRecordLog.getErrorRecord().setProcessingDisabled(errorWebContract.isProcessingDisabled());
+        errorRecordRepository.save(errorRecordLog.getErrorRecord());
+        return getErrorWebContract(errorRecordLog);
+    }
+
     private Page<ErrorWebContract> toContractPage(Page<ErrorRecordLog> page) {
         return page.map(errorRecordLog -> {
-            ErrorWebContract errorWebContract = new ErrorWebContract();
-            errorWebContract.setId(errorRecordLog.getId());
-            errorWebContract.setErrorType(errorRecordLog.getErrorType().getValue());
-            errorWebContract.setErrorLoggedAt(errorRecordLog.getLoggedAt());
-            AvniEntityType avniEntityType = errorRecordLog.getErrorRecord().getAvniEntityType();
-            if (avniEntityType != null)
-                errorWebContract.setAvniEntityType(avniEntityType.name());
-            BahmniEntityType bahmniEntityType = errorRecordLog.getErrorRecord().getBahmniEntityType();
-            if (bahmniEntityType != null)
-                errorWebContract.setBahmniEntityType(bahmniEntityType.name());
-            errorWebContract.setEntityUuid(errorRecordLog.getErrorRecord().getEntityId());
-            return errorWebContract;
+            return getErrorWebContract(errorRecordLog);
         });
+    }
+
+    private ErrorWebContract getErrorWebContract(ErrorRecordLog errorRecordLog) {
+        ErrorWebContract errorWebContract = new ErrorWebContract();
+        errorWebContract.setId(errorRecordLog.getId());
+        errorWebContract.setErrorType(errorRecordLog.getErrorType().getValue());
+        errorWebContract.setErrorLoggedAt(errorRecordLog.getLoggedAt());
+        errorWebContract.setProcessingDisabled(errorRecordLog.getErrorRecord().isProcessingDisabled());
+        AvniEntityType avniEntityType = errorRecordLog.getErrorRecord().getAvniEntityType();
+        if (avniEntityType != null)
+            errorWebContract.setAvniEntityType(avniEntityType.name());
+        BahmniEntityType bahmniEntityType = errorRecordLog.getErrorRecord().getBahmniEntityType();
+        if (bahmniEntityType != null)
+            errorWebContract.setBahmniEntityType(bahmniEntityType.name());
+        errorWebContract.setEntityUuid(errorRecordLog.getErrorRecord().getEntityId());
+        return errorWebContract;
     }
 
     @RequestMapping(value = "/errorRecordLog/search/findByEntityId")

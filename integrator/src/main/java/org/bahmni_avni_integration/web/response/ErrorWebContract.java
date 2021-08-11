@@ -9,6 +9,7 @@ public class ErrorWebContract {
     private String bahmniEntityType;
     private String avniEntityType;
     private String entityUuid;
+    private boolean processingDisabled;
 
     public int getId() {
         return id;
@@ -56,5 +57,13 @@ public class ErrorWebContract {
 
     public void setEntityUuid(String entityUuid) {
         this.entityUuid = entityUuid;
+    }
+
+    public boolean isProcessingDisabled() {
+        return processingDisabled;
+    }
+
+    public void setProcessingDisabled(boolean processingDisabled) {
+        this.processingDisabled = processingDisabled;
     }
 }

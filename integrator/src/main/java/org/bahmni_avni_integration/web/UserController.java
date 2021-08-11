@@ -5,13 +5,11 @@ import org.bahmni_avni_integration.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -25,15 +23,22 @@ public class UserController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @RequestMapping(value = "user", method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(value = "user", method = {RequestMethod.POST})
     @Transactional
     @PreAuthorize("hasRole('USER')")
     public User save(@RequestBody User userRequest) {
-        User user = userRepository.findByEmail(userRequest.getEmail());
-        if (user == null) {
-            user = new User();
-            user.setEmail(userRequest.getEmail());
-        }
+        User user = new User();
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
+        return userRepository.save(user);
+    }
+
+    @RequestMapping(value = "user/{id}", method = {RequestMethod.PUT})
+    @Transactional
+    @PreAuthorize("hasRole('USER')")
+    public User update(@PathVariable("id") Integer id, @RequestBody User userRequest) {
+        User user = userRepository.findById(id).get();
+        user.setEmail(userRequest.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
         return userRepository.save(user);
     }
@@ -43,5 +48,17 @@ public class UserController {
     public User loggedInUser(Principal principal) {
         String email = principal.getName();
         return userRepository.findByEmail(email);
+    }
+
+    @RequestMapping(value = "user", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public List<User> getUsers() {
+        return userRepository.findAllBy();
+    }
+
+    @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public User getUser(@PathVariable("id") Integer id) {
+        return userRepository.findById(id).get();
     }
 }

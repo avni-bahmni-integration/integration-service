@@ -64,8 +64,15 @@ drop-roles:
 build-server: ## Builds the jar file
 	./gradlew clean build -x test
 
+setup-log-dir:
+	-sudo mkdir /var/log/abi
+	-sudo chown $(SU) /var/log/abi
+
 run-server: build-db build-server
 	$(call _run_server)
+
+run-server-without-background: build-server
+	java -jar --enable-preview integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar --app.cron.main="0 0 0/23 * * ?" --avni.api.url=https://example.com/ --avni.impl.username=foo --avni.impl.password=bar
 
 run-migrator: build-server
 	$(call _run_migrator)
