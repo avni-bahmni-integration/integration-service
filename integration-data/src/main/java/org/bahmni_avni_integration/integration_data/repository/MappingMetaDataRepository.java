@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -101,5 +102,5 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
                 encounterType);
     }
 
-    List<MappingMetaData> findAllByMappingTypeAndAvniValue(MappingType mappingType, String avniValue);
+    List<MappingMetaData> findAllByMappingTypeInAndAvniValue(Collection<MappingType> mappingTypes, String avniValue);
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -18,6 +19,8 @@ public class MappingMetaDataService {
     private MappingMetaDataRepository mappingMetaDataRepository;
     @Autowired
     private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
+
+    private static final MappingType[] bahmniEncounterMappingTypes = {MappingType.EncounterType, MappingType.DrugOrderEncounterType, MappingType.LabEncounterType};
 
     public SubjectToPatientMetaData getForSubjectToPatient() {
         MappingMetaData patientIdentifierMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
@@ -57,6 +60,6 @@ public class MappingMetaDataService {
     }
 
     public boolean isBahmniEncounterInAvni(String encounterType) {
-        return mappingMetaDataRepository.findAllByMappingTypeAndAvniValue(MappingType.EncounterType, encounterType).size() != 0;
+        return mappingMetaDataRepository.findAllByMappingTypeInAndAvniValue(Arrays.asList(bahmniEncounterMappingTypes), encounterType).size() != 0;
     }
 }

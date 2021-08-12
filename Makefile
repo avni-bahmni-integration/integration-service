@@ -115,6 +115,7 @@ endif
 
 ####### Deployment
 deploy-to-vagrant-only:
+	echo vagrant | pbcopy
 	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar root@127.0.0.1:/root/source/abi-host/
 
 deploy-to-vagrant: build-server deploy-to-vagrant-only
