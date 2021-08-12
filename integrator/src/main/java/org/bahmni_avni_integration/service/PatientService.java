@@ -89,10 +89,6 @@ public class PatientService {
         errorService.errorOccurred(subject, ErrorType.PatientIdChanged);
     }
 
-    public void processPatientNotFound(Subject subject, SubjectToPatientMetaData metaData) {
-        errorService.errorOccurred(subject, ErrorType.NoPatientWithId);
-    }
-
     private OpenMRSPatient createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
         OpenMRSSavePerson person = new OpenMRSSavePerson();
         person.setNames(List.of(new OpenMRSSaveName(

@@ -33,7 +33,14 @@ public class ErrorRecordLogController {
         return toContractPage(errorRecordLogRepository.findAll(pageable));
     }
 
-    @RequestMapping(value = "errorRecordLog/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/errorRecordLog/{id}", method = {RequestMethod.GET})
+    @PreAuthorize("hasRole('USER')")
+    public ErrorWebContract get(@PathVariable("id") Integer id) {
+        ErrorRecordLog errorRecordLog = errorRecordLogRepository.findById(id).get();
+        return getErrorWebContract(errorRecordLog);
+    }
+
+    @RequestMapping(value = "/errorRecordLog/{id}", method = {RequestMethod.PUT})
     @Transactional
     @PreAuthorize("hasRole('USER')")
     public ErrorWebContract update(@PathVariable("id") Integer id, @RequestBody ErrorWebContract errorWebContract) {
