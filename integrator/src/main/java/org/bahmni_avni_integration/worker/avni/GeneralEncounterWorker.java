@@ -98,6 +98,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
 
         if (errorService.hasAvniMultipleSubjectsError(generalEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni general encounter %s because of multiple subjects with same id error", generalEncounter.getUuid()));
+            errorService.errorOccurred(generalEncounter, ErrorType.MultipleSubjectsWithId);
             updateSyncStatus(generalEncounter, updateSyncStatus);
             return;
         }

@@ -26,6 +26,10 @@ public class ErrorService {
         ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(avniEntityType, uuid);
         if (errorRecord != null && errorRecord.hasThisAsLastErrorType(errorType)) {
             logger.info(String.format("Same error as the last processing for entity uuid %s, and type %s", uuid, avniEntityType));
+            if (!errorRecord.isProcessingDisabled()) {
+                errorRecord.setProcessingDisabled(true);
+                errorRecordRepository.save(errorRecord);
+            }
             return;
         }
 
@@ -54,6 +58,10 @@ public class ErrorService {
         ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, uuid);
         if (errorRecord != null && errorRecord.hasThisAsLastErrorType(errorType)) {
             logger.info(String.format("Same error as the last processing for entity uuid %s, and type %s", uuid, bahmniEntityType));
+            if (!errorRecord.isProcessingDisabled()) {
+                errorRecord.setProcessingDisabled(true);
+                errorRecordRepository.save(errorRecord);
+            }
             return errorRecord;
         }
 

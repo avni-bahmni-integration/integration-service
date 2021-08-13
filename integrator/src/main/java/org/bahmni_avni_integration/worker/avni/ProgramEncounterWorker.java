@@ -99,6 +99,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
         if (errorService.hasAvniMultipleSubjectsError(programEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni encounter %s because of multiple subjects with same id error", programEncounter.getUuid()));
+            errorService.errorOccurred(programEncounter, ErrorType.MultipleSubjectsWithId);
             updateSyncStatus(programEncounter, updateSyncStatus);
             return;
         }
