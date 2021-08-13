@@ -101,6 +101,8 @@ public class MainJob implements Job {
                 getPatientEncounterWorker(allConstants).processEncounters();
             if (hasTask(tasks, IntegrationTask.AvniErrorRecords))
                 processErrorRecords(allConstants, SyncDirection.AvniToBahmni);
+            if (hasTask(tasks, IntegrationTask.BahmniErrorRecords))
+                processErrorRecords(allConstants, SyncDirection.BahmniToAvni);
             if (hasTask(tasks, IntegrationTask.BahmniVisitDateFix))
                 fixBahmniVisitAndEncounterDates();
         } catch (Exception e) {
@@ -114,9 +116,9 @@ public class MainJob implements Job {
         bahmniEntityDateWorker.fixVisitDates();
     }
 
-    private void processErrorRecords(Constants allConstants, SyncDirection avniToBahmni) {
+    private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) {
         errorRecordsWorker.cacheRunImmutables(allConstants);
-        errorRecordsWorker.process(avniToBahmni);
+        errorRecordsWorker.process(syncDirection);
     }
 
     private PatientEncountersProcessor getPatientEncounterWorker(Constants constants) {
