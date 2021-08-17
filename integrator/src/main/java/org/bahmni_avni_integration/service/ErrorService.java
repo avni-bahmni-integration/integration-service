@@ -30,15 +30,17 @@ public class ErrorService {
                 errorRecord.setProcessingDisabled(true);
                 errorRecordRepository.save(errorRecord);
             }
-            return;
+        } else if (errorRecord != null && !errorRecord.hasThisAsLastErrorType(errorType)) {
+            errorRecord.addErrorType(errorType);
+            errorRecordRepository.save(errorRecord);
+        } else {
+            errorRecord = new ErrorRecord();
+            errorRecord.setAvniEntityType(avniEntityType);
+            errorRecord.setEntityId(uuid);
+            errorRecord.addErrorType(errorType);
+            errorRecord.setProcessingDisabled(false);
+            errorRecordRepository.save(errorRecord);
         }
-
-        errorRecord = new ErrorRecord();
-        errorRecord.setAvniEntityType(avniEntityType);
-        errorRecord.setEntityId(uuid);
-        errorRecord.addErrorType(errorType);
-        errorRecord.setProcessingDisabled(false);
-        errorRecordRepository.save(errorRecord);
     }
 
     public boolean hasError(String entityId, BahmniEntityType bahmniEntityType) {
@@ -62,15 +64,19 @@ public class ErrorService {
                 errorRecord.setProcessingDisabled(true);
                 errorRecordRepository.save(errorRecord);
             }
-            return errorRecord;
+        } else if (errorRecord != null && !errorRecord.hasThisAsLastErrorType(errorType)) {
+            logger.info(String.format("New error for entity uuid %s, and type %s", uuid, bahmniEntityType));
+            errorRecord.addErrorType(errorType);
+            errorRecordRepository.save(errorRecord);
+        } else {
+            errorRecord = new ErrorRecord();
+            errorRecord.setBahmniEntityType(bahmniEntityType);
+            errorRecord.setEntityId(uuid);
+            errorRecord.addErrorType(errorType);
+            errorRecord.setProcessingDisabled(false);
+            errorRecordRepository.save(errorRecord);
         }
-
-        errorRecord = new ErrorRecord();
-        errorRecord.setBahmniEntityType(bahmniEntityType);
-        errorRecord.setEntityId(uuid);
-        errorRecord.addErrorType(errorType);
-        errorRecord.setProcessingDisabled(false);
-        return errorRecordRepository.save(errorRecord);
+        return errorRecord;
     }
 
     public void errorOccurred(Subject subject, ErrorType errorType) {
