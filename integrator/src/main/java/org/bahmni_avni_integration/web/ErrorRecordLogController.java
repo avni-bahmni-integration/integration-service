@@ -60,7 +60,7 @@ public class ErrorRecordLogController {
         ErrorWebContract errorWebContract = new ErrorWebContract();
         errorWebContract.setId(errorRecordLog.getId());
         errorWebContract.setErrorType(errorRecordLog.getErrorType().getValue());
-        errorWebContract.setErrorLoggedAt(errorRecordLog.getLoggedAt());
+        errorWebContract.setLoggedAt(errorRecordLog.getLoggedAt());
         errorWebContract.setProcessingDisabled(errorRecordLog.getErrorRecord().isProcessingDisabled());
         AvniEntityType avniEntityType = errorRecordLog.getErrorRecord().getAvniEntityType();
         if (avniEntityType != null)

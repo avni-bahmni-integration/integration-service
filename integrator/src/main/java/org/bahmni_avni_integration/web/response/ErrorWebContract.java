@@ -5,7 +5,7 @@ import java.util.Date;
 public class ErrorWebContract {
     private int id;
     private int errorType;
-    private Date errorLoggedAt;
+    private Date loggedAt;
     private String bahmniEntityType;
     private String avniEntityType;
     private String entityUuid;
@@ -27,12 +27,12 @@ public class ErrorWebContract {
         this.errorType = errorType;
     }
 
-    public Date getErrorLoggedAt() {
-        return errorLoggedAt;
+    public Date getLoggedAt() {
+        return loggedAt;
     }
 
-    public void setErrorLoggedAt(Date errorLoggedAt) {
-        this.errorLoggedAt = errorLoggedAt;
+    public void setLoggedAt(Date loggedAt) {
+        this.loggedAt = loggedAt;
     }
 
     public String getBahmniEntityType() {

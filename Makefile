@@ -131,6 +131,9 @@ deploy-migrator-to-ashwini-prod: build-server
 	ssh dspace-auto "scp /tmp/metadata-migrator-0.0.1-SNAPSHOT.jar ashwini:/root/source/abi-host/"
 #######
 
+# SERVICE MANAGEMENT
+restart-ashwini-service:
+	ssh dspace-auto "ssh ashwini \"systemctl restart abi.service\""
 
 ####### DATABASE ENVIRONMENT
 download-ashwini-backup:
