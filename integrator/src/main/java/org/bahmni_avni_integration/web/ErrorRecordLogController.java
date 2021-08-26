@@ -72,7 +72,7 @@ public class ErrorRecordLogController {
         return errorWebContract;
     }
 
-    @RequestMapping(value = "/errorRecordLog/search/findByEntityId")
+    @RequestMapping(value = "/errorRecordLog/search/findByEntity")
     public Page<ErrorWebContract> findByEntityId(@RequestParam("entityId") String entityId, Pageable pageable) {
         return toContractPage(errorRecordLogRepository.findAllByErrorRecordEntityIdContains(entityId, pageable));
     }

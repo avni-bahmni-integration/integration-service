@@ -135,6 +135,9 @@ deploy-migrator-to-ashwini-prod: build-server
 restart-ashwini-service:
 	ssh dspace-auto "ssh ashwini \"systemctl restart abi.service\""
 
+tail-ashwini-service:
+	ssh dspace-auto "ssh ashwini \"tail -f /var/log/abi/integration-service.log\""
+
 ####### DATABASE ENVIRONMENT
 download-ashwini-backup:
 	ssh dspace-auto "scp ashwini:/root/source/abi-host/backup/backup.sql /tmp/"
