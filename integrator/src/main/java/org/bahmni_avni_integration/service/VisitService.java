@@ -127,4 +127,12 @@ public class VisitService {
                 visitAttribute.getAttributeType().getUuid().equals(avniUuidVisitAttributeTypeUuid)
                 && visitAttribute.getValue().equals(enrolment.getUuid()));
     }
+
+    public void voidVisit(Enrolment enrolment, OpenMRSFullEncounter communityEnrolmentEncounter) {
+        Constants allConstants = constantsRepository.findAllConstants();
+        String locationUuid = allConstants.getValue(ConstantKey.IntegrationBahmniLocation);
+        String visitType = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_VisitType, enrolment.getProgram());
+        OpenMRSVisit visit = openMRSVisitRepository.getVisit(communityEnrolmentEncounter.getPatient().getUuid(), locationUuid, visitType);
+        openMRSVisitRepository.deleteVisit(visit.getUuid());
+    }
 }

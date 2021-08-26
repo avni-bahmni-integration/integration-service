@@ -68,6 +68,7 @@ public class EnrolmentService {
     public void updateCommunityEnrolment(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
         if (enrolment.getVoided()) {
             openMRSEncounterRepository.voidEncounter(existingEncounter);
+            visitService.voidVisit(enrolment, existingEncounter);
         } else {
             OpenMRSEncounter openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentEncounter(existingEncounter, enrolment, constants);
             openMRSEncounterRepository.updateEncounter(openMRSEncounter);
