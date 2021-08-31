@@ -69,7 +69,7 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
                     MappingMetaData mapping = metaData.getEncounterMappingFor(splitEncounter.getFormConceptSetUuid());
                     switch (mapping.getMappingGroup()) {
                         case GeneralEncounter -> processGeneralEncounter(splitEncounter, metaData, avniPatient);
-                        case ProgramEnrolment -> processProgramEnrolment(splitEncounter, metaData, avniPatient);
+                        case ProgramEnrolment -> throw new RuntimeException("Cannot map Bahmni Encounter Form to Avni Enrolment");
                         case ProgramEncounter -> processProgramEncounter(splitEncounter, metaData, avniPatient);
                     }
                 }
@@ -144,7 +144,7 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
     }
 
     private void processProgramEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) throws NoSubjectWithIdException, SubjectIdChangedException {
-        Enrolment existingEnrolment = avniEnrolmentService.getEnrolment(splitEncounter, metaData);
+        Enrolment existingEnrolment = avniEnrolmentService.getEnrolment(splitEncounter, avniPatient.getSubjectId(), metaData);
         if (existingEnrolment != null && avniPatient != null) {
             avniEnrolmentService.update(splitEncounter, existingEnrolment, metaData, avniPatient);
             logger.info("Updated program enrolment");

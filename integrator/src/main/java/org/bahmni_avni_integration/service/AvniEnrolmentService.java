@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -21,9 +22,9 @@ public class AvniEnrolmentService {
     @Autowired
     private OpenMRSEncounterMapper openMRSEncounterMapper;
 
-    public Enrolment getEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData) {
-        Map<String, Object> obsCriteria = Map.of(metaData.getBahmniEntityUuidConcept(), splitEncounter.getOpenMRSEncounterUuid());
-        return avniEnrolmentRepository.getEnrolment(metaData.getAvniMappedName(splitEncounter.getFormConceptSetUuid()), obsCriteria);
+    public Enrolment getEnrolment(BahmniSplitEncounter splitEncounter, String subjectId, BahmniEncounterToAvniEncounterMetaData metaData) {
+        Map<String, Object> obsCriteria = new HashMap<>();
+        return avniEnrolmentRepository.getEnrolment(subjectId, metaData.getAvniMappedName(splitEncounter.getFormConceptSetUuid()), obsCriteria);
     }
 
     public Enrolment update(BahmniSplitEncounter splitEncounter, Enrolment existingEnrolment, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {

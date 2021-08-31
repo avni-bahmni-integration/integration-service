@@ -120,7 +120,7 @@ deploy-to-vagrant-only:
 
 deploy-to-vagrant: build-server deploy-to-vagrant-only
 
-deploy-to-ashwini-prod: deploy-integrator-to-ashwini-prod deploy-migrator-to-ashwini-prod
+deploy-all-to-ashwini-prod: deploy-integrator-to-ashwini-prod deploy-migrator-to-ashwini-prod
 
 deploy-integrator-to-ashwini-prod: build-server
 	scp integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/

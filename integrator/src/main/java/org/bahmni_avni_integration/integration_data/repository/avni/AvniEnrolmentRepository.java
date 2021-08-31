@@ -31,10 +31,11 @@ public class AvniEnrolmentRepository extends BaseAvniRepository {
         return responseEntity.getBody();
     }
 
-    public Enrolment getEnrolment(String program, Map<String, Object> obsCriteria) {
+    public Enrolment getEnrolment(String subjectId, String program, Map<String, Object> obsCriteria) {
         HashMap<String, String> queryParams = new HashMap<>();
         queryParams.put("concepts", ObjectJsonMapper.writeValueAsString(obsCriteria));
         queryParams.put("program", program);
+        queryParams.put("subject", subjectId);
         ResponseEntity<EnrolmentsResponse> responseEntity = avniHttpClient.get("/api/programEnrolments", queryParams, EnrolmentsResponse.class);
         return pickAndExpectOne(responseEntity.getBody().getContent());
     }
