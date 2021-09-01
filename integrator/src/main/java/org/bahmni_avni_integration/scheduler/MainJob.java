@@ -118,7 +118,7 @@ public class MainJob implements Job {
 
     private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) {
         errorRecordsWorker.cacheRunImmutables(allConstants);
-        errorRecordsWorker.process(syncDirection);
+        errorRecordsWorker.process(syncDirection, false);
     }
 
     private PatientEncountersProcessor getPatientEncounterWorker(Constants constants) {

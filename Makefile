@@ -25,7 +25,7 @@ define _drop_db
 endef
 
 define _run_server
-	java -jar build/libs/bahmni_avni_integration-0.0.1-SNAPSHOT.jar --app.cron.main="0/3 * * * * ?" --avni.api.url=https://staging.avniproject.org/ --avni.impl.username=test-user@bahmni_ashwini --avni.impl.password=password
+	java -jar --enable-preview integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar --app.cron.main="0/3 * * * * ?" --app.cron.full.error="0 1 * * * ?" --avni.api.url=https://staging.avniproject.org/ --avni.impl.username=test-user@bahmni_ashwini --avni.impl.password=password
 endef
 
 define _run_migrator
@@ -91,9 +91,6 @@ open-unit-test-results-integrator:
 
 open-unit-test-results-migrator:
 	open metadata-migrator/build/reports/tests/unitTest/index.html
-
-open-test-results: ## To be used when test-server-all is run
-	open integrator/build/reports/tests/test/index.html
 #######
 
 

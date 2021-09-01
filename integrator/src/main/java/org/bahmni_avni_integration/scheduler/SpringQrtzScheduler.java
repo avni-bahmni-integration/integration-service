@@ -5,6 +5,7 @@ import org.bahmni_avni_integration.config.AutoWiringSpringBeanJobFactory;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
@@ -22,6 +23,8 @@ public class SpringQrtzScheduler {
     private static final Logger logger = Logger.getLogger(SpringQrtzScheduler.class);
     @Value("${app.cron.main}")
     private String cronExpression;
+    @Value("${app.cron.full.error}")
+    private String cronExpressionFullError;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -41,8 +44,7 @@ public class SpringQrtzScheduler {
     }
 
     @Bean
-    public SchedulerFactoryBean scheduler(Trigger trigger, JobDetail job, DataSource quartzDataSource) {
-
+    public SchedulerFactoryBean schedulerMainJob(@Qualifier("mainJobTrigger") Trigger trigger, @Qualifier("mainJobDetail") JobDetail job, DataSource quartzDataSource) {
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setConfigLocation(new ClassPathResource("quartz.properties"));
 
@@ -50,29 +52,55 @@ public class SpringQrtzScheduler {
         schedulerFactory.setJobFactory(springBeanJobFactory());
         schedulerFactory.setJobDetails(job);
         schedulerFactory.setTriggers(trigger);
-
-        // Comment the following line to use the default Quartz job store.
-//        schedulerFactory.setDataSource(quartzDataSource);
-
         return schedulerFactory;
     }
 
     @Bean
+    public SchedulerFactoryBean schedulerFullErrorJob(@Qualifier("fullErrorJobTrigger") Trigger trigger, @Qualifier("fullErrorJobDetail") JobDetail job, DataSource quartzDataSource) {
+        SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
+        schedulerFactory.setConfigLocation(new ClassPathResource("quartz.properties"));
+
+        logger.debug("Setting the Scheduler up");
+        schedulerFactory.setJobFactory(springBeanJobFactory());
+        schedulerFactory.setJobDetails(job);
+        schedulerFactory.setTriggers(trigger);
+        return schedulerFactory;
+    }
+
+    @Bean(name = "mainJobDetail")
     public JobDetailFactoryBean jobDetail() {
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
         jobDetailFactory.setJobClass(MainJob.class);
-        jobDetailFactory.setName("Qrtz_Job_Detail");
-        jobDetailFactory.setDescription("Invoke Sample Job service...");
+        jobDetailFactory.setName("mainJobDetail");
+        jobDetailFactory.setDescription("mainJobDetail");
         jobDetailFactory.setDurability(true);
         return jobDetailFactory;
     }
 
-    @Bean
-    public CronTriggerFactoryBean trigger(JobDetail job) {
+    @Bean(name = "fullErrorJobDetail")
+    public JobDetailFactoryBean jobDetailFullError() {
+        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+        jobDetailFactory.setJobClass(FullErrorJob.class);
+        jobDetailFactory.setName("fullErrorJobDetail");
+        jobDetailFactory.setDescription("fullErrorJobDetail");
+        jobDetailFactory.setDurability(true);
+        return jobDetailFactory;
+    }
+
+    @Bean(name = "mainJobTrigger")
+    public CronTriggerFactoryBean trigger(@Qualifier("mainJobDetail") JobDetail job) {
         CronTriggerFactoryBean trigger = new CronTriggerFactoryBean();
-        trigger.setName("Qrtz_Trigger");
+        trigger.setName("Qrtz_Trigger_MainJob");
         trigger.setCronExpression(cronExpression);
-//        SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
+        trigger.setJobDetail(job);
+        return trigger;
+    }
+
+    @Bean(name = "fullErrorJobTrigger")
+    public CronTriggerFactoryBean triggerFullErrorProcessing(@Qualifier("fullErrorJobDetail") JobDetail job) {
+        CronTriggerFactoryBean trigger = new CronTriggerFactoryBean();
+        trigger.setName("Qrtz_Trigger_FullError");
+        trigger.setCronExpression(cronExpressionFullError);
         trigger.setJobDetail(job);
         return trigger;
     }

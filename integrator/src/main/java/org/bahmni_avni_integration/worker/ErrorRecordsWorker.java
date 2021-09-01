@@ -38,7 +38,7 @@ public class ErrorRecordsWorker {
 
     private static final int pageSize = 20;
 
-    public void process(SyncDirection syncDirection) {
+    public void process(SyncDirection syncDirection, boolean allErrors) {
         Page<ErrorRecord> errorRecordPage;
         int pageNumber = 0;
         do {
@@ -46,8 +46,12 @@ public class ErrorRecordsWorker {
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
             if (syncDirection.equals(SyncDirection.AvniToBahmni))
                 errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
-            else
+            else if (syncDirection.equals(SyncDirection.BahmniToAvni) && !allErrors)
+                errorRecordPage = errorRecordRepository.findAllByBahmniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+            else if (syncDirection.equals(SyncDirection.BahmniToAvni) && allErrors)
                 errorRecordPage = errorRecordRepository.findAllByBahmniEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+            else
+                throw new RuntimeException("Invalid arguments");
 
             List<ErrorRecord> errorRecords = errorRecordPage.getContent();
             for (ErrorRecord errorRecord : errorRecords) {
