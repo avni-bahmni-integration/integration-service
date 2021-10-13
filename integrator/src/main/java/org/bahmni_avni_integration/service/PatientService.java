@@ -8,12 +8,14 @@ import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.domain.ConstantKey;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
 import org.bahmni_avni_integration.integration_data.domain.ErrorType;
+import org.bahmni_avni_integration.integration_data.domain.Names;
 import org.bahmni_avni_integration.integration_data.internal.SubjectToPatientMetaData;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.OpenMRSPatientRepository;
 import org.bahmni_avni_integration.integration_data.util.FormatAndParseUtil;
 import org.bahmni_avni_integration.mapper.avni.SubjectMapper;
 import org.bahmni_avni_integration.repository.openmrs.OpenMRSPersonRepository;
+import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.javatuples.Pair;
 import org.springframework.stereotype.Service;
@@ -69,20 +71,23 @@ public class PatientService {
         return createSubject(subject, fullPatientObject, subjectToPatientMetaData, constants);
     }
 
-    public Pair<OpenMRSPatient, OpenMRSFullEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
+    public Pair<OpenMRSPatient, OpenMRSFullEncounter> findSubject(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) throws PatientEncounterEventWorker.SubjectIdChangedException {
         String subjectId = subject.getUuid();
         OpenMRSPatient patient = findPatient(subject, constants, subjectToPatientMetaData);
         if (patient == null) {
             return new Pair<>(null, null);
         }
-        OpenMRSFullEncounter encounter = openMRSEncounterRepository.getEncounterByPatientAndObservation(patient.getUuid(), subjectToPatientMetaData.subjectUuidConceptUuid(), subjectId);
+
+        List<OpenMRSFullEncounter> encounters = openMRSEncounterRepository.getEncounterByPatientAndEncType(patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid());
+        OpenMRSFullEncounter encounter = encounters.stream().filter(openMRSFullEncounter -> subjectId.equals(openMRSFullEncounter.getObservationValue(subjectToPatientMetaData.subjectUuidConceptUuid()))).findFirst().orElse(null);
+        if (encounters.size() > 0 && encounter == null)
+            throw new PatientEncounterEventWorker.SubjectIdChangedException();
         return new Pair<>(patient, encounter);
     }
 
     public OpenMRSPatient findPatient(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
         String patientIdentifier = constants.getValue(ConstantKey.BahmniIdentifierPrefix) + subject.getId(subjectToPatientMetaData);
-        OpenMRSPatient patient = openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
-        return patient;
+        return openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
     }
 
     public void processPatientIdChanged(Subject subject, SubjectToPatientMetaData metaData) {

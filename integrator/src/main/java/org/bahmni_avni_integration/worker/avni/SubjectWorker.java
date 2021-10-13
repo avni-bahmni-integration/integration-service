@@ -12,6 +12,7 @@ import org.bahmni_avni_integration.integration_data.repository.avni.AvniIgnoredC
 import org.bahmni_avni_integration.integration_data.repository.avni.AvniSubjectRepository;
 import org.bahmni_avni_integration.service.*;
 import org.bahmni_avni_integration.worker.ErrorRecordWorker;
+import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -97,24 +98,30 @@ public class SubjectWorker implements ErrorRecordWorker {
             return;
         };
         removeIgnoredObservations(subject);
-        Pair<OpenMRSPatient, OpenMRSFullEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
-        var patient = patientEncounter.getValue0();
-        var encounter = patientEncounter.getValue1();
 
-        if (encounter != null && patient != null) {
-            logger.debug(String.format("Updating existing encounter %s for subject %s", encounter.getUuid(), subject.getUuid()));
-            patientService.updateSubject(encounter, patient, subject, metaData, constants);
-        } else if (encounter != null && patient == null) {
-            // product-roadmap-todo: openmrs doesn't support the ability to find encounter without providing the patient hence this condition will never be reached
-            patientService.processPatientIdChanged(subject, metaData);
-        } else if (encounter == null && patient != null) {
-            logger.debug(String.format("Creating new encounter for subject %s", subject.getUuid()));
-            patientService.createSubject(subject, patient, metaData, constants);
-        } else if (encounter == null && patient == null) {
-            logger.debug(String.format("Creating new patient and new encounter for subject %s", subject.getUuid()));
-            patientService.createPatientAndSubject(subject, metaData, constants);
+        try {
+            Pair<OpenMRSPatient, OpenMRSFullEncounter> patientEncounter = patientService.findSubject(subject, constants, metaData);
+            var patient = patientEncounter.getValue0();
+            var encounter = patientEncounter.getValue1();
+
+            if (encounter != null && patient != null) {
+                logger.debug(String.format("Updating existing encounter %s for subject %s", encounter.getUuid(), subject.getUuid()));
+                patientService.updateSubject(encounter, patient, subject, metaData, constants);
+            } else if (encounter != null && patient == null) {
+                // product-roadmap-todo: openmrs doesn't support the ability to find encounter without providing the patient hence this condition will never be reached
+                patientService.processPatientIdChanged(subject, metaData);
+            } else if (encounter == null && patient != null) {
+                logger.debug(String.format("Creating new encounter for subject %s", subject.getUuid()));
+                patientService.createSubject(subject, patient, metaData, constants);
+            } else if (encounter == null && patient == null) {
+                logger.debug(String.format("Creating new patient and new encounter for subject %s", subject.getUuid()));
+                patientService.createPatientAndSubject(subject, metaData, constants);
+            }
+            logger.debug(String.format("Saving entity status for subject %s", subject.getLastModifiedDate()));
+        } catch (PatientEncounterEventWorker.SubjectIdChangedException e) {
+            errorService.errorOccurred(subject.getUuid(), ErrorType.SubjectIdChanged, AvniEntityType.Subject);
         }
-        logger.debug(String.format("Saving entity status for subject %s", subject.getLastModifiedDate()));
+
         updateSyncStatus(subject, updateSyncStatus);
     }
 

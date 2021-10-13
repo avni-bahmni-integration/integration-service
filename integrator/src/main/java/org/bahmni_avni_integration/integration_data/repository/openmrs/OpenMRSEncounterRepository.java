@@ -47,6 +47,14 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         throw new MultipleResultsFoundException(String.format("More than one entity found with params %s %s %s %s", patientUuid, conceptUuid, value, encounterTypeUuid));
     }
 
+    public List<OpenMRSFullEncounter> getEncounterByPatientAndEncType(String patientUuid, String encounterTypeUuid) {
+        String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&encounterType=%s&v=full", getResourcePath("encounter"), patientUuid, encounterTypeUuid)));
+        SearchResults<OpenMRSFullEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSFullEncounter>>() {
+        });
+        if (searchResults.getResults().size() == 0) return null;
+        return searchResults.getResults();
+    }
+
     public OpenMRSFullEncounter createEncounter(OpenMRSEncounter encounter) {
         String json = ObjectJsonMapper.writeValueAsString(encounter);
         String outputJson = openMRSWebClient.post(getResourcePath("encounter"), json);

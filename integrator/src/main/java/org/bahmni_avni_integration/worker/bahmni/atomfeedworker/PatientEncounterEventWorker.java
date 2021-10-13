@@ -194,7 +194,7 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         processEncounter(bahmniEncounter);
     }
 
-    static class SubjectIdChangedException extends Exception {
+    public static class SubjectIdChangedException extends Exception {
     }
 
     static class NoSubjectWithIdException extends Exception {

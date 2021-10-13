@@ -170,4 +170,11 @@ public class OpenMRSFullEncounter {
     public boolean hasDrugOrders() {
         return getDrugOrderList().size() != 0;
     }
+
+    public Object getObservationValue(String conceptUuid) {
+        List<OpenMRSObservation> leafObservations = getLeafObservations();
+        OpenMRSObservation obs = leafObservations.stream().filter(openMRSObservation -> openMRSObservation.getConceptUuid().equals(conceptUuid)).findFirst().orElse(null);
+        if (obs == null) return null;
+        return obs.getValue();
+    }
 }
