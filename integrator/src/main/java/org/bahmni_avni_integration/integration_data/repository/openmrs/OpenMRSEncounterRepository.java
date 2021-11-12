@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,7 @@ public class OpenMRSEncounterRepository extends BaseOpenMRSRepository {
         String json = openMRSWebClient.get(URI.create(String.format("%s?patient=%s&encounterType=%s&v=full", getResourcePath("encounter"), patientUuid, encounterTypeUuid)));
         SearchResults<OpenMRSFullEncounter> searchResults = ObjectJsonMapper.readValue(json, new TypeReference<SearchResults<OpenMRSFullEncounter>>() {
         });
-        if (searchResults.getResults().size() == 0) return null;
+        if (searchResults.getResults().size() == 0) return new ArrayList<>();
         return searchResults.getResults();
     }
 
