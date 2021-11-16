@@ -140,7 +140,7 @@ public class OpenMRSFullEncounter {
 
     public List<String> getDrugOrders(OpenMRSDefaultEncounter defaultEncounter) {
         List<Map<String, Object>> drugOrderList = getDrugOrderList();
-        return drugOrderList.stream().filter(stringObjectMap -> defaultEncounter.isNotVoided((String) stringObjectMap.get("uuid"))).map(stringObjectMap -> {
+        return drugOrderList.stream().filter(stringObjectMap -> defaultEncounter.isNotVoided((String) stringObjectMap.get("uuid")) && stringObjectMap.get("doseUnits") != null).map(stringObjectMap -> {
             Map<String, Object> drug = (Map<String, Object>) stringObjectMap.get("drug");
             Map<String, Object> doseUnits = (Map<String, Object>) stringObjectMap.get("doseUnits");
 

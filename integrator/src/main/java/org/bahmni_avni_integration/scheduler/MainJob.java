@@ -95,16 +95,26 @@ public class MainJob implements Job {
                 generalEncounterWorker.cacheRunImmutables(allConstants);
                 generalEncounterWorker.processEncounters();
             }
-            if (hasTask(tasks, IntegrationTask.BahmniPatient))
+            if (hasTask(tasks, IntegrationTask.BahmniPatient)) {
+                logger.info("Processing BahmniPatient");
                 getPatientWorker(allConstants).processPatients();
-            if (hasTask(tasks, IntegrationTask.BahmniEncounter))
+            }
+            if (hasTask(tasks, IntegrationTask.BahmniEncounter)) {
+                logger.info("Processing BahmniEncounter");
                 getPatientEncounterWorker(allConstants).processEncounters();
-            if (hasTask(tasks, IntegrationTask.AvniErrorRecords))
+            }
+            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
+                logger.info("Processing AvniErrorRecords");
                 processErrorRecords(allConstants, SyncDirection.AvniToBahmni);
-            if (hasTask(tasks, IntegrationTask.BahmniErrorRecords))
+            }
+            if (hasTask(tasks, IntegrationTask.BahmniErrorRecords)) {
+                logger.info("Processing BahmniErrorRecords");
                 processErrorRecords(allConstants, SyncDirection.BahmniToAvni);
-            if (hasTask(tasks, IntegrationTask.BahmniVisitDateFix))
+            }
+            if (hasTask(tasks, IntegrationTask.BahmniVisitDateFix)) {
+                logger.info("Processing BahmniVisitDateFix");
                 fixBahmniVisitAndEncounterDates();
+            }
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
