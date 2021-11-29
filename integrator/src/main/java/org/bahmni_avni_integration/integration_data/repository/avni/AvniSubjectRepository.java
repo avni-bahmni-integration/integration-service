@@ -23,7 +23,7 @@ public class AvniSubjectRepository extends BaseAvniRepository {
         HashMap<String, String> queryParams = new HashMap<>(1);
         queryParams.put("lastModifiedDateTime", fromTime);
         queryParams.put("subjectType", subjectType);
-        queryParams.put("size", "100");
+        queryParams.put("size", "10");
         ResponseEntity<SubjectsResponse> responseEntity = avniHttpClient.get("/api/subjects", queryParams, SubjectsResponse.class);
         SubjectsResponse subjectsResponse = responseEntity.getBody();
         return subjectsResponse;

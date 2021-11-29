@@ -47,7 +47,7 @@ public class AvniEncounterRepository extends BaseAvniRepository {
     public GeneralEncountersResponse getGeneralEncounters(Date lastModifiedDateTime) {
         Map<String, String> queryParams = Map.of(
                 "lastModifiedDateTime", FormatAndParseUtil.toISODateTimeString(lastModifiedDateTime),
-                "size", "100");
+                "size", "10");
         ResponseEntity<GeneralEncountersResponse> responseEntity = avniHttpClient.get("/api/encounters", queryParams, GeneralEncountersResponse.class);
         return responseEntity.getBody();
     }
