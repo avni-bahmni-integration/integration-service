@@ -7,6 +7,7 @@ import org.bahmni_avni_integration.integration_data.domain.SyncDirection;
 import org.bahmni_avni_integration.integration_data.repository.ConstantsRepository;
 import org.bahmni_avni_integration.integration_data.repository.FailedEventRepository;
 import org.bahmni_avni_integration.worker.ErrorRecordsWorker;
+import org.bahmni_avni_integration.worker.HealthCheckService;
 import org.bahmni_avni_integration.worker.avni.EnrolmentWorker;
 import org.bahmni_avni_integration.worker.avni.GeneralEncounterWorker;
 import org.bahmni_avni_integration.worker.avni.ProgramEncounterWorker;
@@ -68,6 +69,9 @@ public class MainJob implements Job {
     @Autowired
     private Bugsnag bugsnag;
 
+    @Autowired
+    private HealthCheckService healthCheckService;
+
     public void execute(JobExecutionContext context) {
         logger.info(String.format("Job ** {%s} ** fired @ {%s}", context.getJobDetail().getKey().getName(), context.getFireTime()));
         try {
@@ -118,6 +122,8 @@ public class MainJob implements Job {
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
+        } finally {
+            healthCheckService.verifyMainJob();
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }

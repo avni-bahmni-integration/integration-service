@@ -1,7 +1,6 @@
 package org.bahmni_avni_integration.worker.bahmni;
 
 import org.bahmni_avni_integration.BaseExternalTest;
-import org.bahmni_avni_integration.service.MappingMetaDataService;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.bahmni_avni_integration.worker.bahmni.atomfeedworker.PatientEventWorker;
 import org.junit.jupiter.api.BeforeEach;
