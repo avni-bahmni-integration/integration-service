@@ -73,7 +73,7 @@ public class OpenMRSPatient {
 
     public String getPatientId() {
         OpenMRSPatientIdentifier openMRSPatientIdentifier = this.getIdentifiers().stream().filter(OpenMRSPatientIdentifier::isPreferred).findFirst().orElse(null);
-        return openMRSPatientIdentifier.getIdentifier();
+        return openMRSPatientIdentifier == null ? "" : openMRSPatientIdentifier.getIdentifier();
     }
 
     public boolean isVoided() {
