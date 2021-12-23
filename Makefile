@@ -33,6 +33,10 @@ define _run_migrator
 	java -jar --enable-preview metadata-migrator/build/libs/metadata-migrator-0.0.1-SNAPSHOT.jar run
 endef
 
+define _alert_success
+	$(call _alert_message,Script Completed)
+endef
+
 ######## DATABASE LOCAL
 # hashed password when password is password = $2a$10$RipvsoEJg4PtXOExTjg7Eu2WzHH1SBntIkuR.bzmZeU2TrbQoFtMW
 # kept here for emergency purposes as we are not developing the entire login functionality
@@ -118,6 +122,7 @@ deploy-to-vagrant-only:
 deploy-to-vagrant: build-server deploy-to-vagrant-only
 
 deploy-all-to-ashwini-prod: deploy-integrator-to-ashwini-prod deploy-migrator-to-ashwini-prod
+	$(call _alert_success)
 
 deploy-integrator-to-ashwini-prod: build-server
 	scp integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/
