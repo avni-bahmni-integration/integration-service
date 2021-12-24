@@ -63,6 +63,11 @@ public abstract class BaseOpenMRSRepository {
 
     protected String getUnderlyingResourceJson(Event event) {
         String content = event.getContent();
-        return openMRSWebClient.get(URI.create(urlPrefix + content));
+        return openMRSWebClient.get(URI.create(urlPrefix + transformEncounterContent(content)));
+    }
+
+    public static String transformEncounterContent(String content) {
+        String newContent = content.replace("bahmnicore/bahmniencounter", "encounter");
+        return newContent.replace("?includeAll=true", "?v=full");
     }
 }
