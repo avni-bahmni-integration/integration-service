@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 
+import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.bahmni_avni_integration.contract.avni.Enrolment;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
@@ -41,23 +42,32 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
     @Autowired
     private MappingMetaDataService mappingMetaDataService;
 
+    @Autowired
+    private Bugsnag bugsnag;
+
     private BahmniEncounterToAvniEncounterMetaData metaData;
     private Constants constants;
 
     @Override
     public void process(Event event) {
-        if (!"Encounter".equals(event.getTitle())) {
-            logger.info(String.format("Found event of title: %s", event.getTitle()));
-            return;
-        }
+        try {
+            if (!"Encounter".equals(event.getTitle())) {
+                logger.info(String.format("Found event of title: %s", event.getTitle()));
+                return;
+            }
 
-        BahmniEncounter bahmniEncounter = encounterService.getEncounter(event, metaData);
-        if (bahmniEncounter == null) {
-            logger.warn(String.format("Feed out of sync with the actual data: %s", event.toString()));
-            return;
-        }
+            BahmniEncounter bahmniEncounter = encounterService.getEncounter(event, metaData);
+            if (bahmniEncounter == null) {
+                logger.warn(String.format("Feed out of sync with the actual data: %s", event.toString()));
+                return;
+            }
 
-        processEncounter(bahmniEncounter);
+            processEncounter(bahmniEncounter);
+        } catch (Exception e) {
+//            Since atom feed client doesn't throw the exception back to the scheduled job, notify bugsnag here
+            bugsnag.notify(e);
+            throw e;
+        }
     }
 
     private void processEncounter(BahmniEncounter bahmniEncounter) {

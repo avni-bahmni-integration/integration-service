@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration.worker.bahmni.atomfeedworker;
 
+import com.bugsnag.Bugsnag;
 import org.bahmni_avni_integration.contract.avni.GeneralEncounter;
 import org.bahmni_avni_integration.contract.avni.Subject;
 import org.bahmni_avni_integration.contract.bahmni.OpenMRSPatient;
@@ -41,19 +42,28 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
     @Value("${app.first.run}")
     private boolean isFirstRun;
 
+    @Autowired
+    private Bugsnag bugsnag;
+
     @Override
     public void process(Event event) {
-        OpenMRSPatient patient = patientService.getPatient(event);
-        if (patient == null) {
-            logger.warn(String.format("Feed out of sync with the actual data: %s", event.toString()));
-            return;
-        }
-        if (patientService.shouldFilterPatient(patient, constants)) {
-            logger.warn(String.format("Patient should be filtered out: %s", patient.getPatientId()));
-            return;
-        }
+        try {
+            OpenMRSPatient patient = patientService.getPatient(event);
+            if (patient == null) {
+                logger.warn(String.format("Feed out of sync with the actual data: %s", event.toString()));
+                return;
+            }
+            if (patientService.shouldFilterPatient(patient, constants)) {
+                logger.warn(String.format("Patient should be filtered out: %s", patient.getPatientId()));
+                return;
+            }
 
-        processPatient(patient);
+            processPatient(patient);
+        } catch (Exception e) {
+            //            Since atom feed client doesn't throw the exception back to the scheduled job, notify bugsnag here
+            bugsnag.notify(e);
+            throw e;
+        }
     }
 
     private void processPatient(OpenMRSPatient patient) {
