@@ -46,6 +46,11 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
 
     @Override
     public void process(Event event) {
+        if (!"Encounter".equals(event.getTitle())) {
+            logger.info(String.format("Found event of title: %s", event.getTitle()));
+            return;
+        }
+
         BahmniEncounter bahmniEncounter = encounterService.getEncounter(event, metaData);
         if (bahmniEncounter == null) {
             logger.warn(String.format("Feed out of sync with the actual data: %s", event.toString()));
