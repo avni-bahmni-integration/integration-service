@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +44,8 @@ public class AvniProgramEncounterRepository extends BaseAvniRepository {
         queryParams.put("concepts", ObjectJsonMapper.writeValueAsString(concepts));
         queryParams.put("encounterType", encounterType);
         ResponseEntity<ProgramEncountersResponse> responseEntity = avniHttpClient.get("/api/programEncounters", queryParams, ProgramEncountersResponse.class);
-        return pickAndExpectOne(responseEntity.getBody().getContent());
+        ProgramEncounter[] programEncounters = responseEntity.getBody().getContent();
+        return pickAndExpectOne(Arrays.stream(programEncounters).filter(programEncounter -> !programEncounter.getVoided()).toArray(ProgramEncounter[]::new));
     }
 
     public ProgramEncounter create(ProgramEncounter encounter) {

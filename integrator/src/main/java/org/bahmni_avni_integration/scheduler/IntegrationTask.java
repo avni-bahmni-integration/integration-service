@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public enum IntegrationTask {
+//    Bahmni lab results are not present in the atom feed hence has to be handled separately
     AvniSubject, AvniEnrolment, AvniProgramEncounter, AvniGeneralEncounter,
-    BahmniPatient, BahmniEncounter,
+    BahmniPatient, BahmniEncounter, BahmniLabResult,
     AvniErrorRecords, BahmniErrorRecords,
     BahmniVisitDateFix;
 

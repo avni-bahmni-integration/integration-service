@@ -5,7 +5,6 @@ import org.bahmni_avni_integration.integration_data.BahmniEntityType;
 import org.bahmni_avni_integration.integration_data.ConnectionFactory;
 import org.bahmni_avni_integration.integration_data.domain.BahmniEntityStatus;
 import org.bahmni_avni_integration.integration_data.domain.Constants;
-import org.bahmni_avni_integration.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.bahmni_avni_integration.integration_data.repository.BahmniEntityStatusRepository;
 import org.bahmni_avni_integration.integration_data.repository.openmrs.BaseOpenMRSRepository;
 import org.bahmni_avni_integration.repository.openmrs.ImplementationConfigurationRepository;
@@ -20,7 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class PatientEncounterFirstRunWorker implements PatientEncountersProcessor {
+public class LabResultWorker {
     @Autowired
     private ConnectionFactory connectionFactory;
     @Autowired
@@ -31,12 +30,12 @@ public class PatientEncounterFirstRunWorker implements PatientEncountersProcesso
     @Autowired
     private ImplementationConfigurationRepository implementationConfigurationRepository;
 
-    private static final Logger logger = Logger.getLogger(PatientEncounterFirstRunWorker.class);
+    private static final Logger logger = Logger.getLogger(LabResultWorker.class);
 
-    public void processEncounters() {
+    public void processLabResults() {
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(implementationConfigurationRepository.getFirstRunEncounterSql());
-            BahmniEntityStatus bahmniEntityStatus = bahmniEntityStatusRepository.findByEntityType(BahmniEntityType.Encounter);
+            PreparedStatement preparedStatement = connection.prepareStatement(implementationConfigurationRepository.getLabEncounterSql());
+            BahmniEntityStatus bahmniEntityStatus = bahmniEntityStatusRepository.findByEntityType(BahmniEntityType.LabResult);
             preparedStatement.setInt(1, bahmniEntityStatus.getReadUpto());
             preparedStatement.setFetchSize(20);
             ResultSet resultSet = preparedStatement.executeQuery();

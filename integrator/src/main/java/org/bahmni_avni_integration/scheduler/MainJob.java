@@ -39,6 +39,9 @@ public class MainJob implements Job {
     private PatientEncounterFirstRunWorker patientEncounterFirstRunWorker;
 
     @Autowired
+    private LabResultWorker labResultWorker;
+
+    @Autowired
     private SubjectWorker subjectWorker;
 
     @Autowired
@@ -107,6 +110,11 @@ public class MainJob implements Job {
                 logger.info("Processing BahmniEncounter");
                 getPatientEncounterWorker(allConstants).processEncounters();
             }
+            if (hasTask(tasks, IntegrationTask.BahmniLabResult)) {
+                logger.info("Processing BahmniLabResult");
+                labResultWorker.cacheRunImmutables(allConstants);
+                labResultWorker.processLabResults();
+            }
             if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
                 logger.info("Processing AvniErrorRecords");
                 processErrorRecords(allConstants, SyncDirection.AvniToBahmni);
@@ -135,6 +143,11 @@ public class MainJob implements Job {
     private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) {
         errorRecordsWorker.cacheRunImmutables(allConstants);
         errorRecordsWorker.process(syncDirection, false);
+    }
+
+    public PatientEncounterFirstRunWorker getPatientEncounterFirstRunWorker(Constants constants) {
+        patientEncounterFirstRunWorker.cacheRunImmutables(constants);
+        return patientEncounterFirstRunWorker;
     }
 
     private PatientEncountersProcessor getPatientEncounterWorker(Constants constants) {

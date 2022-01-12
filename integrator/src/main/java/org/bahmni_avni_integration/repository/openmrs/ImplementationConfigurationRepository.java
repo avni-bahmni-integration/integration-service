@@ -16,4 +16,8 @@ public class ImplementationConfigurationRepository {
     public String getFirstRunEncounterSql() {
         return fileUtil.readConfigFile("bahmni/first-run-encounters.sql");
     }
+
+    public String getLabEncounterSql() {
+        return fileUtil.readConfigFile("bahmni/lab-results.sql");
+    }
 }
