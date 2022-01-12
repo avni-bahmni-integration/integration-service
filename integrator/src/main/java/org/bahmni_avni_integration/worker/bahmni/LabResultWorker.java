@@ -42,7 +42,9 @@ public class LabResultWorker {
             while (resultSet.next()) {
                 int encounterId = resultSet.getInt(1);
                 String encounterUuid = resultSet.getString(2);
-                eventWorker.process(new Event("0", String.format("/%s/encounter/%s?v=full", BaseOpenMRSRepository.OPENMRS_BASE_PATH, encounterUuid)));
+                Event event = new Event("0", String.format("/%s/encounter/%s?v=full", BaseOpenMRSRepository.OPENMRS_BASE_PATH, encounterUuid));
+                event.setTitle("Encounter");
+                eventWorker.process(event);
                 bahmniEntityStatus.setReadUpto(encounterId);
                 bahmniEntityStatusRepository.save(bahmniEntityStatus);
                 logger.info(String.format("Completed encounter id=%d, uuid:%s", encounterId, encounterUuid));
