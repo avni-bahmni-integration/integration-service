@@ -1,4 +1,4 @@
-rootProject.name = 'bahmni_avni_integration'
+rootProject.name = 'avni_integration_service'
 include 'metadata-migrator'
 include 'integrator'
 include 'integration-data'

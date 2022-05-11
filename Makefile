@@ -10,8 +10,8 @@ help:
 	done
 
 SU:=$(shell id -un)
-DB=bahmni_avni
-ADMIN_USER=bahmni_avni_admin
+DB=avni_int
+ADMIN_USER=avni_int
 postgres_user := $(shell id -un)
 
 define _build_db
@@ -43,20 +43,20 @@ endef
 rebuild-db: drop-db build-db
 
 build-db:
-	$(call _build_db,bahmni_avni)
+	$(call _build_db,avni_int)
 	./gradlew migrateDb
 
 drop-db:
-	$(call _drop_db,bahmni_avni)
+	$(call _drop_db,avni_int)
 
 create-test-db:
-	$(call _build_db,bahmni_avni_test)
+	$(call _build_db,avni_int_test)
 
 build-test-db: create-test-db
 	./gradlew migrateTestDb
 
 drop-test-db:
-	$(call _drop_db,bahmni_avni_test)
+	$(call _drop_db,avni_int_test)
 
 rebuild-test-db: drop-test-db build-test-db
 
@@ -81,20 +81,23 @@ run-server-without-background: build-server
 run-migrator: build-server
 	$(call _run_migrator)
 
-test-server: drop-test-db build-test-db build-server
-	./gradlew unitTest
+test-server: drop-test-db build-test-db
+	./gradlew clean build
 
 setup-external-test-db: drop-test-db create-test-db
-	sudo -u ${postgres_user} psql bahmni_avni_test -f dump.sql
+	sudo -u ${postgres_user} psql avni_int_test -f dump.sql
 
 test-server-external: drop-test-db setup-external-test-db
 	./gradlew clean build
 
-open-unit-test-results-integrator:
-	open integrator/build/reports/tests/unitTest/index.html
+open-test-results-integrator:
+	open integrator/build/reports/tests/test/index.html
 
-open-unit-test-results-migrator:
-	open metadata-migrator/build/reports/tests/unitTest/index.html
+open-test-results-migrator:
+	open metadata-migrator/build/reports/tests/test/index.html
+
+open-test-results-integration-data:
+	open integration-data/build/reports/tests/test/index.html
 #######
 
 

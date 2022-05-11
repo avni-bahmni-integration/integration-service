@@ -1,13 +1,13 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.1'
+    id 'org.springframework.boot' version '2.5.6'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
     id "org.flywaydb.flyway" version "7.1.1"
 }
 
-group = 'org.bahmni_avni_integration'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '15'
+group = 'org.avni_integration_service'
+version = '0.0.2-SNAPSHOT'
+sourceCompatibility = '17'
 
 bootJar {
     enabled = false
@@ -18,14 +18,14 @@ jar {
 }
 
 task migrateTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    url = 'jdbc:postgresql://localhost:5432/bahmni_avni_test'
-    user = 'bahmni_avni_admin'
+    url = 'jdbc:postgresql://localhost:5432/avni_int_test'
+    user = 'avni_int'
     password = 'password'
 }
 
 task migrateDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    url = 'jdbc:postgresql://localhost:5432/bahmni_avni'
-    user = 'bahmni_avni_admin'
+    url = 'jdbc:postgresql://localhost:5432/avni_int'
+    user = 'avni_int'
     password = 'password'
 }
 
@@ -53,9 +53,9 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+//    implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 
-    compile "log4j:log4j:1.2.16"
+    implementation "log4j:log4j:1.2.17"
 }
 
 test {

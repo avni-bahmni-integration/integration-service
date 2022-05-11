@@ -1,0 +1,24 @@
+package org.avni_integration_service.integration_data.repository;
+
+import org.avni_integration_service.integration_data.BahmniEntityType;
+import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.ErrorRecord;
+import org.avni_integration_service.integration_data.domain.ErrorType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ErrorRecordRepository extends PagingAndSortingRepository<ErrorRecord, Integer> {
+    ErrorRecord findByAvniEntityTypeAndEntityId(AvniEntityType avniEntityType, String entityId);
+    ErrorRecord findByBahmniEntityTypeAndEntityId(BahmniEntityType bahmniEntityType, String entityId);
+
+    Page<ErrorRecord> findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(List<ErrorType> errorTypes, Pageable pageable);
+    Page<ErrorRecord> findAllByBahmniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(List<ErrorType> errorTypes, Pageable pageable);
+    Page<ErrorRecord> findAllByBahmniEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(List<ErrorType> errorTypes, Pageable pageable);
+
+    List<ErrorRecord> findAllByAvniEntityTypeNotNull();
+}
