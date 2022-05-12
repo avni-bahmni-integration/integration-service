@@ -1,18 +1,15 @@
 package org.avni_integration_service.integration_data.domain;
 
-import org.avni_integration_service.integration_data.BahmniEntityType;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name = "bahmni_entity_status")
-public class BahmniEntityStatus extends BaseEntity {
+@Table(name = "integrating_entity_status")
+public class IntegratingEntityStatus extends BaseEntity {
     @Column(name = "read_upto", nullable = false)
     private int readUpto;
 
     @Column(name = "entity_type")
-    @Enumerated(EnumType.STRING)
-    private BahmniEntityType entityType;
+    private String entityType;
 
     public int getReadUpto() {
         return readUpto;
@@ -22,11 +19,11 @@ public class BahmniEntityStatus extends BaseEntity {
         this.readUpto = readUpto;
     }
 
-    public BahmniEntityType getEntityType() {
+    public String getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(BahmniEntityType entityType) {
+    public void setEntityType(String entityType) {
         this.entityType = entityType;
     }
 }

@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data;
+package org.avni_integration_service.bahmni;
 
 public enum BahmniEntityType {
     Patient, Encounter, LabResult

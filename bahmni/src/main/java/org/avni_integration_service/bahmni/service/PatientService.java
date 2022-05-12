@@ -1,13 +1,13 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.apache.http.HttpStatus;
+import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.bahmni.client.WebClientsException;
 import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.bahmni.mapper.avni.SubjectMapper;
 import org.avni_integration_service.bahmni.repository.openmrs.OpenMRSPersonRepository;
 import org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.avni_integration_service.contract.avni.Subject;
-import org.avni_integration_service.integration_data.BahmniEntityType;
 import org.avni_integration_service.integration_data.domain.ConstantKey;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.ErrorType;

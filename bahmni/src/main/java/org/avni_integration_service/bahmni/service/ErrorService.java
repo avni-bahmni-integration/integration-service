@@ -1,13 +1,13 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.contract.avni.Enrolment;
 import org.avni_integration_service.contract.avni.GeneralEncounter;
 import org.avni_integration_service.contract.avni.ProgramEncounter;
 import org.avni_integration_service.contract.avni.Subject;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
-import org.avni_integration_service.integration_data.BahmniEntityType;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.ErrorType;
@@ -44,7 +44,7 @@ public class ErrorService {
     }
 
     public boolean hasError(String entityId, BahmniEntityType bahmniEntityType) {
-        return errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, entityId) != null;
+        return errorRecordRepository.findByIntegratingEntityTypeAndEntityId(bahmniEntityType.name(), entityId) != null;
     }
 
     public boolean hasError(String entityId, AvniEntityType avniEntityType, ErrorType errorType) {
@@ -57,7 +57,7 @@ public class ErrorService {
     }
 
     private ErrorRecord saveBahmniError(String uuid, ErrorType errorType, BahmniEntityType bahmniEntityType) {
-        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, uuid);
+        ErrorRecord errorRecord = errorRecordRepository.findByIntegratingEntityTypeAndEntityId(bahmniEntityType.name(), uuid);
         if (errorRecord != null && errorRecord.hasThisAsLastErrorType(errorType)) {
             logger.info(String.format("Same error as the last processing for entity uuid %s, and type %s", uuid, bahmniEntityType));
             if (!errorRecord.isProcessingDisabled()) {
@@ -70,7 +70,7 @@ public class ErrorService {
             errorRecordRepository.save(errorRecord);
         } else {
             errorRecord = new ErrorRecord();
-            errorRecord.setBahmniEntityType(bahmniEntityType);
+            errorRecord.setIntegratingEntityType(bahmniEntityType.name());
             errorRecord.setEntityId(uuid);
             errorRecord.addErrorType(errorType);
             errorRecord.setProcessingDisabled(false);
@@ -118,7 +118,7 @@ public class ErrorService {
     }
 
     private void successfullyProcessedBahmniEntity(BahmniEntityType bahmniEntityType, String uuid) {
-        ErrorRecord errorRecord = errorRecordRepository.findByBahmniEntityTypeAndEntityId(bahmniEntityType, uuid);
+        ErrorRecord errorRecord = errorRecordRepository.findByIntegratingEntityTypeAndEntityId(bahmniEntityType.name(), uuid);
         if (errorRecord != null)
             errorRecordRepository.delete(errorRecord);
     }

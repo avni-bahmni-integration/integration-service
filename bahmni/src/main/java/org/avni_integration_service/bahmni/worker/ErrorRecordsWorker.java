@@ -1,7 +1,7 @@
 package org.avni_integration_service.bahmni.worker;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.integration_data.BahmniEntityType;
+import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.bahmni.worker.avni.EnrolmentWorker;
@@ -47,9 +47,9 @@ public class ErrorRecordsWorker {
             if (syncDirection.equals(SyncDirection.AvniToBahmni))
                 errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
             else if (syncDirection.equals(SyncDirection.BahmniToAvni) && !allErrors)
-                errorRecordPage = errorRecordRepository.findAllByBahmniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
             else if (syncDirection.equals(SyncDirection.BahmniToAvni) && allErrors)
-                errorRecordPage = errorRecordRepository.findAllByBahmniEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
             else
                 throw new RuntimeException("Invalid arguments");
 
@@ -69,11 +69,11 @@ public class ErrorRecordsWorker {
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.Enrolment)) return enrolmentWorker;
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.ProgramEncounter)) return programEncounterWorker;
             if (errorRecord.getAvniEntityType().equals(AvniEntityType.GeneralEncounter)) return generalEncounterWorker;
-        } else if (errorRecord.getBahmniEntityType() != null) {
-            if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Patient)) return patientEventWorker;
-            if (errorRecord.getBahmniEntityType().equals(BahmniEntityType.Encounter)) return patientEncounterEventWorker;
+        } else if (errorRecord.getIntegratingEntityType() != null) {
+            if (errorRecord.getIntegratingEntityType().equals(BahmniEntityType.Patient)) return patientEventWorker;
+            if (errorRecord.getIntegratingEntityType().equals(BahmniEntityType.Encounter)) return patientEncounterEventWorker;
         }
-        throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s and BahmniEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getBahmniEntityType()));
+        throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s and BahmniEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getIntegratingEntityType()));
     }
 
     public void cacheRunImmutables(Constants constants) {

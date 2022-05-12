@@ -1,7 +1,5 @@
 package org.avni_integration_service.integration_data.domain;
 
-import org.avni_integration_service.integration_data.BahmniEntityType;
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -12,8 +10,7 @@ public class ErrorRecord extends BaseEntity {
     private AvniEntityType avniEntityType;
 
     @Column
-    @Enumerated(EnumType.STRING)
-    private BahmniEntityType bahmniEntityType;
+    private String integratingEntityType;
 
     @Column
     private String entityId;
@@ -32,12 +29,12 @@ public class ErrorRecord extends BaseEntity {
         this.avniEntityType = avniEntityType;
     }
 
-    public BahmniEntityType getBahmniEntityType() {
-        return bahmniEntityType;
+    public String getIntegratingEntityType() {
+        return integratingEntityType;
     }
 
-    public void setBahmniEntityType(BahmniEntityType bahmniEntityType) {
-        this.bahmniEntityType = bahmniEntityType;
+    public void setIntegratingEntityType(String integratingEntityType) {
+        this.integratingEntityType = integratingEntityType;
     }
 
     public String getEntityId() {

@@ -1,7 +1,7 @@
 package org.avni_integration_service.service;
 
+import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.bahmni.service.ErrorService;
-import org.avni_integration_service.integration_data.BahmniEntityType;
 import org.avni_integration_service.integration_data.domain.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.ErrorType;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package org.avni_integration_service.web;
 
-import org.avni_integration_service.integration_data.BahmniEntityType;
+import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.ErrorRecordLog;
 import org.avni_integration_service.integration_data.domain.ErrorType;
@@ -65,7 +65,7 @@ public class ErrorRecordLogController {
         AvniEntityType avniEntityType = errorRecordLog.getErrorRecord().getAvniEntityType();
         if (avniEntityType != null)
             errorWebContract.setAvniEntityType(avniEntityType.name());
-        BahmniEntityType bahmniEntityType = errorRecordLog.getErrorRecord().getBahmniEntityType();
+        BahmniEntityType bahmniEntityType = BahmniEntityType.valueOf(errorRecordLog.getErrorRecord().getIntegratingEntityType());
         if (bahmniEntityType != null)
             errorWebContract.setBahmniEntityType(bahmniEntityType.name());
         errorWebContract.setEntityUuid(errorRecordLog.getErrorRecord().getEntityId());
