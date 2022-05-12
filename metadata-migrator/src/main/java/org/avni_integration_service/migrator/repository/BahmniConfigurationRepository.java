@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ImplementationConfigurationRepository {
+public class BahmniConfigurationRepository {
     @Autowired
     private FileUtil fileUtil;
 

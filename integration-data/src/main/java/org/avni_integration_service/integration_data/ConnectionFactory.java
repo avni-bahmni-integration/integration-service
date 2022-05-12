@@ -1,7 +1,6 @@
 package org.avni_integration_service.integration_data;
 
 import org.avni_integration_service.integration_data.config.AvniConfig;
-import org.avni_integration_service.integration_data.config.BahmniConfig;
 import org.avni_integration_service.integration_data.util.TxConfigurableConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,26 +13,10 @@ import java.sql.Statement;
 @Component
 public class ConnectionFactory {
     @Autowired
-    private BahmniConfig bahmniConfig;
-
-    @Autowired
     private AvniConfig avniConfig;
 
     @Value("${app.config.tx.rollback}")
     private boolean txRollback;
-
-    public Connection getOpenMRSDbConnection() {
-        try {
-            String driver = "com.mysql.jdbc.Driver";
-            String url = "jdbc:mysql://localhost:" + bahmniConfig.getOpenMrsMySqlPort() + "/";
-
-            Class.forName(driver);
-            Connection connection = DriverManager.getConnection(url + bahmniConfig.getOpenMrsMySqlDatabase(), bahmniConfig.getOpenMrsMySqlUser(), bahmniConfig.getOpenMrsMySqlPassword());
-            return new TxConfigurableConnection(connection, txRollback);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public Connection getAvniConnection() {
         try {

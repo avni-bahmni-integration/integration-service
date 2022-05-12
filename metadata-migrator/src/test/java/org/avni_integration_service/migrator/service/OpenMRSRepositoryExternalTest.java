@@ -1,7 +1,7 @@
 package org.avni_integration_service.migrator.service;
 
 import org.avni_integration_service.migrator.domain.OpenMRSForm;
-import org.avni_integration_service.migrator.repository.ImplementationConfigurationRepository;
+import org.avni_integration_service.migrator.repository.BahmniConfigurationRepository;
 import org.avni_integration_service.migrator.repository.OpenMRSRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class OpenMRSRepositoryExternalTest {
     @Autowired
     private OpenMRSRepository openMRSRepository;
     @Autowired
-    private ImplementationConfigurationRepository implementationConfigurationRepository;
+    private BahmniConfigurationRepository implementationConfigurationRepository;
 
     @Test
     public void populateForms() throws SQLException {

@@ -1,6 +1,7 @@
 package org.avni_integration_service.migrator.service;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.BahmniDbConnectionFactory;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
@@ -9,7 +10,7 @@ import org.avni_integration_service.integration_data.repository.MappingMetaDataR
 import org.avni_integration_service.integration_data.ConnectionFactory;
 import org.avni_integration_service.migrator.domain.*;
 import org.avni_integration_service.migrator.repository.AvniRepository;
-import org.avni_integration_service.migrator.repository.ImplementationConfigurationRepository;
+import org.avni_integration_service.migrator.repository.BahmniConfigurationRepository;
 import org.avni_integration_service.migrator.repository.OpenMRSRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,17 +27,19 @@ public class AvniToBahmniService {
     private final AvniRepository avniRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final ConnectionFactory connectionFactory;
-    private final ImplementationConfigurationRepository implementationConfigurationRepository;
+    private final BahmniDbConnectionFactory bahmniDbConnectionFactory;
+    private final BahmniConfigurationRepository implementationConfigurationRepository;
     private static final Logger logger = Logger.getLogger(AvniToBahmniService.class);
 
     public AvniToBahmniService(OpenMRSRepository openMRSRepository,
                                AvniRepository avniRepository,
                                MappingMetaDataRepository mappingMetaDataRepository,
-                               ConnectionFactory connectionFactory, ImplementationConfigurationRepository implementationConfigurationRepository) {
+                               ConnectionFactory connectionFactory, BahmniDbConnectionFactory bahmniDbConnectionFactory, BahmniConfigurationRepository implementationConfigurationRepository) {
         this.openMRSRepository = openMRSRepository;
         this.avniRepository = avniRepository;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.connectionFactory = connectionFactory;
+        this.bahmniDbConnectionFactory = bahmniDbConnectionFactory;
         this.implementationConfigurationRepository = implementationConfigurationRepository;
     }
 
@@ -226,7 +229,7 @@ public class AvniToBahmniService {
     }
 
     public void migrate() {
-        try (var connection = connectionFactory.getOpenMRSDbConnection()) {
+        try (var connection = bahmniDbConnectionFactory.getOpenMRSDbConnection()) {
             connection.setAutoCommit(false);
             try {
                 migrateStandardMetadata(connection);

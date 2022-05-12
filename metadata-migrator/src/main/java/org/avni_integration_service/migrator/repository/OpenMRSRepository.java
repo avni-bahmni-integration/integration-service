@@ -1,10 +1,12 @@
 package org.avni_integration_service.migrator.repository;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.BahmniDbConnectionFactory;
 import org.avni_integration_service.integration_data.ConnectionFactory;
 import org.avni_integration_service.util.ObsDataType;
 import org.avni_integration_service.migrator.domain.*;
 import org.avni_integration_service.integration_data.util.FileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +18,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class OpenMRSRepository {
-    private final ConnectionFactory connectionFactory;
+    private BahmniDbConnectionFactory connectionFactory;
+
     private final FileUtil fileUtil;
     private static final Logger logger = Logger.getLogger(OpenMRSRepository.class);
 
@@ -26,7 +29,7 @@ public class OpenMRSRepository {
     @Value("${openmrs.refdata.admin.id}")
     private int refDataAdminId;
 
-    public OpenMRSRepository(ConnectionFactory connectionFactory, FileUtil fileUtil) {
+    public OpenMRSRepository(BahmniDbConnectionFactory connectionFactory, FileUtil fileUtil) {
         this.connectionFactory = connectionFactory;
         this.fileUtil = fileUtil;
     }

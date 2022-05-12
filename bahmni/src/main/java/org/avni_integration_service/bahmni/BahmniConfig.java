@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data.config;
+package org.avni_integration_service.bahmni;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +17,9 @@ public class BahmniConfig {
     @Value("${openmrs.mysql.port}")
     private int openMrsMySqlPort;
 
+    @Value("${app.config.tx.rollback}")
+    private boolean txRollback;
+
     public String getOpenMrsMySqlUser() {
         return openMrsMySqlUser;
     }
@@ -31,5 +34,9 @@ public class BahmniConfig {
 
     public int getOpenMrsMySqlPort() {
         return openMrsMySqlPort;
+    }
+
+    public boolean isTxRollback() {
+        return txRollback;
     }
 }

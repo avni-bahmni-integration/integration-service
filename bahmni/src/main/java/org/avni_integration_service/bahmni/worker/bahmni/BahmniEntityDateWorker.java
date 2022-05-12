@@ -1,5 +1,6 @@
 package org.avni_integration_service.bahmni.worker.bahmni;
 
+import org.avni_integration_service.bahmni.BahmniDbConnectionFactory;
 import org.avni_integration_service.integration_data.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 @Component
 public class BahmniEntityDateWorker {
     @Autowired
-    private ConnectionFactory connectionFactory;
+    private BahmniDbConnectionFactory connectionFactory;
 
     private static final String UPDATE_VISIT_START_DATE_SQL = """
             update ignore visit
