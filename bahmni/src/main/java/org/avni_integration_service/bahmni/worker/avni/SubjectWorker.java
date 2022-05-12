@@ -7,7 +7,7 @@ import org.avni_integration_service.contract.avni.SubjectsResponse;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.integration_data.internal.SubjectToPatientMetaData;
+import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
 import org.avni_integration_service.contract.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.contract.repository.AvniSubjectRepository;

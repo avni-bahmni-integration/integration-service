@@ -11,7 +11,7 @@ import org.avni_integration_service.contract.avni.Subject;
 import org.avni_integration_service.integration_data.domain.ConstantKey;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.ErrorType;
-import org.avni_integration_service.integration_data.internal.SubjectToPatientMetaData;
+import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
 import org.avni_integration_service.bahmni.repository.OpenMRSPatientRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;

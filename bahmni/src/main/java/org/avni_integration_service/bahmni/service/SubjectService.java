@@ -7,10 +7,10 @@ import org.avni_integration_service.contract.avni.Subject;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.contract.repository.AvniEncounterRepository;
 import org.avni_integration_service.contract.repository.AvniSubjectRepository;
-import org.avni_integration_service.integration_data.internal.BahmniToAvniMetaData;
-import org.avni_integration_service.integration_data.internal.PatientToSubjectMetaData;
+import org.avni_integration_service.bahmni.BahmniToAvniMetaData;
+import org.avni_integration_service.bahmni.PatientToSubjectMetaData;
 import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.integration_data.internal.SubjectToPatientMetaData;
+import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.stereotype.Service;
 

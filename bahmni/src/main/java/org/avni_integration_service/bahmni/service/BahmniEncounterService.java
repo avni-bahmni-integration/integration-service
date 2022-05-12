@@ -3,7 +3,7 @@ package org.avni_integration_service.bahmni.service;
 import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.bahmni.repository.BahmniEncounter;
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
 import org.ict4h.atomfeed.client.domain.Event;

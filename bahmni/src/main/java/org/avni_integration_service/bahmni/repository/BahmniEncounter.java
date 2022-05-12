@@ -1,7 +1,7 @@
 package org.avni_integration_service.bahmni.repository;
 
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
-import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
 
 import java.util.List;
 import java.util.stream.Collectors;

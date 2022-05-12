@@ -6,7 +6,7 @@ import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.bahmni.contract.OpenMRSPersonAttribute;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
-import org.avni_integration_service.integration_data.internal.PatientToSubjectMetaData;
+import org.avni_integration_service.bahmni.PatientToSubjectMetaData;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.domain.MappingMetaDataCollection;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;

@@ -1,7 +1,6 @@
 package org.avni_integration_service.integration_data.repository;
 
 import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.util.ObsDataType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,13 +57,6 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
         MappingMetaData mapping = findByMappingGroupAndMappingTypeAndAvniValue(mappingGroup, mappingType, avniValue);
         if (mapping == null) return null;
         return mapping.getBahmniValue();
-    }
-
-    default MappingMetaData getConceptMappingByOpenMRSConcept(String openMRSConceptUuid, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, boolean isIgnorable) {
-        MappingMetaData mappingMetaData = findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, openMRSConceptUuid);
-        if (mappingMetaData == null && !isIgnorable && !bahmniEncounterToAvniEncounterMetaData.isIgnoredInBahmni(openMRSConceptUuid))
-            throw new RuntimeException(String.format("No mapping found for openmrs concept with uuid = %s and is also not ignored", openMRSConceptUuid));
-        return mappingMetaData;
     }
 
     default MappingMetaData saveMapping(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, ObsDataType obsDataType) {

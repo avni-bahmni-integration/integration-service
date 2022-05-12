@@ -7,8 +7,10 @@ import org.avni_integration_service.contract.avni.AvniBaseContract;
 import org.avni_integration_service.contract.avni.Enrolment;
 import org.avni_integration_service.contract.avni.GeneralEncounter;
 import org.avni_integration_service.contract.avni.ProgramEncounter;
+import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
-import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
+import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.bahmni.repository.BahmniSplitEncounter;
 import org.avni_integration_service.util.FormatAndParseUtil;
@@ -63,17 +65,24 @@ public class OpenMRSEncounterMapper {
 
     private void addObservations(List<OpenMRSObservation> observations, AvniBaseContract avniBaseContract, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, String encounterUuid) {
         observations.forEach(openMRSObservation -> {
-            MappingMetaData conceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid(), bahmniEncounterToAvniEncounterMetaData, true);
+            MappingMetaData conceptMapping = getConceptMappingByOpenMRSConcept(openMRSObservation.getConceptUuid(), bahmniEncounterToAvniEncounterMetaData, true);
             if (conceptMapping == null) return;
 
             if (conceptMapping.isCoded()) {
-                MappingMetaData answerConceptMapping = mappingMetaDataRepository.getConceptMappingByOpenMRSConcept((String) openMRSObservation.getValue(), bahmniEncounterToAvniEncounterMetaData, false);
+                MappingMetaData answerConceptMapping = getConceptMappingByOpenMRSConcept((String) openMRSObservation.getValue(), bahmniEncounterToAvniEncounterMetaData, false);
                 avniBaseContract.addObservation(conceptMapping.getAvniValue(), answerConceptMapping.getAvniValue());
             } else {
                 avniBaseContract.addObservation(conceptMapping.getAvniValue(), openMRSObservation.getValue());
             }
         });
         avniBaseContract.addObservation(bahmniEncounterToAvniEncounterMetaData.getBahmniEntityUuidConcept(), encounterUuid);
+    }
+
+    private MappingMetaData getConceptMappingByOpenMRSConcept(String openMRSConceptUuid, BahmniEncounterToAvniEncounterMetaData bahmniEncounterToAvniEncounterMetaData, boolean isIgnorable) {
+        MappingMetaData mappingMetaData = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, openMRSConceptUuid);
+        if (mappingMetaData == null && !isIgnorable && !bahmniEncounterToAvniEncounterMetaData.isIgnoredInBahmni(openMRSConceptUuid))
+            throw new RuntimeException(String.format("No mapping found for openmrs concept with uuid = %s and is also not ignored", openMRSConceptUuid));
+        return mappingMetaData;
     }
 
     public Enrolment mapToAvniEnrolment(BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {

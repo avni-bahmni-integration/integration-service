@@ -10,7 +10,7 @@ import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.integration_data.domain.ErrorType;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
-import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.bahmni.repository.BahmniEncounter;
 import org.avni_integration_service.bahmni.repository.BahmniSplitEncounter;
