@@ -1,4 +1,6 @@
 rootProject.name = 'avni_integration_service'
+include 'contract'
+include 'goonj'
 include 'metadata-migrator'
 include 'integrator'
 include 'integration-data'

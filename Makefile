@@ -25,12 +25,12 @@ define _drop_db
 endef
 
 define _run_server
-	java -jar --enable-preview integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar --app.cron.main="0/3 * * * * ?" --app.cron.full.error="0 1 * * * ?" --avni.api.url=https://staging.avniproject.org/ --avni.impl.username=test-user@bahmni_ashwini --avni.impl.password=password
+	java -jar --enable-preview integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar --app.cron.main="0/3 * * * * ?" --app.cron.full.error="0 1 * * * ?" --avni.api.url=https://staging.avniproject.org/ --avni.impl.username=test-user@bahmni_ashwini --avni.impl.password=password
 endef
 
 define _run_migrator
     . ./conf/local-test.conf
-	java -jar --enable-preview metadata-migrator/build/libs/metadata-migrator-0.0.1-SNAPSHOT.jar run
+	java -jar --enable-preview metadata-migrator/build/libs/metadata-migrator-0.0.2-SNAPSHOT.jar run
 endef
 
 define _alert_success
@@ -76,7 +76,7 @@ run-server: build-db build-server
 	$(call _run_server)
 
 run-server-without-background: build-server
-	java -jar --enable-preview integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar --app.cron.main="0 0 6 6 9 ? 2035" --avni.api.url=https://example.com/ --avni.impl.username=foo --avni.impl.password=bar
+	java -jar --enable-preview integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar --app.cron.main="0 0 6 6 9 ? 2035" --avni.api.url=https://example.com/ --avni.impl.username=foo --avni.impl.password=bar
 
 run-migrator: build-server
 	$(call _run_migrator)
@@ -120,7 +120,7 @@ endif
 ####### Deployment
 deploy-to-vagrant-only:
 	echo vagrant | pbcopy
-	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar root@127.0.0.1:/root/source/abi-host/
+	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar root@127.0.0.1:/root/source/abi-host/
 
 deploy-to-vagrant: build-server deploy-to-vagrant-only
 
@@ -128,12 +128,12 @@ deploy-all-to-ashwini-prod: deploy-integrator-to-ashwini-prod deploy-migrator-to
 	$(call _alert_success)
 
 deploy-integrator-to-ashwini-prod: build-server
-	scp integrator/build/libs/integrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/
-	ssh dspace-auto "scp /tmp/integrator-0.0.1-SNAPSHOT.jar ashwini:/root/source/abi-host/"
+	scp integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar dspace-auto:/tmp/
+	ssh dspace-auto "scp /tmp/integrator-0.0.2-SNAPSHOT.jar ashwini:/root/source/abi-host/"
 
 deploy-migrator-to-ashwini-prod: build-server
-	scp metadata-migrator/build/libs/metadata-migrator-0.0.1-SNAPSHOT.jar dspace-auto:/tmp/
-	ssh dspace-auto "scp /tmp/metadata-migrator-0.0.1-SNAPSHOT.jar ashwini:/root/source/abi-host/"
+	scp metadata-migrator/build/libs/metadata-migrator-0.0.2-SNAPSHOT.jar dspace-auto:/tmp/
+	ssh dspace-auto "scp /tmp/metadata-migrator-0.0.2-SNAPSHOT.jar ashwini:/root/source/abi-host/"
 #######
 
 # SERVICE MANAGEMENT

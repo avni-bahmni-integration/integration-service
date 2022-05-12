@@ -11,11 +11,11 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 
 @SpringBootApplication
-public class BahmniAvniIntegrationApplication {
+public class AvniIntegrationApplication {
     private final RestTemplate restTemplate;
 
     @Autowired
-	public BahmniAvniIntegrationApplication(Environment environment, RestTemplateBuilder restTemplateBuilder) {
+	public AvniIntegrationApplication(Environment environment, RestTemplateBuilder restTemplateBuilder) {
         Duration timeout = Duration.ofSeconds(20);
         restTemplate = restTemplateBuilder.setConnectTimeout(timeout)
                 .setReadTimeout(timeout)
@@ -23,7 +23,7 @@ public class BahmniAvniIntegrationApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(BahmniAvniIntegrationApplication.class, args);
+		SpringApplication.run(AvniIntegrationApplication.class, args);
 	}
 
 	@Bean
