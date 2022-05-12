@@ -28,16 +28,19 @@ repositories {
 
 dependencies {
     implementation project(':util')
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    implementation project(':contract')
+    implementation project(':integration-data')
     implementation "log4j:log4j:1.2.17"
     implementation "commons-io:commons-io:2.11.0"
     implementation "commons-lang:commons-lang:2.6"
     implementation "org.apache.httpcomponents:httpclient:4.5.9"
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.javatuples:javatuples:1.2"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     implementation group: 'org.ict4h', name: 'atomfeed-client', version: '1.9.4'
     implementation group: 'org.ict4h', name: 'atomfeed-spring-server', version: '1.9.4'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {

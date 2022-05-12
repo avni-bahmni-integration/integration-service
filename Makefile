@@ -93,6 +93,12 @@ test-server-external: drop-test-db setup-external-test-db
 open-test-results-integrator:
 	open integrator/build/reports/tests/test/index.html
 
+open-test-results-bahmni:
+	open bahmni/build/reports/tests/test/index.html
+
+open-test-results-contract:
+	open contract/build/reports/tests/test/index.html
+
 open-test-results-migrator:
 	open metadata-migrator/build/reports/tests/test/index.html
 

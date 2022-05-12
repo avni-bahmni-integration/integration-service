@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.SyncDirection;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
-import org.avni_integration_service.worker.ErrorRecordsWorker;
+import org.avni_integration_service.bahmni.worker.ErrorRecordsWorker;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

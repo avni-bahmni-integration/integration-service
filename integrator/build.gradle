@@ -41,6 +41,7 @@ task migrateDb() {
 
 dependencies {
     implementation project(':util')
+    implementation project(':contract')
     implementation project(':integration-data')
     implementation project(':bahmni')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -55,11 +56,11 @@ dependencies {
     implementation group: 'org.ict4h', name: 'atomfeed-spring-server', version: '1.9.4'
     implementation platform('software.amazon.awssdk:bom:2.15.0')
     implementation 'software.amazon.awssdk:cognitoidentity'
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.939')
+    implementation 'com.amazonaws:aws-java-sdk-cognitoidp'
 
     runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.939')
-    implementation 'com.amazonaws:aws-java-sdk-cognitoidp'
     implementation group: 'org.json', name: 'json', version: '20201115'
     implementation "log4j:log4j:1.2.17"
     implementation "commons-io:commons-io:2.11.0"

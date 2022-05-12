@@ -1,5 +1,6 @@
 package org.avni_integration_service.integration_data.repository.openmrs;
 
+import org.avni_integration_service.bahmni.repository.BaseOpenMRSRepository;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
