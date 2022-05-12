@@ -1,9 +1,9 @@
-package org.avni_integration_service.contract.bahmni;
+package org.avni_integration_service.bahmni.contract;
 
+import org.avni_integration_service.bahmni.TestUtils;
 import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSObservation;
-import org.avni_integration_service.util.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;

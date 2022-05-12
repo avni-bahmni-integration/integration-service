@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data.repository.openmrs;
+package org.avni_integration_service.bahmni.repository.openmrs;
 
 import org.avni_integration_service.bahmni.contract.OpenMRSEntity;
 import org.avni_integration_service.bahmni.repository.OpenMRSEntityRepository;

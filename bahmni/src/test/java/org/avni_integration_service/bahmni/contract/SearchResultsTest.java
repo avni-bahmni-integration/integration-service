@@ -1,4 +1,4 @@
-package org.avni_integration_service.contract.bahmni;
+package org.avni_integration_service.bahmni.contract;
 
 import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
 import org.avni_integration_service.bahmni.contract.SearchResults;

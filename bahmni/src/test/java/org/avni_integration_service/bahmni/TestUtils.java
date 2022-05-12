@@ -1,4 +1,6 @@
-package org.avni_integration_service.util;
+package org.avni_integration_service.bahmni;
+
+import org.avni_integration_service.util.ObjectJsonMapper;
 
 import java.io.File;
 

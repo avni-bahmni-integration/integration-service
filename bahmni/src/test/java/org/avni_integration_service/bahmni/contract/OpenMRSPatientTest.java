@@ -1,7 +1,7 @@
-package org.avni_integration_service.contract.bahmni;
+package org.avni_integration_service.bahmni.contract;
 
+import org.avni_integration_service.bahmni.TestUtils;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
-import org.avni_integration_service.util.TestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
