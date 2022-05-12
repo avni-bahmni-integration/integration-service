@@ -1,8 +1,10 @@
 package org.avni_integration_service.integration_data.repository.openmrs;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.avni_integration_service.client.OpenMRSWebClient;
-import org.avni_integration_service.contract.bahmni.*;
+import org.avni_integration_service.bahmni.client.OpenMRSWebClient;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.bahmni.contract.OpenMRSSavePatient;
+import org.avni_integration_service.bahmni.contract.SearchResults;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.springframework.beans.factory.annotation.Autowired;

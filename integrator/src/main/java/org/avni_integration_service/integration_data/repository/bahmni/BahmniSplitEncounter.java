@@ -1,6 +1,6 @@
 package org.avni_integration_service.integration_data.repository.bahmni;
 
-import org.avni_integration_service.contract.bahmni.OpenMRSObservation;
+import org.avni_integration_service.bahmni.contract.OpenMRSObservation;
 
 import java.util.List;
 

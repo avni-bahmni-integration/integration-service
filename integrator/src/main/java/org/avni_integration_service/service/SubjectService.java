@@ -3,7 +3,7 @@ package org.avni_integration_service.service;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.contract.avni.GeneralEncounter;
 import org.avni_integration_service.contract.avni.Subject;
-import org.avni_integration_service.contract.bahmni.OpenMRSPatient;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.integration_data.internal.BahmniToAvniMetaData;
 import org.avni_integration_service.integration_data.internal.PatientToSubjectMetaData;
 import org.avni_integration_service.integration_data.domain.*;

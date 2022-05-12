@@ -1,12 +1,13 @@
 package org.avni_integration_service.mapper.avni;
 
+import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.contract.avni.AvniBaseEncounter;
 import org.avni_integration_service.contract.avni.GeneralEncounter;
 import org.avni_integration_service.contract.avni.ProgramEncounter;
-import org.avni_integration_service.contract.bahmni.*;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
+import org.avni_integration_service.util.ObsDataType;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

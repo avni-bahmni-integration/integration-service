@@ -1,6 +1,6 @@
 package org.avni_integration_service.integration_data.util;
 
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;

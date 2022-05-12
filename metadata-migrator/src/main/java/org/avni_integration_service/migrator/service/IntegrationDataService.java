@@ -3,8 +3,8 @@ package org.avni_integration_service.migrator.service;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.*;
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
 import org.avni_integration_service.migrator.repository.ImplementationConfigurationRepository;
+import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

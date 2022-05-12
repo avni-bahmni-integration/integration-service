@@ -1,15 +1,16 @@
 package org.avni_integration_service.mapper.avni;
 
 import org.avni_integration_service.contract.avni.Subject;
-import org.avni_integration_service.contract.bahmni.OpenMRSFullEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSSaveObservation;
-import org.avni_integration_service.contract.bahmni.OpenMRSUuidHolder;
-import org.avni_integration_service.contract.bahmni.OpenMRSVisit;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
+import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
+import org.avni_integration_service.bahmni.contract.OpenMRSVisit;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

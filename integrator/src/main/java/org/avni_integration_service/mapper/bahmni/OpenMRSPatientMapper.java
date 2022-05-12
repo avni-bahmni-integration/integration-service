@@ -2,15 +2,16 @@ package org.avni_integration_service.mapper.bahmni;
 
 import org.avni_integration_service.contract.avni.GeneralEncounter;
 import org.avni_integration_service.contract.avni.Subject;
-import org.avni_integration_service.contract.bahmni.OpenMRSPatient;
-import org.avni_integration_service.contract.bahmni.OpenMRSPersonAttribute;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.bahmni.contract.OpenMRSPersonAttribute;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.internal.PatientToSubjectMetaData;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.domain.MappingMetaDataCollection;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.util.AvniFormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

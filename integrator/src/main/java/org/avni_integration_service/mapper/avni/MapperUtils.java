@@ -1,7 +1,8 @@
 package org.avni_integration_service.mapper.avni;
 
-import org.avni_integration_service.contract.bahmni.OpenMRSVisit;
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.bahmni.contract.OpenMRSVisit;
+import org.avni_integration_service.util.AvniFormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
 
 import java.util.Calendar;
 import java.util.Date;

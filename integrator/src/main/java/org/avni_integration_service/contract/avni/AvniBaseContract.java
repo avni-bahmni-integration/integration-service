@@ -3,7 +3,8 @@ package org.avni_integration_service.contract.avni;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.util.AvniFormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
 
 import java.util.Date;
 import java.util.HashMap;

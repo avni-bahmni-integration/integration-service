@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.contract.avni.Enrolment;
 import org.avni_integration_service.contract.avni.EnrolmentsResponse;
 import org.avni_integration_service.contract.avni.Subject;
-import org.avni_integration_service.contract.bahmni.OpenMRSPatient;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.integration_data.domain.AvniEntityStatus;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.Constants;

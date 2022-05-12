@@ -1,5 +1,8 @@
 package org.avni_integration_service.contract.bahmni;
 
+import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSObservation;
 import org.avni_integration_service.util.TestUtils;
 import org.junit.jupiter.api.Test;
 

@@ -2,9 +2,9 @@ package org.avni_integration_service.service;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.contract.avni.GeneralEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSDefaultEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSFullEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSPatient;
+import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.ErrorType;
 import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;

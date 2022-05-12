@@ -40,6 +40,7 @@ task migrateDb() {
 }
 
 dependencies {
+    implementation project(':util')
     implementation project(':integration-data')
     implementation project(':bahmni')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

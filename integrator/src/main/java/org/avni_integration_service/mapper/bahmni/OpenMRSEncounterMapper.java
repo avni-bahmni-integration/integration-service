@@ -1,17 +1,17 @@
 package org.avni_integration_service.mapper.bahmni;
 
+import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSObservation;
 import org.avni_integration_service.contract.avni.AvniBaseContract;
 import org.avni_integration_service.contract.avni.Enrolment;
 import org.avni_integration_service.contract.avni.GeneralEncounter;
 import org.avni_integration_service.contract.avni.ProgramEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSDefaultEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSFullEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSObservation;
-import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
+import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.integration_data.repository.bahmni.BahmniSplitEncounter;
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

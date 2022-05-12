@@ -1,13 +1,14 @@
 package org.avni_integration_service.mapper.avni;
 
-import org.avni_integration_service.contract.bahmni.*;
+import org.avni_integration_service.bahmni.contract.OpenMRSObservation;
+import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static org.avni_integration_service.contract.bahmni.OpenMRSSaveObservation.createVoidedObs;
+import static org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation.createVoidedObs;
 
 @Component
 public class ObservationMapper {

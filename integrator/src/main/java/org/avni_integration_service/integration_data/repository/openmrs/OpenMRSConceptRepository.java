@@ -1,9 +1,9 @@
 package org.avni_integration_service.integration_data.repository.openmrs;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.avni_integration_service.client.OpenMRSWebClient;
-import org.avni_integration_service.contract.bahmni.OpenMRSConcept;
-import org.avni_integration_service.contract.bahmni.SearchResults;
+import org.avni_integration_service.bahmni.client.OpenMRSWebClient;
+import org.avni_integration_service.bahmni.contract.OpenMRSConcept;
+import org.avni_integration_service.bahmni.contract.SearchResults;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

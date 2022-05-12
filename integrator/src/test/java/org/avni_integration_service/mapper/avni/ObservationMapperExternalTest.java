@@ -1,7 +1,7 @@
 package org.avni_integration_service.mapper.avni;
 
-import org.avni_integration_service.contract.bahmni.OpenMRSFullEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSSaveObservation;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingMetaDataCollection;
 import org.avni_integration_service.integration_data.domain.MappingType;

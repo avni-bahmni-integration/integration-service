@@ -1,6 +1,6 @@
 package org.avni_integration_service.migrator.domain;
 
-import org.avni_integration_service.integration_data.domain.ObsDataType;
+import org.avni_integration_service.util.ObsDataType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

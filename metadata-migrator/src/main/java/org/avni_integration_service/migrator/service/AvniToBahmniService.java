@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
-import org.avni_integration_service.integration_data.domain.ObsDataType;
+import org.avni_integration_service.util.ObsDataType;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.integration_data.ConnectionFactory;
 import org.avni_integration_service.migrator.domain.*;

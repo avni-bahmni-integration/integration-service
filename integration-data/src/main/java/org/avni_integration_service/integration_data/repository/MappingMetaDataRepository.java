@@ -2,6 +2,7 @@ package org.avni_integration_service.integration_data.repository;
 
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
+import org.avni_integration_service.util.ObsDataType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;

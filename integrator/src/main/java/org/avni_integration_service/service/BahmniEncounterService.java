@@ -1,7 +1,7 @@
 package org.avni_integration_service.service;
 
-import org.avni_integration_service.contract.bahmni.OpenMRSDefaultEncounter;
-import org.avni_integration_service.contract.bahmni.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.internal.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.integration_data.repository.bahmni.BahmniEncounter;

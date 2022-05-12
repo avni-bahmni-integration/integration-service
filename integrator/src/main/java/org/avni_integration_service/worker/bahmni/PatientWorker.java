@@ -1,7 +1,7 @@
 package org.avni_integration_service.worker.bahmni;
 
-import org.avni_integration_service.client.OpenMRSWebClient;
-import org.avni_integration_service.config.OpenMRSAtomFeedPropertiesFactory;
+import org.avni_integration_service.bahmni.client.OpenMRSWebClient;
+import org.avni_integration_service.bahmni.client.config.OpenMRSAtomFeedPropertiesFactory;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.worker.bahmni.atomfeedworker.PatientEventWorker;
 import org.springframework.beans.factory.annotation.Autowired;

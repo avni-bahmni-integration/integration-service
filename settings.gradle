@@ -5,4 +5,5 @@ include 'metadata-migrator'
 include 'integrator'
 include 'integration-data'
 include 'bahmni'
+include 'util'
 

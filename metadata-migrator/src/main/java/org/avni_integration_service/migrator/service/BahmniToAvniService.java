@@ -8,6 +8,7 @@ import org.avni_integration_service.migrator.repository.AvniRepository;
 import org.avni_integration_service.migrator.repository.ImplementationConfigurationRepository;
 import org.avni_integration_service.migrator.repository.OpenMRSRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
+import org.avni_integration_service.util.ObsDataType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

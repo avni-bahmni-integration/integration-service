@@ -1,8 +1,8 @@
 package org.avni_integration_service.repository.openmrs;
 
-import org.avni_integration_service.client.OpenMRSWebClient;
-import org.avni_integration_service.contract.bahmni.OpenMRSSavePerson;
-import org.avni_integration_service.contract.bahmni.OpenMRSUuidHolder;
+import org.avni_integration_service.bahmni.client.OpenMRSWebClient;
+import org.avni_integration_service.bahmni.contract.OpenMRSSavePerson;
+import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
 import org.avni_integration_service.integration_data.repository.openmrs.BaseOpenMRSRepository;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;

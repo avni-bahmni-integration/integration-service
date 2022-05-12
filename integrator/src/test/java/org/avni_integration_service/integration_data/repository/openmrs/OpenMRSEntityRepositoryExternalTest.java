@@ -1,6 +1,6 @@
 package org.avni_integration_service.integration_data.repository.openmrs;
 
-import org.avni_integration_service.contract.bahmni.OpenMRSEntity;
+import org.avni_integration_service.bahmni.contract.OpenMRSEntity;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

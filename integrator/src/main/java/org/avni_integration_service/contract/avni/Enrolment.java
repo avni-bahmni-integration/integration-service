@@ -1,8 +1,9 @@
 package org.avni_integration_service.contract.avni;
 
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.util.AvniFormatAndParseUtil;
 import org.avni_integration_service.util.Empty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.avni_integration_service.util.FormatAndParseUtil;
 
 import java.util.Date;
 

@@ -1,7 +1,7 @@
 package org.avni_integration_service.integration_data.repository.openmrs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.avni_integration_service.contract.bahmni.OpenMRSPatient;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package org.avni_integration_service.service;
 
 import org.apache.http.HttpStatus;
-import org.avni_integration_service.client.bahmni.WebClientsException;
+import org.avni_integration_service.bahmni.client.WebClientsException;
+import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.contract.avni.Subject;
-import org.avni_integration_service.contract.bahmni.*;
 import org.avni_integration_service.integration_data.BahmniEntityType;
 import org.avni_integration_service.integration_data.domain.ConstantKey;
 import org.avni_integration_service.integration_data.domain.Constants;
@@ -11,9 +11,10 @@ import org.avni_integration_service.integration_data.domain.ErrorType;
 import org.avni_integration_service.integration_data.internal.SubjectToPatientMetaData;
 import org.avni_integration_service.integration_data.repository.openmrs.OpenMRSEncounterRepository;
 import org.avni_integration_service.integration_data.repository.openmrs.OpenMRSPatientRepository;
-import org.avni_integration_service.integration_data.util.FormatAndParseUtil;
+import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.mapper.avni.SubjectMapper;
 import org.avni_integration_service.repository.openmrs.OpenMRSPersonRepository;
+import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.javatuples.Pair;

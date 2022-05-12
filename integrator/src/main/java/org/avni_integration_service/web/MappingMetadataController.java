@@ -3,7 +3,7 @@ package org.avni_integration_service.web;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.domain.MappingType;
-import org.avni_integration_service.integration_data.domain.ObsDataType;
+import org.avni_integration_service.util.ObsDataType;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.integration_data.util.EnumUtil;
 import org.avni_integration_service.web.contract.MappingMetadataWebContract;

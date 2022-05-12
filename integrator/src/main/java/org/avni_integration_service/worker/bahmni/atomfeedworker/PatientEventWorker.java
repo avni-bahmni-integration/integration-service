@@ -3,7 +3,7 @@ package org.avni_integration_service.worker.bahmni.atomfeedworker;
 import com.bugsnag.Bugsnag;
 import org.avni_integration_service.contract.avni.GeneralEncounter;
 import org.avni_integration_service.contract.avni.Subject;
-import org.avni_integration_service.contract.bahmni.OpenMRSPatient;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.integration_data.BahmniEntityType;
 import org.avni_integration_service.integration_data.internal.PatientToSubjectMetaData;
 import org.avni_integration_service.integration_data.domain.Constants;

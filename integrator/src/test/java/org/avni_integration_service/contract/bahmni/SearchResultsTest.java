@@ -1,5 +1,7 @@
 package org.avni_integration_service.contract.bahmni;
 
+import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
+import org.avni_integration_service.bahmni.contract.SearchResults;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

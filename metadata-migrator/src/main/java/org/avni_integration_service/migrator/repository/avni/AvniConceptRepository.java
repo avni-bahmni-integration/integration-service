@@ -1,12 +1,13 @@
 package org.avni_integration_service.migrator.repository.avni;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.util.FormatAndParseUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.avni_integration_service.integration_data.util.FormatAndParseUtil.escapedForSql;
+import static org.avni_integration_service.util.FormatAndParseUtil.escapedForSql;
 
 public class AvniConceptRepository {
     private static final String conceptInsert = """
