@@ -7,6 +7,14 @@ plugins {
 group 'org.avni_integration_service'
 version '0.0.2-SNAPSHOT'
 
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
 tasks.withType(JavaCompile).all {
     options.compilerArgs += ['--enable-preview']
 }
