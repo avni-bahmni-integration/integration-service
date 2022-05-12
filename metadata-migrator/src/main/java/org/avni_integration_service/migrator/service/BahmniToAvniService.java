@@ -90,8 +90,8 @@ public class BahmniToAvniService {
         List<String> ignoredConcepts = implementationConfigurationRepository.getIgnoredConcepts();
         logger.info(String.format("Found %d ignored concepts configured", ignoredConcepts.size()));
         for (String ignoredConcept : ignoredConcepts) {
-            if (ignoredBahmniConceptRepository.findByConceptUuid(ignoredConcept) == null)
-                ignoredBahmniConceptRepository.save(new IgnoredBahmniConcept(ignoredConcept));
+            if (ignoredBahmniConceptRepository.findByConceptId(ignoredConcept) == null)
+                ignoredBahmniConceptRepository.save(new IgnoredIntegratingConcept(ignoredConcept));
         }
         logger.info("Created ignored concepts.");
     }

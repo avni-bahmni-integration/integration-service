@@ -53,9 +53,9 @@ public class MappingMetaDataService {
         metaData.addDrugOrderMapping(mappingMetaDataRepository.findByMappingType(MappingType.DrugOrderEncounterType));
         metaData.addDrugOrderConceptMapping(mappingMetaDataRepository.findByMappingType(MappingType.DrugOrderConcept));
         metaData.addProgramMapping(mappingMetaDataRepository.findAllByMappingGroupAndMappingType(MappingGroup.ProgramEnrolment, MappingType.BahmniForm_CommunityProgram));
-        ArrayList<IgnoredBahmniConcept> ignoredBahmniConcepts = new ArrayList<>();
-        ignoredBahmniConceptRepository.findAll().forEach(ignoredBahmniConcepts::add);
-        metaData.setIgnoredConcepts(ignoredBahmniConcepts);
+        ArrayList<IgnoredIntegratingConcept> ignoredIntegratingConcepts = new ArrayList<>();
+        ignoredBahmniConceptRepository.findAll().forEach(ignoredIntegratingConcepts::add);
+        metaData.setIgnoredConcepts(ignoredIntegratingConcepts);
         return metaData;
     }
 

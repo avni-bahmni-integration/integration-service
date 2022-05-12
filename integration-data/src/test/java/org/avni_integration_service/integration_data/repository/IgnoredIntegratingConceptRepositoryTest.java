@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = IgnoredBahmniConceptRepository.class)
-public class IgnoredBahmniConceptRepositoryTest extends AbstractSpringTest {
+public class IgnoredIntegratingConceptRepositoryTest extends AbstractSpringTest {
     @Autowired
     private IgnoredBahmniConceptRepository repository;
 
