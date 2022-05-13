@@ -1,4 +1,4 @@
-package org.avni_integration_service.client;
+package org.avni_integration_service.avni.client;
 
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.junit.jupiter.api.Disabled;

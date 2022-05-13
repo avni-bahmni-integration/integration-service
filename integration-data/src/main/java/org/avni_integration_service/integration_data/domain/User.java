@@ -1,4 +1,4 @@
-package org.avni_integration_service.entity;
+package org.avni_integration_service.integration_data.domain;
 
 import org.avni_integration_service.integration_data.domain.BaseEntity;
 

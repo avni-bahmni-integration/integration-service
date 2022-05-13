@@ -1,7 +1,7 @@
-package org.avni_integration_service.service;
+package org.avni_integration_service.bahmni.service;
 
 import org.avni_integration_service.bahmni.BahmniEntityType;
-import org.avni_integration_service.bahmni.service.ErrorService;
+import org.avni_integration_service.bahmni.BaseSpringTest;
 import org.avni_integration_service.integration_data.domain.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.ErrorType;
 import org.junit.jupiter.api.Test;
@@ -10,10 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
-class ErrorServiceTest {
+@SpringBootTest(classes = {ErrorService.class})
+class ErrorServiceTest extends BaseSpringTest {
     @Autowired
     private ErrorService errorService;
 

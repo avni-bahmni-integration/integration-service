@@ -1,7 +1,7 @@
 package org.avni_integration_service.web;
 
-import org.avni_integration_service.entity.User;
-import org.avni_integration_service.repository.UserRepository;
+import org.avni_integration_service.integration_data.domain.User;
+import org.avni_integration_service.integration_data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

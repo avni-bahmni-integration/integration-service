@@ -1,4 +1,4 @@
-package org.avni_integration_service;
+package org.avni_integration_service.bahmni;
 
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;

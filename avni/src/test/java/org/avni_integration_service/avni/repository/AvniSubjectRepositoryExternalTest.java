@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data.repository.avni;
+package org.avni_integration_service.avni.repository;
 
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.domain.SubjectsResponse;

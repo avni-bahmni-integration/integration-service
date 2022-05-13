@@ -1,6 +1,6 @@
 package org.avni_integration_service.bahmni.worker.bahmni;
 
-import org.avni_integration_service.BaseExternalTest;
+import org.avni_integration_service.bahmni.BaseExternalTest;
 import org.avni_integration_service.bahmni.service.MappingMetaDataService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

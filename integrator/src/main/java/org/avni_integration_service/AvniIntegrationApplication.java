@@ -12,22 +12,10 @@ import java.time.Duration;
 
 @SpringBootApplication
 public class AvniIntegrationApplication {
-    private final RestTemplate restTemplate;
 
-    @Autowired
-	public AvniIntegrationApplication(Environment environment, RestTemplateBuilder restTemplateBuilder) {
-        Duration timeout = Duration.ofSeconds(20);
-        restTemplate = restTemplateBuilder.setConnectTimeout(timeout)
-                .setReadTimeout(timeout)
-                .build();
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(AvniIntegrationApplication.class, args);
 	}
 
-	@Bean
-	public RestTemplate restTemplate() {
-        return restTemplate;
-	}
 }

@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.SyncDirection;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
-import org.avni_integration_service.integration_data.repository.FailedEventRepository;
 import org.avni_integration_service.bahmni.worker.ErrorRecordsWorker;
 import org.avni_integration_service.worker.HealthCheckService;
 import org.avni_integration_service.bahmni.worker.avni.EnrolmentWorker;
@@ -61,9 +60,6 @@ public class MainJob implements Job {
     private boolean isFirstRun;
 
     @Autowired
-    private FailedEventRepository failedEventRepository;
-
-    @Autowired
     private ErrorRecordsWorker errorRecordsWorker;
 
     @Autowired
@@ -78,7 +74,6 @@ public class MainJob implements Job {
     public void execute(JobExecutionContext context) {
         logger.info(String.format("Job ** {%s} ** fired @ {%s}", context.getJobDetail().getKey().getName(), context.getFireTime()));
         try {
-            failedEventRepository.deleteAll();
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
             Constants allConstants = constantsRepository.findAllConstants();
 
