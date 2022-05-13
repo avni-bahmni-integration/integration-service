@@ -96,8 +96,8 @@ open-test-results-integrator:
 open-test-results-bahmni:
 	open bahmni/build/reports/tests/test/index.html
 
-open-test-results-contract:
-	open contract/build/reports/tests/test/index.html
+open-test-results-avni:
+	open avni/build/reports/tests/test/index.html
 
 open-test-results-migrator:
 	open metadata-migrator/build/reports/tests/test/index.html

@@ -3,7 +3,7 @@ package org.avni_integration_service.bahmni.repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.avni_integration_service.bahmni.client.OpenMRSWebClient;
 import org.avni_integration_service.bahmni.contract.*;
-import org.avni_integration_service.contract.MultipleResultsFoundException;
+import org.avni_integration_service.avni.MultipleResultsFoundException;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.springframework.beans.factory.annotation.Autowired;

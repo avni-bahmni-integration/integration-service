@@ -1,6 +1,6 @@
 package org.avni_integration_service.client;
 
-import org.avni_integration_service.contract.client.AvniHttpClient;
+import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

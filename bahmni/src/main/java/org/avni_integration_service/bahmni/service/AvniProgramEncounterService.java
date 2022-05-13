@@ -1,9 +1,9 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.avni_integration_service.bahmni.mapper.OpenMRSEncounterMapper;
-import org.avni_integration_service.contract.avni.Enrolment;
-import org.avni_integration_service.contract.avni.ProgramEncounter;
-import org.avni_integration_service.contract.repository.AvniProgramEncounterRepository;
+import org.avni_integration_service.avni.domain.Enrolment;
+import org.avni_integration_service.avni.domain.ProgramEncounter;
+import org.avni_integration_service.avni.repository.AvniProgramEncounterRepository;
 import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.bahmni.repository.BahmniSplitEncounter;
 import org.springframework.beans.factory.annotation.Autowired;

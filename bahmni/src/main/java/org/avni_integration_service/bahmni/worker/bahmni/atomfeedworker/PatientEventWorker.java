@@ -1,12 +1,12 @@
 package org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker;
 
 import org.avni_integration_service.bahmni.BahmniEntityType;
-import org.avni_integration_service.contract.avni.GeneralEncounter;
-import org.avni_integration_service.contract.avni.Subject;
+import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.bahmni.PatientToSubjectMetaData;
 import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.contract.MultipleResultsFoundException;
+import org.avni_integration_service.avni.MultipleResultsFoundException;
 import org.avni_integration_service.bahmni.service.ErrorService;
 import org.avni_integration_service.bahmni.service.MappingMetaDataService;
 import org.avni_integration_service.bahmni.service.PatientService;

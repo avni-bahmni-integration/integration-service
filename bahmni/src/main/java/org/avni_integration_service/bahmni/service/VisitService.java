@@ -2,8 +2,8 @@ package org.avni_integration_service.bahmni.service;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.bahmni.contract.*;
-import org.avni_integration_service.contract.avni.Enrolment;
-import org.avni_integration_service.contract.avni.Subject;
+import org.avni_integration_service.avni.domain.Enrolment;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;

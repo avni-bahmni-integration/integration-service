@@ -2,11 +2,11 @@ package org.avni_integration_service.bahmni.service;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.bahmni.mapper.OpenMRSPatientMapper;
-import org.avni_integration_service.contract.avni.GeneralEncounter;
-import org.avni_integration_service.contract.avni.Subject;
+import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
-import org.avni_integration_service.contract.repository.AvniEncounterRepository;
-import org.avni_integration_service.contract.repository.AvniSubjectRepository;
+import org.avni_integration_service.avni.repository.AvniEncounterRepository;
+import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.bahmni.BahmniToAvniMetaData;
 import org.avni_integration_service.bahmni.PatientToSubjectMetaData;
 import org.avni_integration_service.integration_data.domain.*;

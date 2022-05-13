@@ -1,6 +1,6 @@
 package org.avni_integration_service.bahmni.service;
 
-import org.avni_integration_service.contract.avni.*;
+import org.avni_integration_service.avni.domain.*;
 import org.avni_integration_service.integration_data.domain.AvniEntityStatus;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;

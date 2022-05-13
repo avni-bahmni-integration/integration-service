@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
     implementation project(':util')
-    implementation project(':contract')
+    implementation project(':avni')
     implementation project(':integration-data')
     implementation "log4j:log4j:1.2.17"
     implementation "commons-io:commons-io:2.11.0"

@@ -1,7 +1,6 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
-import org.avni_integration_service.bahmni.mapper.avni.SubjectMapper;
-import org.avni_integration_service.contract.avni.Subject;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;

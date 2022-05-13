@@ -1,8 +1,8 @@
 package org.avni_integration_service.integration_data.repository.avni;
 
-import org.avni_integration_service.contract.avni.Subject;
-import org.avni_integration_service.contract.avni.SubjectsResponse;
-import org.avni_integration_service.contract.repository.AvniSubjectRepository;
+import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.avni.domain.SubjectsResponse;
+import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

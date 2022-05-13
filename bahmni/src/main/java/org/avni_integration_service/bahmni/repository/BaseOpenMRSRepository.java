@@ -2,7 +2,7 @@ package org.avni_integration_service.bahmni.repository;
 
 import org.avni_integration_service.bahmni.client.OpenMRSWebClient;
 import org.avni_integration_service.bahmni.contract.SearchResults;
-import org.avni_integration_service.contract.MultipleResultsFoundException;
+import org.avni_integration_service.avni.MultipleResultsFoundException;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.springframework.beans.factory.annotation.Value;
 

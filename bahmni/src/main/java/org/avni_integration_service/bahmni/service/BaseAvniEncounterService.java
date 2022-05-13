@@ -1,7 +1,7 @@
 package org.avni_integration_service.bahmni.service;
 
-import org.avni_integration_service.contract.avni.AvniBaseEncounter;
-import org.avni_integration_service.contract.avni.Subject;
+import org.avni_integration_service.avni.domain.AvniBaseEncounter;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.integration_data.domain.Constants;

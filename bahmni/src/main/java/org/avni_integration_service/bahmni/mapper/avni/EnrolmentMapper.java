@@ -1,7 +1,7 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
 import org.avni_integration_service.bahmni.contract.*;
-import org.avni_integration_service.contract.avni.Enrolment;
+import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;

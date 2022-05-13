@@ -1,9 +1,9 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
 import org.avni_integration_service.bahmni.contract.*;
-import org.avni_integration_service.contract.avni.AvniBaseEncounter;
-import org.avni_integration_service.contract.avni.GeneralEncounter;
-import org.avni_integration_service.contract.avni.ProgramEncounter;
+import org.avni_integration_service.avni.domain.AvniBaseEncounter;
+import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.ProgramEncounter;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;

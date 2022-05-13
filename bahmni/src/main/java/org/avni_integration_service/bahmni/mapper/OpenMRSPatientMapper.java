@@ -1,7 +1,7 @@
 package org.avni_integration_service.bahmni.mapper;
 
-import org.avni_integration_service.contract.avni.GeneralEncounter;
-import org.avni_integration_service.contract.avni.Subject;
+import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.bahmni.contract.OpenMRSPersonAttribute;
 import org.avni_integration_service.integration_data.domain.MappingGroup;

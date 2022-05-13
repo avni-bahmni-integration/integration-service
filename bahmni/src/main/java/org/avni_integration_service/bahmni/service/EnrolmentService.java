@@ -1,7 +1,7 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.avni_integration_service.bahmni.mapper.avni.EnrolmentMapper;
-import org.avni_integration_service.contract.avni.Enrolment;
+import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.bahmni.contract.OpenMRSEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;

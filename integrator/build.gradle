@@ -41,7 +41,7 @@ task migrateDb() {
 
 dependencies {
     implementation project(':util')
-    implementation project(':contract')
+    implementation project(':avni')
     implementation project(':integration-data')
     implementation project(':bahmni')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

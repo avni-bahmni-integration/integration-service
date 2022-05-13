@@ -1,9 +1,9 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.avni_integration_service.bahmni.mapper.OpenMRSEncounterMapper;
-import org.avni_integration_service.contract.avni.Enrolment;
-import org.avni_integration_service.contract.avni.GeneralEncounter;
-import org.avni_integration_service.contract.repository.AvniEnrolmentRepository;
+import org.avni_integration_service.avni.domain.Enrolment;
+import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.repository.AvniEnrolmentRepository;
 import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.bahmni.repository.BahmniSplitEncounter;
 import org.joda.time.DateTime;
