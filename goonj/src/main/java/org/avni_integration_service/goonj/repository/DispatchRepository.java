@@ -16,19 +16,12 @@ import java.util.HashMap;
 
 @Component
 public class DispatchRepository extends BaseRepository {
-    private final RestTemplate restTemplate;
-    private final GoonjConfig goonjConfig;
-
     @Autowired
     public DispatchRepository(RestTemplate restTemplate, GoonjConfig goonjConfig) {
-        this.restTemplate = restTemplate;
-        this.goonjConfig = goonjConfig;
+        super(restTemplate, goonjConfig);
     }
 
     public HashMap<String, Object>[] getDispatches(AuthResponse authResponse, LocalDateTime dateTime) {
-        URI uri = URI.create(String.format("%s/services/apexrest/v1/DispatchService/getDispatches?dateTimestamp=%s", goonjConfig.getAppUrl(), DateTimeUtil.formatDateTime(dateTime)));
-        ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
-        ResponseEntity<HashMap<String, Object>[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, getHeaders(authResponse), responseType);
-        return responseEntity.getBody();
+        return super.getResponse(authResponse, dateTime, "DispatchService/getDispatches");
     }
 }
