@@ -7,22 +7,22 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource("classpath:/goonj-secret.properties")
 public class GoonjConfig {
-    @Value("goonj.sf.authUrl")
+    @Value("${goonj.sf.authUrl}")
     private String salesForceAuthUrl;
 
-    @Value("goonj.sf.userName")
+    @Value("${goonj.sf.userName}")
     private String loginUserName;
 
-    @Value("goonj.sf.password")
+    @Value("${goonj.sf.password}")
     private String loginPassword;
 
-    @Value("goonj.sf.clientId")
+    @Value("${goonj.sf.clientId}")
     private String clientId;
 
-    @Value("goonj.sf.clientSecret")
+    @Value("${goonj.sf.clientSecret}")
     private String clientSecret;
 
-    @Value("goonj.sf.appUrl")
+    @Value("${goonj.sf.appUrl}")
     private String appUrl;
 
     public String getSalesForceAuthUrl() {

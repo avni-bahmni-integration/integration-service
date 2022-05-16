@@ -26,7 +26,7 @@ public class DispatchRepository extends BaseRepository {
     }
 
     public HashMap<String, Object>[] getDispatches(AuthResponse authResponse, LocalDateTime dateTime) {
-        URI uri = URI.create(String.format("http://%s/services/apexrest/v1/DispatchService/getDispatches?dateTimestamp=%s", goonjConfig.getAppUrl(), DateTimeUtil.formatDateTime(dateTime)));
+        URI uri = URI.create(String.format("%s/services/apexrest/v1/DispatchService/getDispatches?dateTimestamp=%s", goonjConfig.getAppUrl(), DateTimeUtil.formatDateTime(dateTime)));
         ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
         ResponseEntity<HashMap<String, Object>[]> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, getHeaders(authResponse), responseType);
         return responseEntity.getBody();

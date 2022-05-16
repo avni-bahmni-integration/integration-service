@@ -2,24 +2,30 @@ package org.avni_integration_service.goonj.repository;
 
 import org.avni_integration_service.goonj.BaseGoonjSpringTest;
 import org.avni_integration_service.goonj.domain.AuthResponse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
-@SpringBootTest(classes = {SalesForceUserRepository.class, DemandRepository.class})
+@SpringBootTest(classes = {SalesForceUserRepository.class, DispatchRepository.class})
 @Disabled
 public class DispatchRepositoryExternalTest extends BaseGoonjSpringTest {
     @Autowired
     private SalesForceUserRepository salesForceUserRepository;
     @Autowired
-    private DemandRepository demandRepository;
+    private DispatchRepository dispatchRepository;
 
     @Test
     public void dispatchDownload() {
         AuthResponse authResponse = salesForceUserRepository.login();
-        demandRepository.getDemands(authResponse, LocalDateTime.of(2021, 4, 1, 0, 0));
+        HashMap<String, Object>[] dispatches = dispatchRepository.getDispatches(authResponse, LocalDateTime.of(2021, 4, 1, 0, 0));
+        Assertions.assertNotEquals(0, dispatches.length);
+
+        Assertions.assertNotEquals("", dispatches[0].get("MaterialName"));
+        Assertions.assertNotNull(dispatches[0].get("MaterialName"));
     }
 }
