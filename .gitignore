@@ -6,3 +6,4 @@ out
 integration-service.iml
 logs
 dump.sql
+goonj/src/test/resources/goonj-secret.properties

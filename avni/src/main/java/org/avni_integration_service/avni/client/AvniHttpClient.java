@@ -31,9 +31,6 @@ public class AvniHttpClient {
     @Value("${avni.impl.password}")
     private String AVNI_IMPL_PASSWORD;
 
-    @Value("${authenticate.with.avni}")
-    private boolean authenticateWithAvni;
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -104,8 +101,7 @@ public class AvniHttpClient {
 
     private HttpHeaders authHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        if (authenticateWithAvni)
-            headers.add("auth-token", fetchAuthToken());
+        headers.add("auth-token", fetchAuthToken());
         headers.add("content-type", "application/json");
         return headers;
     }

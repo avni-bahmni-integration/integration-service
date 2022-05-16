@@ -3,7 +3,6 @@ package org.avni_integration_service.bahmni.worker.bahmni;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.bahmni.BahmniDbConnectionFactory;
 import org.avni_integration_service.bahmni.BahmniEntityType;
-import org.avni_integration_service.integration_data.ConnectionFactory;
 import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;

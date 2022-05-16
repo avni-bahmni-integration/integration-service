@@ -1,7 +1,7 @@
-package org.avni_integration_service.integration_data;
+package org.avni_integration_service.avni.repository;
 
-import org.avni_integration_service.integration_data.config.AvniConfig;
-import org.avni_integration_service.integration_data.util.TxConfigurableConnection;
+import org.avni_integration_service.avni.config.AvniConfig;
+import org.avni_integration_service.util.TxConfigurableConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

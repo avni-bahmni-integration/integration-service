@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data.config;
+package org.avni_integration_service.avni.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

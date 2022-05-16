@@ -1,13 +1,13 @@
 package org.avni_integration_service.migrator.service;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.avni.repository.ConnectionFactory;
 import org.avni_integration_service.bahmni.BahmniDbConnectionFactory;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.util.ObsDataType;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
-import org.avni_integration_service.integration_data.ConnectionFactory;
 import org.avni_integration_service.migrator.domain.*;
 import org.avni_integration_service.migrator.repository.AvniRepository;
 import org.avni_integration_service.migrator.repository.BahmniConfigurationRepository;
@@ -26,7 +26,6 @@ public class AvniToBahmniService {
     private final OpenMRSRepository openMRSRepository;
     private final AvniRepository avniRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;
-    private final ConnectionFactory connectionFactory;
     private final BahmniDbConnectionFactory bahmniDbConnectionFactory;
     private final BahmniConfigurationRepository implementationConfigurationRepository;
     private static final Logger logger = Logger.getLogger(AvniToBahmniService.class);
@@ -34,11 +33,10 @@ public class AvniToBahmniService {
     public AvniToBahmniService(OpenMRSRepository openMRSRepository,
                                AvniRepository avniRepository,
                                MappingMetaDataRepository mappingMetaDataRepository,
-                               ConnectionFactory connectionFactory, BahmniDbConnectionFactory bahmniDbConnectionFactory, BahmniConfigurationRepository implementationConfigurationRepository) {
+                               BahmniDbConnectionFactory bahmniDbConnectionFactory, BahmniConfigurationRepository implementationConfigurationRepository) {
         this.openMRSRepository = openMRSRepository;
         this.avniRepository = avniRepository;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
-        this.connectionFactory = connectionFactory;
         this.bahmniDbConnectionFactory = bahmniDbConnectionFactory;
         this.implementationConfigurationRepository = implementationConfigurationRepository;
     }

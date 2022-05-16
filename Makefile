@@ -157,3 +157,7 @@ download-ashwini-backup:
 copy-backup-to-vagrant:
 	scp -P 2222 -i ~/.vagrant.d/insecure_private_key /tmp/abi-backup.sql root@127.0.0.1:/tmp/
 #######
+
+### Setup
+setup:
+	touch goonj/src/test/resources/goonj-secret.properties

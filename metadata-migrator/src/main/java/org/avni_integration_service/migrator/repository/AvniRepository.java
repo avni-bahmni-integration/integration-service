@@ -1,10 +1,10 @@
 package org.avni_integration_service.migrator.repository;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.avni.config.AvniConfig;
+import org.avni_integration_service.avni.repository.ConnectionFactory;
 import org.avni_integration_service.integration_data.domain.Names;
 import org.avni_integration_service.util.ObsDataType;
-import org.avni_integration_service.integration_data.ConnectionFactory;
-import org.avni_integration_service.integration_data.config.AvniConfig;
 import org.avni_integration_service.migrator.domain.*;
 import org.avni_integration_service.migrator.repository.avni.AvniAuditRepository;
 import org.avni_integration_service.migrator.repository.avni.AvniConceptRepository;

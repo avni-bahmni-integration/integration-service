@@ -1,6 +1,6 @@
 package org.avni_integration_service.bahmni;
 
-import org.avni_integration_service.integration_data.util.TxConfigurableConnection;
+import org.avni_integration_service.util.TxConfigurableConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

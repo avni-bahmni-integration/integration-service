@@ -1,7 +1,6 @@
 package org.avni_integration_service.bahmni.worker.bahmni;
 
 import org.avni_integration_service.bahmni.BahmniDbConnectionFactory;
-import org.avni_integration_service.integration_data.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

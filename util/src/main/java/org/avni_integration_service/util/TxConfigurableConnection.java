@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data.util;
+package org.avni_integration_service.util;
 
 import org.apache.log4j.Logger;
 

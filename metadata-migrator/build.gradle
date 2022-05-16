@@ -31,6 +31,7 @@ dependencies {
     implementation project(':integration-data')
     implementation project(':bahmni')
     implementation project(':util')
+    implementation project(':avni')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
