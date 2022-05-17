@@ -35,14 +35,14 @@ public class PatientFirstRunWorker implements PatientsProcessor {
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(implementationConfigurationRepository.getFirstRunPatientSql());
             IntegratingEntityStatus integratingEntityStatus = integratingEntityStatusRepository.findByEntityType(BahmniEntityType.Patient.name());
-            preparedStatement.setInt(1, integratingEntityStatus.getReadUpto());
+            preparedStatement.setInt(1, integratingEntityStatus.getReadUptoNumeric());
             preparedStatement.setFetchSize(20);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int patientId = resultSet.getInt(1);
                 String patientUuid = resultSet.getString(2);
                 eventWorker.process(new Event("0", String.format("/%s/patient/%s?v=full", BaseOpenMRSRepository.OPENMRS_BASE_PATH, patientUuid)));
-                integratingEntityStatus.setReadUpto(patientId);
+                integratingEntityStatus.setReadUptoNumeric(patientId);
                 integratingEntityStatusRepository.save(integratingEntityStatus);
                 logger.info(String.format("Completed patient id=%d, uuid:%s", patientId, patientUuid));
             }

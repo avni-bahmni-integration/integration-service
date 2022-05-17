@@ -37,7 +37,7 @@ public class LabResultWorker {
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(implementationConfigurationRepository.getLabEncounterSql());
             IntegratingEntityStatus integratingEntityStatus = integratingEntityStatusRepository.findByEntityType(BahmniEntityType.LabResult.name());
-            preparedStatement.setInt(1, integratingEntityStatus.getReadUpto());
+            preparedStatement.setInt(1, integratingEntityStatus.getReadUptoNumeric());
             preparedStatement.setFetchSize(20);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -46,7 +46,7 @@ public class LabResultWorker {
                 Event event = new Event("0", String.format("/%s/encounter/%s?v=full", BaseOpenMRSRepository.OPENMRS_BASE_PATH, encounterUuid));
                 event.setTitle("Encounter");
                 eventWorker.process(event);
-                integratingEntityStatus.setReadUpto(encounterId);
+                integratingEntityStatus.setReadUptoNumeric(encounterId);
                 integratingEntityStatusRepository.save(integratingEntityStatus);
                 logger.info(String.format("Completed encounter id=%d, uuid:%s", encounterId, encounterUuid));
             }

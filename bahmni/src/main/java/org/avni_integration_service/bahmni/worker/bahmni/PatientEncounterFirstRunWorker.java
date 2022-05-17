@@ -37,14 +37,14 @@ public class PatientEncounterFirstRunWorker implements PatientEncountersProcesso
         try (Connection connection = connectionFactory.getOpenMRSDbConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(implementationConfigurationRepository.getFirstRunEncounterSql());
             IntegratingEntityStatus integratingEntityStatus = integratingEntityStatusRepository.findByEntityType(BahmniEntityType.Encounter.name());
-            preparedStatement.setInt(1, integratingEntityStatus.getReadUpto());
+            preparedStatement.setInt(1, integratingEntityStatus.getReadUptoNumeric());
             preparedStatement.setFetchSize(20);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int encounterId = resultSet.getInt(1);
                 String encounterUuid = resultSet.getString(2);
                 eventWorker.process(new Event("0", String.format("/%s/encounter/%s?v=full", BaseOpenMRSRepository.OPENMRS_BASE_PATH, encounterUuid)));
-                integratingEntityStatus.setReadUpto(encounterId);
+                integratingEntityStatus.setReadUptoNumeric(encounterId);
                 integratingEntityStatusRepository.save(integratingEntityStatus);
                 logger.info(String.format("Completed encounter id=%d, uuid:%s", encounterId, encounterUuid));
             }

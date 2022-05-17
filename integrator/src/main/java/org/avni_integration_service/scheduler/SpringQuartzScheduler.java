@@ -1,7 +1,7 @@
 package org.avni_integration_service.scheduler;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.config.AutoWiringSpringBeanJobFactory;
+import org.avni_integration_service.util.AutoWiringSpringBeanJobFactory;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableAutoConfiguration
-public class SpringQrtzScheduler {
-    private static final Logger logger = Logger.getLogger(SpringQrtzScheduler.class);
+public class SpringQuartzScheduler {
+    private static final Logger logger = Logger.getLogger(SpringQuartzScheduler.class);
     @Value("${app.cron.main}")
     private String cronExpression;
     @Value("${app.cron.full.error}")
