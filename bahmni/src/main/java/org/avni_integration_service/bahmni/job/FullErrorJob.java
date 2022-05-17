@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@DisallowConcurrentExecution
-public class FullErrorJob implements Job {
+public class FullErrorJob {
     private static final Logger logger = Logger.getLogger(FullErrorJob.class);
 
     @Autowired
@@ -26,8 +25,7 @@ public class FullErrorJob implements Job {
     @Autowired
     private Bugsnag bugsnag;
 
-    public void execute(JobExecutionContext context) {
-        logger.info(String.format("Job ** {%s} ** fired @ {%s}", context.getJobDetail().getKey().getName(), context.getFireTime()));
+    public void execute() {
         try {
             Constants allConstants = constantsRepository.findAllConstants();
             errorRecordsWorker.cacheRunImmutables(allConstants);
@@ -36,6 +34,5 @@ public class FullErrorJob implements Job {
             logger.error("Failed", e);
             bugsnag.notify(e);
         }
-        logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }
 }

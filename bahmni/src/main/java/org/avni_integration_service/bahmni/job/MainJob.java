@@ -23,8 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Component
-@DisallowConcurrentExecution
-public class MainJob implements Job {
+public class MainJob {
     private static final Logger logger = Logger.getLogger(MainJob.class);
 
     @Value("${healthcheck.mainJob}")
@@ -74,8 +73,7 @@ public class MainJob implements Job {
     @Autowired
     private HealthCheckService healthCheckService;
 
-    public void execute(JobExecutionContext context) {
-        logger.info(String.format("Job ** {%s} ** fired @ {%s}", context.getJobDetail().getKey().getName(), context.getFireTime()));
+    public void execute() {
         try {
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
             Constants allConstants = constantsRepository.findAllConstants();
@@ -131,7 +129,6 @@ public class MainJob implements Job {
         } finally {
             healthCheckService.verify(mainJobId);
         }
-        logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }
 
     private void fixBahmniVisitAndEncounterDates() throws SQLException {
