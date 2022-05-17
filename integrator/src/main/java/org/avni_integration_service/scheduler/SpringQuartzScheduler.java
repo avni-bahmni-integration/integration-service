@@ -1,6 +1,8 @@
 package org.avni_integration_service.scheduler;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.job.FullErrorJob;
+import org.avni_integration_service.bahmni.job.MainJob;
 import org.avni_integration_service.util.AutoWiringSpringBeanJobFactory;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;

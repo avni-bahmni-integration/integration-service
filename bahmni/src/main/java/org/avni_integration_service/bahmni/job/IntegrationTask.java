@@ -1,4 +1,4 @@
-package org.avni_integration_service.scheduler;
+package org.avni_integration_service.bahmni.job;
 
 import java.util.ArrayList;
 import java.util.Arrays;

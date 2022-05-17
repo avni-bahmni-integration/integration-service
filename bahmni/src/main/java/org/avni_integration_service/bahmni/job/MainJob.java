@@ -1,4 +1,4 @@
-package org.avni_integration_service.scheduler;
+package org.avni_integration_service.bahmni.job;
 
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
@@ -6,7 +6,7 @@ import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.SyncDirection;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.bahmni.worker.ErrorRecordsWorker;
-import org.avni_integration_service.worker.HealthCheckService;
+import org.avni_integration_service.util.HealthCheckService;
 import org.avni_integration_service.bahmni.worker.avni.EnrolmentWorker;
 import org.avni_integration_service.bahmni.worker.avni.GeneralEncounterWorker;
 import org.avni_integration_service.bahmni.worker.avni.ProgramEncounterWorker;
@@ -26,6 +26,9 @@ import java.util.List;
 @DisallowConcurrentExecution
 public class MainJob implements Job {
     private static final Logger logger = Logger.getLogger(MainJob.class);
+
+    @Value("${healthcheck.mainJob}")
+    private String mainJobId;
 
     @Autowired
     private PatientWorker patientWorker;
@@ -126,7 +129,7 @@ public class MainJob implements Job {
             logger.error("Failed", e);
             bugsnag.notify(e);
         } finally {
-            healthCheckService.verifyMainJob();
+            healthCheckService.verify(mainJobId);
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }

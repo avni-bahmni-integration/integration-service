@@ -1,4 +1,4 @@
-package org.avni_integration_service.worker;
+package org.avni_integration_service.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +10,6 @@ import java.net.URI;
 
 @Component
 public class HealthCheckService {
-    @Value("${healthcheck.mainJob}")
-    private String mainJobId;
-
     private static final String PING_BASE_URL = "https://hc-ping.com/";
 
     private final RestTemplate restTemplate;
@@ -20,10 +17,6 @@ public class HealthCheckService {
     @Autowired
     public HealthCheckService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-    }
-
-    public void verifyMainJob() {
-        verify(mainJobId);
     }
 
     public void verify(String uuid) {

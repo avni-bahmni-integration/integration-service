@@ -1,4 +1,4 @@
-package org.avni_integration_service.config;
+package org.avni_integration_service.util;
 
 import com.bugsnag.Bugsnag;
 import com.bugsnag.BugsnagSpringConfiguration;

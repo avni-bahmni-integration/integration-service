@@ -1,4 +1,4 @@
-package org.avni_integration_service.scheduler;
+package org.avni_integration_service.bahmni.job;
 
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
