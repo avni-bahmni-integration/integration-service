@@ -10,7 +10,7 @@ public class ProgramEncounter extends AvniBaseEncounter {
 
     @JsonIgnore
     public String getSubjectType() {
-        return (String) get("Subject type");
+        return (String) get(Subject.SubjectTypeFieldName);
     }
 
     @JsonIgnore

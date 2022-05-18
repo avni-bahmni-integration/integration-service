@@ -1,5 +1,6 @@
 package org.avni_integration_service.avni.repository;
 
+import org.avni_integration_service.avni.domain.ProgramEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.domain.SubjectsResponse;
 import org.avni_integration_service.avni.client.AvniHttpClient;
@@ -50,4 +51,8 @@ public class AvniSubjectRepository extends BaseAvniRepository {
         return responseEntity.getBody();
     }
 
+    public Subject create(Subject subject) {
+        ResponseEntity<Subject> responseEntity = avniHttpClient.post("/api/subject", subject, Subject.class);
+        return responseEntity.getBody();
+    }
 }

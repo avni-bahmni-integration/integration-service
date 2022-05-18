@@ -23,71 +23,19 @@ package org.avni_integration_service.goonj.domain;
         "AccountName": "Mumbai"
  */
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.avni_integration_service.avni.domain.Subject;
 
-import java.time.LocalDate;
+import java.util.Map;
 
 public class Dispatch {
-    @JsonProperty("Unit")
-    private String unit;
-
-    @JsonProperty("Type")
-    private String type;
-
-    @JsonProperty("TargetCommunity")
-    private String targetCommunity;
-
-    @JsonProperty("Quantity")
-    private int quantity;
-
-    @JsonProperty("PurchaseItemCategory")
-    private String purchaseItemCategory;
-
-    @JsonProperty("OtherKitDetails")
-    private String OtherKitDetails;
-
-    @JsonProperty("MaterialName")
-    private String materialName;
-
-    @JsonProperty("LocalDemand")
-    private String localDemand;
-
-    @JsonProperty("KitSubType")
-    private String kitSubType;
-
-    @JsonProperty("KitName")
-    private String kitName;
-
-    @JsonProperty("ItemName")
-    private String itemName;
-
-    @JsonProperty("ItemCategory")
-    private String itemCategory;
-
-    @JsonProperty("DispatchStatusName")
-    private String dispatchStatusName;
-
-    @JsonProperty("DispatchStatusId")
-    private String getDispatchStatusId;
-
-    @JsonProperty("DispatchState")
-    private String dispatchState;
-
-    @JsonProperty("DispatchLineItemId")
-    private String dispatchLineItemId;
-
-    @JsonProperty("DispatchDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
-    private LocalDate dispatchDate;
-
-    @JsonProperty("DisasterType")
-    private String disasterType;
-
-    @JsonProperty("ContributedItem")
-    private String contributedItem;
-
-    @JsonProperty("AccountName")
-    private String accountName;
+    public static Subject from(Map<String, Object> dispatch) {
+        Subject subject = new Subject();
+        subject.setSubjectType("Dispatch");
+        subject.set(Subject.AddressFieldName, dispatch.get("foo"));
+        dispatch.forEach((field, value) -> {
+            if (!field.equals("DispatchLineItemId"))
+                subject.addObservation(field, value);
+        });
+        return subject;
+    }
 }
