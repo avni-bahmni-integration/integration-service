@@ -435,7 +435,7 @@ public class AvniToBahmniService {
     private MappingMetaData mappingMetadata(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, String about, ObsDataType obsDataType) {
         MappingMetaData mappingMetaData = new MappingMetaData();
         mappingMetaData.setMappingGroup(mappingGroup);
-        mappingMetaData.setMappingType(mappingType);
+        mappingMetaData.setMappingType(mappingType.name());
         mappingMetaData.setIntSystemValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
         mappingMetaData.setAbout(about);

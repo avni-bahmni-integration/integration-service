@@ -33,7 +33,7 @@ public class MappingMetadataController {
         MappingMetaData mappingMetaData = mappingMetaDataRepository.findById(id).get();
         MappingMetadataWebContract mappingMetadataWebContract = new MappingMetadataWebContract();
         mappingMetadataWebContract.setMappingGroup(mappingMetaData.getMappingGroup().getValue());
-        mappingMetadataWebContract.setMappingType(mappingMetaData.getMappingType().getValue());
+        mappingMetadataWebContract.setMappingType(MappingType.valueOf(mappingMetaData.getMappingType()).getValue());
         mappingMetadataWebContract.setBahmniValue(mappingMetaData.getIntSystemValue());
         mappingMetadataWebContract.setAvniValue(mappingMetaData.getAvniValue());
         mappingMetadataWebContract.setId(mappingMetaData.getId());
@@ -66,7 +66,7 @@ public class MappingMetadataController {
             mappingMetaData = mappingMetaDataRepository.findById(request.getId()).get();
         }
         mappingMetaData.setMappingGroup((MappingGroup) EnumUtil.findByValue(MappingGroup.values(), request.getMappingGroup()));
-        mappingMetaData.setMappingType((MappingType) EnumUtil.findByValue(MappingType.values(), request.getMappingType()));
+        mappingMetaData.setMappingType(MappingType.valueOf(request.getMappingType()).name());
         mappingMetaData.setIntSystemValue(request.getBahmniValue());
         mappingMetaData.setAvniValue(request.getAvniValue());
         mappingMetaData.setDataTypeHint(request.isCoded() ? ObsDataType.Coded : null);

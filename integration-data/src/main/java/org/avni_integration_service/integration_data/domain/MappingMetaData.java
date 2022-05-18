@@ -12,8 +12,7 @@ public class MappingMetaData extends BaseEntity {
     private MappingGroup mappingGroup;
 
     @Column(name = "mapping_name")
-    @Enumerated(EnumType.STRING)
-    private MappingType mappingType;
+    private String mappingType;
 
     @Column(name = "int_system_value")
     private String intSystemValue;
@@ -36,11 +35,11 @@ public class MappingMetaData extends BaseEntity {
         this.mappingGroup = mappingGroup;
     }
 
-    public MappingType getMappingType() {
+    public String getMappingType() {
         return mappingType;
     }
 
-    public void setMappingType(MappingType mappingType) {
+    public void setMappingType(String mappingType) {
         this.mappingType = mappingType;
     }
 

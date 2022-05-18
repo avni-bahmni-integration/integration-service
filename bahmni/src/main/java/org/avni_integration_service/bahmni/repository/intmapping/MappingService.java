@@ -59,7 +59,7 @@ public class MappingService {
     private MappingMetaData createMappingMetaData(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue) {
         MappingMetaData mappingMetaData = new MappingMetaData();
         mappingMetaData.setMappingGroup(mappingGroup);
-        mappingMetaData.setMappingType(mappingType);
+        mappingMetaData.setMappingType(mappingType.name());
         mappingMetaData.setIntSystemValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
         return mappingMetaData;
