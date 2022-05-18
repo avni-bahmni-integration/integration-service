@@ -1,7 +1,7 @@
 package org.avni_integration_service.web;
 
-import org.avni_integration_service.integration_data.domain.BaseEnum;
-import org.avni_integration_service.integration_data.domain.ErrorType;
+import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.web.response.EnumResponse;

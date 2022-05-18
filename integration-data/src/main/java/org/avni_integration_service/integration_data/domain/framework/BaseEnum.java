@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data.domain;
+package org.avni_integration_service.integration_data.domain.framework;
 
 public abstract class BaseEnum {
     private final int value;

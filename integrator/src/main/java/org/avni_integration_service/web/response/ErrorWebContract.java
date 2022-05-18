@@ -6,10 +6,11 @@ public class ErrorWebContract {
     private int id;
     private int errorType;
     private Date loggedAt;
-    private String bahmniEntityType;
+    private String integratingEntityType;
     private String avniEntityType;
-    private String entityUuid;
+    private String entityId;
     private boolean processingDisabled;
+    private String integrationSystem;
 
     public int getId() {
         return id;
@@ -35,12 +36,12 @@ public class ErrorWebContract {
         this.loggedAt = loggedAt;
     }
 
-    public String getBahmniEntityType() {
-        return bahmniEntityType;
+    public String getIntegratingEntityType() {
+        return integratingEntityType;
     }
 
-    public void setBahmniEntityType(String bahmniEntityType) {
-        this.bahmniEntityType = bahmniEntityType;
+    public void setIntegratingEntityType(String integratingEntityType) {
+        this.integratingEntityType = integratingEntityType;
     }
 
     public String getAvniEntityType() {
@@ -51,12 +52,12 @@ public class ErrorWebContract {
         this.avniEntityType = avniEntityType;
     }
 
-    public String getEntityUuid() {
-        return entityUuid;
+    public String getEntityId() {
+        return entityId;
     }
 
-    public void setEntityUuid(String entityUuid) {
-        this.entityUuid = entityUuid;
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
     }
 
     public boolean isProcessingDisabled() {
@@ -65,5 +66,13 @@ public class ErrorWebContract {
 
     public void setProcessingDisabled(boolean processingDisabled) {
         this.processingDisabled = processingDisabled;
+    }
+
+    public String getIntegrationSystem() {
+        return integrationSystem;
+    }
+
+    public void setIntegrationSystem(String integrationSystem) {
+        this.integrationSystem = integrationSystem;
     }
 }

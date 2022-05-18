@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.bahmni.SyncDirection;
 import org.avni_integration_service.integration_data.domain.*;
+import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.bahmni.worker.avni.EnrolmentWorker;
 import org.avni_integration_service.bahmni.worker.avni.GeneralEncounterWorker;

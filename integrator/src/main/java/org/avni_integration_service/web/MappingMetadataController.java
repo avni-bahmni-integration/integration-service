@@ -5,7 +5,6 @@ import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.util.ObsDataType;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
-import org.avni_integration_service.integration_data.util.EnumUtil;
 import org.avni_integration_service.web.contract.MappingMetadataWebContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +33,7 @@ public class MappingMetadataController {
         MappingMetadataWebContract mappingMetadataWebContract = new MappingMetadataWebContract();
         mappingMetadataWebContract.setMappingGroup(MappingGroup.valueOf(mappingMetaData.getMappingGroup()).getValue());
         mappingMetadataWebContract.setMappingType(MappingType.valueOf(mappingMetaData.getMappingType()).getValue());
-        mappingMetadataWebContract.setBahmniValue(mappingMetaData.getIntSystemValue());
+        mappingMetadataWebContract.setIntSystemValue(mappingMetaData.getIntSystemValue());
         mappingMetadataWebContract.setAvniValue(mappingMetaData.getAvniValue());
         mappingMetadataWebContract.setId(mappingMetaData.getId());
         mappingMetadataWebContract.setCoded(mappingMetaData.isCoded());
@@ -67,7 +66,7 @@ public class MappingMetadataController {
         }
         mappingMetaData.setMappingGroup(MappingGroup.valueOf(request.getMappingGroup()).name());
         mappingMetaData.setMappingType(MappingType.valueOf(request.getMappingType()).name());
-        mappingMetaData.setIntSystemValue(request.getBahmniValue());
+        mappingMetaData.setIntSystemValue(request.getIntSystemValue());
         mappingMetaData.setAvniValue(request.getAvniValue());
         mappingMetaData.setDataTypeHint(request.isCoded() ? ObsDataType.Coded : null);
         MappingMetaData saved = mappingMetaDataRepository.save(mappingMetaData);

@@ -1,9 +1,8 @@
 package org.avni_integration_service.web;
 
-import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
-import org.avni_integration_service.integration_data.domain.ErrorRecordLog;
-import org.avni_integration_service.integration_data.domain.ErrorType;
+import org.avni_integration_service.integration_data.domain.error.ErrorRecordLog;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordLogRepository;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
@@ -62,13 +61,16 @@ public class ErrorRecordLogController {
         errorWebContract.setErrorType(errorRecordLog.getErrorType().getValue());
         errorWebContract.setLoggedAt(errorRecordLog.getLoggedAt());
         errorWebContract.setProcessingDisabled(errorRecordLog.getErrorRecord().isProcessingDisabled());
+        errorWebContract.setIntegrationSystem(errorRecordLog.getErrorRecord().getIntegrationSystem().getName());
         AvniEntityType avniEntityType = errorRecordLog.getErrorRecord().getAvniEntityType();
         if (avniEntityType != null)
             errorWebContract.setAvniEntityType(avniEntityType.name());
-        BahmniEntityType bahmniEntityType = BahmniEntityType.valueOf(errorRecordLog.getErrorRecord().getIntegratingEntityType());
-        if (bahmniEntityType != null)
-            errorWebContract.setBahmniEntityType(bahmniEntityType.name());
-        errorWebContract.setEntityUuid(errorRecordLog.getErrorRecord().getEntityId());
+
+        String integratingEntityType = errorRecordLog.getErrorRecord().getIntegratingEntityType();
+        if (integratingEntityType != null) {
+            errorWebContract.setIntegratingEntityType(integratingEntityType);
+        }
+        errorWebContract.setEntityId(errorRecordLog.getErrorRecord().getEntityId());
         return errorWebContract;
     }
 

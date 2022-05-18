@@ -9,7 +9,7 @@ import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.integration_data.domain.AvniEntityStatus;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.domain.ErrorType;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
 import org.avni_integration_service.avni.repository.AvniEnrolmentRepository;

@@ -1,6 +1,6 @@
 package org.avni_integration_service.integration_data.util;
 
-import org.avni_integration_service.integration_data.domain.BaseEnum;
+import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
 
 import java.util.Arrays;
 

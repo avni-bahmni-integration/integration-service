@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data.domain;
+package org.avni_integration_service.integration_data.domain.error;
 
 import java.util.Arrays;
 import java.util.List;

@@ -11,6 +11,7 @@ import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.springframework.stereotype.Service;
 
 @Service

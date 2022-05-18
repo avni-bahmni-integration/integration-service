@@ -5,7 +5,7 @@ public class MappingMetadataWebContract {
     private int mappingGroup;
     private int mappingType;
     private String avniValue;
-    private String bahmniValue;
+    private String intSystemValue;
     private boolean coded;
 
     public int getMappingGroup() {
@@ -32,12 +32,12 @@ public class MappingMetadataWebContract {
         this.avniValue = avniValue;
     }
 
-    public String getBahmniValue() {
-        return bahmniValue;
+    public String getIntSystemValue() {
+        return intSystemValue;
     }
 
-    public void setBahmniValue(String bahmniValue) {
-        this.bahmniValue = bahmniValue;
+    public void setIntSystemValue(String intSystemValue) {
+        this.intSystemValue = intSystemValue;
     }
 
     public boolean isCoded() {

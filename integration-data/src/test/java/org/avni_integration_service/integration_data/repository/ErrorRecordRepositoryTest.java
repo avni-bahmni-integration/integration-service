@@ -1,6 +1,6 @@
 package org.avni_integration_service.integration_data.repository;
 
-import org.avni_integration_service.integration_data.domain.ErrorType;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

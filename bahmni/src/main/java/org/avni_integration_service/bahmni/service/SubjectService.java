@@ -9,6 +9,7 @@ import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

@@ -1,4 +1,7 @@
-package org.avni_integration_service.integration_data.domain;
+package org.avni_integration_service.integration_data.domain.framework;
+
+import org.avni_integration_service.integration_data.domain.MappingGroup;
+import org.avni_integration_service.integration_data.domain.MappingType;
 
 import java.util.ArrayList;
 import java.util.List;

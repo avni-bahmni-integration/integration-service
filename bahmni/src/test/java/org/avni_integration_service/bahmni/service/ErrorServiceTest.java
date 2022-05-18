@@ -2,8 +2,8 @@ package org.avni_integration_service.bahmni.service;
 
 import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.bahmni.BaseSpringTest;
-import org.avni_integration_service.integration_data.domain.ErrorRecord;
-import org.avni_integration_service.integration_data.domain.ErrorType;
+import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

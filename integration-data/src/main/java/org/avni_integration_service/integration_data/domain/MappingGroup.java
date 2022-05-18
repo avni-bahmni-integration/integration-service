@@ -1,5 +1,8 @@
 package org.avni_integration_service.integration_data.domain;
 
+import org.avni_integration_service.integration_data.domain.framework.AllEnumTypes;
+import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
+
 public class MappingGroup extends BaseEnum {
     public static final MappingGroup Common = new MappingGroup("Common", 1);
 

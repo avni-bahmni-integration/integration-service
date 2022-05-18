@@ -1,6 +1,6 @@
 package org.avni_integration_service.web.response;
 
-import org.avni_integration_service.integration_data.domain.BaseEnum;
+import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
 
 public class EnumResponse {
     private int id;

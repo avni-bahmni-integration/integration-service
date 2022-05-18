@@ -10,7 +10,7 @@ import org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker.PatientE
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.domain.ErrorType;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
 import org.avni_integration_service.bahmni.repository.OpenMRSPatientRepository;

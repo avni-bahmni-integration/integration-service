@@ -1,10 +1,14 @@
-package org.avni_integration_service.integration_data.domain;
+package org.avni_integration_service.integration_data.domain.error;
+
+import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.framework.BaseEntity;
+import org.avni_integration_service.integration_data.domain.framework.BaseIntegrationSpecificEntity;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-public class ErrorRecord extends BaseEntity {
+public class ErrorRecord extends BaseIntegrationSpecificEntity {
     @Column
     @Enumerated(EnumType.STRING)
     private AvniEntityType avniEntityType;

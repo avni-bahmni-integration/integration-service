@@ -1,5 +1,8 @@
 package org.avni_integration_service.integration_data.domain;
 
+import org.avni_integration_service.integration_data.domain.framework.AllEnumTypes;
+import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
+
 //Todo: after another integration move the ones not generic to Bahmni module
 public class MappingType extends BaseEnum {
     public static MappingType Concept = new MappingType(2, "Concept");

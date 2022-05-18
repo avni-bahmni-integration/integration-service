@@ -1,7 +1,7 @@
 package org.avni_integration_service.integration_data.repository;
 
-import org.avni_integration_service.integration_data.domain.ErrorRecordLog;
-import org.avni_integration_service.integration_data.domain.ErrorType;
+import org.avni_integration_service.integration_data.domain.error.ErrorRecordLog;
+import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
