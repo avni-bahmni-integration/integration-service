@@ -1,4 +1,6 @@
-package org.avni_integration_service.integration_data.domain;
+package org.avni_integration_service.bahmni;
+
+import org.avni_integration_service.integration_data.domain.MappingMetaData;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class MappingMetaDataCollection {
     public String getBahmniValueForAvniValue(String avniValue) {
         MappingMetaData mapping = getMappingForAvniValue(avniValue);
         if (mapping == null) return null;
-        return mapping.getBahmniValue();
+        return mapping.getIntSystemValue();
     }
 
     public String getAvniValueForBahmniValue(String bahmniValue) {
@@ -26,6 +28,6 @@ public class MappingMetaDataCollection {
     }
 
     public MappingMetaData getMappingForBahmniValue(String bahmniValue) {
-        return list.stream().filter(mappingMetaData -> bahmniValue.equals(mappingMetaData.getBahmniValue())).findAny().orElse(null);
+        return list.stream().filter(mappingMetaData -> bahmniValue.equals(mappingMetaData.getIntSystemValue())).findAny().orElse(null);
     }
 }

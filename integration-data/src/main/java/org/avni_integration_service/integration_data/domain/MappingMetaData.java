@@ -15,8 +15,8 @@ public class MappingMetaData extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MappingType mappingType;
 
-    @Column(name = "bahmni_value")
-    private String bahmniValue;
+    @Column(name = "int_system_value")
+    private String intSystemValue;
 
     @Column(name = "avni_value")
     private String avniValue;
@@ -44,12 +44,12 @@ public class MappingMetaData extends BaseEntity {
         this.mappingType = mappingType;
     }
 
-    public String getBahmniValue() {
-        return bahmniValue;
+    public String getIntSystemValue() {
+        return intSystemValue;
     }
 
-    public void setBahmniValue(String bahmniValue) {
-        this.bahmniValue = bahmniValue;
+    public void setIntSystemValue(String intSystemValue) {
+        this.intSystemValue = intSystemValue;
     }
 
     public String getAvniValue() {

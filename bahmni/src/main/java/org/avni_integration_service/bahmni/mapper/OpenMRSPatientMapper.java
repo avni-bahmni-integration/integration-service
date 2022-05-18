@@ -8,7 +8,7 @@ import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.bahmni.PatientToSubjectMetaData;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
-import org.avni_integration_service.integration_data.domain.MappingMetaDataCollection;
+import org.avni_integration_service.bahmni.MappingMetaDataCollection;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class OpenMRSPatientMapper {
             if (attributeValue instanceof Map) {
                 Map<String, String> attributeValueMap = (Map<String, String>) attributeValue;
                 String attributeUuid = attributeValueMap.get("uuid");
-                MappingMetaData answerMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup.Observation, MappingType.Concept, attributeUuid);
+                MappingMetaData answerMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndIntSystemValue(MappingGroup.Observation, MappingType.Concept, attributeUuid);
                 if (answerMapping == null) {
                     throw new RuntimeException(String.format("Could not find concept mapped for OpenMRS concept: %s while finding answer to OpenMRS concept/person-attribute: %s which is Avni Concept %s", attributeUuid, attributeTypeUuid, questionMapping.getAvniValue()));
                 }

@@ -21,7 +21,7 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
     }
 
     private MappingMetaData getMappingMetaData(String openmrsEncounterTypeUuid) {
-        return encounterTypeMappings.stream().filter(mappingMetaData -> mappingMetaData.getBahmniValue().equals(openmrsEncounterTypeUuid)).findFirst().orElse(null);
+        return encounterTypeMappings.stream().filter(mappingMetaData -> mappingMetaData.getIntSystemValue().equals(openmrsEncounterTypeUuid)).findFirst().orElse(null);
     }
 
     public boolean hasBahmniConceptSet(String openmrsEncounterTypeUuid) {
@@ -41,7 +41,7 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
     }
 
     public MappingMetaData getEncounterMappingFor(String openMRSEncounterUuid) {
-        return encounterTypeMappings.stream().filter(x -> x.getBahmniValue().equals(openMRSEncounterUuid)).findFirst().orElse(null);
+        return encounterTypeMappings.stream().filter(x -> x.getIntSystemValue().equals(openMRSEncounterUuid)).findFirst().orElse(null);
     }
 
     public void addLabMapping(MappingMetaData labMapping) {
@@ -73,7 +73,7 @@ public class BahmniEncounterToAvniEncounterMetaData implements BahmniToAvniMetaD
     }
 
     public String getAvniProgramName(String formConceptSetUuid) {
-        MappingMetaData programMapping = this.programMappings.stream().filter(mappingMetaData -> mappingMetaData.getBahmniValue().equals(formConceptSetUuid)).findFirst().orElse(null);
+        MappingMetaData programMapping = this.programMappings.stream().filter(mappingMetaData -> mappingMetaData.getIntSystemValue().equals(formConceptSetUuid)).findFirst().orElse(null);
         if (programMapping == null) return null;
         return programMapping.getAvniValue();
     }

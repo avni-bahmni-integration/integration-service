@@ -6,8 +6,7 @@ import javax.persistence.*;
 @Table(name = "constants") //constant is reserved in postgres
 public class Constant extends BaseEntity {
     @Column
-    @Enumerated(EnumType.STRING)
-    private ConstantKey key;
+    private String key;
 
     @Column
     private String value;
@@ -15,16 +14,16 @@ public class Constant extends BaseEntity {
     public Constant() {
     }
 
-    public Constant(ConstantKey key, String value) {
+    public Constant(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    public ConstantKey getKey() {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(ConstantKey key) {
+    public void setKey(String key) {
         this.key = key;
     }
 

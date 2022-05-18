@@ -1,8 +1,9 @@
 package org.avni_integration_service.migrator.service;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.avni.repository.ConnectionFactory;
 import org.avni_integration_service.bahmni.BahmniDbConnectionFactory;
+import org.avni_integration_service.bahmni.ConstantKey;
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
@@ -26,6 +27,7 @@ public class AvniToBahmniService {
     private final OpenMRSRepository openMRSRepository;
     private final AvniRepository avniRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;
+    private final MappingService mappingService;
     private final BahmniDbConnectionFactory bahmniDbConnectionFactory;
     private final BahmniConfigurationRepository implementationConfigurationRepository;
     private static final Logger logger = Logger.getLogger(AvniToBahmniService.class);
@@ -33,12 +35,13 @@ public class AvniToBahmniService {
     public AvniToBahmniService(OpenMRSRepository openMRSRepository,
                                AvniRepository avniRepository,
                                MappingMetaDataRepository mappingMetaDataRepository,
-                               BahmniDbConnectionFactory bahmniDbConnectionFactory, BahmniConfigurationRepository implementationConfigurationRepository) {
+                               BahmniDbConnectionFactory bahmniDbConnectionFactory, BahmniConfigurationRepository implementationConfigurationRepository, MappingService mappingService) {
         this.openMRSRepository = openMRSRepository;
         this.avniRepository = avniRepository;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.bahmniDbConnectionFactory = bahmniDbConnectionFactory;
         this.implementationConfigurationRepository = implementationConfigurationRepository;
+        this.mappingService = mappingService;
     }
 
     private void migrateForms(Connection connection) throws SQLException {
@@ -155,7 +158,7 @@ public class AvniToBahmniService {
         var existingMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndAvniValue(MappingGroup.Observation,
                 MappingType.Concept, avniValue);
         if (existingMapping == null) {
-            mappingMetaDataRepository.saveMapping(MappingGroup.Observation,
+            mappingService.saveMapping(MappingGroup.Observation,
                     MappingType.Concept,
                     bahmniValue,
                     avniValue,
@@ -165,7 +168,7 @@ public class AvniToBahmniService {
     }
 
     private void saveFormMapping(AvniForm avniForm, String bahmniValue) {
-        mappingMetaDataRepository.saveMapping(getMappingGroup(avniForm), getMappingType(avniForm), bahmniValue, getAvniValueForMapping(avniForm));
+        mappingService.saveMapping(getMappingGroup(avniForm), getMappingType(avniForm), bahmniValue, getAvniValueForMapping(avniForm));
     }
 
     private MappingGroup getMappingGroup(AvniForm avniForm) {
@@ -433,7 +436,7 @@ public class AvniToBahmniService {
         MappingMetaData mappingMetaData = new MappingMetaData();
         mappingMetaData.setMappingGroup(mappingGroup);
         mappingMetaData.setMappingType(mappingType);
-        mappingMetaData.setBahmniValue(bahmniValue);
+        mappingMetaData.setIntSystemValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
         mappingMetaData.setAbout(about);
         mappingMetaData.setDataTypeHint(obsDataType);

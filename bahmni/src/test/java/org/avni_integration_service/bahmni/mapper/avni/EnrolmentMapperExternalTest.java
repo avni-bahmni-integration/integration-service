@@ -5,6 +5,7 @@ import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
 import org.avni_integration_service.bahmni.contract.OpenMRSVisit;
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
@@ -33,6 +34,9 @@ public class EnrolmentMapperExternalTest {
     private MappingMetaDataRepository mappingMetaDataRepository;
 
     @Autowired
+    private MappingService mappingService;
+
+    @Autowired
     private ConstantsRepository constantsRepository;
 
     private String existingGroupUuid = "22dc3419-b8e5-4316-bf4d-39b9aa743164";
@@ -44,7 +48,7 @@ public class EnrolmentMapperExternalTest {
 
     @Test
     public void mapEnrolmentToEncounter() {
-        var metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(MappingGroup.Observation, MappingType.Concept);
         var enrolment = new Enrolment();
         enrolment.setProgram(program);
         enrolment.setUuid(enrolmentUuid);
@@ -52,7 +56,7 @@ public class EnrolmentMapperExternalTest {
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
         enrolment.set("observations", avniObservations);
-        var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
+        var formConcept = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
 
         enrolment.set("Enrolment datetime", FormatAndParseUtil.toISODateTimeString(new Date()));
 
@@ -67,7 +71,7 @@ public class EnrolmentMapperExternalTest {
         var groupObs = openMRSEncounter.getObservations().get(0);
         assertEquals(formConcept, groupObs.getConcept());
 
-        var avniIdConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
+        var avniIdConcept = mappingService.getBahmniValueForAvniIdConcept();
         var avniIdObs = getGroupMember(avniIdConcept, groupObs);
         assertNull(avniIdObs.getUuid());
         assertEquals(enrolment.getUuid(), avniIdObs.getValue());
@@ -79,7 +83,7 @@ public class EnrolmentMapperExternalTest {
 
     @Test
     public void mapEnrolmentToExistingEncounter() {
-        var metaData = mappingMetaDataRepository.findAll(MappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(MappingGroup.Observation, MappingType.Concept);
         var enrolment = new Enrolment();
         enrolment.setUuid(enrolmentUuid);
         enrolment.setProgram(program);
@@ -87,7 +91,7 @@ public class EnrolmentMapperExternalTest {
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
         enrolment.set("observations", avniObservations);
-        var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
+        var formConcept = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
 
         var openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentEncounter(getExistingEncounter(), enrolment,
                 constantsRepository.findAllConstants());
@@ -98,7 +102,7 @@ public class EnrolmentMapperExternalTest {
         assertEquals(formConcept, groupObs.getConcept());
         assertEquals(existingGroupUuid, groupObs.getUuid());
 
-        var avniIdConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
+        var avniIdConcept = mappingService.getBahmniValueForAvniIdConcept();
         var avniIdObs = getGroupMember(avniIdConcept, groupObs);
         assertEquals(avniIdObsUuid, avniIdObs.getUuid());
         assertEquals(enrolmentUuid, avniIdObs.getValue());
@@ -111,8 +115,8 @@ public class EnrolmentMapperExternalTest {
         OpenMRSFullEncounter encounter = new OpenMRSFullEncounter();
         OpenMRSUuidHolder patient = new OpenMRSUuidHolder();
         patient.setUuid(patientUuid);
-        var formConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
-        var avniIdConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
+        var formConceptUuid = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
+        var avniIdConcept = mappingService.getBahmniValueForAvniIdConcept();
         encounter.setPatient(patient);
         encounter.setAny("obs", List.of(
                 Map.of("uuid", existingGroupUuid,

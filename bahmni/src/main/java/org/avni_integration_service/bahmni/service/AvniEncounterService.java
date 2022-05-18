@@ -8,6 +8,7 @@ import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.avni.repository.AvniEncounterRepository;
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.ErrorType;
 import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
@@ -36,11 +37,11 @@ public class AvniEncounterService extends BaseAvniEncounterService {
     private static final Logger logger = Logger.getLogger(AvniEncounterService.class);
 
     @Autowired
-    public AvniEncounterService(PatientService patientService, MappingMetaDataRepository mappingMetaDataRepository, OpenMRSEncounterRepository openMRSEncounterRepository, OpenMRSEncounterMapper openMRSEncounterMapper, AvniEncounterRepository avniEncounterRepository, PatientService patientService1, MappingMetaDataRepository mappingMetaDataRepository1, OpenMRSEncounterRepository openMRSEncounterRepository1, EncounterMapper encounterMapper, VisitService visitService, ErrorService errorService) {
-        super(patientService, mappingMetaDataRepository, openMRSEncounterRepository);
+    public AvniEncounterService(PatientService patientService, OpenMRSEncounterRepository openMRSEncounterRepository, OpenMRSEncounterMapper openMRSEncounterMapper, AvniEncounterRepository avniEncounterRepository, PatientService patientService1, MappingService mappingService, OpenMRSEncounterRepository openMRSEncounterRepository1, EncounterMapper encounterMapper, VisitService visitService, ErrorService errorService) {
+        super(patientService, mappingService, openMRSEncounterRepository);
         this.openMRSEncounterMapper = openMRSEncounterMapper;
         this.avniEncounterRepository = avniEncounterRepository;
-        this.mappingMetaDataRepository = mappingMetaDataRepository1;
+        this.mappingService = mappingService;
         this.openMRSEncounterRepository = openMRSEncounterRepository1;
         this.encounterMapper = encounterMapper;
         this.visitService = visitService;

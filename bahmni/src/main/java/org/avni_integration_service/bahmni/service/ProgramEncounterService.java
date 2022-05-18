@@ -6,6 +6,7 @@ import org.avni_integration_service.avni.domain.ProgramEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.avni.repository.AvniEnrolmentRepository;
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.ErrorType;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
@@ -22,13 +23,13 @@ public class ProgramEncounterService extends BaseAvniEncounterService {
     private static final Logger logger = Logger.getLogger(ProgramEncounterService.class);
 
     public ProgramEncounterService(PatientService patientService,
-                                   MappingMetaDataRepository mappingMetaDataRepository,
+                                   MappingService mappingService,
                                    OpenMRSEncounterRepository openMRSEncounterRepository,
                                    VisitService visitService,
                                    EncounterMapper encounterMapper,
                                    ErrorService errorService,
                                    AvniEnrolmentRepository avniEnrolmentRepository) {
-        super(patientService, mappingMetaDataRepository, openMRSEncounterRepository);
+        super(patientService, mappingService, openMRSEncounterRepository);
         this.visitService = visitService;
         this.encounterMapper = encounterMapper;
         this.errorService = errorService;

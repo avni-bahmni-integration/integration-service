@@ -1,5 +1,6 @@
 package org.avni_integration_service.bahmni.service;
 
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.bahmni.PatientToSubjectMetaData;
@@ -16,6 +17,8 @@ import java.util.List;
 @Service
 public class MappingMetaDataService {
     @Autowired
+    private MappingService mappingService;
+    @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
     @Autowired
     private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
@@ -23,21 +26,21 @@ public class MappingMetaDataService {
     private static final MappingType[] bahmniEncounterMappingTypes = {MappingType.EncounterType, MappingType.DrugOrderEncounterType, MappingType.LabEncounterType};
 
     public SubjectToPatientMetaData getForSubjectToPatient() {
-        MappingMetaData patientIdentifierMapping = mappingMetaDataRepository.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
+        MappingMetaData patientIdentifierMapping = mappingService.findByMappingGroupAndMappingType(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
         String avniIdentifierConcept = patientIdentifierMapping.getAvniValue();
 
-        String encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.Subject_EncounterType);
+        String encounterTypeUuid = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.Subject_EncounterType);
 
-        String subjectUuidConceptUuid = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
+        String subjectUuidConceptUuid = mappingService.getBahmniValueForAvniIdConcept();
 
         return new SubjectToPatientMetaData(avniIdentifierConcept, encounterTypeUuid, subjectUuidConceptUuid);
     }
 
     public PatientToSubjectMetaData getForPatientToSubject() {
-        String avniIdentifierConcept = mappingMetaDataRepository.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
+        String avniIdentifierConcept = mappingService.getAvniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
         String patientEncounterType = Names.AvniPatientRegistrationEncounter;
-        String patientIdentifierName = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
-        String bahmniEntityUuidConceptInAvni = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
+        String patientIdentifierName = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.PatientIdentifier_Concept);
+        String bahmniEntityUuidConceptInAvni = mappingService.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
         return new PatientToSubjectMetaData(bahmniEntityUuidConceptInAvni, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
     }
 
@@ -46,7 +49,7 @@ public class MappingMetaDataService {
         BahmniEncounterToAvniEncounterMetaData metaData = new BahmniEncounterToAvniEncounterMetaData();
         metaData.addEncounterMappings(mappings);
 
-        String bahmniEntityUuidConceptInAvni = mappingMetaDataRepository.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
+        String bahmniEntityUuidConceptInAvni = mappingService.getAvniValue(MappingGroup.Common, MappingType.BahmniUUID_Concept);
         metaData.setBahmniEntityUuidConcept(bahmniEntityUuidConceptInAvni);
 
         metaData.addLabMapping(mappingMetaDataRepository.findByMappingType(MappingType.LabEncounterType));

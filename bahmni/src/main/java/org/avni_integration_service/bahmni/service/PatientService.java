@@ -8,7 +8,7 @@ import org.avni_integration_service.bahmni.mapper.avni.SubjectMapper;
 import org.avni_integration_service.bahmni.repository.openmrs.OpenMRSPersonRepository;
 import org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
 import org.avni_integration_service.avni.domain.Subject;
-import org.avni_integration_service.integration_data.domain.ConstantKey;
+import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.ErrorType;
 import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
@@ -85,7 +85,7 @@ public class PatientService {
     }
 
     public OpenMRSPatient findPatient(Subject subject, Constants constants, SubjectToPatientMetaData subjectToPatientMetaData) {
-        String patientIdentifier = constants.getValue(ConstantKey.BahmniIdentifierPrefix) + subject.getId(subjectToPatientMetaData.avniIdentifierConcept());
+        String patientIdentifier = constants.getValue(ConstantKey.BahmniIdentifierPrefix.name()) + subject.getId(subjectToPatientMetaData.avniIdentifierConcept());
         return openMRSPatientRepository.getPatientByIdentifier(patientIdentifier);
     }
 
@@ -106,9 +106,9 @@ public class PatientService {
         OpenMRSSavePatient patient = new OpenMRSSavePatient();
         patient.setPerson(uuidHolder.getUuid());
         patient.setIdentifiers(List.of(new OpenMRSSavePatientIdentifier(
-                String.format("%s%s", constants.getValue(ConstantKey.BahmniIdentifierPrefix), subject.getId(metaData.avniIdentifierConcept())),
-                constants.getValue(ConstantKey.IntegrationBahmniIdentifierType),
-                constants.getValue(ConstantKey.IntegrationBahmniLocation),
+                String.format("%s%s", constants.getValue(ConstantKey.BahmniIdentifierPrefix.name()), subject.getId(metaData.avniIdentifierConcept())),
+                constants.getValue(ConstantKey.IntegrationBahmniIdentifierType.name()),
+                constants.getValue(ConstantKey.IntegrationBahmniLocation.name()),
                 true
         )));
         return openMRSPatientRepository.createPatient(patient);
@@ -132,7 +132,7 @@ public class PatientService {
 
     public boolean shouldFilterPatient(OpenMRSPatient patient, Constants constants) {
         String patientId = patient.getPatientId();
-        return !patientId.startsWith(constants.getValue(ConstantKey.BahmniIdentifierPrefix));
+        return !patientId.startsWith(constants.getValue(ConstantKey.BahmniIdentifierPrefix.name()));
     }
 
     public OpenMRSPatient getPatient(String patientUuid) {

@@ -1,7 +1,8 @@
 package org.avni_integration_service.integration_data.repository;
 
-import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.util.ObsDataType;
+import org.avni_integration_service.integration_data.domain.MappingGroup;
+import org.avni_integration_service.integration_data.domain.MappingMetaData;
+import org.avni_integration_service.integration_data.domain.MappingType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface MappingMetaDataRepository extends PagingAndSortingRepository<MappingMetaData, Integer> {
     MappingMetaData findByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
 
-    MappingMetaData findByMappingGroupAndMappingTypeAndBahmniValue(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue);
+    MappingMetaData findByMappingGroupAndMappingTypeAndIntSystemValue(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue);
 
     MappingMetaData findByMappingGroupAndMappingTypeAndAvniValue(MappingGroup mappingGroup, MappingType mappingType, String avniValue);
 
@@ -24,76 +25,10 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
 
     List<MappingMetaData> findAllByMappingType(MappingType mappingType);
     Page<MappingMetaData> findAllByAvniValueContains(String avniValue, Pageable pageable);
-    Page<MappingMetaData> findAllByBahmniValueContains(String bahmniValue, Pageable pageable);
-    Page<MappingMetaData> findAllByAvniValueContainsAndBahmniValueContains(String avniValue, String bahmniValue, Pageable pageable);
+    Page<MappingMetaData> findAllByIntSystemValueContains(String bahmniValue, Pageable pageable);
+    Page<MappingMetaData> findAllByAvniValueContainsAndIntSystemValueContains(String avniValue, String bahmniValue, Pageable pageable);
 
     MappingMetaData findByMappingType(MappingType mappingType);
-
-    default MappingMetaDataCollection findAll(MappingGroup mappingGroup, List<MappingType> mappingTypes) {
-        return new MappingMetaDataCollection(findAllByMappingGroupAndMappingTypeIn(mappingGroup, mappingTypes));
-    }
-
-    default MappingMetaDataCollection findAll(MappingGroup mappingGroup, MappingType mappingType) {
-        return new MappingMetaDataCollection(findAllByMappingGroupAndMappingType(mappingGroup, mappingType));
-    }
-
-    default String getAvniValue(MappingGroup mappingGroup, MappingType mappingType) {
-        MappingMetaData mapping = findByMappingGroupAndMappingType(mappingGroup, mappingType);
-        return getAvniValue(mapping);
-    }
-
-    private String getAvniValue(MappingMetaData mapping) {
-        if (mapping == null) return null;
-        return mapping.getAvniValue();
-    }
-
-    default String getBahmniValue(MappingGroup mappingGroup, MappingType mappingType) {
-        MappingMetaData mapping = findByMappingGroupAndMappingType(mappingGroup, mappingType);
-        if (mapping == null) return null;
-        return mapping.getBahmniValue();
-    }
-
-    default String getBahmniValue(MappingGroup mappingGroup, MappingType mappingType, String avniValue) {
-        MappingMetaData mapping = findByMappingGroupAndMappingTypeAndAvniValue(mappingGroup, mappingType, avniValue);
-        if (mapping == null) return null;
-        return mapping.getBahmniValue();
-    }
-
-    default MappingMetaData saveMapping(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, ObsDataType obsDataType) {
-        MappingMetaData mappingMetaData = createMappingMetaData(mappingGroup, mappingType, bahmniValue, avniValue);
-        mappingMetaData.setDataTypeHint(obsDataType);
-        return save(mappingMetaData);
-    }
-
-    private MappingMetaData createMappingMetaData(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue) {
-        MappingMetaData mappingMetaData = new MappingMetaData();
-        mappingMetaData.setMappingGroup(mappingGroup);
-        mappingMetaData.setMappingType(mappingType);
-        mappingMetaData.setBahmniValue(bahmniValue);
-        mappingMetaData.setAvniValue(avniValue);
-        return mappingMetaData;
-    }
-
-    default MappingMetaData saveMapping(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue) {
-        MappingMetaData mappingMetaData = createMappingMetaData(mappingGroup, mappingType, bahmniValue, avniValue);
-        return save(mappingMetaData);
-    }
-
-    default String getBahmniValueForAvniIdConcept() {
-        return getBahmniValue(MappingGroup.Common, MappingType.AvniUUID_Concept);
-    }
-
-    default String getBahmniFormUuidForProgramEncounter(String encounterType) {
-        return getBahmniValue(MappingGroup.ProgramEncounter,
-                MappingType.CommunityProgramEncounter_BahmniForm,
-                encounterType);
-    }
-
-    default String getBahmniFormUuidForGeneralEncounter(String encounterType) {
-        return getBahmniValue(MappingGroup.GeneralEncounter,
-                MappingType.CommunityEncounter_BahmniForm,
-                encounterType);
-    }
 
     List<MappingMetaData> findAllByMappingTypeInAndAvniValue(Collection<MappingType> mappingTypes, String avniValue);
 }

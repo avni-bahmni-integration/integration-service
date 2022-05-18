@@ -45,6 +45,7 @@ rebuild-db: drop-db build-db
 build-db:
 	$(call _build_db,avni_int)
 	./gradlew migrateDb
+	psql -h localhost -U avni_int -d avni_int < integration-data/src/main/resources/db/util/superadmin.sql;
 
 drop-db:
 	$(call _drop_db,avni_int)
@@ -69,8 +70,8 @@ build-server: ## Builds the jar file
 	./gradlew clean build -x test
 
 setup-log-dir:
-	-sudo mkdir /var/log/abi
-	-sudo chown $(SU) /var/log/abi
+	-sudo mkdir /var/log/avni-int-service
+	-sudo chown $(SU) /var/log/avni-int-service
 
 run-server: build-db build-server
 	$(call _run_server)
@@ -159,5 +160,5 @@ copy-backup-to-vagrant:
 #######
 
 ### Setup
-setup:
+setup: setup-log-dir
 	touch goonj/src/test/resources/goonj-secret.properties

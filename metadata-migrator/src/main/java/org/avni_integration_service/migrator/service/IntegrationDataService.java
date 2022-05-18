@@ -1,6 +1,7 @@
 package org.avni_integration_service.migrator.service;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.*;
 import org.avni_integration_service.migrator.repository.BahmniConfigurationRepository;
@@ -20,6 +21,8 @@ public class IntegrationDataService {
     @Autowired
     private ConstantsRepository constantsRepository;
     @Autowired
+    private MappingService mappingService;
+    @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
     @Autowired
     private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
@@ -32,11 +35,11 @@ public class IntegrationDataService {
 
     public void createConstants() {
         Map<String, Object> constants = implementationConfigurationRepository.getConstants();
-        List<Constant> list = constants.keySet().stream().filter(key -> constants.get(key) instanceof String).map(key -> new Constant(ConstantKey.valueOf(key), (String) constants.get(key))).collect(Collectors.toList());
+        List<Constant> list = constants.keySet().stream().filter(key -> constants.get(key) instanceof String).map(key -> new Constant(key, (String) constants.get(key))).collect(Collectors.toList());
         constants.keySet().stream().filter(key -> !(constants.get(key) instanceof String)).forEach(key -> {
             ArrayList arrayList = (ArrayList) constants.get(key);
             arrayList.forEach(valueElement -> {
-                list.add(new Constant(ConstantKey.valueOf(key), (String) valueElement));
+                list.add(new Constant(key, (String) valueElement));
             });
         });
         constantsRepository.saveAll(list);
@@ -46,7 +49,7 @@ public class IntegrationDataService {
     public void createStandardMappings() {
         List<Map<String, String>> standardMappings = implementationConfigurationRepository.getStandardMappings().getList();
         standardMappings.forEach(keyValues -> {
-            mappingMetaDataRepository.saveMapping(MappingGroup.valueOf(keyValues.get("MappingGroup")), MappingType.valueOf(keyValues.get("MappingType")), keyValues.get("Bahmni Value"), keyValues.get("Avni Value"));
+            mappingService.saveMapping(MappingGroup.valueOf(keyValues.get("MappingGroup")), MappingType.valueOf(keyValues.get("MappingType")), keyValues.get("Bahmni Value"), keyValues.get("Avni Value"));
         });
         logger.info("Standard mappings created in integration database");
     }

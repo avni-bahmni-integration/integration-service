@@ -11,13 +11,13 @@ public class Constants {
         iterable.forEach(list::add);
     }
 
-    public String getValue(ConstantKey key) {
+    public String getValue(String key) {
         Constant c = list.stream().filter(constant -> constant.getKey().equals(key)).findAny().orElse(null);
         if (c == null) return null;
         return c.getValue();
     }
 
-    public List<Constant> getValues(ConstantKey key) {
+    public List<Constant> getValues(String key) {
         return list.stream().filter(constant -> constant.getKey().equals(key)).collect(Collectors.toList());
     }
 }

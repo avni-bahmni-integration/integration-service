@@ -1,5 +1,6 @@
 package org.avni_integration_service.bahmni.service;
 
+import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.integration_data.domain.*;
@@ -31,11 +32,11 @@ public class BahmniEncounterService {
     }
 
     public boolean isProcessableLabEncounter(BahmniEncounter bahmniEncounter, BahmniEncounterToAvniEncounterMetaData metaData, Constants constants) {
-         return this.isOutpatientEncounter(bahmniEncounter, constants) && bahmniEncounter.getEncounterTypeUuid().equals(metaData.getLabEncounterTypeMapping().getBahmniValue());
+         return this.isOutpatientEncounter(bahmniEncounter, constants) && bahmniEncounter.getEncounterTypeUuid().equals(metaData.getLabEncounterTypeMapping().getIntSystemValue());
     }
 
     private boolean isOutpatientEncounter(BahmniEncounter bahmniEncounter, Constants constants) {
-        List<String> outPatientVisitTypes = constants.getValues(ConstantKey.OutpatientVisitTypes).stream().map(Constant::getValue).collect(Collectors.toList());
+        List<String> outPatientVisitTypes = constants.getValues(ConstantKey.OutpatientVisitTypes.name()).stream().map(Constant::getValue).collect(Collectors.toList());
         String visitTypeUuid = bahmniEncounter.getVisitTypeUuid();
         long count = outPatientVisitTypes.stream().filter(visitTypeUuid::equals).count();
         return count != 0;

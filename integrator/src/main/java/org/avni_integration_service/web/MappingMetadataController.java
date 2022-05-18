@@ -34,7 +34,7 @@ public class MappingMetadataController {
         MappingMetadataWebContract mappingMetadataWebContract = new MappingMetadataWebContract();
         mappingMetadataWebContract.setMappingGroup(mappingMetaData.getMappingGroup().getValue());
         mappingMetadataWebContract.setMappingType(mappingMetaData.getMappingType().getValue());
-        mappingMetadataWebContract.setBahmniValue(mappingMetaData.getBahmniValue());
+        mappingMetadataWebContract.setBahmniValue(mappingMetaData.getIntSystemValue());
         mappingMetadataWebContract.setAvniValue(mappingMetaData.getAvniValue());
         mappingMetadataWebContract.setId(mappingMetaData.getId());
         mappingMetadataWebContract.setCoded(mappingMetaData.isCoded());
@@ -48,12 +48,12 @@ public class MappingMetadataController {
 
     @RequestMapping(value = "/mappingMetadata/search/findByBahmniValue")
     public Page<MappingMetadataWebContract> findByBahmniValue(@RequestParam("bahmniValue") String bahmniValue, Pageable pageable) {
-        return toContractPage(mappingMetaDataRepository.findAllByBahmniValueContains(bahmniValue, pageable));
+        return toContractPage(mappingMetaDataRepository.findAllByIntSystemValueContains(bahmniValue, pageable));
     }
 
     @RequestMapping(value = "/mappingMetadata/search/find", method = {RequestMethod.GET})
     public Page<MappingMetadataWebContract> find(@RequestParam("avniValue") String avniValue, @RequestParam("bahmniValue") String bahmniValue, Pageable pageable) {
-        return toContractPage(mappingMetaDataRepository.findAllByAvniValueContainsAndBahmniValueContains(avniValue, bahmniValue, pageable));
+        return toContractPage(mappingMetaDataRepository.findAllByAvniValueContainsAndIntSystemValueContains(avniValue, bahmniValue, pageable));
     }
 
     @RequestMapping(value = "/mappingMetadata", method = {RequestMethod.POST})
@@ -67,7 +67,7 @@ public class MappingMetadataController {
         }
         mappingMetaData.setMappingGroup((MappingGroup) EnumUtil.findByValue(MappingGroup.values(), request.getMappingGroup()));
         mappingMetaData.setMappingType((MappingType) EnumUtil.findByValue(MappingType.values(), request.getMappingType()));
-        mappingMetaData.setBahmniValue(request.getBahmniValue());
+        mappingMetaData.setIntSystemValue(request.getBahmniValue());
         mappingMetaData.setAvniValue(request.getAvniValue());
         mappingMetaData.setDataTypeHint(request.isCoded() ? ObsDataType.Coded : null);
         MappingMetaData saved = mappingMetaDataRepository.save(mappingMetaData);

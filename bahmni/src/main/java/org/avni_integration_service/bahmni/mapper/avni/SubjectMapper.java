@@ -1,9 +1,10 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
+import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.util.ObsDataType;
 import org.springframework.stereotype.Component;
@@ -12,11 +13,11 @@ import java.util.*;
 
 @Component
 public class SubjectMapper {
-    private final MappingMetaDataRepository mappingMetaDataRepository;
+    private final MappingService mappingService;
     private final ObservationMapper observationMapper;
 
-    public SubjectMapper(MappingMetaDataRepository mappingMetaDataRepository, ObservationMapper observationMapper) {
-        this.mappingMetaDataRepository = mappingMetaDataRepository;
+    public SubjectMapper(MappingService mappingService, ObservationMapper observationMapper) {
+        this.mappingService = mappingService;
         this.observationMapper = observationMapper;
     }
 
@@ -24,10 +25,10 @@ public class SubjectMapper {
         var openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
-        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
+        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation.name()));
 
-        var encounterProvider = new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider),
-                constants.getValue(ConstantKey.IntegrationBahmniEncounterRole));
+        var encounterProvider = new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider.name()),
+                constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name()));
         openMRSEncounter.addEncounterProvider(encounterProvider);
 
         var observations = observationMapper.mapObservations((LinkedHashMap<String, Object>) subject.get("observations"));
@@ -47,20 +48,20 @@ public class SubjectMapper {
         openMRSEncounter.setEncounterDatetime(existingEncounter.getEncounterDatetime());
         openMRSEncounter.setPatient(existingEncounter.getPatient().getUuid());
         openMRSEncounter.setEncounterType(encounterTypeUuid);
-        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
-        openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
+        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation.name()));
+        openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider.name()), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name())));
 
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) subject.get("observations"),
-                List.of(mappingMetaDataRepository.getBahmniValueForAvniIdConcept(),
-                        mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept)));
+                List.of(mappingService.getBahmniValueForAvniIdConcept(),
+                        mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept)));
         openMRSEncounter.setObservations(existingGroupObs(existingEncounter, observations));
         return openMRSEncounter;
     }
 
     private List<OpenMRSSaveObservation> groupObs(List<OpenMRSSaveObservation> observations) {
-        var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConcept = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
         var groupObservation = new OpenMRSSaveObservation();
         groupObservation.setConcept(formConcept);
         groupObservation.setGroupMembers(observations);
@@ -68,7 +69,7 @@ public class SubjectMapper {
     }
 
     private List<OpenMRSSaveObservation> existingGroupObs(OpenMRSFullEncounter existingEncounter, List<OpenMRSSaveObservation> observations) {
-        var formConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConceptUuid = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
         Optional<OpenMRSObservation> existingGroupObs = existingEncounter.findObservation(formConceptUuid);
         var groupObservation = new OpenMRSSaveObservation();
         existingGroupObs.ifPresent(o -> groupObservation.setUuid(o.getObsUuid()));
@@ -78,12 +79,12 @@ public class SubjectMapper {
     }
 
     private OpenMRSSaveObservation avniUuidObs(String avniEntityUuid) {
-        var bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
+        var bahmniValueForAvniUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, avniEntityUuid, ObsDataType.Text);
     }
 
     private OpenMRSSaveObservation eventDateObs(Subject subject) {
-        var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
+        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(subject.getRegistrationDate()), ObsDataType.Date);
     }
 }

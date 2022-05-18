@@ -1,11 +1,12 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
+import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.avni.domain.AvniBaseEncounter;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.ProgramEncounter;
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.util.ObsDataType;
 import org.springframework.stereotype.Component;
@@ -14,28 +15,28 @@ import java.util.*;
 
 @Component
 public class EncounterMapper {
-    private final MappingMetaDataRepository mappingMetaDataRepository;
+    private final MappingService mappingService;
     private final ObservationMapper observationMapper;
 
-    public EncounterMapper(MappingMetaDataRepository mappingMetaDataRepository, ObservationMapper observationMapper) {
-        this.mappingMetaDataRepository = mappingMetaDataRepository;
+    public EncounterMapper(MappingService mappingService, ObservationMapper observationMapper) {
+        this.mappingService = mappingService;
         this.observationMapper = observationMapper;
     }
 
     public OpenMRSEncounter mapEncounter(GeneralEncounter generalEncounter, String patientUuid, Constants constants, OpenMRSVisit visit) {
-        var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.GeneralEncounter,
+        var encounterTypeUuid = mappingService.getBahmniValue(MappingGroup.GeneralEncounter,
                 MappingType.CommunityEncounter_EncounterType,
                 generalEncounter.getEncounterType());
-        String formConceptUuid = mappingMetaDataRepository.getBahmniFormUuidForGeneralEncounter(generalEncounter.getEncounterType());
+        String formConceptUuid = mappingService.getBahmniFormUuidForGeneralEncounter(generalEncounter.getEncounterType());
         if (formConceptUuid == null) throw new RuntimeException(String.format("No form mapping setup for general encounter of type: %s", generalEncounter.getEncounterType()));
         return mapEncounter(generalEncounter, patientUuid, constants, visit, encounterTypeUuid, formConceptUuid);
     }
 
     public OpenMRSEncounter mapEncounter(ProgramEncounter programEncounter, String patientUuid, Constants constants, OpenMRSVisit visit) {
-        var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
+        var encounterTypeUuid = mappingService.getBahmniValue(MappingGroup.ProgramEncounter,
                 MappingType.CommunityProgramEncounter_EncounterType,
                 programEncounter.getEncounterType());
-        String formConceptUuid = mappingMetaDataRepository.getBahmniFormUuidForProgramEncounter(programEncounter.getEncounterType());
+        String formConceptUuid = mappingService.getBahmniFormUuidForProgramEncounter(programEncounter.getEncounterType());
         if (formConceptUuid == null) throw new RuntimeException(String.format("No form mapping setup for program encounter of type: %s", programEncounter.getEncounterType()));
         return mapEncounter(programEncounter, patientUuid, constants, visit, encounterTypeUuid, formConceptUuid);
     }
@@ -45,9 +46,9 @@ public class EncounterMapper {
         openMRSEncounter.setPatient(patientUuid);
         openMRSEncounter.setEncounterType(encounterTypeUuid);
         openMRSEncounter.setEncounterDatetime(MapperUtils.getEventDateTime(baseEncounter.getEncounterDateTime(), visit));
-        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
-        openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider),
-                constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
+        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation.name()));
+        openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider.name()),
+                constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name())));
 
         List<OpenMRSSaveObservation> observations = observationMapper.mapObservations((LinkedHashMap<String, Object>) baseEncounter.get("observations"));
         observations.add(avniUuidObs(baseEncounter));
@@ -66,28 +67,28 @@ public class EncounterMapper {
     }
 
     private OpenMRSSaveObservation avniUuidObs(AvniBaseEncounter encounter) {
-        String bahmniValueForAvniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
+        String bahmniValueForAvniUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValueForAvniUuidConcept, encounter.getUuid(), ObsDataType.Text);
     }
 
     private OpenMRSSaveObservation eventDateObs(AvniBaseEncounter encounter) {
-        var bahmniValue = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
+        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(encounter.getEncounterDateTime()), ObsDataType.Date);
     }
 
     public OpenMRSEncounter mapEncounterToExistingEncounter(OpenMRSFullEncounter existingOpenMRSEncounter, ProgramEncounter programEncounter, Constants constants) {
-        var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
+        var encounterTypeUuid = mappingService.getBahmniValue(MappingGroup.ProgramEncounter,
                 MappingType.CommunityProgramEncounter_EncounterType,
                 programEncounter.getEncounterType());
-        String formConceptUuid = mappingMetaDataRepository.getBahmniFormUuidForProgramEncounter(programEncounter.getEncounterType());
+        String formConceptUuid = mappingService.getBahmniFormUuidForProgramEncounter(programEncounter.getEncounterType());
         return mapEncounterToExistingEncounter(existingOpenMRSEncounter, programEncounter, constants, encounterTypeUuid, formConceptUuid);
     }
 
     public OpenMRSEncounter mapEncounterToExistingEncounter(OpenMRSFullEncounter existingOpenMRSEncounter, GeneralEncounter generalEncounter, Constants constants) {
-        var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.GeneralEncounter,
+        var encounterTypeUuid = mappingService.getBahmniValue(MappingGroup.GeneralEncounter,
                 MappingType.CommunityEncounter_EncounterType,
                 generalEncounter.getEncounterType());
-        String formConceptUuid = mappingMetaDataRepository.getBahmniFormUuidForGeneralEncounter(generalEncounter.getEncounterType());
+        String formConceptUuid = mappingService.getBahmniFormUuidForGeneralEncounter(generalEncounter.getEncounterType());
         return mapEncounterToExistingEncounter(existingOpenMRSEncounter, generalEncounter, constants, encounterTypeUuid, formConceptUuid);
     }
 
@@ -97,11 +98,11 @@ public class EncounterMapper {
         openMRSEncounter.setEncounterDatetime(existingEncounter.getEncounterDatetime());
         openMRSEncounter.setPatient(existingEncounter.getPatient().getUuid());
         openMRSEncounter.setEncounterType(encounterTypeUuid);
-        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
-        openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole)));
+        openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation.name()));
+        openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider.name()), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name())));
 
-        String avniUuidConcept = mappingMetaDataRepository.getBahmniValueForAvniIdConcept();
-        String eventDateConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
+        String avniUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
+        String eventDateConcept = mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) avniBaseEncounter.get("observations"),

@@ -1,12 +1,13 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
-import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.bahmni.repository.OpenMRSVisitRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.stereotype.Service;
@@ -17,26 +18,26 @@ import java.util.List;
 public class VisitService {
     private final ConstantsRepository constantsRepository;
     private final OpenMRSVisitRepository openMRSVisitRepository;
-    private final MappingMetaDataRepository mappingMetaDataRepository;
+    private final MappingService mappingService;
     private static final Logger logger = Logger.getLogger(VisitService.class);
 
-    public VisitService(ConstantsRepository constantsRepository, OpenMRSVisitRepository openMRSVisitRepository, MappingMetaDataRepository mappingMetaDataRepository) {
+    public VisitService(ConstantsRepository constantsRepository, OpenMRSVisitRepository openMRSVisitRepository, MappingService mappingService) {
         this.constantsRepository = constantsRepository;
         this.openMRSVisitRepository = openMRSVisitRepository;
-        this.mappingMetaDataRepository = mappingMetaDataRepository;
+        this.mappingService = mappingService;
     }
 
     public OpenMRSVisit getAvniRegistrationVisit(String patientUuid) {
         Constants allConstants = constantsRepository.findAllConstants();
-        String locationUuid = allConstants.getValue(ConstantKey.IntegrationBahmniLocation);
-        String visitTypeUuid = allConstants.getValue(ConstantKey.IntegrationBahmniVisitType);
+        String locationUuid = allConstants.getValue(ConstantKey.IntegrationBahmniLocation.name());
+        String visitTypeUuid = allConstants.getValue(ConstantKey.IntegrationBahmniVisitType.name());
         return openMRSVisitRepository.getVisit(patientUuid, locationUuid, visitTypeUuid);
     }
 
     private OpenMRSVisit getAvniRegistrationVisit(String patientUuid, Enrolment enrolment, String visitTypeUuid) {
-        var avniUuidVisitAttributeTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common,
+        var avniUuidVisitAttributeTypeUuid = mappingService.getBahmniValue(MappingGroup.Common,
                 MappingType.AvniUUID_VisitAttributeType);
-        String locationUuid = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation);
+        String locationUuid = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation.name());
         var visits = openMRSVisitRepository.getVisits(patientUuid, locationUuid, visitTypeUuid);
         return visits.stream()
                 .filter(visit -> matchesEnrolmentId(visit, enrolment, avniUuidVisitAttributeTypeUuid))
@@ -44,14 +45,14 @@ public class VisitService {
     }
 
     private OpenMRSVisit createVisit(OpenMRSPatient patient, Subject subject) {
-        String location = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation);
-        String visitType = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniVisitType);
+        String location = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation.name());
+        String visitType = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniVisitType.name());
         return createVisit(patient, location, visitType, visitAttributes(subject));
     }
 
     private OpenMRSVisit createVisit(OpenMRSPatient patient, Enrolment enrolment) {
-        String location = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation);
-        String visitType = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_VisitType, enrolment.getProgram());
+        String location = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation.name());
+        String visitType = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_VisitType, enrolment.getProgram());
         return createVisit(patient, location, visitType, visitAttributes(enrolment));
     }
 
@@ -70,13 +71,13 @@ public class VisitService {
     }
 
     private List<OpenMRSSaveVisitAttribute> visitAttributes(Subject subject) {
-        String avniIdAttributeType = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common,
+        String avniIdAttributeType = mappingService.getBahmniValue(MappingGroup.Common,
                 MappingType.AvniUUID_VisitAttributeType);
         var avniIdAttribute = new OpenMRSSaveVisitAttribute();
         avniIdAttribute.setAttributeType(avniIdAttributeType);
         avniIdAttribute.setValue(subject.getUuid());
 
-        String avniEventDateAttributeType = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common,
+        String avniEventDateAttributeType = mappingService.getBahmniValue(MappingGroup.Common,
                 MappingType.AvniEventDate_VisitAttributeType);
         var eventDateAttribute = new OpenMRSSaveVisitAttribute();
         eventDateAttribute.setAttributeType(avniEventDateAttributeType);
@@ -86,13 +87,13 @@ public class VisitService {
     }
 
     private List<OpenMRSSaveVisitAttribute> visitAttributes(Enrolment enrolment) {
-        String avniIdAttributeType = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common,
+        String avniIdAttributeType = mappingService.getBahmniValue(MappingGroup.Common,
                 MappingType.AvniUUID_VisitAttributeType);
         var avniIdAttribute = new OpenMRSSaveVisitAttribute();
         avniIdAttribute.setAttributeType(avniIdAttributeType);
         avniIdAttribute.setValue(enrolment.getUuid());
 
-        String avniEventDateAttributeType = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common,
+        String avniEventDateAttributeType = mappingService.getBahmniValue(MappingGroup.Common,
                 MappingType.AvniEventDate_VisitAttributeType);
         var eventDateAttribute = new OpenMRSSaveVisitAttribute();
         eventDateAttribute.setAttributeType(avniEventDateAttributeType);
@@ -111,7 +112,7 @@ public class VisitService {
     }
 
     public OpenMRSVisit getOrCreateVisit(OpenMRSPatient patient, Enrolment enrolment) {
-        var visitTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment,
+        var visitTypeUuid = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment,
                 MappingType.CommunityEnrolment_VisitType,
                 enrolment.getProgram());
         var visit = getAvniRegistrationVisit(patient.getUuid(), enrolment, visitTypeUuid);
@@ -130,8 +131,8 @@ public class VisitService {
 
     public void voidVisit(Enrolment enrolment, OpenMRSFullEncounter communityEnrolmentEncounter) {
         Constants allConstants = constantsRepository.findAllConstants();
-        String locationUuid = allConstants.getValue(ConstantKey.IntegrationBahmniLocation);
-        String visitType = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_VisitType, enrolment.getProgram());
+        String locationUuid = allConstants.getValue(ConstantKey.IntegrationBahmniLocation.name());
+        String visitType = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_VisitType, enrolment.getProgram());
         OpenMRSVisit visit = openMRSVisitRepository.getVisit(communityEnrolmentEncounter.getPatient().getUuid(), locationUuid, visitType);
         openMRSVisitRepository.deleteVisit(visit.getUuid());
     }
