@@ -1,9 +1,7 @@
 package org.avni_integration_service.migrator.service;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.bahmni.BahmniDbConnectionFactory;
-import org.avni_integration_service.bahmni.ConstantKey;
-import org.avni_integration_service.bahmni.Names;
+import org.avni_integration_service.bahmni.*;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
@@ -88,8 +86,8 @@ public class AvniToBahmniService {
             openMRSRepository.createEncounterType(connection,
                     NameMapping.fromAvniNameToBahmni(form.getEncounterType()),
                     encounterTypeUuid);
-            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEncounter,
-                    MappingType.CommunityProgramEncounter_EncounterType,
+            mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.ProgramEncounter,
+                    BahmniMappingType.CommunityProgramEncounter_EncounterType,
                     encounterTypeUuid,
                     form.getEncounterType(),
                     "Encounter type in OpenMRS for encounter type in Avni",
@@ -100,8 +98,8 @@ public class AvniToBahmniService {
             openMRSRepository.createEncounterType(connection,
                     NameMapping.fromAvniNameToBahmni(String.format("%s Enrolment", form.getProgram())),
                     openMrsEncounterTypeUuid);
-            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEnrolment,
-                    MappingType.CommunityEnrolment_EncounterType,
+            mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.ProgramEnrolment,
+                    BahmniMappingType.CommunityEnrolment_EncounterType,
                     openMrsEncounterTypeUuid,
                     form.getProgram(),
                     "Encounter type in OpenMRS for program enrolment data in Avni",
@@ -112,8 +110,8 @@ public class AvniToBahmniService {
             openMRSRepository.createEncounterType(connection,
                     NameMapping.fromAvniNameToBahmni(String.format("%s Exit", form.getProgram())),
                     openMrsEncounterTypeUuid);
-            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.ProgramEnrolment,
-                    MappingType.CommunityEnrolmentExit_EncounterType,
+            mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.ProgramEnrolment,
+                    BahmniMappingType.CommunityEnrolmentExit_EncounterType,
                     openMrsEncounterTypeUuid,
                     form.getProgram(),
                     "Encounter type in OpenMRS for program exit data in Avni",
@@ -124,8 +122,8 @@ public class AvniToBahmniService {
             openMRSRepository.createEncounterType(connection,
                     NameMapping.fromAvniNameToBahmni(form.getEncounterType()),
                     encounterTypeUuid);
-            mappingMetaDataRepository.save(mappingMetadata(MappingGroup.GeneralEncounter,
-                    MappingType.CommunityEncounter_EncounterType,
+            mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.GeneralEncounter,
+                    BahmniMappingType.CommunityEncounter_EncounterType,
                     encounterTypeUuid,
                     form.getEncounterType(),
                     "Encounter type in OpenMRS for encounter type in Avni",
@@ -138,8 +136,8 @@ public class AvniToBahmniService {
         if (form.getFormType().equals(ProgramEnrolment)) {
             createVisitTypeAndMapping(connection,
                     NameMapping.fromAvniNameToBahmni(String.format("%s Enrolment", form.getProgram())),
-                    MappingGroup.ProgramEnrolment,
-                    MappingType.CommunityEnrolment_VisitType,
+                    BahmniMappingGroup.ProgramEnrolment,
+                    BahmniMappingType.CommunityEnrolment_VisitType,
                     form.getProgram(),
                     "Visit type in OpenMRS for program enrolment data in Avni");
 
@@ -156,10 +154,10 @@ public class AvniToBahmniService {
     }
 
     private void saveObsMapping(String avniValue, String bahmniValue, ObsDataType obsDataType) {
-        var existingMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndAvniValue(MappingGroup.Observation,
+        var existingMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndAvniValue(BahmniMappingGroup.Observation,
                 MappingType.Concept, avniValue);
         if (existingMapping == null) {
-            mappingService.saveMapping(MappingGroup.Observation,
+            mappingService.saveMapping(BahmniMappingGroup.Observation,
                     MappingType.Concept,
                     bahmniValue,
                     avniValue,
@@ -175,21 +173,21 @@ public class AvniToBahmniService {
     private MappingGroup getMappingGroup(AvniForm avniForm) {
         var formType = avniForm.getFormType();
         return switch (formType) {
-            case IndividualProfile -> MappingGroup.PatientSubject;
-            case Encounter -> MappingGroup.GeneralEncounter;
-            case ProgramEncounter -> MappingGroup.ProgramEncounter;
-            case ProgramEnrolment, ProgramExit -> MappingGroup.ProgramEnrolment;
+            case IndividualProfile -> BahmniMappingGroup.PatientSubject;
+            case Encounter -> BahmniMappingGroup.GeneralEncounter;
+            case ProgramEncounter -> BahmniMappingGroup.ProgramEncounter;
+            case ProgramEnrolment, ProgramExit -> BahmniMappingGroup.ProgramEnrolment;
         };
     }
 
     private MappingType getMappingType(AvniForm avniForm) {
         var formType = avniForm.getFormType();
         return switch (formType) {
-            case IndividualProfile -> MappingType.CommunityRegistration_BahmniForm;
-            case Encounter -> MappingType.CommunityEncounter_BahmniForm;
-            case ProgramEncounter -> MappingType.CommunityProgramEncounter_BahmniForm;
-            case ProgramEnrolment -> MappingType.CommunityEnrolment_BahmniForm;
-            case ProgramExit -> MappingType.CommunityEnrolmentExit_BahmniForm;
+            case IndividualProfile -> BahmniMappingType.CommunityRegistration_BahmniForm;
+            case Encounter -> BahmniMappingType.CommunityEncounter_BahmniForm;
+            case ProgramEncounter -> BahmniMappingType.CommunityProgramEncounter_BahmniForm;
+            case ProgramEnrolment -> BahmniMappingType.CommunityEnrolment_BahmniForm;
+            case ProgramExit -> BahmniMappingType.CommunityEnrolmentExit_BahmniForm;
         };
     }
 
@@ -266,14 +264,14 @@ public class AvniToBahmniService {
         createVisitTypeAttributeAndMapping(connection,
                 Names.AvniEntityUuidConceptName,
                 MappingGroup.Common,
-                MappingType.AvniUUID_VisitAttributeType,
+                BahmniMappingType.AvniUUID_VisitAttributeType,
                 null,
                 "Visit Attribute Type for Avni Entity Uuid"
                 );
         createVisitTypeAttributeAndMapping(connection,
                 Names.AvniEventDateConceptName,
                 MappingGroup.Common,
-                MappingType.AvniEventDate_VisitAttributeType,
+                BahmniMappingType.AvniEventDate_VisitAttributeType,
                 null,
                 "Visit Attribute Type for Avni Event Date"
         );
@@ -282,8 +280,8 @@ public class AvniToBahmniService {
     private void createRegistrationEncounterTypeAndMapping(Connection connection) throws SQLException {
         var registrationEncounterTypeUuid = UUID.randomUUID().toString();
         openMRSRepository.createEncounterType(connection, "Community Registration", registrationEncounterTypeUuid);
-        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.PatientSubject,
-                MappingType.Subject_EncounterType,
+        mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.PatientSubject,
+                BahmniMappingType.Subject_EncounterType,
                 registrationEncounterTypeUuid,
                 null,
                 "Encounter type in OpenMRS for subject registration data in Avni",
@@ -319,7 +317,7 @@ public class AvniToBahmniService {
                 "Misc",
                 false);
         mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
-                MappingType.AvniUUID_Concept,
+                BahmniMappingType.AvniUUID_Concept,
                 entityConceptUuid,
                 null,
                 "External uuid is used to match entities after first save",
@@ -335,7 +333,7 @@ public class AvniToBahmniService {
                 "Misc",
                 false);
         mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
-                MappingType.AvniProgramData_Concept,
+                BahmniMappingType.AvniProgramData_Concept,
                 entityConceptUuid,
                 null,
                 "Program Data",
@@ -351,7 +349,7 @@ public class AvniToBahmniService {
                 "Misc",
                 false);
         mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
-                MappingType.AvniEventDate_Concept,
+                BahmniMappingType.AvniEventDate_Concept,
                 conceptUuid,
                 null,
                 Names.AvniEventDateConceptName,
@@ -401,7 +399,7 @@ public class AvniToBahmniService {
 
     private void createStandardConceptAndMapping(Connection connection, String conceptUuid, String conceptName, String conceptDataType, String avniValue, String about) throws SQLException {
         openMRSRepository.createConcept(connection, conceptUuid, conceptName, conceptDataType, "Misc", false);
-        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Observation,
+        mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.Observation,
                 MappingType.Concept,
                 conceptUuid,
                 avniValue,
@@ -435,8 +433,8 @@ public class AvniToBahmniService {
 
     private MappingMetaData mappingMetadata(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, String about, ObsDataType obsDataType) {
         MappingMetaData mappingMetaData = new MappingMetaData();
-        mappingMetaData.setMappingGroup(mappingGroup);
-        mappingMetaData.setMappingType(mappingType.name());
+        mappingMetaData.setMappingGroup(mappingGroup.name());
+        mappingMetaData.setMappingType(mappingType.getName());
         mappingMetaData.setIntSystemValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
         mappingMetaData.setAbout(about);

@@ -8,8 +8,7 @@ import javax.persistence.*;
 @Table(name = "mapping_metadata")
 public class MappingMetaData extends BaseEntity {
     @Column(name = "mapping_group_name")
-    @Enumerated(EnumType.STRING)
-    private MappingGroup mappingGroup;
+    private String mappingGroup;
 
     @Column(name = "mapping_name")
     private String mappingType;
@@ -27,11 +26,11 @@ public class MappingMetaData extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ObsDataType dataTypeHint;
 
-    public MappingGroup getMappingGroup() {
+    public String getMappingGroup() {
         return mappingGroup;
     }
 
-    public void setMappingGroup(MappingGroup mappingGroup) {
+    public void setMappingGroup(String mappingGroup) {
         this.mappingGroup = mappingGroup;
     }
 

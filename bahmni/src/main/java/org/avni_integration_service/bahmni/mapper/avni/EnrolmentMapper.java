@@ -1,5 +1,7 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
+import org.avni_integration_service.bahmni.BahmniMappingGroup;
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.avni.domain.Enrolment;
@@ -23,9 +25,9 @@ public class EnrolmentMapper {
     }
 
     public OpenMRSEncounter mapEnrolmentToEnrolmentEncounter(Enrolment enrolment, String patientUuid, OpenMRSVisit visit, Constants constants) {
-        var encounterTypes = mappingService.findAll(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_EncounterType);
+        var encounterTypes = mappingService.findAll(BahmniMappingGroup.ProgramEnrolment, BahmniMappingType.CommunityEnrolment_EncounterType);
         var encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
-        var formGroupObservation = formGroupObservation(enrolment, MappingType.CommunityEnrolment_BahmniForm);
+        var formGroupObservation = formGroupObservation(enrolment, BahmniMappingType.CommunityEnrolment_BahmniForm);
         return mapEnrolmentToEncounter(enrolment,
                 (LinkedHashMap<String, Object>) enrolment.get("observations"),
                 formGroupObservation,
@@ -37,9 +39,9 @@ public class EnrolmentMapper {
     }
 
     public OpenMRSEncounter mapEnrolmentToExitEncounter(Enrolment enrolment, String patientUuid, OpenMRSVisit visit, Constants constants) {
-        var encounterTypes = mappingService.findAll(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolmentExit_EncounterType);
+        var encounterTypes = mappingService.findAll(BahmniMappingGroup.ProgramEnrolment, BahmniMappingType.CommunityEnrolmentExit_EncounterType);
         var encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
-        var formGroupObservation = formGroupObservation(enrolment, MappingType.CommunityEnrolmentExit_BahmniForm);
+        var formGroupObservation = formGroupObservation(enrolment, BahmniMappingType.CommunityEnrolmentExit_BahmniForm);
         return mapEnrolmentToEncounter(enrolment,
                 (LinkedHashMap<String, Object>) enrolment.get("exitObservations"),
                 formGroupObservation,
@@ -79,14 +81,14 @@ public class EnrolmentMapper {
 
 
     private OpenMRSSaveObservation formGroupObservation(Enrolment enrolment, MappingType mappingType) {
-        var formConcept = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
+        var formConcept = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
         var groupObservation = new OpenMRSSaveObservation();
         groupObservation.setConcept(formConcept);
         return groupObservation;
     }
 
     private OpenMRSSaveObservation existingGroupObs(Enrolment enrolment, MappingType mappingType, OpenMRSFullEncounter existingEncounter) {
-        var formConceptUuid = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
+        var formConceptUuid = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
         Optional<OpenMRSObservation> existingGroupObs = existingEncounter.findObservation(formConceptUuid);
         var groupObservation = new OpenMRSSaveObservation();
         existingGroupObs.ifPresent(o -> groupObservation.setUuid(o.getObsUuid()));
@@ -95,10 +97,10 @@ public class EnrolmentMapper {
     }
 
     public OpenMRSEncounter mapEnrolmentToExistingEnrolmentEncounter(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
-        String encounterTypeUuid = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment,
-                MappingType.CommunityEnrolment_EncounterType,
+        String encounterTypeUuid = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment,
+                BahmniMappingType.CommunityEnrolment_EncounterType,
                 enrolment.getProgram());
-        OpenMRSSaveObservation formGroupObservation = existingGroupObs(enrolment, MappingType.CommunityEnrolment_BahmniForm, existingEncounter);
+        OpenMRSSaveObservation formGroupObservation = existingGroupObs(enrolment, BahmniMappingType.CommunityEnrolment_BahmniForm, existingEncounter);
         return mapEnrolmentToExistingEncounter(existingEncounter,
                 (Map<String, Object>) enrolment.get("observations"),
                 formGroupObservation,
@@ -107,10 +109,10 @@ public class EnrolmentMapper {
     }
 
     public OpenMRSEncounter mapEnrolmentToExistingEnrolmentExitEncounter(OpenMRSFullEncounter existingEncounter, Enrolment enrolment, Constants constants) {
-        String encounterTypeUuid = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment,
-                MappingType.CommunityEnrolmentExit_EncounterType,
+        String encounterTypeUuid = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment,
+                BahmniMappingType.CommunityEnrolmentExit_EncounterType,
                 enrolment.getProgram());
-        OpenMRSSaveObservation formGroupObservation = existingGroupObs(enrolment, MappingType.CommunityEnrolmentExit_BahmniForm, existingEncounter);
+        OpenMRSSaveObservation formGroupObservation = existingGroupObs(enrolment, BahmniMappingType.CommunityEnrolmentExit_BahmniForm, existingEncounter);
         return mapEnrolmentToExistingEncounter(existingEncounter,
                 (Map<String, Object>) enrolment.get("exitObservations"),
                 formGroupObservation,
@@ -133,8 +135,8 @@ public class EnrolmentMapper {
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider.name()), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name())));
 
         String avniUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
-        String eventDateConcept = mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
-        String programDataConcept = mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniProgramData_Concept);
+        String eventDateConcept = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
+        String programDataConcept = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniProgramData_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 avniObservations,
@@ -150,13 +152,13 @@ public class EnrolmentMapper {
     }
 
     private OpenMRSSaveObservation eventDateObs(Enrolment enrolment, boolean isExit) {
-        var obsConcept = mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
+        var obsConcept = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
         var obsValue = FormatAndParseUtil.toISODateString(isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime());
         return OpenMRSSaveObservation.createPrimitiveObs(obsConcept, obsValue, ObsDataType.Date);
     }
 
     private OpenMRSSaveObservation programDataObs(Enrolment enrolment, boolean isExit) {
-        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniProgramData_Concept);
+        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniProgramData_Concept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue,
                 String.format("%s - %s - %s",
                         enrolment.getProgram(),

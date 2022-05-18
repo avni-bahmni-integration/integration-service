@@ -1,12 +1,13 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
 import org.avni_integration_service.avni.domain.Enrolment;
+import org.avni_integration_service.bahmni.BahmniMappingGroup;
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
 import org.avni_integration_service.bahmni.contract.OpenMRSVisit;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
-import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
@@ -48,7 +49,7 @@ public class EnrolmentMapperExternalTest {
 
     @Test
     public void mapEnrolmentToEncounter() {
-        var metaData = mappingService.findAll(MappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
         var enrolment = new Enrolment();
         enrolment.setProgram(program);
         enrolment.setUuid(enrolmentUuid);
@@ -56,7 +57,7 @@ public class EnrolmentMapperExternalTest {
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
         enrolment.set("observations", avniObservations);
-        var formConcept = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
+        var formConcept = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment, BahmniMappingType.CommunityEnrolment_BahmniForm, program);
 
         enrolment.set("Enrolment datetime", FormatAndParseUtil.toISODateTimeString(new Date()));
 
@@ -83,7 +84,7 @@ public class EnrolmentMapperExternalTest {
 
     @Test
     public void mapEnrolmentToExistingEncounter() {
-        var metaData = mappingService.findAll(MappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
         var enrolment = new Enrolment();
         enrolment.setUuid(enrolmentUuid);
         enrolment.setProgram(program);
@@ -91,7 +92,7 @@ public class EnrolmentMapperExternalTest {
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
         enrolment.set("observations", avniObservations);
-        var formConcept = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
+        var formConcept = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment, BahmniMappingType.CommunityEnrolment_BahmniForm, program);
 
         var openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentEncounter(getExistingEncounter(), enrolment,
                 constantsRepository.findAllConstants());
@@ -115,7 +116,7 @@ public class EnrolmentMapperExternalTest {
         OpenMRSFullEncounter encounter = new OpenMRSFullEncounter();
         OpenMRSUuidHolder patient = new OpenMRSUuidHolder();
         patient.setUuid(patientUuid);
-        var formConceptUuid = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, MappingType.CommunityEnrolment_BahmniForm, program);
+        var formConceptUuid = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment, BahmniMappingType.CommunityEnrolment_BahmniForm, program);
         var avniIdConcept = mappingService.getBahmniValueForAvniIdConcept();
         encounter.setPatient(patient);
         encounter.setAny("obs", List.of(

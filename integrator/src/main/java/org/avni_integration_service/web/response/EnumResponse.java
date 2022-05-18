@@ -11,6 +11,11 @@ public class EnumResponse {
         this.name = baseEnum.name();
     }
 
+    public EnumResponse(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public EnumResponse() {
     }
 

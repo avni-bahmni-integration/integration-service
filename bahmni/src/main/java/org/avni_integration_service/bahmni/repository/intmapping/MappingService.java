@@ -1,5 +1,7 @@
 package org.avni_integration_service.bahmni.repository.intmapping;
 
+import org.avni_integration_service.bahmni.BahmniMappingGroup;
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.MappingMetaDataCollection;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
@@ -58,8 +60,8 @@ public class MappingService {
 
     private MappingMetaData createMappingMetaData(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue) {
         MappingMetaData mappingMetaData = new MappingMetaData();
-        mappingMetaData.setMappingGroup(mappingGroup);
-        mappingMetaData.setMappingType(mappingType.name());
+        mappingMetaData.setMappingGroup(mappingGroup.name());
+        mappingMetaData.setMappingType(mappingType.getName());
         mappingMetaData.setIntSystemValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
         return mappingMetaData;
@@ -71,18 +73,18 @@ public class MappingService {
     }
 
     public String getBahmniValueForAvniIdConcept() {
-        return getBahmniValue(MappingGroup.Common, MappingType.AvniUUID_Concept);
+        return getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniUUID_Concept);
     }
 
     public String getBahmniFormUuidForProgramEncounter(String encounterType) {
-        return getBahmniValue(MappingGroup.ProgramEncounter,
-                MappingType.CommunityProgramEncounter_BahmniForm,
+        return getBahmniValue(BahmniMappingGroup.ProgramEncounter,
+                BahmniMappingType.CommunityProgramEncounter_BahmniForm,
                 encounterType);
     }
 
     public String getBahmniFormUuidForGeneralEncounter(String encounterType) {
-        return getBahmniValue(MappingGroup.GeneralEncounter,
-                MappingType.CommunityEncounter_BahmniForm,
+        return getBahmniValue(BahmniMappingGroup.GeneralEncounter,
+                BahmniMappingType.CommunityEncounter_BahmniForm,
                 encounterType);
     }
 

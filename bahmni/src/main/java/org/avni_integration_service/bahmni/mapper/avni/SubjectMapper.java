@@ -1,5 +1,7 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
+import org.avni_integration_service.bahmni.BahmniMappingGroup;
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.avni.domain.Subject;
@@ -55,13 +57,13 @@ public class SubjectMapper {
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) subject.get("observations"),
                 List.of(mappingService.getBahmniValueForAvniIdConcept(),
-                        mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept)));
+                        mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept)));
         openMRSEncounter.setObservations(existingGroupObs(existingEncounter, observations));
         return openMRSEncounter;
     }
 
     private List<OpenMRSSaveObservation> groupObs(List<OpenMRSSaveObservation> observations) {
-        var formConcept = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConcept = mappingService.getBahmniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.CommunityRegistration_BahmniForm);
         var groupObservation = new OpenMRSSaveObservation();
         groupObservation.setConcept(formConcept);
         groupObservation.setGroupMembers(observations);
@@ -69,7 +71,7 @@ public class SubjectMapper {
     }
 
     private List<OpenMRSSaveObservation> existingGroupObs(OpenMRSFullEncounter existingEncounter, List<OpenMRSSaveObservation> observations) {
-        var formConceptUuid = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConceptUuid = mappingService.getBahmniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.CommunityRegistration_BahmniForm);
         Optional<OpenMRSObservation> existingGroupObs = existingEncounter.findObservation(formConceptUuid);
         var groupObservation = new OpenMRSSaveObservation();
         existingGroupObs.ifPresent(o -> groupObservation.setUuid(o.getObsUuid()));
@@ -84,7 +86,7 @@ public class SubjectMapper {
     }
 
     private OpenMRSSaveObservation eventDateObs(Subject subject) {
-        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, MappingType.AvniEventDate_Concept);
+        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(subject.getRegistrationDate()), ObsDataType.Date);
     }
 }

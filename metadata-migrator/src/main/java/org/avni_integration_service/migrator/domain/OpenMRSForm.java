@@ -1,5 +1,6 @@
 package org.avni_integration_service.migrator.domain;
 
+import org.avni_integration_service.bahmni.BahmniMappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 
 import java.util.ArrayList;
@@ -63,9 +64,9 @@ public class OpenMRSForm {
     }
 
     public MappingGroup getMappingGroup() {
-        if (type.equals("Encounter")) return MappingGroup.GeneralEncounter;
-        else if (type.equals("ProgramEnrolment")) return MappingGroup.ProgramEnrolment;
-        else if (type.equals("ProgramEncounter")) return MappingGroup.ProgramEncounter;
+        if (type.equals("Encounter")) return BahmniMappingGroup.GeneralEncounter;
+        else if (type.equals("ProgramEnrolment")) return BahmniMappingGroup.ProgramEnrolment;
+        else if (type.equals("ProgramEncounter")) return BahmniMappingGroup.ProgramEncounter;
         throw new RuntimeException("Invalid form type");
     }
 }

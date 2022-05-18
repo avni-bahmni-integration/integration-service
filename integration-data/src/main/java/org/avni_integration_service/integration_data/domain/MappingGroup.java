@@ -1,14 +1,22 @@
 package org.avni_integration_service.integration_data.domain;
 
-public enum MappingGroup implements BaseEnum {
-    Common(1), PatientSubject(2), GeneralEncounter(3), ProgramEnrolment(4), ProgramEncounter(5), Observation(6);
+public class MappingGroup extends BaseEnum {
+    public static final MappingGroup Common = new MappingGroup("Common", 1);
 
-    private final int value;
-    MappingGroup(int value) {
-        this.value = value;
+    public MappingGroup(String name, int value) {
+        super(value, name);
+        AllEnumTypes.add(this);
     }
 
-    public int getValue() {
-        return value;
+    public static BaseEnum[] values() {
+        return AllEnumTypes.getAllMappingGroups().toArray(BaseEnum[]::new);
+    }
+
+    public static MappingGroup valueOf(String mappingGroup) {
+        return AllEnumTypes.getAllMappingGroups().stream().filter(x -> x.getName().equals(mappingGroup)).findFirst().orElse(null);
+    }
+
+    public static MappingGroup valueOf(int mappingValue) {
+        return AllEnumTypes.getAllMappingGroups().stream().filter(x -> x.getValue() == mappingValue).findFirst().orElse(null);
     }
 }

@@ -3,8 +3,9 @@ package org.avni_integration_service.integration_data.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllMappingTypes {
+public class AllEnumTypes {
     private static final List<MappingType> allMappingTypes = new ArrayList<>();
+    private static final List<MappingGroup> allMappingGroups = new ArrayList<>();
 
     public static void add(MappingType mappingType) {
         allMappingTypes.add(mappingType);
@@ -12,5 +13,13 @@ public class AllMappingTypes {
 
     public static List<MappingType> getAllMappingTypes() {
         return allMappingTypes;
+    }
+
+    public static void add(MappingGroup mappingGroup) {
+        allMappingGroups.add(mappingGroup);
+    }
+
+    public static List<MappingGroup> getAllMappingGroups() {
+        return allMappingGroups;
     }
 }

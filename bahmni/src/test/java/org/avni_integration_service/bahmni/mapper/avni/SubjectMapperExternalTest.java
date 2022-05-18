@@ -1,12 +1,13 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.bahmni.BahmniMappingGroup;
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
 import org.avni_integration_service.bahmni.contract.OpenMRSVisit;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
-import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
@@ -43,7 +44,7 @@ public class SubjectMapperExternalTest {
 
     @Test
     public void mapSubjectToEncounter() {
-        var metaData = mappingService.findAll(MappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
         var subject = new Subject();
         subject.setUuid("fb6c59c6-cbb5-4c65-8d7e-99019fdb2490");
         var avniObservations = new LinkedHashMap<String, Object>();
@@ -51,7 +52,7 @@ public class SubjectMapperExternalTest {
         avniObservations.put("Number of babies", numberOfBabies);
         subject.set("observations", avniObservations);
         subject.set("Registration date", FormatAndParseUtil.toISODateTimeString(new Date()));
-        var formConcept = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConcept = mappingService.getBahmniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.CommunityRegistration_BahmniForm);
         var entityUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
         OpenMRSVisit openMRSVisit = new OpenMRSVisit();
         openMRSVisit.setStartDatetime(FormatAndParseUtil.toISODateTimeString(new Date()));
@@ -71,14 +72,14 @@ public class SubjectMapperExternalTest {
 
     @Test
     public void mapSubjectToExistingEncounter() {
-        var metaData = mappingService.findAll(MappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
         var subject = new Subject();
         subject.setUuid("fb6c59c6-cbb5-4c65-8d7e-99019fdb2490");
         var avniObservations = new LinkedHashMap<String, Object>();
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
         subject.set("observations", avniObservations);
-        var formConcept = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConcept = mappingService.getBahmniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.CommunityRegistration_BahmniForm);
         var openMRSEncounter = subjectMapper.mapSubjectToExistingEncounter(getExistingEncounter(), subject,
                 "cc0369c8-748c-42cc-a534-5ab40855c3f8",
                 "f39ce690-d1c4-4bb3-aa4b-893bdd73e5a1",
@@ -97,7 +98,7 @@ public class SubjectMapperExternalTest {
         OpenMRSFullEncounter encounter = new OpenMRSFullEncounter();
         OpenMRSUuidHolder patient = new OpenMRSUuidHolder();
         patient.setUuid("e0d4570b-3ca0-439e-a65e-d8ebe95caa14");
-        var formConceptUuid = mappingService.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConceptUuid = mappingService.getBahmniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.CommunityRegistration_BahmniForm);
         encounter.setPatient(patient);
         encounter.setAny("obs", List.of(
                 Map.of("uuid", existingGroupUuid,

@@ -1,5 +1,6 @@
 package org.avni_integration_service.migrator.domain;
 
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.integration_data.domain.MappingType;
 
 import java.util.List;
@@ -13,11 +14,11 @@ public class StandardMappings {
     }
 
     public Map<String, String> getLabMappingType() {
-        return getForMappingType(MappingType.LabEncounterType);
+        return getForMappingType(BahmniMappingType.LabEncounterType);
     }
 
     public Map<String, String> getForMappingType(MappingType mappingType) {
-        return list.stream().filter(stringStringMap -> stringStringMap.get("MappingType").equals(mappingType.name())).findFirst().orElse(null);
+        return list.stream().filter(stringStringMap -> stringStringMap.get("MappingType").equals(mappingType.getName())).findFirst().orElse(null);
     }
 
     public String getAvniValueForMappingType(MappingType mappingType) {
@@ -26,7 +27,7 @@ public class StandardMappings {
     }
 
     public Map<String, String> getDrugOrderMappingType() {
-        return getForMappingType(MappingType.DrugOrderEncounterType);
+        return getForMappingType(BahmniMappingType.DrugOrderEncounterType);
     }
 
     public List<Map<String, String>> getList() {
@@ -34,6 +35,6 @@ public class StandardMappings {
     }
 
     public Map<String, String> getDrugOrderConcept() {
-        return getForMappingType(MappingType.DrugOrderConcept);
+        return getForMappingType(BahmniMappingType.DrugOrderConcept);
     }
 }

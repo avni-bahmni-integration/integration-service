@@ -1,5 +1,7 @@
 package org.avni_integration_service.bahmni.service;
 
+import org.avni_integration_service.bahmni.BahmniMappingGroup;
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.mapper.avni.EnrolmentMapper;
 import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.bahmni.contract.OpenMRSEncounter;
@@ -28,16 +30,16 @@ public class EnrolmentService {
     }
 
     public OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSPatient patient) {
-        return findCommunityEnrolment(enrolment, patient, MappingType.CommunityEnrolment_EncounterType);
+        return findCommunityEnrolment(enrolment, patient, BahmniMappingType.CommunityEnrolment_EncounterType);
     }
 
     public OpenMRSFullEncounter findCommunityExitEnrolment(Enrolment enrolment, OpenMRSPatient patient) {
-        return findCommunityEnrolment(enrolment, patient, MappingType.CommunityEnrolmentExit_EncounterType);
+        return findCommunityEnrolment(enrolment, patient, BahmniMappingType.CommunityEnrolmentExit_EncounterType);
     }
 
     private OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSPatient patient, MappingType mappingType) {
         String bahmniValueForAvniUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
-        var encounterTypeUuid = mappingService.getBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
+        var encounterTypeUuid = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
         OpenMRSFullEncounter encounter = openMRSEncounterRepository
                 .getEncounterByPatientAndObservationAndEncType(patient.getUuid(), bahmniValueForAvniUuidConcept, enrolment.getUuid(), encounterTypeUuid);
         return encounter;

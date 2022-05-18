@@ -32,7 +32,7 @@ public class MappingMetadataController {
     public MappingMetadataWebContract getOne(@PathVariable("id") int id) {
         MappingMetaData mappingMetaData = mappingMetaDataRepository.findById(id).get();
         MappingMetadataWebContract mappingMetadataWebContract = new MappingMetadataWebContract();
-        mappingMetadataWebContract.setMappingGroup(mappingMetaData.getMappingGroup().getValue());
+        mappingMetadataWebContract.setMappingGroup(MappingGroup.valueOf(mappingMetaData.getMappingGroup()).getValue());
         mappingMetadataWebContract.setMappingType(MappingType.valueOf(mappingMetaData.getMappingType()).getValue());
         mappingMetadataWebContract.setBahmniValue(mappingMetaData.getIntSystemValue());
         mappingMetadataWebContract.setAvniValue(mappingMetaData.getAvniValue());
@@ -65,7 +65,7 @@ public class MappingMetadataController {
         } else {
             mappingMetaData = mappingMetaDataRepository.findById(request.getId()).get();
         }
-        mappingMetaData.setMappingGroup((MappingGroup) EnumUtil.findByValue(MappingGroup.values(), request.getMappingGroup()));
+        mappingMetaData.setMappingGroup(MappingGroup.valueOf(request.getMappingGroup()).name());
         mappingMetaData.setMappingType(MappingType.valueOf(request.getMappingType()).name());
         mappingMetaData.setIntSystemValue(request.getBahmniValue());
         mappingMetaData.setAvniValue(request.getAvniValue());

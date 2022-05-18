@@ -34,6 +34,6 @@ public class EnumController {
 
     @RequestMapping(value = "/errorType", method = {RequestMethod.GET})
     public List<EnumResponse> getErrorTypes(Pageable pageable) {
-        return getEnumResponses(ErrorType.values());
+        return Arrays.stream(ErrorType.values()).map(errorType -> new EnumResponse(errorType.getValue(), errorType.name())).sorted(Comparator.comparing(EnumResponse::getName)).collect(Collectors.toList());
     }
 }
