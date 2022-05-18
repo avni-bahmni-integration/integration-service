@@ -1,8 +1,6 @@
 package org.avni_integration_service.integration_data.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
+//Todo: after another integration move the ones not generic to Bahmni module
 public class MappingType implements BaseEnum {
     public static MappingType Subject_EncounterType = new MappingType(1, "Subject_EncounterType");
     public static MappingType Concept = new MappingType(2, "Concept");

@@ -25,7 +25,7 @@ public class IntegrationDataService {
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
     @Autowired
-    private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
+    private IgnoredIntegratingConceptRepository ignoredBahmniConceptRepository;
     @Autowired
     private AvniEntityStatusRepository avniEntityStatusRepository;
     @Autowired

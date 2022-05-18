@@ -1,4 +1,4 @@
-package org.avni_integration_service.integration_data.domain;
+package org.avni_integration_service.bahmni;
 
 public class Names {
     public static final String AvniPatientRegistrationEncounter = "Bahmni Patient Registration";

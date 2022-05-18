@@ -1,6 +1,6 @@
 package org.avni_integration_service.migrator.domain;
 
-import org.avni_integration_service.integration_data.domain.Names;
+import org.avni_integration_service.bahmni.Names;
 
 import java.util.ArrayList;
 

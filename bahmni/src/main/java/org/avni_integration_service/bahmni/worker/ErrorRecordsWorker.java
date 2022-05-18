@@ -2,6 +2,7 @@ package org.avni_integration_service.bahmni.worker;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.bahmni.BahmniEntityType;
+import org.avni_integration_service.bahmni.SyncDirection;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.bahmni.worker.avni.EnrolmentWorker;

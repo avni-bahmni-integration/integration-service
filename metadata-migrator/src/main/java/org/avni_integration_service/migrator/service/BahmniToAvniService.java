@@ -3,7 +3,7 @@ package org.avni_integration_service.migrator.service;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.integration_data.repository.IgnoredBahmniConceptRepository;
+import org.avni_integration_service.integration_data.repository.IgnoredIntegratingConceptRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.migrator.domain.*;
 import org.avni_integration_service.migrator.repository.AvniRepository;
@@ -36,7 +36,7 @@ public class BahmniToAvniService {
     private MappingMetaDataRepository mappingMetaDataRepository;
 
     @Autowired
-    private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
+    private IgnoredIntegratingConceptRepository ignoredBahmniConceptRepository;
 
     private static final Logger logger = Logger.getLogger(BahmniToAvniService.class);
 

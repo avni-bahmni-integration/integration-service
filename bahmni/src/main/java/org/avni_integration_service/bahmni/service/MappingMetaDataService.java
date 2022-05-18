@@ -1,11 +1,12 @@
 package org.avni_integration_service.bahmni.service;
 
+import org.avni_integration_service.bahmni.Names;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.bahmni.PatientToSubjectMetaData;
 import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
-import org.avni_integration_service.integration_data.repository.IgnoredBahmniConceptRepository;
+import org.avni_integration_service.integration_data.repository.IgnoredIntegratingConceptRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class MappingMetaDataService {
     @Autowired
     private MappingMetaDataRepository mappingMetaDataRepository;
     @Autowired
-    private IgnoredBahmniConceptRepository ignoredBahmniConceptRepository;
+    private IgnoredIntegratingConceptRepository ignoredBahmniConceptRepository;
 
     private static final MappingType[] bahmniEncounterMappingTypes = {MappingType.EncounterType, MappingType.DrugOrderEncounterType, MappingType.LabEncounterType};
 

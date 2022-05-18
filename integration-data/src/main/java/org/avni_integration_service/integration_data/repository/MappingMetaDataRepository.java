@@ -15,7 +15,7 @@ import java.util.List;
 public interface MappingMetaDataRepository extends PagingAndSortingRepository<MappingMetaData, Integer> {
     MappingMetaData findByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
 
-    MappingMetaData findByMappingGroupAndMappingTypeAndIntSystemValue(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue);
+    MappingMetaData findByMappingGroupAndMappingTypeAndIntSystemValue(MappingGroup mappingGroup, MappingType mappingType, String intSystemValue);
 
     MappingMetaData findByMappingGroupAndMappingTypeAndAvniValue(MappingGroup mappingGroup, MappingType mappingType, String avniValue);
 
@@ -25,8 +25,8 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
 
     List<MappingMetaData> findAllByMappingType(MappingType mappingType);
     Page<MappingMetaData> findAllByAvniValueContains(String avniValue, Pageable pageable);
-    Page<MappingMetaData> findAllByIntSystemValueContains(String bahmniValue, Pageable pageable);
-    Page<MappingMetaData> findAllByAvniValueContainsAndIntSystemValueContains(String avniValue, String bahmniValue, Pageable pageable);
+    Page<MappingMetaData> findAllByIntSystemValueContains(String intSystemValue, Pageable pageable);
+    Page<MappingMetaData> findAllByAvniValueContainsAndIntSystemValueContains(String avniValue, String intSystemValue, Pageable pageable);
 
     MappingMetaData findByMappingType(MappingType mappingType);
 

@@ -1,6 +1,7 @@
 package org.avni_integration_service.bahmni.worker.avni;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.Names;
 import org.avni_integration_service.bahmni.service.EntityStatusService;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.GeneralEncountersResponse;
