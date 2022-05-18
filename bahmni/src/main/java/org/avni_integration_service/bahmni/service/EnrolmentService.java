@@ -46,7 +46,7 @@ public class EnrolmentService {
     }
 
     public void processPatientNotFound(Enrolment enrolment) {
-        errorService.errorOccurred(enrolment, ErrorType.NoPatientWithId);
+        errorService.errorOccurred(enrolment, ErrorType.NoIntEntityWithId);
     }
 
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSPatient openMRSPatient, Constants constants) {

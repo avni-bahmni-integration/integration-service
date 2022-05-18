@@ -94,6 +94,9 @@ test-server-external: drop-test-db setup-external-test-db
 open-test-results-integrator:
 	open integrator/build/reports/tests/test/index.html
 
+open-test-results-util:
+	open util/build/reports/tests/test/index.html
+
 open-test-results-bahmni:
 	open bahmni/build/reports/tests/test/index.html
 

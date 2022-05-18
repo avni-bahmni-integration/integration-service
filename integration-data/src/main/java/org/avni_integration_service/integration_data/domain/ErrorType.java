@@ -1,18 +1,16 @@
 package org.avni_integration_service.integration_data.domain;
 
-import org.avni_integration_service.integration_data.util.EnumUtil;
-
 import java.util.Arrays;
 import java.util.List;
 
 public enum ErrorType {
-    NoPatientWithId(1), PatientIdChanged(2), EntityIsDeleted(3), NotACommunityMember(4),
+    NoIntEntityWithId(1), IntEntityIdChanged(2), EntityIsDeleted(3), NotAvniEntityFound(4),
     NoSubjectWithId(5), SubjectIdChanged(6), MultipleSubjectsWithId(7), SubjectIdNull(8);
 
     private final int value;
 
     public static List<ErrorType> getUnprocessableErrorTypes() {
-        return Arrays.asList(ErrorType.NotACommunityMember, ErrorType.EntityIsDeleted);
+        return Arrays.asList(ErrorType.NotAvniEntityFound, ErrorType.EntityIsDeleted);
     }
 
     ErrorType(int value) {

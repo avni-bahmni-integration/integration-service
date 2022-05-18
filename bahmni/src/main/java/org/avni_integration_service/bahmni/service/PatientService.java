@@ -90,7 +90,7 @@ public class PatientService {
     }
 
     public void processPatientIdChanged(Subject subject, SubjectToPatientMetaData metaData) {
-        errorService.errorOccurred(subject, ErrorType.PatientIdChanged);
+        errorService.errorOccurred(subject, ErrorType.IntEntityIdChanged);
     }
 
     private OpenMRSPatient createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
@@ -151,7 +151,7 @@ public class PatientService {
     }
 
     public void notACommunityMember(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, ErrorType.NotACommunityMember);
+        errorService.errorOccurred(patient, ErrorType.NotAvniEntityFound);
     }
 
     public void processMultipleSubjectsFound(Subject subject) {

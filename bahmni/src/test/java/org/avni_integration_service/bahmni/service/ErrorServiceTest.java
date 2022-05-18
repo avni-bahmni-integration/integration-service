@@ -19,7 +19,7 @@ class ErrorServiceTest extends BaseSpringTest {
 
     @Test
     public void errorOccurred() {
-        ErrorRecord errorRecord = errorService.errorOccurred(UUID.randomUUID().toString(), ErrorType.PatientIdChanged, BahmniEntityType.Patient);
+        ErrorRecord errorRecord = errorService.errorOccurred(UUID.randomUUID().toString(), ErrorType.IntEntityIdChanged, BahmniEntityType.Patient);
         assertNotNull(errorRecord);
     }
 }

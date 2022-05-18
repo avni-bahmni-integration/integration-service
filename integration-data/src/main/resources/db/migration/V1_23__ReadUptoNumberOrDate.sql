@@ -4,3 +4,7 @@ alter table integrating_entity_status add column read_upto_date_time TIMESTAMP W
 alter table integrating_entity_status add constraint all_read_upto_cannot_be_null check ((read_upto_numeric is not null) or (read_upto_date_time is not null));
 
 alter table mapping_metadata rename column bahmni_value to int_system_value;
+
+update error_record_log set error_type = 'NoIntEntityWithId' where error_type = 'NoPatientWithId';
+update error_record_log set error_type = 'IntEntityIdChanged' where error_type = 'PatientIdChanged';
+update error_record_log set error_type = 'NotAvniEntityFound' where error_type = 'NotACommunityMember';
