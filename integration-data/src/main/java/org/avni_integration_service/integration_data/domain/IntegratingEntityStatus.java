@@ -1,13 +1,15 @@
 package org.avni_integration_service.integration_data.domain;
 
-import org.avni_integration_service.integration_data.domain.framework.BaseEntity;
+import org.avni_integration_service.integration_data.domain.framework.BaseIntegrationSpecificEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
 @Table(name = "integrating_entity_status")
-public class IntegratingEntityStatus extends BaseEntity {
+public class IntegratingEntityStatus extends BaseIntegrationSpecificEntity {
     @Column(name = "read_upto_numeric")
     private Integer readUptoNumeric;
 

@@ -1,5 +1,12 @@
+alter table bahmni_entity_status rename to integrating_entity_status;
+alter table error_record rename column bahmni_entity_type to integrating_entity_type;
+alter table ignored_bahmni_concept rename to ignored_integrating_concept;
+alter table ignored_integrating_concept rename column concept_uuid to concept_id;
+
 alter table integrating_entity_status
     rename column read_upto to read_upto_numeric;
+alter table integrating_entity_status
+    alter column read_upto_numeric drop not null;
 alter table integrating_entity_status
     add column read_upto_date_time TIMESTAMP WITHOUT TIME ZONE null;
 
@@ -32,4 +39,10 @@ create table integrating_entity_type
     integration_system_id int not null references integration_system(id)
 );
 
-alter table error_record add column integration_system_id int null references integration_system(id);
+-- created this placeholder so that the same code could be deployed in future to ashwini in premise
+insert into integration_system (name) values ('bahmni');
+
+alter table error_record add column integration_system_id int not null references integration_system(id) default 1;
+alter table integrating_entity_status add column integration_system_id int null references integration_system(id) default 1;
+alter table avni_entity_status add column entity_sub_type varchar(255) null;
+alter table avni_entity_status add column integration_system_id int not null references integration_system(id) default 1;

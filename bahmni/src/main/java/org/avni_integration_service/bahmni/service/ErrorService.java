@@ -12,6 +12,7 @@ import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
+import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,14 @@ import org.springframework.stereotype.Service;
 public class ErrorService {
     private static final Logger logger = Logger.getLogger(ErrorService.class);
 
+    private final ErrorRecordRepository errorRecordRepository;
+    private final IntegrationSystemRepository integrationSystemRepository;
+
     @Autowired
-    private ErrorRecordRepository errorRecordRepository;
+    public ErrorService(ErrorRecordRepository errorRecordRepository, IntegrationSystemRepository integrationSystemRepository) {
+        this.errorRecordRepository = errorRecordRepository;
+        this.integrationSystemRepository = integrationSystemRepository;
+    }
 
     private void saveAvniError(String uuid, ErrorType errorType, AvniEntityType avniEntityType) {
         ErrorRecord errorRecord = errorRecordRepository.findByAvniEntityTypeAndEntityId(avniEntityType, uuid);
@@ -74,6 +81,7 @@ public class ErrorService {
             errorRecord.setEntityId(uuid);
             errorRecord.addErrorType(errorType);
             errorRecord.setProcessingDisabled(false);
+            errorRecord.setIntegrationSystem(integrationSystemRepository.findByName("bahmni"));
             errorRecordRepository.save(errorRecord);
         }
         return errorRecord;

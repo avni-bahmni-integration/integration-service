@@ -1,13 +1,14 @@
 package org.avni_integration_service.integration_data.domain;
 
 import org.avni_integration_service.integration_data.domain.framework.BaseEntity;
+import org.avni_integration_service.integration_data.domain.framework.BaseIntegrationSpecificEntity;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "avni_entity_status")
-public class AvniEntityStatus extends BaseEntity {
+public class AvniEntityStatus extends BaseIntegrationSpecificEntity {
     @Column(name = "read_upto", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date readUpto;
@@ -15,6 +16,9 @@ public class AvniEntityStatus extends BaseEntity {
     @Column(name = "entity_type")
     @Enumerated(EnumType.STRING)
     private AvniEntityType entityType;
+
+    @Column
+    private String entitySubType;
 
     public Date getReadUpto() {
         return readUpto;
@@ -30,5 +34,13 @@ public class AvniEntityStatus extends BaseEntity {
 
     public void setEntityType(AvniEntityType entityType) {
         this.entityType = entityType;
+    }
+
+    public String getEntitySubType() {
+        return entitySubType;
+    }
+
+    public void setEntitySubType(String entitySubType) {
+        this.entitySubType = entitySubType;
     }
 }
