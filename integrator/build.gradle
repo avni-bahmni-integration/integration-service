@@ -79,6 +79,7 @@ sourceSets {
         resources {
             srcDir '../integration-data/src/main/resources'
             srcDir '../goonj/src/main/resources'
+            srcDir '../amrit/src/main/resources'
         }
     }
     test {
