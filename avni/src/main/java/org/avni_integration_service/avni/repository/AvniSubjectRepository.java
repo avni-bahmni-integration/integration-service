@@ -1,9 +1,8 @@
 package org.avni_integration_service.avni.repository;
 
-import org.avni_integration_service.avni.domain.ProgramEncounter;
+import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.domain.SubjectsResponse;
-import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
