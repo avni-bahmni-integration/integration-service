@@ -53,6 +53,7 @@ build-db:
 build-db-schema:
 	./gradlew :integration-data:migrateDb
 	./gradlew --stacktrace :goonj:migrateDb
+	./gradlew --stacktrace :amrit:migrateDb
 	psql -h localhost -U avni_int -d avni_int < integration-data/src/main/resources/db/util/superadmin.sql;
 
 drop-db:
