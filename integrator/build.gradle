@@ -35,10 +35,6 @@ task migrateTestDb() {
     dependsOn ":integration-data:migrateTestDb"
 }
 
-task migrateDb() {
-    dependsOn ":integration-data:migrateDb"
-}
-
 dependencies {
     implementation project(':util')
     implementation project(':avni')

@@ -1,22 +1,28 @@
 package org.avni_integration_service.web.response;
 
 import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
+import org.avni_integration_service.integration_data.domain.framework.NamedEntity;
 
-public class EnumResponse {
+public class NamedEntityResponse {
     private int id;
     private String name;
 
-    public EnumResponse(BaseEnum baseEnum) {
+    public NamedEntityResponse(BaseEnum baseEnum) {
         this.id = baseEnum.getValue();
         this.name = baseEnum.name();
     }
 
-    public EnumResponse(int id, String name) {
+    public NamedEntityResponse(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public EnumResponse() {
+    public NamedEntityResponse(NamedEntity namedEntity) {
+        this.id = namedEntity.getId();
+        this.name = namedEntity.getName();
+    }
+
+    public NamedEntityResponse() {
     }
 
     public int getId() {

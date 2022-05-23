@@ -46,3 +46,5 @@ alter table error_record add column integration_system_id int not null reference
 alter table integrating_entity_status add column integration_system_id int null references integration_system(id) default 1;
 alter table avni_entity_status add column entity_sub_type varchar(255) null;
 alter table avni_entity_status add column integration_system_id int not null references integration_system(id) default 1;
+
+alter table users add column working_integration_system_id int not null references integration_system(id) default 1;

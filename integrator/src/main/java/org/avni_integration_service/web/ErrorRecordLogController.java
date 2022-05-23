@@ -50,9 +50,7 @@ public class ErrorRecordLogController {
     }
 
     private Page<ErrorWebContract> toContractPage(Page<ErrorRecordLog> page) {
-        return page.map(errorRecordLog -> {
-            return getErrorWebContract(errorRecordLog);
-        });
+        return page.map(this::getErrorWebContract);
     }
 
     private ErrorWebContract getErrorWebContract(ErrorRecordLog errorRecordLog) {

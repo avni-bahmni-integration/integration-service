@@ -1,3 +1,5 @@
+include bahmni/bahmni.mk
+
 help:
 	@IFS=$$'\n' ; \
 	help_lines=(`fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//'`); \
@@ -43,11 +45,14 @@ endef
 # kept here for emergency purposes as we are not developing the entire login functionality
 rebuild-db: drop-db build-db
 
+rebuild-db-schema: rebuild-db build-db-schema
+
 build-db:
 	$(call _build_db,avni_int)
 
 build-db-schema:
-	./gradlew migrateDb
+	./gradlew :integration-data:migrateDb
+	./gradlew --stacktrace :goonj:migrateDb
 	psql -h localhost -U avni_int -d avni_int < integration-data/src/main/resources/db/util/superadmin.sql;
 
 drop-db:
@@ -136,40 +141,12 @@ endif
 	git push origin --tags
 #######
 
-
 ####### Deployment
 deploy-to-vagrant-only:
 	echo vagrant | pbcopy
 	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/$(application_jar) root@127.0.0.1:/root/source/abi-host/
 
 deploy-to-vagrant: build-server deploy-to-vagrant-only
-
-deploy-all-to-ashwini-prod: deploy-integrator-to-ashwini-prod deploy-migrator-to-ashwini-prod
-	$(call _alert_success)
-
-deploy-integrator-to-ashwini-prod: build-server
-	scp integrator/build/libs/$(application_jar) dspace-auto:/tmp/
-	ssh dspace-auto "scp /tmp/$(application_jar) ashwini:/root/source/abi-host/"
-
-deploy-migrator-to-ashwini-prod: build-server
-	scp metadata-migrator/build/libs/metadata-migrator-0.0.2-SNAPSHOT.jar dspace-auto:/tmp/
-	ssh dspace-auto "scp /tmp/metadata-migrator-0.0.2-SNAPSHOT.jar ashwini:/root/source/abi-host/"
-#######
-
-# SERVICE MANAGEMENT
-restart-ashwini-service:
-	ssh dspace-auto "ssh ashwini \"systemctl restart abi.service\""
-
-tail-ashwini-service:
-	ssh dspace-auto "ssh ashwini \"tail -f /var/log/abi/integration-service.log\""
-
-####### DATABASE ENVIRONMENT
-download-ashwini-backup:
-	ssh dspace-auto "scp ashwini:/root/source/abi-host/backup/backup.sql /tmp/"
-	scp dspace-auto:/tmp/backup.sql /tmp/abi-backup.sql
-
-copy-backup-to-vagrant:
-	scp -P 2222 -i ~/.vagrant.d/insecure_private_key /tmp/abi-backup.sql root@127.0.0.1:/tmp/
 #######
 
 ### Setup
