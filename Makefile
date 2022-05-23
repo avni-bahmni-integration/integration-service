@@ -13,6 +13,7 @@ SU:=$(shell id -un)
 DB=avni_int
 ADMIN_USER=avni_int
 postgres_user := $(shell id -un)
+application_jar=integrator-0.0.2-SNAPSHOT.jar
 
 define _build_db
 	-psql -h localhost -U $(SU) -d postgres -c "create user $(ADMIN_USER) with password 'password' createrole";
@@ -25,7 +26,7 @@ define _drop_db
 endef
 
 define _run_server
-	java -jar --enable-preview integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar --app.cron.main="0/3 * * * * ?" --app.cron.full.error="0 1 * * * ?" --avni.api.url=https://staging.avniproject.org/ --avni.impl.username=test-user@bahmni_ashwini --avni.impl.password=password
+	java -jar --enable-preview integrator/build/libs/$(application_jar) --app.cron.main="0/3 * * * * ?" --app.cron.full.error="0 1 * * * ?" --avni.api.url=https://staging.avniproject.org/ --avni.impl.username=test-user@bahmni_ashwini --avni.impl.password=password
 endef
 
 define _run_migrator
@@ -79,13 +80,14 @@ run-server: build-db build-server
 	$(call _run_server)
 
 run-server-without-background: build-server
-	java -jar --enable-preview integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar --app.cron.main="0 0 6 6 9 ? 2035" --avni.api.url=https://example.com/ --avni.impl.username=foo --avni.impl.password=bar
+	java -jar --enable-preview integrator/build/libs/$(application_jar) --app.cron.main="0 0 6 6 9 ? 2035" --avni.api.url=https://example.com/ --avni.impl.username=foo --avni.impl.password=bar
 
 run-migrator: build-server
 	$(call _run_migrator)
 
 test-server: drop-test-db build-test-db
 	./gradlew clean build
+	java -jar integrator/build/libs/$(application_jar) CloseOnStart
 
 setup-external-test-db: drop-test-db create-test-db
 	sudo -u ${postgres_user} psql avni_int_test -f dump.sql
@@ -138,7 +140,7 @@ endif
 ####### Deployment
 deploy-to-vagrant-only:
 	echo vagrant | pbcopy
-	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar root@127.0.0.1:/root/source/abi-host/
+	scp -P 2222 -i ~/.vagrant.d/insecure_private_key integrator/build/libs/$(application_jar) root@127.0.0.1:/root/source/abi-host/
 
 deploy-to-vagrant: build-server deploy-to-vagrant-only
 
@@ -146,8 +148,8 @@ deploy-all-to-ashwini-prod: deploy-integrator-to-ashwini-prod deploy-migrator-to
 	$(call _alert_success)
 
 deploy-integrator-to-ashwini-prod: build-server
-	scp integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar dspace-auto:/tmp/
-	ssh dspace-auto "scp /tmp/integrator-0.0.2-SNAPSHOT.jar ashwini:/root/source/abi-host/"
+	scp integrator/build/libs/$(application_jar) dspace-auto:/tmp/
+	ssh dspace-auto "scp /tmp/$(application_jar) ashwini:/root/source/abi-host/"
 
 deploy-migrator-to-ashwini-prod: build-server
 	scp metadata-migrator/build/libs/metadata-migrator-0.0.2-SNAPSHOT.jar dspace-auto:/tmp/
