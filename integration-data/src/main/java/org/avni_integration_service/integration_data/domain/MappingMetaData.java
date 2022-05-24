@@ -1,13 +1,13 @@
 package org.avni_integration_service.integration_data.domain;
 
-import org.avni_integration_service.integration_data.domain.framework.BaseEntity;
+import org.avni_integration_service.integration_data.domain.framework.BaseIntegrationSpecificEntity;
 import org.avni_integration_service.util.ObsDataType;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "mapping_metadata")
-public class MappingMetaData extends BaseEntity {
+public class MappingMetaData extends BaseIntegrationSpecificEntity {
     @Column(name = "mapping_group_name")
     private String mappingGroup;
 

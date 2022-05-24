@@ -1,6 +1,5 @@
 package org.avni_integration_service.integration_data.domain;
 
-import org.avni_integration_service.integration_data.domain.framework.BaseEntity;
 import org.avni_integration_service.integration_data.domain.framework.BaseIntegrationSpecificEntity;
 
 import javax.persistence.*;
