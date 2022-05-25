@@ -51,7 +51,8 @@ build-db:
 	$(call _build_db,avni_int)
 
 build-db-schema:
-	./gradlew :integration-data:migrateDb
+	./gradlew --stacktrace :integration-data:migrateDb
+	./gradlew --stacktrace :bahmni:migrateDb
 	./gradlew --stacktrace :goonj:migrateDb
 	./gradlew --stacktrace :amrit:migrateDb
 	psql -h localhost -U avni_int -d avni_int < integration-data/src/main/resources/db/util/superadmin.sql;
