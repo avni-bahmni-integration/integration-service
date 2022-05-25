@@ -1,4 +1,4 @@
-package org.avni_integration_service.web.response;
+package org.avni_integration_service.web.contract;
 
 public class BaseEntityContract {
     private int id;

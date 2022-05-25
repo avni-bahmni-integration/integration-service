@@ -1,7 +1,6 @@
 package org.avni_integration_service.web.contract;
 
 import org.avni_integration_service.integration_data.domain.User;
-import org.avni_integration_service.web.response.BaseEntityContract;
 
 public class UserContract extends BaseEntityContract {
     private String email;

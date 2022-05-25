@@ -1,7 +1,8 @@
-package org.avni_integration_service.web.response;
+package org.avni_integration_service.web.contract;
 
 import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
 import org.avni_integration_service.integration_data.domain.framework.NamedEntity;
+import org.avni_integration_service.web.contract.BaseEntityContract;
 
 public class NamedEntityContract extends BaseEntityContract {
     private String name;

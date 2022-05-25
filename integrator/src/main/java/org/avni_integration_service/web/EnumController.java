@@ -4,7 +4,7 @@ import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingType;
-import org.avni_integration_service.web.response.NamedEntityContract;
+import org.avni_integration_service.web.contract.NamedEntityContract;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

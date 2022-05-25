@@ -1,4 +1,4 @@
-package org.avni_integration_service.web.response;
+package org.avni_integration_service.web.contract;
 
 import java.util.Date;
 

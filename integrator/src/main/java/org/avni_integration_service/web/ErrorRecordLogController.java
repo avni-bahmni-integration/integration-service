@@ -6,7 +6,7 @@ import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordLogRepository;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
-import org.avni_integration_service.web.response.ErrorWebContract;
+import org.avni_integration_service.web.contract.ErrorWebContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

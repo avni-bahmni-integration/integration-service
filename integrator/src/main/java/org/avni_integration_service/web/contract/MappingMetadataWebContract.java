@@ -1,7 +1,6 @@
 package org.avni_integration_service.web.contract;
 
-public class MappingMetadataWebContract {
-    private int id;
+public class MappingMetadataWebContract extends BaseIntSystemSpecificContract {
     private int mappingGroup;
     private int mappingType;
     private String avniValue;
@@ -46,13 +45,5 @@ public class MappingMetadataWebContract {
 
     public void setCoded(boolean coded) {
         this.coded = coded;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
