@@ -57,7 +57,7 @@ public class SubjectMapper {
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) subject.get("observations"),
                 List.of(mappingService.getBahmniValueForAvniIdConcept(),
-                        mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept)));
+                        mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniEventDate_Concept)));
         openMRSEncounter.setObservations(existingGroupObs(existingEncounter, observations));
         return openMRSEncounter;
     }
@@ -86,7 +86,7 @@ public class SubjectMapper {
     }
 
     private OpenMRSSaveObservation eventDateObs(Subject subject) {
-        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
+        var bahmniValue = mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(subject.getRegistrationDate()), ObsDataType.Date);
     }
 }

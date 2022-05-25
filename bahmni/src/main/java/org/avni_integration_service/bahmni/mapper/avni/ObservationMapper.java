@@ -1,6 +1,7 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
 import org.avni_integration_service.bahmni.BahmniMappingGroup;
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.MappingMetaDataCollection;
 import org.avni_integration_service.bahmni.contract.OpenMRSObservation;
 import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
@@ -22,7 +23,7 @@ public class ObservationMapper {
 
     public List<OpenMRSSaveObservation> updateOpenMRSObservationsFromAvniObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, List<String> hardcodedConcepts) {
         List<OpenMRSSaveObservation> updateObservations = new ArrayList<>();
-        MappingMetaDataCollection conceptMappings = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection conceptMappings = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         updateObservations.addAll(voidedObservations(openMRSObservations, avniObservations, conceptMappings, hardcodedConcepts));
         updateObservations.addAll(updatedObservations(openMRSObservations, avniObservations, conceptMappings));
         updateObservations.addAll(hardcodedObservations(openMRSObservations, hardcodedConcepts));
@@ -129,7 +130,7 @@ public class ObservationMapper {
 
     public List<OpenMRSSaveObservation> mapObservations(LinkedHashMap<String, Object> avniObservations) {
         List<OpenMRSSaveObservation> openMRSObservations = new ArrayList<>();
-        MappingMetaDataCollection conceptMappings = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection conceptMappings = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         for (Map.Entry<String, Object> entry : avniObservations.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

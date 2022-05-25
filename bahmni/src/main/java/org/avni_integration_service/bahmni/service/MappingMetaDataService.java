@@ -38,7 +38,7 @@ public class MappingMetaDataService {
         String avniIdentifierConcept = mappingService.getAvniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.PatientIdentifier_Concept);
         String patientEncounterType = Names.AvniPatientRegistrationEncounter;
         String patientIdentifierName = mappingService.getBahmniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.PatientIdentifier_Concept);
-        String bahmniEntityUuidConceptInAvni = mappingService.getAvniValue(MappingGroup.Common, BahmniMappingType.BahmniUUID_Concept);
+        String bahmniEntityUuidConceptInAvni = mappingService.getAvniValue(BahmniMappingGroup.Common, BahmniMappingType.BahmniUUID_Concept);
         return new PatientToSubjectMetaData(bahmniEntityUuidConceptInAvni, avniIdentifierConcept, patientEncounterType, patientIdentifierName);
     }
 
@@ -47,7 +47,7 @@ public class MappingMetaDataService {
         BahmniEncounterToAvniEncounterMetaData metaData = new BahmniEncounterToAvniEncounterMetaData();
         metaData.addEncounterMappings(mappings);
 
-        String bahmniEntityUuidConceptInAvni = mappingService.getAvniValue(MappingGroup.Common, BahmniMappingType.BahmniUUID_Concept);
+        String bahmniEntityUuidConceptInAvni = mappingService.getAvniValue(BahmniMappingGroup.Common, BahmniMappingType.BahmniUUID_Concept);
         metaData.setBahmniEntityUuidConcept(bahmniEntityUuidConceptInAvni);
 
         metaData.addLabMapping(mappingMetaDataRepository.findByMappingType(BahmniMappingType.LabEncounterType));

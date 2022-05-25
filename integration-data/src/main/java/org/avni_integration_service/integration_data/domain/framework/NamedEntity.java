@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class NamedEntity extends BaseEntity {
+public abstract class NamedEntity extends BaseEntity implements BaseEnum {
     @Column
     private String name;
 
@@ -14,5 +14,14 @@ public abstract class NamedEntity extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public int getValue() {
+        return getId();
     }
 }

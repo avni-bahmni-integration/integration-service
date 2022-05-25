@@ -37,7 +37,7 @@ public class VisitService {
     }
 
     private OpenMRSVisit getAvniRegistrationVisit(String patientUuid, Enrolment enrolment, String visitTypeUuid) {
-        var avniUuidVisitAttributeTypeUuid = mappingService.getBahmniValue(MappingGroup.Common,
+        var avniUuidVisitAttributeTypeUuid = mappingService.getBahmniValue(BahmniMappingGroup.Common,
                 BahmniMappingType.AvniUUID_VisitAttributeType);
         String locationUuid = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation.name());
         var visits = openMRSVisitRepository.getVisits(patientUuid, locationUuid, visitTypeUuid);
@@ -73,13 +73,13 @@ public class VisitService {
     }
 
     private List<OpenMRSSaveVisitAttribute> visitAttributes(Subject subject) {
-        String avniIdAttributeType = mappingService.getBahmniValue(MappingGroup.Common,
+        String avniIdAttributeType = mappingService.getBahmniValue(BahmniMappingGroup.Common,
                 BahmniMappingType.AvniUUID_VisitAttributeType);
         var avniIdAttribute = new OpenMRSSaveVisitAttribute();
         avniIdAttribute.setAttributeType(avniIdAttributeType);
         avniIdAttribute.setValue(subject.getUuid());
 
-        String avniEventDateAttributeType = mappingService.getBahmniValue(MappingGroup.Common,
+        String avniEventDateAttributeType = mappingService.getBahmniValue(BahmniMappingGroup.Common,
                 BahmniMappingType.AvniEventDate_VisitAttributeType);
         var eventDateAttribute = new OpenMRSSaveVisitAttribute();
         eventDateAttribute.setAttributeType(avniEventDateAttributeType);
@@ -89,13 +89,13 @@ public class VisitService {
     }
 
     private List<OpenMRSSaveVisitAttribute> visitAttributes(Enrolment enrolment) {
-        String avniIdAttributeType = mappingService.getBahmniValue(MappingGroup.Common,
+        String avniIdAttributeType = mappingService.getBahmniValue(BahmniMappingGroup.Common,
                 BahmniMappingType.AvniUUID_VisitAttributeType);
         var avniIdAttribute = new OpenMRSSaveVisitAttribute();
         avniIdAttribute.setAttributeType(avniIdAttributeType);
         avniIdAttribute.setValue(enrolment.getUuid());
 
-        String avniEventDateAttributeType = mappingService.getBahmniValue(MappingGroup.Common,
+        String avniEventDateAttributeType = mappingService.getBahmniValue(BahmniMappingGroup.Common,
                 BahmniMappingType.AvniEventDate_VisitAttributeType);
         var eventDateAttribute = new OpenMRSSaveVisitAttribute();
         eventDateAttribute.setAttributeType(avniEventDateAttributeType);

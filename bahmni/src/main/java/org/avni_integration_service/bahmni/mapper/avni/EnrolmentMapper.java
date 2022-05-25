@@ -135,8 +135,8 @@ public class EnrolmentMapper {
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider.name()), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name())));
 
         String avniUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
-        String eventDateConcept = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
-        String programDataConcept = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniProgramData_Concept);
+        String eventDateConcept = mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
+        String programDataConcept = mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniProgramData_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 avniObservations,
@@ -152,13 +152,13 @@ public class EnrolmentMapper {
     }
 
     private OpenMRSSaveObservation eventDateObs(Enrolment enrolment, boolean isExit) {
-        var obsConcept = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
+        var obsConcept = mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
         var obsValue = FormatAndParseUtil.toISODateString(isExit ? enrolment.getExitDateTime() : enrolment.getEnrolmentDateTime());
         return OpenMRSSaveObservation.createPrimitiveObs(obsConcept, obsValue, ObsDataType.Date);
     }
 
     private OpenMRSSaveObservation programDataObs(Enrolment enrolment, boolean isExit) {
-        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniProgramData_Concept);
+        var bahmniValue = mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniProgramData_Concept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue,
                 String.format("%s - %s - %s",
                         enrolment.getProgram(),

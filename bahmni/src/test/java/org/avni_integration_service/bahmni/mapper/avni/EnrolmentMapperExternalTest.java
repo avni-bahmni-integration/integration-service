@@ -8,7 +8,6 @@ import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
 import org.avni_integration_service.bahmni.contract.OpenMRSVisit;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
-import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
@@ -49,7 +48,7 @@ public class EnrolmentMapperExternalTest {
 
     @Test
     public void mapEnrolmentToEncounter() {
-        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         var enrolment = new Enrolment();
         enrolment.setProgram(program);
         enrolment.setUuid(enrolmentUuid);
@@ -84,7 +83,7 @@ public class EnrolmentMapperExternalTest {
 
     @Test
     public void mapEnrolmentToExistingEncounter() {
-        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         var enrolment = new Enrolment();
         enrolment.setUuid(enrolmentUuid);
         enrolment.setProgram(program);

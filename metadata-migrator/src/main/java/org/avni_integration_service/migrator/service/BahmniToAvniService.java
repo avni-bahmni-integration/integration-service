@@ -88,8 +88,8 @@ public class BahmniToAvniService {
         logger.info(String.format("Found %d concepts in OpenMRS", concepts.size()));
         for (OpenMRSConcept openMRSConcept : concepts) {
             ObsDataType dataTypeHint = openMRSConcept.getAvniDataType().equals(ObsDataType.Coded.name()) ? ObsDataType.Coded : null;
-            if (mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndIntSystemValue(BahmniMappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid()) == null) {
-                mappingService.saveMapping(BahmniMappingGroup.Observation, MappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);
+            if (mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndIntSystemValue(BahmniMappingGroup.Observation, BahmniMappingType.Concept, openMRSConcept.getUuid()) == null) {
+                mappingService.saveMapping(BahmniMappingGroup.Observation, BahmniMappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);
             }
         }
         logger.info("Created concept mappings.");

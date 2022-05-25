@@ -60,8 +60,8 @@ public class MappingService {
 
     private MappingMetaData createMappingMetaData(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue) {
         MappingMetaData mappingMetaData = new MappingMetaData();
-        mappingMetaData.setMappingGroup(mappingGroup.name());
-        mappingMetaData.setMappingType(mappingType.getName());
+        mappingMetaData.setMappingGroup(mappingGroup);
+        mappingMetaData.setMappingType(mappingType);
         mappingMetaData.setIntSystemValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
         return mappingMetaData;
@@ -73,7 +73,7 @@ public class MappingService {
     }
 
     public String getBahmniValueForAvniIdConcept() {
-        return getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniUUID_Concept);
+        return getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniUUID_Concept);
     }
 
     public String getBahmniFormUuidForProgramEncounter(String encounterType) {

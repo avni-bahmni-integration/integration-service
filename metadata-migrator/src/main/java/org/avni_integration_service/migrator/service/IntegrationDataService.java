@@ -30,6 +30,10 @@ public class IntegrationDataService {
     private AvniEntityStatusRepository avniEntityStatusRepository;
     @Autowired
     private ErrorRecordRepository errorRecordRepository;
+    @Autowired
+    private MappingGroupRepository mappingGroupRepository;
+    @Autowired
+    private MappingTypeRepository mappingTypeRepository;
 
     private static final Logger logger = Logger.getLogger(IntegrationDataService.class);
 
@@ -49,7 +53,9 @@ public class IntegrationDataService {
     public void createStandardMappings() {
         List<Map<String, String>> standardMappings = implementationConfigurationRepository.getStandardMappings().getList();
         standardMappings.forEach(keyValues -> {
-            mappingService.saveMapping(MappingGroup.valueOf(keyValues.get("MappingGroup")), MappingType.valueOf(keyValues.get("MappingType")), keyValues.get("Bahmni Value"), keyValues.get("Avni Value"));
+            MappingGroup mappingGroup = mappingGroupRepository.findByName(keyValues.get("MappingGroup"));
+            MappingType mappingType = mappingTypeRepository.findByName(keyValues.get("MappingType"));
+            mappingService.saveMapping(mappingGroup, mappingType, keyValues.get("Bahmni Value"), keyValues.get("Avni Value"));
         });
         logger.info("Standard mappings created in integration database");
     }

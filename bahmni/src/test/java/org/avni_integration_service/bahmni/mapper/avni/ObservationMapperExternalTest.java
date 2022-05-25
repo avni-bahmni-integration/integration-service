@@ -1,11 +1,11 @@
 package org.avni_integration_service.bahmni.mapper.avni;
 
 import org.avni_integration_service.bahmni.BahmniMappingGroup;
+import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.bahmni.MappingMetaDataCollection;
-import org.avni_integration_service.integration_data.domain.MappingType;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkVoidingOfMultiSelectCodedObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
 
         Map<String, Object> noProblem = createCodedObservation(
                 UUID.randomUUID(),
@@ -60,7 +60,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkVoidingOfSingleSelectCodedObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
 
         Map<String, Object> ancRegisteredYes = createCodedObservation(
                 UUID.randomUUID(),
@@ -91,7 +91,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkVoidingOfObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
 
         Map<String, Object> numberOfBabies = createPrimitiveObservation(
                 UUID.randomUUID(),
@@ -114,7 +114,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkUpdateOfObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
 
         Map<String, Object> numberOfBabies = createPrimitiveObservation(
                 UUID.randomUUID(),
@@ -140,7 +140,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkAddingOfPrimitiveObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         openMRSFullEncounter.setAny("obs", List.of());
 
@@ -161,7 +161,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkAddingOfMultiSelectCodedObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         Map<String, Object> obsHistoryNoProblem = createCodedObservation(
                 UUID.randomUUID(),
@@ -216,7 +216,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkAddingOfSingleSelectCodedObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         Map<String, Object> obsHistoryNoProblem = createCodedObservation(
                 UUID.randomUUID(),
@@ -253,7 +253,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkUpdateOfEmptyTextObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
 
         OpenMRSFullEncounter openMRSFullEncounter = new OpenMRSFullEncounter();
         openMRSFullEncounter.setAny("obs", List.of());
@@ -272,7 +272,7 @@ public class ObservationMapperExternalTest {
 
     @Test
     public void checkAddingOfEmptyTextObservations() {
-        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        MappingMetaDataCollection metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         var avniObservations = new LinkedHashMap<String, Object>();
         String avniTextConcept = "Reason for skipping height capture.";
         avniObservations.put(avniTextConcept, "  ");

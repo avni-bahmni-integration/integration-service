@@ -1,0 +1,35 @@
+insert into mapping_group (name, integration_system_id) values ('Common', (select id from integration_system where name = 'bahmni'));
+insert into mapping_group (name, integration_system_id) values ('PatientSubject', (select id from integration_system where name = 'bahmni'));
+insert into mapping_group (name, integration_system_id) values ('GeneralEncounter', (select id from integration_system where name = 'bahmni'));
+insert into mapping_group (name, integration_system_id) values ('ProgramEnrolment', (select id from integration_system where name = 'bahmni'));
+insert into mapping_group (name, integration_system_id) values ('ProgramEncounter', (select id from integration_system where name = 'bahmni'));
+insert into mapping_group (name, integration_system_id) values ('Observation', (select id from integration_system where name = 'bahmni'));
+
+insert into mapping_type (name, integration_system_id) values ('Subject_EncounterType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('PersonAttributeConcept', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('EncounterType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('LabEncounterType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('DrugOrderEncounterType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('DrugOrderConcept', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityEnrolment_EncounterType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityEnrolmentExit_EncounterType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityProgramEncounter_EncounterType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityEncounter_EncounterType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('AvniUUID_Concept', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('AvniEventDate_Concept', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('AvniProgramData_Concept', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('BahmniUUID_Concept', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('BahmniForm_CommunityProgram', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityRegistration_BahmniForm', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityEnrolment_BahmniForm', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityEnrolmentExit_BahmniForm', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityProgramEncounter_BahmniForm', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityEncounter_BahmniForm', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('PatientIdentifier_Concept', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('CommunityEnrolment_VisitType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('AvniEventDate_VisitAttributeType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('AvniUUID_VisitAttributeType', (select id from integration_system where name = 'bahmni'));
+insert into mapping_type (name, integration_system_id) values ('Concept', (select id from integration_system where name = 'bahmni'));
+
+update mapping_metadata set mapping_group_id = (select mapping_group.id from mapping_group join mapping_metadata mmd on mmd.mapping_group_name = mapping_group.name);
+update mapping_metadata set mapping_type_id = (select mapping_type.id from mapping_type join mapping_metadata mmd on mmd.mapping_name = mapping_type.name);

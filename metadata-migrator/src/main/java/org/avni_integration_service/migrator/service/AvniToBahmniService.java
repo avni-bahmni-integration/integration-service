@@ -155,10 +155,10 @@ public class AvniToBahmniService {
 
     private void saveObsMapping(String avniValue, String bahmniValue, ObsDataType obsDataType) {
         var existingMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndAvniValue(BahmniMappingGroup.Observation,
-                MappingType.Concept, avniValue);
+                BahmniMappingType.Concept, avniValue);
         if (existingMapping == null) {
             mappingService.saveMapping(BahmniMappingGroup.Observation,
-                    MappingType.Concept,
+                    BahmniMappingType.Concept,
                     bahmniValue,
                     avniValue,
                     obsDataType
@@ -263,14 +263,14 @@ public class AvniToBahmniService {
     private void createStandardVisitTypeAttributesAndMapping(Connection connection) throws SQLException {
         createVisitTypeAttributeAndMapping(connection,
                 Names.AvniEntityUuidConceptName,
-                MappingGroup.Common,
+                BahmniMappingGroup.Common,
                 BahmniMappingType.AvniUUID_VisitAttributeType,
                 null,
                 "Visit Attribute Type for Avni Entity Uuid"
                 );
         createVisitTypeAttributeAndMapping(connection,
                 Names.AvniEventDateConceptName,
-                MappingGroup.Common,
+                BahmniMappingGroup.Common,
                 BahmniMappingType.AvniEventDate_VisitAttributeType,
                 null,
                 "Visit Attribute Type for Avni Event Date"
@@ -316,7 +316,7 @@ public class AvniToBahmniService {
                 "Text",
                 "Misc",
                 false);
-        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
+        mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.Common,
                 BahmniMappingType.AvniUUID_Concept,
                 entityConceptUuid,
                 null,
@@ -332,7 +332,7 @@ public class AvniToBahmniService {
                 "Text",
                 "Misc",
                 false);
-        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
+        mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.Common,
                 BahmniMappingType.AvniProgramData_Concept,
                 entityConceptUuid,
                 null,
@@ -348,7 +348,7 @@ public class AvniToBahmniService {
                 "Date",
                 "Misc",
                 false);
-        mappingMetaDataRepository.save(mappingMetadata(MappingGroup.Common,
+        mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.Common,
                 BahmniMappingType.AvniEventDate_Concept,
                 conceptUuid,
                 null,
@@ -400,7 +400,7 @@ public class AvniToBahmniService {
     private void createStandardConceptAndMapping(Connection connection, String conceptUuid, String conceptName, String conceptDataType, String avniValue, String about) throws SQLException {
         openMRSRepository.createConcept(connection, conceptUuid, conceptName, conceptDataType, "Misc", false);
         mappingMetaDataRepository.save(mappingMetadata(BahmniMappingGroup.Observation,
-                MappingType.Concept,
+                BahmniMappingType.Concept,
                 conceptUuid,
                 avniValue,
                 about,
@@ -433,8 +433,8 @@ public class AvniToBahmniService {
 
     private MappingMetaData mappingMetadata(MappingGroup mappingGroup, MappingType mappingType, String bahmniValue, String avniValue, String about, ObsDataType obsDataType) {
         MappingMetaData mappingMetaData = new MappingMetaData();
-        mappingMetaData.setMappingGroup(mappingGroup.name());
-        mappingMetaData.setMappingType(mappingType.getName());
+        mappingMetaData.setMappingGroup(mappingGroup);
+        mappingMetaData.setMappingType(mappingType);
         mappingMetaData.setIntSystemValue(bahmniValue);
         mappingMetaData.setAvniValue(avniValue);
         mappingMetaData.setAbout(about);

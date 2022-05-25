@@ -74,7 +74,7 @@ public class EncounterMapper {
     }
 
     private OpenMRSSaveObservation eventDateObs(AvniBaseEncounter encounter) {
-        var bahmniValue = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
+        var bahmniValue = mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(encounter.getEncounterDateTime()), ObsDataType.Date);
     }
 
@@ -104,7 +104,7 @@ public class EncounterMapper {
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider.name()), constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name())));
 
         String avniUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
-        String eventDateConcept = mappingService.getBahmniValue(MappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
+        String eventDateConcept = mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) avniBaseEncounter.get("observations"),

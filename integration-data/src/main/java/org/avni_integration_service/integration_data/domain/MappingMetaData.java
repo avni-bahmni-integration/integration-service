@@ -8,11 +8,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "mapping_metadata")
 public class MappingMetaData extends BaseIntegrationSpecificEntity {
-    @Column(name = "mapping_group_name")
-    private String mappingGroup;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mapping_group_id")
+    private MappingGroup mappingGroup;
 
-    @Column(name = "mapping_name")
-    private String mappingType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mapping_type_id")
+    private MappingType mappingType;
 
     @Column(name = "int_system_value")
     private String intSystemValue;
@@ -27,20 +29,20 @@ public class MappingMetaData extends BaseIntegrationSpecificEntity {
     @Enumerated(EnumType.STRING)
     private ObsDataType dataTypeHint;
 
-    public String getMappingGroup() {
+    public MappingGroup getMappingGroup() {
         return mappingGroup;
     }
 
-    public void setMappingGroup(String mappingGroup) {
+    public void setMappingGroup(MappingGroup mappingGroup) {
         this.mappingGroup = mappingGroup;
     }
 
-    public String getMappingType() {
-        return mappingType;
+    public void setMappingType(MappingType mappingType) {
+        this.mappingType = mappingType;
     }
 
-    public void setMappingType(String mappingType) {
-        this.mappingType = mappingType;
+    public MappingType getMappingType() {
+        return mappingType;
     }
 
     public String getIntSystemValue() {

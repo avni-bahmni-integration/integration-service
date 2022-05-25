@@ -54,4 +54,5 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    mustRunAfter(":bahmni:test")
 }

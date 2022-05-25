@@ -39,7 +39,7 @@ create table integrating_entity_type
     integration_system_id int not null references integration_system(id)
 );
 
--- created this placeholder so that the same code could be deployed in future to ashwini in premise
+-- created this placeholder so that the same code could be deployed in future to ashwini in premise. otherwise it should have been in bahmni module
 insert into integration_system (name) values ('bahmni');
 
 alter table error_record add column integration_system_id int not null references integration_system(id) default 1;
@@ -50,3 +50,19 @@ alter table avni_entity_status add column integration_system_id int not null ref
 alter table users add column working_integration_system_id int not null references integration_system(id) default 1;
 
 alter table mapping_metadata add column integration_system_id int not null references integration_system(id) default 1;
+
+create table mapping_group
+(
+    id   SERIAL PRIMARY KEY,
+    name CHARACTER VARYING(250),
+    integration_system_id int not null references integration_system(id)
+);
+create table mapping_type
+(
+    id   SERIAL PRIMARY KEY,
+    name CHARACTER VARYING(250),
+    integration_system_id int not null references integration_system(id)
+);
+
+alter table mapping_metadata add column mapping_group_id int null references mapping_group(id);
+alter table mapping_metadata add column mapping_type_id int null references mapping_type(id);

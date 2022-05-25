@@ -72,7 +72,7 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
                 List<BahmniSplitEncounter> splitEncounters = bahmniEncounter.getSplitEncounters();
                 for (BahmniSplitEncounter splitEncounter : splitEncounters) {
                     MappingMetaData mapping = metaData.getEncounterMappingFor(splitEncounter.getFormConceptSetUuid());
-                    switch (mapping.getMappingGroup()) {
+                    switch (mapping.getMappingGroup().name()) {
                         case "GeneralEncounter" -> processGeneralEncounter(splitEncounter, metaData, avniPatient);
                         case "ProgramEnrolment" -> throw new RuntimeException("Cannot map Bahmni Encounter Form to Avni Enrolment");
                         case "ProgramEncounter" -> processProgramEncounter(splitEncounter, metaData, avniPatient);

@@ -8,7 +8,6 @@ import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.bahmni.contract.OpenMRSUuidHolder;
 import org.avni_integration_service.bahmni.contract.OpenMRSVisit;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
-import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.junit.jupiter.api.Disabled;
@@ -44,7 +43,7 @@ public class SubjectMapperExternalTest {
 
     @Test
     public void mapSubjectToEncounter() {
-        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         var subject = new Subject();
         subject.setUuid("fb6c59c6-cbb5-4c65-8d7e-99019fdb2490");
         var avniObservations = new LinkedHashMap<String, Object>();
@@ -72,7 +71,7 @@ public class SubjectMapperExternalTest {
 
     @Test
     public void mapSubjectToExistingEncounter() {
-        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, MappingType.Concept);
+        var metaData = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
         var subject = new Subject();
         subject.setUuid("fb6c59c6-cbb5-4c65-8d7e-99019fdb2490");
         var avniObservations = new LinkedHashMap<String, Object>();

@@ -4,7 +4,9 @@ import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.domain.MappingType;
+import org.avni_integration_service.integration_data.repository.MappingGroupRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
+import org.avni_integration_service.integration_data.repository.MappingTypeRepository;
 import org.avni_integration_service.integration_data.repository.UserRepository;
 import org.avni_integration_service.util.ObsDataType;
 import org.avni_integration_service.web.contract.MappingMetadataWebContract;
@@ -20,10 +22,14 @@ import java.security.Principal;
 @PreAuthorize("hasRole('USER')")
 public class MappingMetadataController extends BaseController {
     private final MappingMetaDataRepository mappingMetaDataRepository;
+    private final MappingTypeRepository mappingTypeRepository;
+    private final MappingGroupRepository mappingGroupRepository;
 
-    public MappingMetadataController(MappingMetaDataRepository mappingMetaDataRepository, UserRepository userRepository) {
+    public MappingMetadataController(MappingMetaDataRepository mappingMetaDataRepository, UserRepository userRepository, MappingTypeRepository mappingTypeRepository, MappingGroupRepository mappingGroupRepository) {
         super(userRepository);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
+        this.mappingTypeRepository = mappingTypeRepository;
+        this.mappingGroupRepository = mappingGroupRepository;
     }
 
     @RequestMapping(value = "/mappingMetadata", method = {RequestMethod.GET})
@@ -44,8 +50,8 @@ public class MappingMetadataController extends BaseController {
 
     private MappingMetadataWebContract mapOne(MappingMetaData mappingMetaData) {
         MappingMetadataWebContract mappingMetadataWebContract = new MappingMetadataWebContract();
-        mappingMetadataWebContract.setMappingGroup(MappingGroup.valueOf(mappingMetaData.getMappingGroup()).getValue());
-        mappingMetadataWebContract.setMappingType(MappingType.valueOf(mappingMetaData.getMappingType()).getValue());
+        mappingMetadataWebContract.setMappingGroup(mappingMetaData.getMappingGroup().getId());
+        mappingMetadataWebContract.setMappingType(mappingMetaData.getMappingType().getId());
         mappingMetadataWebContract.setIntSystemValue(mappingMetaData.getIntSystemValue());
         mappingMetadataWebContract.setAvniValue(mappingMetaData.getAvniValue());
         mappingMetadataWebContract.setId(mappingMetaData.getId());
@@ -76,8 +82,9 @@ public class MappingMetadataController extends BaseController {
         } else {
             mappingMetaData = mappingMetaDataRepository.findByIdAndIntegrationSystem(request.getId(), getCurrentIntegrationSystem(principal));
         }
-        mappingMetaData.setMappingGroup(MappingGroup.valueOf(request.getMappingGroup()).name());
-        mappingMetaData.setMappingType(MappingType.valueOf(request.getMappingType()).name());
+
+        mappingMetaData.setMappingGroup(mappingGroupRepository.findById(request.getMappingGroup()).get());
+        mappingMetaData.setMappingType(mappingTypeRepository.findById(request.getMappingType()).get());
         mappingMetaData.setIntSystemValue(request.getIntSystemValue());
         mappingMetaData.setAvniValue(request.getAvniValue());
         mappingMetaData.setDataTypeHint(request.isCoded() ? ObsDataType.Coded : null);
