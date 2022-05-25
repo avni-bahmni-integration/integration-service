@@ -2,6 +2,7 @@ package org.avni_integration_service.web;
 
 import org.avni_integration_service.integration_data.domain.User;
 import org.avni_integration_service.integration_data.repository.UserRepository;
+import org.avni_integration_service.web.contract.UserContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/")
@@ -52,13 +54,13 @@ public class UserController {
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public List<User> getUsers() {
-        return userRepository.findAllBy();
+    public List<UserContract> getUsers() {
+        return userRepository.findAllBy().stream().map(UserContract::new).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public User getUser(@PathVariable("id") Integer id) {
-        return userRepository.findById(id).get();
+    public UserContract getUser(@PathVariable("id") Integer id) {
+        return new UserContract(userRepository.findById(id).get());
     }
 }

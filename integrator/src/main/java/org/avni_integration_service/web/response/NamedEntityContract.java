@@ -3,34 +3,25 @@ package org.avni_integration_service.web.response;
 import org.avni_integration_service.integration_data.domain.framework.BaseEnum;
 import org.avni_integration_service.integration_data.domain.framework.NamedEntity;
 
-public class NamedEntityResponse {
-    private int id;
+public class NamedEntityContract extends BaseEntityContract {
     private String name;
 
-    public NamedEntityResponse(BaseEnum baseEnum) {
-        this.id = baseEnum.getValue();
+    public NamedEntityContract(BaseEnum baseEnum) {
+        super(baseEnum.getValue());
         this.name = baseEnum.name();
     }
 
-    public NamedEntityResponse(int id, String name) {
-        this.id = id;
+    public NamedEntityContract(int id, String name) {
+        super(id);
         this.name = name;
     }
 
-    public NamedEntityResponse(NamedEntity namedEntity) {
-        this.id = namedEntity.getId();
+    public NamedEntityContract(NamedEntity namedEntity) {
+        super(namedEntity.getId());
         this.name = namedEntity.getName();
     }
 
-    public NamedEntityResponse() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public NamedEntityContract() {
     }
 
     public String getName() {
