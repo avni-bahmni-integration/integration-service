@@ -40,7 +40,7 @@ public class IntegrationSystemController {
 
     @RequestMapping(value = {"/integrationSystem/{id}"}, method = {RequestMethod.GET})
     public NamedEntityContract getIntegrationSystems(@PathVariable("id") int id) {
-        IntegrationSystem integrationSystem = integrationSystemRepository.findById(id).get();
+        IntegrationSystem integrationSystem = integrationSystemRepository.getEntity(id);
         return new NamedEntityContract(integrationSystem);
     }
 }

@@ -1,6 +1,7 @@
 package org.avni_integration_service.web;
 
 import org.avni_integration_service.integration_data.domain.User;
+import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.UserRepository;
 import org.avni_integration_service.web.contract.UserContract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,31 +19,36 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final IntegrationSystemRepository integrationSystemRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserController(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, IntegrationSystemRepository integrationSystemRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.integrationSystemRepository = integrationSystemRepository;
     }
 
     @RequestMapping(value = "user", method = {RequestMethod.POST})
     @Transactional
     @PreAuthorize("hasRole('USER')")
-    public User save(@RequestBody User userRequest) {
+    public UserContract save(@RequestBody UserContract userRequest) {
         User user = new User();
+        return save(userRequest, user);
+    }
+
+    private UserContract save(UserContract userRequest, User user) {
         user.setEmail(userRequest.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
-        return userRepository.save(user);
+        user.setWorkingIntegrationSystem(integrationSystemRepository.findEntity(userRequest.getWorkingIntegrationSystemId()));
+        userRepository.save(user);
+        return new UserContract(user);
     }
 
     @RequestMapping(value = "user/{id}", method = {RequestMethod.PUT})
     @Transactional
     @PreAuthorize("hasRole('USER')")
-    public User update(@PathVariable("id") Integer id, @RequestBody User userRequest) {
-        User user = userRepository.findById(id).get();
-        user.setEmail(userRequest.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
-        return userRepository.save(user);
+    public UserContract update(@PathVariable("id") Integer id, @RequestBody UserContract userRequest) {
+        User user = userRepository.findEntity(id);
+        return save(userRequest, user);
     }
 
     @RequestMapping(value = "currentUser", method = RequestMethod.GET)
