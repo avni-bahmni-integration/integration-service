@@ -64,7 +64,8 @@ create-test-db:
 	$(call _build_db,avni_int_test)
 
 build-test-db: create-test-db
-	./gradlew migrateTestDb
+	./gradlew :integration-data:migrateTestDb
+	./gradlew --stacktrace :bahmni:migrateTestDb
 
 drop-test-db:
 	$(call _drop_db,avni_int_test)
