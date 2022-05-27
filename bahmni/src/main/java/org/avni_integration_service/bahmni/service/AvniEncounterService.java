@@ -1,6 +1,7 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.mapper.OpenMRSEncounterMapper;
 import org.avni_integration_service.bahmni.mapper.avni.EncounterMapper;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
@@ -10,7 +11,6 @@ import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
 import org.avni_integration_service.bahmni.repository.BahmniSplitEncounter;
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
@@ -136,6 +136,6 @@ public class AvniEncounterService extends BaseAvniEncounterService {
     }
 
     public void processPatientNotFound(GeneralEncounter encounter) {
-        errorService.errorOccurred(encounter, ErrorType.NoIntEntityWithId);
+        errorService.errorOccurred(encounter, BahmniErrorType.NoPatientWithId);
     }
 }

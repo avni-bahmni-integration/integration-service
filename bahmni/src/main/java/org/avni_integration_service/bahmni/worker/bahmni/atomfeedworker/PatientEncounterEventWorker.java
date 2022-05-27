@@ -2,6 +2,7 @@ package org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.bahmni.BahmniEntityType;
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.service.*;
 import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
@@ -81,10 +82,10 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
             }
             errorService.successfullyProcessed(bahmniEncounter.getOpenMRSEncounter());
         } catch (NoSubjectWithIdException e) {
-            errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), ErrorType.NoSubjectWithId);
+            errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), BahmniErrorType.NoSubjectWithId);
             logger.info("No subject found with the identifier");
         } catch (SubjectIdChangedException e) {
-            errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), ErrorType.SubjectIdChanged);
+            errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), BahmniErrorType.SubjectIdChanged);
             logger.info("Subject id changed!!");
         }
     }
@@ -192,7 +193,7 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         BahmniEncounter bahmniEncounter = encounterService.getEncounter(entityUuid, metaData);
         if (bahmniEncounter == null) {
             logger.warn(String.format("Encounter has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, ErrorType.EntityIsDeleted, BahmniEntityType.Encounter);
+            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, BahmniEntityType.Encounter);
             return;
         }
 

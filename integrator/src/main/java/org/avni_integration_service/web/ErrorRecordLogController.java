@@ -5,6 +5,7 @@ import org.avni_integration_service.integration_data.domain.error.ErrorRecordLog
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordLogRepository;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
+import org.avni_integration_service.integration_data.repository.ErrorTypeRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.web.contract.ErrorWebContract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,13 @@ import javax.transaction.Transactional;
 public class ErrorRecordLogController {
     private final ErrorRecordLogRepository errorRecordLogRepository;
     private final ErrorRecordRepository errorRecordRepository;
+    private final ErrorTypeRepository errorTypeRepository;
 
     @Autowired
-    public ErrorRecordLogController(ErrorRecordLogRepository errorRecordLogRepository, ErrorRecordRepository errorRecordRepository) {
+    public ErrorRecordLogController(ErrorRecordLogRepository errorRecordLogRepository, ErrorRecordRepository errorRecordRepository, ErrorTypeRepository errorTypeRepository) {
         this.errorRecordLogRepository = errorRecordLogRepository;
         this.errorRecordRepository = errorRecordRepository;
+        this.errorTypeRepository = errorTypeRepository;
     }
 
     @RequestMapping(value = {"/errorRecordLog"}, method = {RequestMethod.GET})
@@ -79,7 +82,8 @@ public class ErrorRecordLogController {
 
     @RequestMapping(value = "/errorRecordLog/search/findByErrorType")
     public Page<ErrorWebContract> findByErrorType(@RequestParam("errorType") int errorType, Pageable pageable) {
-        return toContractPage(errorRecordLogRepository.findAllByErrorType(ErrorType.findByValue(errorType), pageable));
+        ErrorType et = errorTypeRepository.findEntity(errorType);
+        return toContractPage(errorRecordLogRepository.findAllByErrorType(et, pageable));
     }
 
     @RequestMapping(value = "/errorRecordLog/search/findByStartDate")
@@ -100,8 +104,10 @@ public class ErrorRecordLogController {
                                                     Pageable pageable) {
         if (startDate != null && endDate != null)
             return toContractPage(errorRecordLogRepository.findAllByLoggedAtAfterAndLoggedAtBefore(FormatAndParseUtil.fromAvniDate(startDate), FormatAndParseUtil.fromAvniDate(endDate), pageable));
-        else if (errorType != null && entityId != null)
-            return toContractPage(errorRecordLogRepository.findAllByErrorTypeAndErrorRecordEntityIdContains(ErrorType.findByValue(errorType), entityId.trim(), pageable));
+        else if (errorType != null && entityId != null) {
+            ErrorType et = errorTypeRepository.findEntity(errorType);
+            return toContractPage(errorRecordLogRepository.findAllByErrorTypeAndErrorRecordEntityIdContains(et, entityId.trim(), pageable));
+        }
         throw new RuntimeException("Invalid usage of find");
     }
 }

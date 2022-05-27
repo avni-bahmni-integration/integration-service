@@ -1,6 +1,7 @@
 package org.avni_integration_service.bahmni.worker.avni;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.service.EntityStatusService;
 import org.avni_integration_service.avni.domain.ProgramEncounter;
 import org.avni_integration_service.avni.domain.ProgramEncountersResponse;
@@ -98,7 +99,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
         if (errorService.hasAvniMultipleSubjectsError(programEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni encounter %s because of multiple subjects with same id error", programEncounter.getUuid()));
-            errorService.errorOccurred(programEncounter, ErrorType.MultipleSubjectsWithId);
+            errorService.errorOccurred(programEncounter, BahmniErrorType.MultipleSubjectsWithId);
             updateSyncStatus(programEncounter, updateSyncStatus);
             return;
         }
@@ -139,7 +140,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
         ProgramEncounter programEncounter = avniProgramEncounterRepository.getProgramEncounter(entityUuid);
         if (programEncounter == null) {
             logger.warn(String.format("ProgramEncounter has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, ErrorType.EntityIsDeleted, AvniEntityType.ProgramEncounter);
+            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.ProgramEncounter);
             return;
         }
 

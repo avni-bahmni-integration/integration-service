@@ -11,8 +11,8 @@ public class ErrorRecordLog extends BaseEntity {
     @JoinColumn(name = "error_record_id")
     private ErrorRecord errorRecord;
 
-    @Column
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "error_type_id")
     private ErrorType errorType;
 
     @Column(name = "logged_at")

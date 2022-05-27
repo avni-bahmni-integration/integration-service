@@ -79,14 +79,14 @@ public class SubjectService {
     }
 
     public void processSubjectIdChanged(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, ErrorType.SubjectIdChanged);
+        errorService.errorOccurred(patient, BahmniErrorType.SubjectIdChanged);
     }
 
     public void processSubjectNotFound(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, ErrorType.NoSubjectWithId);
+        errorService.errorOccurred(patient, BahmniErrorType.NoSubjectWithId);
     }
 
     public void processMultipleSubjectsFound(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, ErrorType.MultipleSubjectsWithId);
+        errorService.errorOccurred(patient, BahmniErrorType.MultipleSubjectsWithId);
     }
 }

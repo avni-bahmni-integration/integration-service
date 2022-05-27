@@ -1,21 +1,21 @@
 package org.avni_integration_service.bahmni.worker.avni;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.bahmni.service.*;
 import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.EnrolmentsResponse;
 import org.avni_integration_service.avni.domain.Subject;
-import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
-import org.avni_integration_service.integration_data.domain.AvniEntityStatus;
-import org.avni_integration_service.integration_data.domain.AvniEntityType;
-import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
-import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
-import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
 import org.avni_integration_service.avni.repository.AvniEnrolmentRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
+import org.avni_integration_service.bahmni.BahmniErrorType;
+import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.bahmni.service.*;
 import org.avni_integration_service.bahmni.worker.ErrorRecordWorker;
+import org.avni_integration_service.integration_data.domain.AvniEntityStatus;
+import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,7 +95,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
     protected void processEnrolment(Enrolment enrolment, boolean updateSyncStatus) {
         if (errorService.hasAvniMultipleSubjectsError(enrolment.getSubjectId())) {
             logger.error(String.format("Skipping Avni enrolment %s because of multiple subjects with same id error", enrolment.getUuid()));
-            errorService.errorOccurred(enrolment, ErrorType.MultipleSubjectsWithId);
+            errorService.errorOccurred(enrolment, BahmniErrorType.MultipleSubjectsWithId);
             updateSyncStatus(enrolment, updateSyncStatus);
             return;
         }
@@ -147,7 +147,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         Enrolment enrolment = avniEnrolmentRepository.getEnrolment(entityUuid);
         if (enrolment == null) {
             logger.warn(String.format("Enrolment has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, ErrorType.EntityIsDeleted, AvniEntityType.Enrolment);
+            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.Enrolment);
             return;
         }
 

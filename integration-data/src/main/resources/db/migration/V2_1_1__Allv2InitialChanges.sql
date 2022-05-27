@@ -66,3 +66,28 @@ create table mapping_type
 
 alter table mapping_metadata add column mapping_group_id int null references mapping_group(id);
 alter table mapping_metadata add column mapping_type_id int null references mapping_type(id);
+
+create table error_type
+(
+    id   SERIAL PRIMARY KEY,
+    name CHARACTER VARYING(250),
+    integration_system_id int not null references integration_system(id)
+);
+
+alter table error_record_log add column error_type_id int null references error_type(id);
+
+insert into error_type (name, integration_system_id) values ('NoPatientWithId', (select id from integration_system where name = 'bahmni'));
+insert into error_type (name, integration_system_id) values ('PatientIdChanged', (select id from integration_system where name = 'bahmni'));
+insert into error_type (name, integration_system_id) values ('EntityIsDeleted', (select id from integration_system where name = 'bahmni'));
+insert into error_type (name, integration_system_id) values ('NotACommunityMember', (select id from integration_system where name = 'bahmni'));
+insert into error_type (name, integration_system_id) values ('NoSubjectWithId', (select id from integration_system where name = 'bahmni'));
+insert into error_type (name, integration_system_id) values ('SubjectIdChanged', (select id from integration_system where name = 'bahmni'));
+insert into error_type (name, integration_system_id) values ('MultipleSubjectsWithId', (select id from integration_system where name = 'bahmni'));
+insert into error_type (name, integration_system_id) values ('SubjectIdNull', (select id from integration_system where name = 'bahmni'));
+
+update error_record_log set error_type_id = et.id
+from error_type et
+where et.name = error_record_log.error_type;
+
+alter table error_record_log drop column error_type;
+alter table error_record_log alter column error_type_id set not null;

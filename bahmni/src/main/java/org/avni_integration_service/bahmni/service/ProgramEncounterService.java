@@ -1,6 +1,7 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.mapper.avni.EncounterMapper;
 import org.avni_integration_service.avni.domain.ProgramEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
@@ -8,7 +9,6 @@ import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.avni.repository.AvniEnrolmentRepository;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
 
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
 import org.springframework.stereotype.Service;
@@ -56,7 +56,7 @@ public class ProgramEncounterService extends BaseAvniEncounterService {
     }
 
     public void processPatientNotFound(ProgramEncounter programEncounter) {
-        errorService.errorOccurred(programEncounter, ErrorType.NoIntEntityWithId);
+        errorService.errorOccurred(programEncounter, BahmniErrorType.NoPatientWithId);
     }
 
     public void updateCommunityEncounter(OpenMRSFullEncounter existingEncounter, ProgramEncounter programEncounter, Constants constants) {

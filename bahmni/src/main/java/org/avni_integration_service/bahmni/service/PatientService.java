@@ -2,6 +2,7 @@ package org.avni_integration_service.bahmni.service;
 
 import org.apache.http.HttpStatus;
 import org.avni_integration_service.bahmni.BahmniEntityType;
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.client.WebClientsException;
 import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.bahmni.mapper.avni.SubjectMapper;
@@ -10,7 +11,6 @@ import org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker.PatientE
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
 import org.avni_integration_service.bahmni.repository.OpenMRSPatientRepository;
@@ -90,7 +90,7 @@ public class PatientService {
     }
 
     public void processPatientIdChanged(Subject subject, SubjectToPatientMetaData metaData) {
-        errorService.errorOccurred(subject, ErrorType.IntEntityIdChanged);
+        errorService.errorOccurred(subject, BahmniErrorType.PatientIdChanged);
     }
 
     private OpenMRSPatient createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
@@ -147,18 +147,18 @@ public class PatientService {
     }
 
     public void patientDeleted(String patientUuid) {
-        errorService.errorOccurred(patientUuid, ErrorType.EntityIsDeleted, BahmniEntityType.Patient);
+        errorService.errorOccurred(patientUuid, BahmniErrorType.EntityIsDeleted, BahmniEntityType.Patient);
     }
 
     public void notACommunityMember(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, ErrorType.NotAvniEntityFound);
+        errorService.errorOccurred(patient, BahmniErrorType.NotACommunityMember);
     }
 
     public void processMultipleSubjectsFound(Subject subject) {
-        errorService.errorOccurred(subject, ErrorType.MultipleSubjectsWithId);
+        errorService.errorOccurred(subject, BahmniErrorType.MultipleSubjectsWithId);
     }
 
     public void processSubjectIdNull(Subject subject) {
-        errorService.errorOccurred(subject, ErrorType.SubjectIdNull);
+        errorService.errorOccurred(subject, BahmniErrorType.SubjectIdNull);
     }
 }

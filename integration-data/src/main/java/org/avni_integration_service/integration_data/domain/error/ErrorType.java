@@ -1,27 +1,26 @@
 package org.avni_integration_service.integration_data.domain.error;
 
+import org.avni_integration_service.integration_data.domain.framework.BaseIntegrationSpecificEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.util.Arrays;
 import java.util.List;
 
-public enum ErrorType {
-    NoIntEntityWithId(1), IntEntityIdChanged(2), EntityIsDeleted(3), NotAvniEntityFound(4),
-    NoSubjectWithId(5), SubjectIdChanged(6), MultipleSubjectsWithId(7), SubjectIdNull(8);
+@Entity
+public class ErrorType extends BaseIntegrationSpecificEntity {
+    @Column
+    private String name;
 
-    private final int value;
-
-    public static List<ErrorType> getUnprocessableErrorTypes() {
-        return Arrays.asList(ErrorType.NotAvniEntityFound, ErrorType.EntityIsDeleted);
+    public String getName() {
+        return name;
     }
 
-    ErrorType(int value) {
-        this.value = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getValue() {
-        return value;
-    }
-
-    public static ErrorType findByValue(int value) {
-        return Arrays.stream(ErrorType.values()).filter(baseEnum -> baseEnum.getValue() == value).findFirst().orElse(null);
+        return this.getId();
     }
 }

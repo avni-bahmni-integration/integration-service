@@ -1,5 +1,6 @@
 package org.avni_integration_service.bahmni.service;
 
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.BahmniMappingGroup;
 import org.avni_integration_service.bahmni.BahmniMappingType;
 import org.avni_integration_service.bahmni.mapper.avni.EnrolmentMapper;
@@ -11,7 +12,6 @@ import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,7 +47,7 @@ public class EnrolmentService {
     }
 
     public void processPatientNotFound(Enrolment enrolment) {
-        errorService.errorOccurred(enrolment, ErrorType.NoIntEntityWithId);
+        errorService.errorOccurred(enrolment, BahmniErrorType.NoPatientWithId);
     }
 
     public OpenMRSFullEncounter createCommunityEnrolment(Enrolment enrolment, OpenMRSPatient openMRSPatient, Constants constants) {

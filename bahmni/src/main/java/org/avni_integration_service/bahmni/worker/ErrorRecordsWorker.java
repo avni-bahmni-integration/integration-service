@@ -1,11 +1,12 @@
 package org.avni_integration_service.bahmni.worker;
 
 import org.apache.log4j.Logger;
+import org.apache.tomcat.jni.Error;
 import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.bahmni.SyncDirection;
+import org.avni_integration_service.bahmni.service.ErrorService;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.bahmni.worker.avni.EnrolmentWorker;
 import org.avni_integration_service.bahmni.worker.avni.GeneralEncounterWorker;
@@ -36,6 +37,8 @@ public class ErrorRecordsWorker {
     private PatientEventWorker patientEventWorker;
     @Autowired
     private PatientEncounterEventWorker patientEncounterEventWorker;
+    @Autowired
+    private ErrorService errorService;
 
     private static final Logger logger = Logger.getLogger(ErrorRecordsWorker.class);
 
@@ -48,11 +51,11 @@ public class ErrorRecordsWorker {
             logger.info(String.format("Starting page number: %d for sync direction: %s", pageNumber, syncDirection.name()));
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
             if (syncDirection.equals(SyncDirection.AvniToBahmni))
-                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(errorService.getUnprocessableErrorTypes(), pageRequest);
             else if (syncDirection.equals(SyncDirection.BahmniToAvni) && !allErrors)
-                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(errorService.getUnprocessableErrorTypes(), pageRequest);
             else if (syncDirection.equals(SyncDirection.BahmniToAvni) && allErrors)
-                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(ErrorType.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(errorService.getUnprocessableErrorTypes(), pageRequest);
             else
                 throw new RuntimeException("Invalid arguments");
 

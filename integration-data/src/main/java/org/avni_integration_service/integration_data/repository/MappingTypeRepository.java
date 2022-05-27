@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MappingTypeRepository extends PagingAndSortingRepository<MappingType, Integer> {
+public interface MappingTypeRepository extends BaseRepository<MappingType> {
     MappingType findByName(String name);
-    List<MappingType> findByIdIn(Integer[] ids);
     List<MappingType> findAllByIntegrationSystem(IntegrationSystem integrationSystem);
 }

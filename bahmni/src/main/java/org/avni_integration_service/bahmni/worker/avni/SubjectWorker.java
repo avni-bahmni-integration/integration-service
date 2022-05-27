@@ -1,6 +1,7 @@
 package org.avni_integration_service.bahmni.worker.avni;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.ConstantKey;
 import org.avni_integration_service.bahmni.service.*;
 import org.avni_integration_service.avni.domain.Subject;
@@ -121,7 +122,7 @@ public class SubjectWorker implements ErrorRecordWorker {
             }
             logger.debug(String.format("Saving entity status for subject %s", subject.getLastModifiedDate()));
         } catch (PatientEncounterEventWorker.SubjectIdChangedException e) {
-            errorService.errorOccurred(subject.getUuid(), ErrorType.SubjectIdChanged, AvniEntityType.Subject);
+            errorService.errorOccurred(subject.getUuid(), BahmniErrorType.SubjectIdChanged, AvniEntityType.Subject);
         }
 
         updateSyncStatus(subject, updateSyncStatus);
@@ -148,7 +149,7 @@ public class SubjectWorker implements ErrorRecordWorker {
         Subject subject = avniSubjectRepository.getSubject(entityUuid);
         if (subject == null) {
             logger.warn(String.format("Subject has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, ErrorType.EntityIsDeleted, AvniEntityType.Subject);
+            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.Subject);
             return;
         }
 
