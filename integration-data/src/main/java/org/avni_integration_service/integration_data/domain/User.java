@@ -13,7 +13,7 @@ public class User extends BaseEntity {
     @Column(name = "password")
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "working_integration_system_id")
     private IntegrationSystem workingIntegrationSystem;
 

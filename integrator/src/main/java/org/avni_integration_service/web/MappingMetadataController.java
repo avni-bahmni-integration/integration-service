@@ -10,6 +10,7 @@ import org.avni_integration_service.integration_data.repository.MappingTypeRepos
 import org.avni_integration_service.integration_data.repository.UserRepository;
 import org.avni_integration_service.util.ObsDataType;
 import org.avni_integration_service.web.contract.MappingMetadataWebContract;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +26,7 @@ public class MappingMetadataController extends BaseController {
     private final MappingTypeRepository mappingTypeRepository;
     private final MappingGroupRepository mappingGroupRepository;
 
+    @Autowired
     public MappingMetadataController(MappingMetaDataRepository mappingMetaDataRepository, UserRepository userRepository, MappingTypeRepository mappingTypeRepository, MappingGroupRepository mappingGroupRepository) {
         super(userRepository);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
@@ -77,11 +79,12 @@ public class MappingMetadataController extends BaseController {
     @RequestMapping(value = "/int/mappingMetadata", method = {RequestMethod.POST})
     @Transactional
     public MappingMetadataWebContract create(@RequestBody MappingMetadataWebContract request, Principal principal) {
+        IntegrationSystem iSystem =  getCurrentIntegrationSystem(principal);
         MappingMetaData mappingMetaData;
         if (request.getId() == 0) {
             mappingMetaData = new MappingMetaData();
         } else {
-            mappingMetaData = mappingMetaDataRepository.findByIdAndIntegrationSystem(request.getId(), getCurrentIntegrationSystem(principal));
+            mappingMetaData = mappingMetaDataRepository.findByIdAndIntegrationSystem(request.getId(), iSystem);
         }
 
         mappingMetaData.setMappingGroup(mappingGroupRepository.findById(request.getMappingGroup()).get());
@@ -89,6 +92,7 @@ public class MappingMetadataController extends BaseController {
         mappingMetaData.setIntSystemValue(request.getIntSystemValue());
         mappingMetaData.setAvniValue(request.getAvniValue());
         mappingMetaData.setDataTypeHint(request.isCoded() ? ObsDataType.Coded : null);
+        mappingMetaData.setIntegrationSystem(iSystem);
         MappingMetaData saved = mappingMetaDataRepository.save(mappingMetaData);
         return mapOne(saved);
     }
