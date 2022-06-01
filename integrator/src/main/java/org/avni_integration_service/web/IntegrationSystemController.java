@@ -6,6 +6,7 @@ import org.avni_integration_service.web.contract.NamedEntityContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
+@PreAuthorize("hasRole('USER')")
 public class IntegrationSystemController {
     private final IntegrationSystemRepository integrationSystemRepository;
 
@@ -23,7 +25,7 @@ public class IntegrationSystemController {
         this.integrationSystemRepository = integrationSystemRepository;
     }
 
-    @RequestMapping(value = {"/integrationSystem"}, method = {RequestMethod.GET})
+    @RequestMapping(value = "/int/integrationSystem", method = {RequestMethod.GET})
     public List<NamedEntityContract> getIntegrationSystems(@RequestParam(value = "ids", required = false) String ids, Pageable pageable) {
         if (ids == null) {
             Page<IntegrationSystem> all = integrationSystemRepository.findAll(pageable);
@@ -38,7 +40,7 @@ public class IntegrationSystemController {
         return all.map((NamedEntityContract::new)).sorted(Comparator.comparing(NamedEntityContract::getName)).collect(Collectors.toList());
     }
 
-    @RequestMapping(value = {"/integrationSystem/{id}"}, method = {RequestMethod.GET})
+    @RequestMapping(value = "/int/integrationSystem/{id}", method = {RequestMethod.GET})
     public NamedEntityContract getIntegrationSystems(@PathVariable("id") int id) {
         IntegrationSystem integrationSystem = integrationSystemRepository.getEntity(id);
         return new NamedEntityContract(integrationSystem);

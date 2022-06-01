@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 
 @RestController
-@RequestMapping("/")
+@PreAuthorize("hasRole('USER')")
 public class ErrorRecordLogController {
     private final ErrorRecordLogRepository errorRecordLogRepository;
     private final ErrorRecordRepository errorRecordRepository;
@@ -30,21 +30,19 @@ public class ErrorRecordLogController {
         this.errorTypeRepository = errorTypeRepository;
     }
 
-    @RequestMapping(value = {"/errorRecordLog"}, method = {RequestMethod.GET})
+    @RequestMapping(value = "/int/errorRecordLog", method = {RequestMethod.GET})
     public Page<ErrorWebContract> getPage(Pageable pageable) {
         return toContractPage(errorRecordLogRepository.findAll(pageable));
     }
 
-    @RequestMapping(value = "/errorRecordLog/{id}", method = {RequestMethod.GET})
-    @PreAuthorize("hasRole('USER')")
+    @RequestMapping(value = "/int/errorRecordLog/{id}", method = {RequestMethod.GET})
     public ErrorWebContract get(@PathVariable("id") Integer id) {
         ErrorRecordLog errorRecordLog = errorRecordLogRepository.findById(id).get();
         return getErrorWebContract(errorRecordLog);
     }
 
-    @RequestMapping(value = "/errorRecordLog/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/int/errorRecordLog/{id}", method = {RequestMethod.PUT})
     @Transactional
-    @PreAuthorize("hasRole('USER')")
     public ErrorWebContract update(@PathVariable("id") Integer id, @RequestBody ErrorWebContract errorWebContract) {
         ErrorRecordLog errorRecordLog = errorRecordLogRepository.findById(id).get();
         errorRecordLog.getErrorRecord().setProcessingDisabled(errorWebContract.isProcessingDisabled());
@@ -75,28 +73,28 @@ public class ErrorRecordLogController {
         return errorWebContract;
     }
 
-    @RequestMapping(value = "/errorRecordLog/search/findByEntity")
+    @RequestMapping(value = "/int/errorRecordLog/search/findByEntity", method = {RequestMethod.GET})
     public Page<ErrorWebContract> findByEntityId(@RequestParam("entityId") String entityId, Pageable pageable) {
         return toContractPage(errorRecordLogRepository.findAllByErrorRecordEntityIdContains(entityId, pageable));
     }
 
-    @RequestMapping(value = "/errorRecordLog/search/findByErrorType")
+    @RequestMapping(value = "/int/errorRecordLog/search/findByErrorType", method = {RequestMethod.GET})
     public Page<ErrorWebContract> findByErrorType(@RequestParam("errorType") int errorType, Pageable pageable) {
         ErrorType et = errorTypeRepository.findEntity(errorType);
         return toContractPage(errorRecordLogRepository.findAllByErrorType(et, pageable));
     }
 
-    @RequestMapping(value = "/errorRecordLog/search/findByStartDate")
+    @RequestMapping(value = "/int/errorRecordLog/search/findByStartDate", method = {RequestMethod.GET})
     public Page<ErrorWebContract> findByStartDate(@RequestParam("startDate") String startDate, Pageable pageable) {
         return toContractPage(errorRecordLogRepository.findAllByLoggedAtAfter(FormatAndParseUtil.fromAvniDate(startDate), pageable));
     }
 
-    @RequestMapping(value = "/errorRecordLog/search/findByEndDate")
+    @RequestMapping(value = "/int/errorRecordLog/search/findByEndDate", method = {RequestMethod.GET})
     public Page<ErrorWebContract> findByEndDate(@RequestParam("endDate") String endDate, Pageable pageable) {
         return toContractPage(errorRecordLogRepository.findAllByLoggedAtBefore(FormatAndParseUtil.fromAvniDate(endDate), pageable));
     }
 
-    @RequestMapping(value = "/errorRecordLog/search/find")
+    @RequestMapping(value = "/int/errorRecordLog/search/find", method = {RequestMethod.GET})
     public Page<ErrorWebContract> find(@RequestParam(value = "startDate", required = false) String startDate,
                                                     @RequestParam(value = "endDate", required = false) String endDate,
                                                     @RequestParam(value = "errorType", required = false) Integer errorType,
