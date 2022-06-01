@@ -84,4 +84,11 @@ public class EnumController extends BaseController {
         List<ErrorType> errorTypes = errorTypeRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
         return errorTypes.stream().map(errorType -> new NamedEntityContract(errorType.getValue(), errorType.getName())).sorted(Comparator.comparing(NamedEntityContract::getName)).collect(Collectors.toList());
     }
+
+    @RequestMapping(value = "/int/errorType", method = {RequestMethod.POST})
+    @Transactional
+    public NamedIntegrationSystemSpecificContract postErrorType(@RequestBody NamedEntityContract namedEntityContract) {
+        ErrorType errorType = new ErrorType(namedEntityContract.getName());
+        return new NamedIntegrationSystemSpecificContract(errorTypeRepository.save(errorType));
+    }
 }
