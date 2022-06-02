@@ -5,7 +5,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:/goonj-secret.properties")
 public class GoonjConfig {
     @Value("${goonj.sf.authUrl}")
     private String salesForceAuthUrl;
