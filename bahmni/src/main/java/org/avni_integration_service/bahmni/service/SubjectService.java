@@ -9,7 +9,6 @@ import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,13 +20,20 @@ public class SubjectService {
     private final MappingService mappingService;
     private final ErrorService errorService;
     private final OpenMRSPatientMapper openMRSPatientMapper;
+    private final BahmniMappingGroup bahmniMappingGroup;
+    private final BahmniMappingType bahmniMappingType;
 
-    public SubjectService(AvniEncounterRepository avniEncounterRepository, AvniSubjectRepository avniSubjectRepository, MappingService mappingService, ErrorService errorService, OpenMRSPatientMapper openMRSPatientMapper) {
+    public SubjectService(AvniEncounterRepository avniEncounterRepository, AvniSubjectRepository avniSubjectRepository,
+                          MappingService mappingService, ErrorService errorService,
+                          OpenMRSPatientMapper openMRSPatientMapper, BahmniMappingGroup bahmniMappingGroup,
+                          BahmniMappingType bahmniMappingType) {
         this.avniEncounterRepository = avniEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.mappingService = mappingService;
         this.errorService = errorService;
         this.openMRSPatientMapper = openMRSPatientMapper;
+        this.bahmniMappingGroup = bahmniMappingGroup;
+        this.bahmniMappingType = bahmniMappingType;
     }
 
     public Subject findSubject(OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData, Constants constants) {
@@ -55,7 +61,7 @@ public class SubjectService {
     public void createRegistrationEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData) {
         if (openMRSPatient.isVoided()) return;
 
-        MappingMetaDataCollection conceptMetaData = mappingService.findAll(BahmniMappingGroup.PatientSubject, BahmniMappingType.PersonAttributeConcept);
+        MappingMetaDataCollection conceptMetaData = mappingService.findAll(bahmniMappingGroup.patientSubject, bahmniMappingType.personAttributeConcept);
         GeneralEncounter encounterRequest = openMRSPatientMapper.mapToAvniEncounter(openMRSPatient, subject, patientToSubjectMetaData, conceptMetaData);
         avniEncounterRepository.create(encounterRequest);
 
@@ -63,7 +69,7 @@ public class SubjectService {
     }
 
     public void updateRegistrationEncounter(GeneralEncounter encounterRequest, OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
-        MappingMetaDataCollection conceptMetaData = mappingService.findAll(BahmniMappingGroup.PatientSubject, BahmniMappingType.PersonAttributeConcept);
+        MappingMetaDataCollection conceptMetaData = mappingService.findAll(bahmniMappingGroup.patientSubject, bahmniMappingType.personAttributeConcept);
         encounterRequest.set("observations", openMRSPatientMapper.mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData));
         encounterRequest.setVoided(openMRSPatient.isVoided());
         avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);

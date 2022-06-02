@@ -9,7 +9,8 @@ public class MappingGroup extends NamedIntegrationSpecificEntity {
     public MappingGroup() {
     }
 
-    public MappingGroup(String name) {
+    public MappingGroup(String name, IntegrationSystem integrationSystem) {
         this.setName(name);
+        this.setIntegrationSystem(integrationSystem);
     }
 }

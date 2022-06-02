@@ -63,10 +63,10 @@ public class OpenMRSForm {
         this.uuid = uuid;
     }
 
-    public MappingGroup getMappingGroup() {
-        if (type.equals("Encounter")) return BahmniMappingGroup.GeneralEncounter;
-        else if (type.equals("ProgramEnrolment")) return BahmniMappingGroup.ProgramEnrolment;
-        else if (type.equals("ProgramEncounter")) return BahmniMappingGroup.ProgramEncounter;
+    public MappingGroup getMappingGroup(BahmniMappingGroup bahmniMappingGroup) {
+        if (type.equals("Encounter")) return bahmniMappingGroup.generalEncounter;
+        else if (type.equals("ProgramEnrolment")) return bahmniMappingGroup.programEnrolment;
+        else if (type.equals("ProgramEncounter")) return bahmniMappingGroup.programEncounter;
         throw new RuntimeException("Invalid form type");
     }
 }

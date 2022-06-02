@@ -30,6 +30,3 @@ insert into mapping_type (name, integration_system_id) values ('CommunityEnrolme
 insert into mapping_type (name, integration_system_id) values ('AvniEventDate_VisitAttributeType', (select id from integration_system where name = 'bahmni'));
 insert into mapping_type (name, integration_system_id) values ('AvniUUID_VisitAttributeType', (select id from integration_system where name = 'bahmni'));
 insert into mapping_type (name, integration_system_id) values ('Concept', (select id from integration_system where name = 'bahmni'));
-
-update mapping_metadata set mapping_group_id = (select mapping_group.id from mapping_group join mapping_metadata mmd on mmd.mapping_group_name = mapping_group.name);
-update mapping_metadata set mapping_type_id = (select mapping_type.id from mapping_type join mapping_metadata mmd on mmd.mapping_name = mapping_type.name);

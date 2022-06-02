@@ -1,31 +1,67 @@
 package org.avni_integration_service.bahmni;
 
+import org.apache.log4j.Logger;
 import org.avni_integration_service.integration_data.domain.MappingType;
+import org.avni_integration_service.integration_data.repository.MappingTypeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BahmniMappingType {
-    public static MappingType Subject_EncounterType = new MappingType("Subject_EncounterType");
-    public static MappingType PersonAttributeConcept = new MappingType("PersonAttributeConcept");
-    public static MappingType EncounterType = new MappingType("EncounterType");
-    public static MappingType LabEncounterType = new MappingType("LabEncounterType");
-    public static MappingType DrugOrderEncounterType = new MappingType("DrugOrderEncounterType");
-    public static MappingType DrugOrderConcept = new MappingType("DrugOrderConcept");
-    public static MappingType CommunityEnrolment_EncounterType = new MappingType("CommunityEnrolment_EncounterType");
-    public static MappingType CommunityEnrolmentExit_EncounterType = new MappingType("CommunityEnrolmentExit_EncounterType");
-    public static MappingType CommunityProgramEncounter_EncounterType = new MappingType("CommunityProgramEncounter_EncounterType");
-    public static MappingType CommunityEncounter_EncounterType = new MappingType("CommunityEncounter_EncounterType");
-    public static MappingType AvniUUID_Concept = new MappingType("AvniUUID_Concept");
-    public static MappingType AvniEventDate_Concept = new MappingType("AvniEventDate_Concept");
-    public static MappingType AvniProgramData_Concept = new MappingType("AvniProgramData_Concept");
-    public static MappingType BahmniUUID_Concept = new MappingType("BahmniUUID_Concept");
-    public static MappingType BahmniForm_CommunityProgram = new MappingType("BahmniForm_CommunityProgram");
-    public static MappingType CommunityRegistration_BahmniForm = new MappingType("CommunityRegistration_BahmniForm");
-    public static MappingType CommunityEnrolment_BahmniForm = new MappingType("CommunityEnrolment_BahmniForm");
-    public static MappingType CommunityEnrolmentExit_BahmniForm = new MappingType("CommunityEnrolmentExit_BahmniForm");
-    public static MappingType CommunityProgramEncounter_BahmniForm = new MappingType("CommunityProgramEncounter_BahmniForm");
-    public static MappingType CommunityEncounter_BahmniForm = new MappingType("CommunityEncounter_BahmniForm");
-    public static MappingType PatientIdentifier_Concept = new MappingType("PatientIdentifier_Concept");
-    public static MappingType CommunityEnrolment_VisitType = new MappingType("CommunityEnrolment_VisitType");
-    public static MappingType AvniEventDate_VisitAttributeType = new MappingType("AvniEventDate_VisitAttributeType");
-    public static MappingType AvniUUID_VisitAttributeType = new MappingType("AvniUUID_VisitAttributeType");
-    public static MappingType Concept = new MappingType("Concept");
+    private static final Logger logger = Logger.getLogger(org.avni_integration_service.bahmni.BahmniMappingType.class);
+
+    public final MappingType subjectEncounterType;
+    public final MappingType personAttributeConcept;
+    public final MappingType encounterType;
+    public final MappingType labEncounterType;
+    public final MappingType drugOrderEncounterType;
+    public final MappingType drugOrderConcept;
+    public final MappingType communityEnrolmentEncounterType;
+    public final MappingType communityEnrolmentExitEncounterType;
+    public final MappingType communityProgramEncounterEncounterType;
+    public final MappingType communityEncounterEncounterType;
+    public final MappingType avniUUIDConcept;
+    public final MappingType avniEventDateConcept;
+    public final MappingType avniProgramDataConcept;
+    public final MappingType bahmniUUIDConcept;
+    public final MappingType bahmniFormCommunityProgram;
+    public final MappingType communityRegistrationBahmniForm;
+    public final MappingType communityEnrolmentBahmniForm;
+    public final MappingType communityEnrolmentExitBahmniForm;
+    public final MappingType communityProgramEncounterBahmniForm;
+    public final MappingType communityEncounterBahmniForm;
+    public final MappingType patientIdentifierConcept;
+    public final MappingType communityEnrolmentVisitType;
+    public final MappingType avniEventDateVisitAttributeType;
+    public final MappingType avniUUIDVisitAttributeType;
+    public final MappingType concept;
+
+    @Autowired
+    public BahmniMappingType(MappingTypeRepository mappingTypeRepository) {
+        this.subjectEncounterType = mappingTypeRepository.findByName("Subject_EncounterType");
+        this.personAttributeConcept = mappingTypeRepository.findByName("PersonAttributeConcept");
+        this.encounterType = mappingTypeRepository.findByName("EncounterType");
+        this.labEncounterType = mappingTypeRepository.findByName("LabEncounterType");
+        this.drugOrderEncounterType = mappingTypeRepository.findByName("DrugOrderEncounterType");
+        this.drugOrderConcept = mappingTypeRepository.findByName("DrugOrderConcept");
+        this.communityEnrolmentEncounterType = mappingTypeRepository.findByName("CommunityEnrolment_EncounterType");
+        this.communityEnrolmentExitEncounterType = mappingTypeRepository.findByName("CommunityEnrolmentExit_EncounterType");
+        this.communityProgramEncounterEncounterType = mappingTypeRepository.findByName("CommunityProgramEncounter_EncounterType");
+        this.communityEncounterEncounterType = mappingTypeRepository.findByName("CommunityEncounter_EncounterType");
+        this.avniUUIDConcept = mappingTypeRepository.findByName("AvniUUID_Concept");
+        this.avniEventDateConcept = mappingTypeRepository.findByName("AvniEventDate_Concept");
+        this.avniProgramDataConcept = mappingTypeRepository.findByName("AvniProgramData_Concept");
+        this.bahmniUUIDConcept = mappingTypeRepository.findByName("BahmniUUID_Concept");
+        this.bahmniFormCommunityProgram = mappingTypeRepository.findByName("BahmniForm_CommunityProgram");
+        this.communityRegistrationBahmniForm = mappingTypeRepository.findByName("CommunityRegistration_BahmniForm");
+        this.communityEnrolmentBahmniForm = mappingTypeRepository.findByName("CommunityEnrolment_BahmniForm");
+        this.communityEnrolmentExitBahmniForm = mappingTypeRepository.findByName("CommunityEnrolmentExit_BahmniForm");
+        this.communityProgramEncounterBahmniForm = mappingTypeRepository.findByName("CommunityProgramEncounter_BahmniForm");
+        this.communityEncounterBahmniForm = mappingTypeRepository.findByName("CommunityEncounter_BahmniForm");
+        this.patientIdentifierConcept = mappingTypeRepository.findByName("PatientIdentifier_Concept");
+        this.communityEnrolmentVisitType = mappingTypeRepository.findByName("CommunityEnrolment_VisitType");
+        this.avniEventDateVisitAttributeType = mappingTypeRepository.findByName("AvniEventDate_VisitAttributeType");
+        this.avniUUIDVisitAttributeType = mappingTypeRepository.findByName("AvniUUID_VisitAttributeType");
+        this.concept = mappingTypeRepository.findByName("Concept");
+    }
 }

@@ -21,10 +21,15 @@ import java.util.Map;
 @Component
 public class OpenMRSPatientMapper {
     private final MappingMetaDataRepository mappingMetaDataRepository;
+    private final BahmniMappingGroup bahmniMappingGroup;
+    private final BahmniMappingType bahmniMappingType;
 
     @Autowired
-    public OpenMRSPatientMapper(MappingMetaDataRepository mappingMetaDataRepository) {
+    public OpenMRSPatientMapper(MappingMetaDataRepository mappingMetaDataRepository, BahmniMappingGroup bahmniMappingGroup,
+                                BahmniMappingType bahmniMappingType) {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
+        this.bahmniMappingGroup = bahmniMappingGroup;
+        this.bahmniMappingType = bahmniMappingType;
     }
 
     public GeneralEncounter mapToAvniEncounter(OpenMRSPatient openMRSPatient, Subject subject, PatientToSubjectMetaData patientToSubjectMetaData, MappingMetaDataCollection conceptMetaData) {
@@ -51,7 +56,7 @@ public class OpenMRSPatientMapper {
             if (attributeValue instanceof Map) {
                 Map<String, String> attributeValueMap = (Map<String, String>) attributeValue;
                 String attributeUuid = attributeValueMap.get("uuid");
-                MappingMetaData answerMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndIntSystemValue(BahmniMappingGroup.Observation, BahmniMappingType.Concept, attributeUuid);
+                MappingMetaData answerMapping = mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndIntSystemValue( bahmniMappingGroup.observation, bahmniMappingType.concept, attributeUuid);
                 if (answerMapping == null) {
                     throw new RuntimeException(String.format("Could not find concept mapped for OpenMRS concept: %s while finding answer to OpenMRS concept/person-attribute: %s which is Avni Concept %s", attributeUuid, attributeTypeUuid, questionMapping.getAvniValue()));
                 }

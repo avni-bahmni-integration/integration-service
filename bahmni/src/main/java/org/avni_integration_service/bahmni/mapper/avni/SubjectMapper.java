@@ -9,6 +9,7 @@ import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.util.ObsDataType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -17,10 +18,15 @@ import java.util.*;
 public class SubjectMapper {
     private final MappingService mappingService;
     private final ObservationMapper observationMapper;
-
-    public SubjectMapper(MappingService mappingService, ObservationMapper observationMapper) {
+    private final BahmniMappingGroup bahmniMappingGroup;
+    private final BahmniMappingType bahmniMappingType;
+    @Autowired
+    public SubjectMapper(MappingService mappingService, ObservationMapper observationMapper,
+                           BahmniMappingGroup bahmniMappingGroup, BahmniMappingType bahmniMappingType) {
         this.mappingService = mappingService;
         this.observationMapper = observationMapper;
+        this.bahmniMappingGroup = bahmniMappingGroup;
+        this.bahmniMappingType = bahmniMappingType;
     }
 
     public OpenMRSEncounter mapSubjectToEncounter(Subject subject, String patientUuid, String encounterTypeUuid, Constants constants, OpenMRSVisit visit) {
@@ -57,13 +63,13 @@ public class SubjectMapper {
                 existingEncounter.getLeafObservations(),
                 (Map<String, Object>) subject.get("observations"),
                 List.of(mappingService.getBahmniValueForAvniIdConcept(),
-                        mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniEventDate_Concept)));
+                        mappingService.getBahmniValue(bahmniMappingGroup.common, bahmniMappingType.avniEventDateConcept)));
         openMRSEncounter.setObservations(existingGroupObs(existingEncounter, observations));
         return openMRSEncounter;
     }
 
     private List<OpenMRSSaveObservation> groupObs(List<OpenMRSSaveObservation> observations) {
-        var formConcept = mappingService.getBahmniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.CommunityRegistration_BahmniForm);
+        var formConcept = mappingService.getBahmniValue(bahmniMappingGroup.patientSubject, bahmniMappingType.communityRegistrationBahmniForm);
         var groupObservation = new OpenMRSSaveObservation();
         groupObservation.setConcept(formConcept);
         groupObservation.setGroupMembers(observations);
@@ -71,7 +77,7 @@ public class SubjectMapper {
     }
 
     private List<OpenMRSSaveObservation> existingGroupObs(OpenMRSFullEncounter existingEncounter, List<OpenMRSSaveObservation> observations) {
-        var formConceptUuid = mappingService.getBahmniValue(BahmniMappingGroup.PatientSubject, BahmniMappingType.CommunityRegistration_BahmniForm);
+        var formConceptUuid = mappingService.getBahmniValue(bahmniMappingGroup.patientSubject, bahmniMappingType.communityRegistrationBahmniForm);
         Optional<OpenMRSObservation> existingGroupObs = existingEncounter.findObservation(formConceptUuid);
         var groupObservation = new OpenMRSSaveObservation();
         existingGroupObs.ifPresent(o -> groupObservation.setUuid(o.getObsUuid()));
@@ -86,7 +92,7 @@ public class SubjectMapper {
     }
 
     private OpenMRSSaveObservation eventDateObs(Subject subject) {
-        var bahmniValue = mappingService.getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniEventDate_Concept);
+        var bahmniValue = mappingService.getBahmniValue(bahmniMappingGroup.common, bahmniMappingType.avniEventDateConcept);
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(subject.getRegistrationDate()), ObsDataType.Date);
     }
 }

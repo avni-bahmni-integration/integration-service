@@ -38,8 +38,7 @@ public class UserController {
     private UserContract save(UserContract userRequest, User user) {
         user.setEmail(userRequest.getEmail());
         user.setWorkingIntegrationSystem(integrationSystemRepository.findEntity(userRequest.getWorkingIntegrationSystemId()));
-        userRepository.save(user);
-        return new UserContract(user);
+        return new UserContract(userRepository.save(user));
     }
 
     @RequestMapping(value = "/int/user/{id}", method = {RequestMethod.PUT})
