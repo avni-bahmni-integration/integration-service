@@ -9,8 +9,10 @@ import org.avni_integration_service.web.contract.NamedEntityContract;
 import org.avni_integration_service.web.contract.NamedIntegrationSystemSpecificContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -18,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/")
+@PreAuthorize("hasRole('USER')")
 public class EnumController extends BaseController {
     private final MappingTypeRepository mappingTypeRepository;
     private final MappingGroupRepository mappingGroupRepository;
@@ -41,43 +43,57 @@ public class EnumController extends BaseController {
         return Arrays.stream(values).map((NamedIntegrationSystemSpecificContract::new)).sorted(Comparator.comparing(NamedEntityContract::getName)).collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/mappingGroup", method = {RequestMethod.GET})
+    @RequestMapping(value = "/int/mappingGroup", method = {RequestMethod.GET})
     public List<NamedIntegrationSystemSpecificContract> getMappingGroups(Pageable pageable, Principal principal) {
         List<MappingGroup> mappingGroups = mappingGroupRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
         return getEnumResponses(mappingGroups.toArray(new MappingGroup[0]));
     }
 
-    @RequestMapping(value = "/mappingGroup/{id}", method = {RequestMethod.GET})
+    @RequestMapping(value = "/int/mappingGroup/{id}", method = {RequestMethod.GET})
     public NamedIntegrationSystemSpecificContract getMappingGroup(@PathVariable("id") int id) {
         return getNamedEntityContract(mappingGroupRepository, id);
     }
 
-    @RequestMapping(value = "/mappingGroup", method = {RequestMethod.POST})
+    @RequestMapping(value = "/int/mappingGroup", method = {RequestMethod.POST})
+    @Transactional
     public NamedIntegrationSystemSpecificContract postMappingGroup(@RequestBody NamedEntityContract namedEntityContract) {
         MappingGroup mappingGroup = new MappingGroup(namedEntityContract.getName());
         return new NamedIntegrationSystemSpecificContract(mappingGroupRepository.save(mappingGroup));
     }
 
-    @RequestMapping(value = "/mappingType", method = {RequestMethod.GET})
+    @RequestMapping(value = "/int/mappingType", method = {RequestMethod.GET})
     public List<NamedIntegrationSystemSpecificContract> getMappingTypes(Pageable pageable, Principal principal) {
         List<MappingType> mappingTypes = mappingTypeRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
         return getEnumResponses(mappingTypes.toArray(new MappingType[0]));
     }
 
-    @RequestMapping(value = "/mappingType/{id}", method = {RequestMethod.GET})
+    @RequestMapping(value = "/int/mappingType/{id}", method = {RequestMethod.GET})
     public NamedIntegrationSystemSpecificContract getMappingType(@PathVariable("id") int id) {
         return getNamedEntityContract(mappingTypeRepository, id);
     }
 
-    @RequestMapping(value = "/mappingType", method = {RequestMethod.POST})
+    @RequestMapping(value = "/int/mappingType", method = {RequestMethod.POST})
+    @Transactional
     public NamedIntegrationSystemSpecificContract postMappingType(@RequestBody NamedEntityContract namedEntityContract) {
         MappingType mappingType = new MappingType(namedEntityContract.getName());
         return new NamedIntegrationSystemSpecificContract(mappingTypeRepository.save(mappingType));
     }
 
-    @RequestMapping(value = "/errorType", method = {RequestMethod.GET})
+    @RequestMapping(value = "/int/errorType", method = {RequestMethod.GET})
     public List<NamedEntityContract> getErrorTypes(Pageable pageable, Principal principal) {
         List<ErrorType> errorTypes = errorTypeRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
         return errorTypes.stream().map(errorType -> new NamedEntityContract(errorType.getValue(), errorType.getName())).sorted(Comparator.comparing(NamedEntityContract::getName)).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/int/errorType/{id}", method = {RequestMethod.GET})
+    public NamedIntegrationSystemSpecificContract getErrorType(@PathVariable("id") int id) {
+        return getNamedEntityContract(errorTypeRepository, id);
+    }
+
+    @RequestMapping(value = "/int/errorType", method = {RequestMethod.POST})
+    @Transactional
+    public NamedIntegrationSystemSpecificContract postErrorType(@RequestBody NamedEntityContract namedEntityContract) {
+        ErrorType errorType = new ErrorType(namedEntityContract.getName());
+        return new NamedIntegrationSystemSpecificContract(errorTypeRepository.save(errorType));
     }
 }

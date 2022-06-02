@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/")
 public class UserController {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -28,7 +27,7 @@ public class UserController {
         this.integrationSystemRepository = integrationSystemRepository;
     }
 
-    @RequestMapping(value = "user", method = {RequestMethod.POST})
+    @RequestMapping(value = "/int/user", method = {RequestMethod.POST})
     @Transactional
     @PreAuthorize("hasRole('USER')")
     public UserContract save(@RequestBody UserContract userRequest) {
@@ -43,7 +42,7 @@ public class UserController {
         return new UserContract(user);
     }
 
-    @RequestMapping(value = "user/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/int/user/{id}", method = {RequestMethod.PUT})
     @Transactional
     @PreAuthorize("hasRole('USER')")
     public UserContract update(@PathVariable("id") Integer id, @RequestBody UserContract userRequest) {
@@ -51,20 +50,20 @@ public class UserController {
         return save(userRequest, user);
     }
 
-    @RequestMapping(value = "currentUser", method = RequestMethod.GET)
+    @RequestMapping(value = "/int/currentUser", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public User loggedInUser(Principal principal) {
         String email = principal.getName();
         return userRepository.findByEmail(email);
     }
 
-    @RequestMapping(value = "user", method = RequestMethod.GET)
+    @RequestMapping(value = "/int/user", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public List<UserContract> getUsers() {
         return userRepository.findAllBy().stream().map(UserContract::new).collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/int/user/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public UserContract getUser(@PathVariable("id") Integer id) {
         return new UserContract(userRepository.findById(id).get());

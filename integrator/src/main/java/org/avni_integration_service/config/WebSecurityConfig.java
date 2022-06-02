@@ -51,14 +51,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry = http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/user", "/test/*").permitAll();
+                .antMatchers("/int", "/int/user", "/int/test/*").permitAll();
 
         handleLogin(expressionInterceptUrlRegistry);
     }
 
     private void handleLogin(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry) throws Exception {
         registry.anyRequest().authenticated().and().csrf().disable()
-                .formLogin().loginPage("/login").successHandler((request, response, authentication) -> {
+                .formLogin().loginPage("/int/login").successHandler((request, response, authentication) -> {
             response.setStatus(HttpServletResponse.SC_OK);
             logger.info("Login Successful");
         }).failureHandler((request, response, exception) -> {
@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).addLogoutHandler((request, response, authentication) -> {
+                .logoutRequestMatcher(new AntPathRequestMatcher("/int/logout")).addLogoutHandler((request, response, authentication) -> {
             request.getSession().invalidate();
         })
                 .and().exceptionHandling().authenticationEntryPoint(unauthenticatedRequestHandler());
