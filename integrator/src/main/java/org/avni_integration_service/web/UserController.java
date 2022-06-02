@@ -52,9 +52,10 @@ public class UserController {
 
     @RequestMapping(value = "/int/currentUser", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
-    public User loggedInUser(Principal principal) {
+    public UserContract loggedInUser(Principal principal) {
         String email = principal.getName();
-        return userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
+        return new UserContract(user);
     }
 
     @RequestMapping(value = "/int/user", method = RequestMethod.GET)
