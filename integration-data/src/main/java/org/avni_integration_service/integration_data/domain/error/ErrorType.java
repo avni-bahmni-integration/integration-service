@@ -1,5 +1,6 @@
 package org.avni_integration_service.integration_data.domain.error;
 
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.framework.NamedIntegrationSpecificEntity;
 
 import javax.persistence.Column;
@@ -9,25 +10,10 @@ import java.util.List;
 
 @Entity
 public class ErrorType extends NamedIntegrationSpecificEntity {
-    @Column
-    private String name;
-
     public ErrorType() {
-
     }
-    public ErrorType(String name) {
+    public ErrorType(String name, IntegrationSystem integrationSystem) {
         this.setName(name);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getValue() {
-        return this.getId();
+        this.setIntegrationSystem(integrationSystem);
     }
 }

@@ -7,6 +7,7 @@ import org.avni_integration_service.bahmni.contract.OpenMRSObservation;
 import org.avni_integration_service.bahmni.contract.OpenMRSSaveObservation;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -16,14 +17,19 @@ import static org.avni_integration_service.bahmni.contract.OpenMRSSaveObservatio
 @Component
 public class ObservationMapper {
     private final MappingService mappingService;
+    private final BahmniMappingGroup bahmniMappingGroup;
 
-    public ObservationMapper(MappingService mappingService) {
+    private final BahmniMappingType bahmniMappingType;
+    @Autowired
+    public ObservationMapper(MappingService mappingService, BahmniMappingGroup bahmniMappingGroup, BahmniMappingType bahmniMappingType) {
         this.mappingService = mappingService;
+        this.bahmniMappingGroup = bahmniMappingGroup;
+        this.bahmniMappingType = bahmniMappingType;
     }
 
     public List<OpenMRSSaveObservation> updateOpenMRSObservationsFromAvniObservations(List<OpenMRSObservation> openMRSObservations, Map<String, Object> avniObservations, List<String> hardcodedConcepts) {
         List<OpenMRSSaveObservation> updateObservations = new ArrayList<>();
-        MappingMetaDataCollection conceptMappings = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
+        MappingMetaDataCollection conceptMappings = mappingService.findAll(bahmniMappingGroup.observation, bahmniMappingType.concept);
         updateObservations.addAll(voidedObservations(openMRSObservations, avniObservations, conceptMappings, hardcodedConcepts));
         updateObservations.addAll(updatedObservations(openMRSObservations, avniObservations, conceptMappings));
         updateObservations.addAll(hardcodedObservations(openMRSObservations, hardcodedConcepts));
@@ -130,7 +136,7 @@ public class ObservationMapper {
 
     public List<OpenMRSSaveObservation> mapObservations(LinkedHashMap<String, Object> avniObservations) {
         List<OpenMRSSaveObservation> openMRSObservations = new ArrayList<>();
-        MappingMetaDataCollection conceptMappings = mappingService.findAll(BahmniMappingGroup.Observation, BahmniMappingType.Concept);
+        MappingMetaDataCollection conceptMappings = mappingService.findAll(bahmniMappingGroup.observation, bahmniMappingType.concept);
         for (Map.Entry<String, Object> entry : avniObservations.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

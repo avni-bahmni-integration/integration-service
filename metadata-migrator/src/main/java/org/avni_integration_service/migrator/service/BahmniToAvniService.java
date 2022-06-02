@@ -40,6 +40,11 @@ public class BahmniToAvniService {
     @Autowired
     private IgnoredIntegratingConceptRepository ignoredBahmniConceptRepository;
 
+    @Autowired
+    private BahmniMappingGroup bahmniMappingGroup;
+
+    @Autowired
+    private BahmniMappingType bahmniMappingType;
     private static final Logger logger = Logger.getLogger(BahmniToAvniService.class);
 
     public void migrateForms() throws SQLException {
@@ -53,9 +58,9 @@ public class BahmniToAvniService {
         avniRepository.createForms(forms);
         for (OpenMRSForm form : forms) {
             logger.info(String.format("Creating mapping for form: %s", form.getFormName()));
-            mappingService.saveMapping(form.getMappingGroup(), BahmniMappingType.EncounterType, form.getUuid(), form.getFormName(), null);
+            mappingService.saveMapping(form.getMappingGroup(bahmniMappingGroup), bahmniMappingType.encounterType, form.getUuid(), form.getFormName(), null);
             if (form.getProgram() != null)
-                mappingService.saveMapping(BahmniMappingGroup.ProgramEnrolment, BahmniMappingType.BahmniForm_CommunityProgram, form.getUuid(), form.getProgram(), null);
+                mappingService.saveMapping(bahmniMappingGroup.programEnrolment, bahmniMappingType.bahmniFormCommunityProgram, form.getUuid(), form.getProgram(), null);
         }
         logger.info("Bahmni forms created in Avni");
     }
@@ -66,7 +71,7 @@ public class BahmniToAvniService {
         OpenMRSForm bahmniEncounterForm = personAttributes.createForm();
         avniRepository.createForms(Collections.singletonList(bahmniEncounterForm));
         for (OpenMRSPersonAttribute openMRSPersonAttribute : personAttributes) {
-            mappingService.saveMapping(BahmniMappingGroup.PatientSubject, BahmniMappingType.PersonAttributeConcept, openMRSPersonAttribute.getUuid(), openMRSPersonAttribute.getAvniName());
+            mappingService.saveMapping(bahmniMappingGroup.patientSubject, bahmniMappingType.personAttributeConcept, openMRSPersonAttribute.getUuid(), openMRSPersonAttribute.getAvniName());
         }
         logger.info("Patient attributes mapping to Avni completed");
         logger.info("Patient attributes migration completed");
@@ -88,8 +93,8 @@ public class BahmniToAvniService {
         logger.info(String.format("Found %d concepts in OpenMRS", concepts.size()));
         for (OpenMRSConcept openMRSConcept : concepts) {
             ObsDataType dataTypeHint = openMRSConcept.getAvniDataType().equals(ObsDataType.Coded.name()) ? ObsDataType.Coded : null;
-            if (mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndIntSystemValue(BahmniMappingGroup.Observation, BahmniMappingType.Concept, openMRSConcept.getUuid()) == null) {
-                mappingService.saveMapping(BahmniMappingGroup.Observation, BahmniMappingType.Concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);
+            if (mappingMetaDataRepository.findByMappingGroupAndMappingTypeAndIntSystemValue(bahmniMappingGroup.observation, bahmniMappingType.concept, openMRSConcept.getUuid()) == null) {
+                mappingService.saveMapping(bahmniMappingGroup.observation, bahmniMappingType.concept, openMRSConcept.getUuid(), openMRSConcept.getAvniName(), dataTypeHint);
             }
         }
         logger.info("Created concept mappings.");
@@ -105,17 +110,17 @@ public class BahmniToAvniService {
     public void createStandardMetadata() throws SQLException {
         StandardMappings standardMappings = implementationConfigurationRepository.getStandardMappings();
 
-        avniRepository.createConcept(ObsDataType.Text, standardMappings.getAvniValueForMappingType(BahmniMappingType.BahmniUUID_Concept));
+        avniRepository.createConcept(ObsDataType.Text, standardMappings.getAvniValueForMappingType(bahmniMappingType.bahmniUUIDConcept));
 
-        Map<String, String> labMappingType = standardMappings.getLabMappingType();
+        Map<String, String> labMappingType = standardMappings.getLabMappingType(bahmniMappingType.labEncounterType);
         if (labMappingType != null) {
             OpenMRSForm labForm = openMRSRepository.getLabForm(labMappingType.get("Avni Value"));
             avniRepository.createForms(Collections.singletonList(labForm));
             logger.info("Lab form and encounter type created in Avni");
         }
 
-        Map<String, String> drugOrderMappingType = standardMappings.getDrugOrderMappingType();
-        Map<String, String> drugOrderConceptMapping = standardMappings.getDrugOrderConcept();
+        Map<String, String> drugOrderMappingType = standardMappings.getDrugOrderMappingType(bahmniMappingType.drugOrderEncounterType);
+        Map<String, String> drugOrderConceptMapping = standardMappings.getDrugOrderConcept(bahmniMappingType.drugOrderConcept);
         if (drugOrderMappingType != null) {
             avniRepository.createConcept(ObsDataType.Text, drugOrderConceptMapping.get("Avni Value"));
 

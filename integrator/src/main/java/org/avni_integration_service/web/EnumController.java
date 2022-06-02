@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @PreAuthorize("hasRole('USER')")
@@ -44,9 +45,15 @@ public class EnumController extends BaseController {
     }
 
     @RequestMapping(value = "/int/mappingGroup", method = {RequestMethod.GET})
-    public List<NamedIntegrationSystemSpecificContract> getMappingGroups(Pageable pageable, Principal principal) {
-        List<MappingGroup> mappingGroups = mappingGroupRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
-        return getEnumResponses(mappingGroups.toArray(new MappingGroup[0]));
+    public List<NamedIntegrationSystemSpecificContract> getMappingGroups(@RequestParam(value = "ids", required = false) String ids,
+                                                                         Pageable pageable, Principal principal) {
+       if (ids == null) {
+            List<MappingGroup> mappingGroups = mappingGroupRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
+            return mapStream(mappingGroups.stream().map(ent -> ent));
+        } else {
+            Integer[] eTypes = Arrays.stream(ids.split(",")).map(Integer::parseInt).toArray(Integer[]::new);
+            return mapStream(mappingGroupRepository.findByIdIn(eTypes).stream().map(ent -> ent));
+        }
     }
 
     @RequestMapping(value = "/int/mappingGroup/{id}", method = {RequestMethod.GET})
@@ -56,15 +63,21 @@ public class EnumController extends BaseController {
 
     @RequestMapping(value = "/int/mappingGroup", method = {RequestMethod.POST})
     @Transactional
-    public NamedIntegrationSystemSpecificContract postMappingGroup(@RequestBody NamedEntityContract namedEntityContract) {
-        MappingGroup mappingGroup = new MappingGroup(namedEntityContract.getName());
+    public NamedIntegrationSystemSpecificContract postMappingGroup(@RequestBody NamedEntityContract namedEntityContract, Principal principal) {
+        MappingGroup mappingGroup = new MappingGroup(namedEntityContract.getName(), getCurrentIntegrationSystem(principal));
         return new NamedIntegrationSystemSpecificContract(mappingGroupRepository.save(mappingGroup));
     }
 
     @RequestMapping(value = "/int/mappingType", method = {RequestMethod.GET})
-    public List<NamedIntegrationSystemSpecificContract> getMappingTypes(Pageable pageable, Principal principal) {
-        List<MappingType> mappingTypes = mappingTypeRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
-        return getEnumResponses(mappingTypes.toArray(new MappingType[0]));
+    public List<NamedIntegrationSystemSpecificContract> getMappingTypes(@RequestParam(value = "ids", required = false) String ids,
+                                                                        Pageable pageable, Principal principal) {
+      if (ids == null) {
+            List<MappingType> mappingTypes = mappingTypeRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
+            return mapStream(mappingTypes.stream().map(ent -> ent));
+        } else {
+            Integer[] eTypes = Arrays.stream(ids.split(",")).map(Integer::parseInt).toArray(Integer[]::new);
+            return mapStream(mappingTypeRepository.findByIdIn(eTypes).stream().map(ent -> ent));
+        }
     }
 
     @RequestMapping(value = "/int/mappingType/{id}", method = {RequestMethod.GET})
@@ -74,15 +87,21 @@ public class EnumController extends BaseController {
 
     @RequestMapping(value = "/int/mappingType", method = {RequestMethod.POST})
     @Transactional
-    public NamedIntegrationSystemSpecificContract postMappingType(@RequestBody NamedEntityContract namedEntityContract) {
-        MappingType mappingType = new MappingType(namedEntityContract.getName());
+    public NamedIntegrationSystemSpecificContract postMappingType(@RequestBody NamedEntityContract namedEntityContract, Principal principal) {
+        MappingType mappingType = new MappingType(namedEntityContract.getName(), getCurrentIntegrationSystem(principal));
         return new NamedIntegrationSystemSpecificContract(mappingTypeRepository.save(mappingType));
     }
 
     @RequestMapping(value = "/int/errorType", method = {RequestMethod.GET})
-    public List<NamedEntityContract> getErrorTypes(Pageable pageable, Principal principal) {
-        List<ErrorType> errorTypes = errorTypeRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
-        return errorTypes.stream().map(errorType -> new NamedEntityContract(errorType.getValue(), errorType.getName())).sorted(Comparator.comparing(NamedEntityContract::getName)).collect(Collectors.toList());
+    public List<NamedIntegrationSystemSpecificContract> getErrorTypes(@RequestParam(value = "ids", required = false) String ids,
+                                                                      Pageable pageable, Principal principal) {
+        if (ids == null) {
+            List<ErrorType> all = errorTypeRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
+            return mapStream(all.stream().map(ent -> ent));
+        } else {
+            Integer[] eTypes = Arrays.stream(ids.split(",")).map(Integer::parseInt).toArray(Integer[]::new);
+            return mapStream(errorTypeRepository.findByIdIn(eTypes).stream().map(ent -> ent));
+        }
     }
 
     @RequestMapping(value = "/int/errorType/{id}", method = {RequestMethod.GET})
@@ -92,8 +111,14 @@ public class EnumController extends BaseController {
 
     @RequestMapping(value = "/int/errorType", method = {RequestMethod.POST})
     @Transactional
-    public NamedIntegrationSystemSpecificContract postErrorType(@RequestBody NamedEntityContract namedEntityContract) {
-        ErrorType errorType = new ErrorType(namedEntityContract.getName());
+    public NamedIntegrationSystemSpecificContract postErrorType(@RequestBody NamedEntityContract namedEntityContract, Principal principal) {
+        ErrorType errorType = new ErrorType(namedEntityContract.getName(), getCurrentIntegrationSystem(principal));
         return new NamedIntegrationSystemSpecificContract(errorTypeRepository.save(errorType));
+    }
+
+    private List<NamedIntegrationSystemSpecificContract> mapStream(Stream<NamedIntegrationSpecificEntity> all) {
+        return all.map((NamedIntegrationSystemSpecificContract::new))
+                .sorted(Comparator.comparing(NamedIntegrationSystemSpecificContract::getName))
+                .collect(Collectors.toList());
     }
 }

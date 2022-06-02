@@ -67,6 +67,9 @@ create table mapping_type
 alter table mapping_metadata add column mapping_group_id int null references mapping_group(id);
 alter table mapping_metadata add column mapping_type_id int null references mapping_type(id);
 
+alter table mapping_metadata drop column mapping_name;
+alter table mapping_metadata drop column mapping_group_name;
+
 create table error_type
 (
     id   SERIAL PRIMARY KEY,

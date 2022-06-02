@@ -16,10 +16,14 @@ import java.util.List;
 @Component
 public class MappingService {
     private final MappingMetaDataRepository mappingMetaDataRepository;
-
+    private final BahmniMappingGroup bahmniMappingGroup;
+    private final BahmniMappingType bahmniMappingType;
     @Autowired
-    public MappingService(MappingMetaDataRepository mappingMetaDataRepository) {
+    public MappingService(MappingMetaDataRepository mappingMetaDataRepository, BahmniMappingGroup bahmniMappingGroup,
+                          BahmniMappingType bahmniMappingType) {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
+        this.bahmniMappingGroup = bahmniMappingGroup;
+        this.bahmniMappingType = bahmniMappingType;
     }
 
     public MappingMetaDataCollection findAll(MappingGroup mappingGroup, List<MappingType> mappingTypes) {
@@ -73,18 +77,18 @@ public class MappingService {
     }
 
     public String getBahmniValueForAvniIdConcept() {
-        return getBahmniValue(BahmniMappingGroup.Common, BahmniMappingType.AvniUUID_Concept);
+        return getBahmniValue(bahmniMappingGroup.common, bahmniMappingType.avniUUIDConcept);
     }
 
     public String getBahmniFormUuidForProgramEncounter(String encounterType) {
-        return getBahmniValue(BahmniMappingGroup.ProgramEncounter,
-                BahmniMappingType.CommunityProgramEncounter_BahmniForm,
+        return getBahmniValue(bahmniMappingGroup.programEncounter,
+                bahmniMappingType.communityProgramEncounterBahmniForm,
                 encounterType);
     }
 
     public String getBahmniFormUuidForGeneralEncounter(String encounterType) {
-        return getBahmniValue(BahmniMappingGroup.GeneralEncounter,
-                BahmniMappingType.CommunityEncounter_BahmniForm,
+        return getBahmniValue(bahmniMappingGroup.generalEncounter,
+                bahmniMappingType.communityEncounterBahmniForm,
                 encounterType);
     }
 

@@ -7,10 +7,10 @@ import javax.persistence.Entity;
 
 @Entity
 public class MappingType extends NamedIntegrationSpecificEntity {
-    public MappingType(String name) {
-        this.setName(name);
-    }
-
     public MappingType() {
+    }
+    public MappingType(String name, IntegrationSystem integrationSystem) {
+        this.setName(name);
+        this.setIntegrationSystem(integrationSystem);
     }
 }

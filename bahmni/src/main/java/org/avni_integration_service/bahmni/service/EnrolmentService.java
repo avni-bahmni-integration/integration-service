@@ -21,26 +21,32 @@ public class EnrolmentService {
     private final EnrolmentMapper enrolmentMapper;
     private final ErrorService errorService;
     private final VisitService visitService;
+    private final BahmniMappingGroup bahmniMappingGroup;
+    private final BahmniMappingType bahmniMappingType;
 
-    public EnrolmentService(MappingService mappingService, OpenMRSEncounterRepository openMRSEncounterRepository, EnrolmentMapper enrolmentMapper, ErrorService errorService, VisitService visitService) {
+    public EnrolmentService(MappingService mappingService, OpenMRSEncounterRepository openMRSEncounterRepository,
+                            EnrolmentMapper enrolmentMapper, ErrorService errorService, VisitService visitService,
+                            BahmniMappingGroup bahmniMappingGroup, BahmniMappingType bahmniMappingType) {
         this.mappingService = mappingService;
         this.openMRSEncounterRepository = openMRSEncounterRepository;
         this.enrolmentMapper = enrolmentMapper;
         this.errorService = errorService;
         this.visitService = visitService;
+        this.bahmniMappingGroup = bahmniMappingGroup;
+        this.bahmniMappingType = bahmniMappingType;
     }
 
     public OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSPatient patient) {
-        return findCommunityEnrolment(enrolment, patient, BahmniMappingType.CommunityEnrolment_EncounterType);
+        return findCommunityEnrolment(enrolment, patient, bahmniMappingType.communityEnrolmentEncounterType);
     }
 
     public OpenMRSFullEncounter findCommunityExitEnrolment(Enrolment enrolment, OpenMRSPatient patient) {
-        return findCommunityEnrolment(enrolment, patient, BahmniMappingType.CommunityEnrolmentExit_EncounterType);
+        return findCommunityEnrolment(enrolment, patient, bahmniMappingType.communityEnrolmentExitEncounterType);
     }
 
     private OpenMRSFullEncounter findCommunityEnrolment(Enrolment enrolment, OpenMRSPatient patient, MappingType mappingType) {
         String bahmniValueForAvniUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
-        var encounterTypeUuid = mappingService.getBahmniValue(BahmniMappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
+        var encounterTypeUuid = mappingService.getBahmniValue(bahmniMappingGroup.programEnrolment, mappingType, enrolment.getProgram());
         OpenMRSFullEncounter encounter = openMRSEncounterRepository
                 .getEncounterByPatientAndObservationAndEncType(patient.getUuid(), bahmniValueForAvniUuidConcept, enrolment.getUuid(), encounterTypeUuid);
         return encounter;
