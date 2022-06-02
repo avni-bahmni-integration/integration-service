@@ -7,7 +7,7 @@ plugins {
 
 group = 'org.avni_integration_service'
 version = '0.0.2-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = "17"
 
 bootJar {
     enabled = false
@@ -62,3 +62,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+targetCompatibility = JavaVersion.VERSION_17
