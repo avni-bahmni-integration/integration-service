@@ -6,7 +6,7 @@ plugins {
 
 group = 'org.avni_integration_service'
 version = '0.0.2-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = "17"
 
 repositories {
     mavenCentral()
@@ -89,3 +89,5 @@ sourceSets {
 test {
     useJUnitPlatform()
 }
+targetCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
