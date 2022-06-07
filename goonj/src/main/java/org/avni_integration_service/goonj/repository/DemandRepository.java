@@ -15,7 +15,7 @@ public class DemandRepository extends BaseRepository {
         super(restTemplate, goonjConfig);
     }
 
-    public HashMap<String, Object>[] getDispatches(LocalDateTime dateTime) {
+    public HashMap<String, Object>[] getDemands(LocalDateTime dateTime) {
         return super.getResponse( dateTime, "DemandService/getDemands");
     }
 }
