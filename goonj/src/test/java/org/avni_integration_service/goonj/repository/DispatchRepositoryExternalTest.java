@@ -11,18 +11,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-@SpringBootTest(classes = {SalesForceUserRepository.class, DispatchRepository.class})
+@SpringBootTest(classes = {DispatchRepository.class})
 @Disabled
 public class DispatchRepositoryExternalTest extends BaseGoonjSpringTest {
-    @Autowired
-    private SalesForceUserRepository salesForceUserRepository;
-    @Autowired
+   @Autowired
     private DispatchRepository dispatchRepository;
 
     @Test
     public void dispatchDownload() {
-        AuthResponse authResponse = salesForceUserRepository.login();
-        HashMap<String, Object>[] dispatches = dispatchRepository.getDispatches(authResponse, LocalDateTime.of(2021, 4, 1, 0, 0));
+        HashMap<String, Object>[] dispatches = dispatchRepository.getDispatches(LocalDateTime.of(2021, 4, 1, 0, 0));
         Assertions.assertNotEquals(0, dispatches.length);
 
         Assertions.assertNotEquals("", dispatches[0].get("MaterialName"));

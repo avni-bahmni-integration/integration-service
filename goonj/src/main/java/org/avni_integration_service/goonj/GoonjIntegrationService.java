@@ -2,7 +2,6 @@ package org.avni_integration_service.goonj;
 
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
-import org.avni_integration_service.goonj.domain.AuthResponse;
 import org.avni_integration_service.goonj.domain.Dispatch;
 import org.avni_integration_service.goonj.repository.DispatchRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
@@ -26,8 +25,8 @@ public class GoonjIntegrationService {
         this.dispatchRepository = dispatchRepository;
     }
 
-    public void pushDemandToAvni(AuthResponse authResponse, LocalDateTime localDateTime) {
-        HashMap<String, Object>[] dispatches = dispatchRepository.getDispatches(authResponse, localDateTime);
+    public void pushDemandToAvni( LocalDateTime localDateTime) {
+        HashMap<String, Object>[] dispatches = dispatchRepository.getDispatches( localDateTime);
         for (Map<String, Object> dispatch : dispatches) {
             Subject subject = Dispatch.from(dispatch);
             avniSubjectRepository.create(subject);
