@@ -14,6 +14,6 @@ public class GoonjModuleSpringTest extends BaseGoonjSpringTest {
 
     @Test
     public void contextLoads() {
-        System.out.println(config.getLoginUserName());
+        System.out.println(config.getAppUrl());
     }
 }

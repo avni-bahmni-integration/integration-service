@@ -22,7 +22,7 @@ public class DispatchRepositoryExternalTest extends BaseGoonjSpringTest {
     @Test
     public void dispatchDownload() {
         AuthResponse authResponse = salesForceUserRepository.login();
-        HashMap<String, Object>[] dispatches = dispatchRepository.getDispatches(authResponse, LocalDateTime.of(2021, 4, 1, 0, 0));
+        HashMap<String, Object>[] dispatches = dispatchRepository.getDispatches( LocalDateTime.of(2021, 4, 1, 0, 0));
         Assertions.assertNotEquals(0, dispatches.length);
 
         Assertions.assertNotEquals("", dispatches[0].get("MaterialName"));
