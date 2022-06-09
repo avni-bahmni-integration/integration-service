@@ -1,25 +1,24 @@
 package org.avni_integration_service.bahmni.worker.avni;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.bahmni.BahmniErrorType;
-import org.avni_integration_service.bahmni.service.EntityStatusService;
 import org.avni_integration_service.avni.domain.ProgramEncounter;
 import org.avni_integration_service.avni.domain.ProgramEncountersResponse;
-import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
-import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
-import org.avni_integration_service.integration_data.domain.AvniEntityStatus;
-import org.avni_integration_service.integration_data.domain.AvniEntityType;
-import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
-import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
-import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniProgramEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
-import org.avni_integration_service.bahmni.service.ErrorService;
+import org.avni_integration_service.avni.worker.ErrorRecordWorker;
+import org.avni_integration_service.bahmni.BahmniErrorType;
+import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.bahmni.service.AvniBahmniErrorService;
+import org.avni_integration_service.bahmni.service.AvniEntityStatusService;
 import org.avni_integration_service.bahmni.service.MappingMetaDataService;
 import org.avni_integration_service.bahmni.service.ProgramEncounterService;
-import org.avni_integration_service.bahmni.worker.ErrorRecordWorker;
+import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
+import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.javatuples.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,7 +28,7 @@ import java.util.LinkedHashMap;
 
 @Component
 public class ProgramEncounterWorker implements ErrorRecordWorker {
-    private final AvniEntityStatusRepository avniEntityStatusRepository;
+    private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final AvniProgramEncounterRepository avniProgramEncounterRepository;
     private final MappingMetaDataService mappingMetaDataService;
     private final AvniSubjectRepository avniSubjectRepository;
@@ -37,36 +36,36 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
     private final AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
 
     private static final Logger logger = Logger.getLogger(ProgramEncounterWorker.class);
-    private final EntityStatusService entityStatusService;
+    private final AvniEntityStatusService avniEntityStatusService;
     private Constants constants;
     private SubjectToPatientMetaData metaData;
-    private final ErrorService errorService;
+    private final AvniBahmniErrorService avniBahmniErrorService;
 
-    public ProgramEncounterWorker(AvniEntityStatusRepository avniEntityStatusRepository,
+    public ProgramEncounterWorker(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                   MappingMetaDataService mappingMetaDataService,
                                   AvniProgramEncounterRepository avniProgramEncounterRepository,
                                   AvniSubjectRepository avniSubjectRepository,
                                   ProgramEncounterService programEncounterService,
                                   AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
-                                  EntityStatusService entityStatusService,
-                                  ErrorService errorService) {
-        this.avniEntityStatusRepository = avniEntityStatusRepository;
+                                  AvniEntityStatusService avniEntityStatusService,
+                                  AvniBahmniErrorService avniBahmniErrorService) {
+        this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.mappingMetaDataService = mappingMetaDataService;
         this.avniProgramEncounterRepository = avniProgramEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.programEncounterService = programEncounterService;
         this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
-        this.entityStatusService = entityStatusService;
-        this.errorService = errorService;
+        this.avniEntityStatusService = avniEntityStatusService;
+        this.avniBahmniErrorService = avniBahmniErrorService;
     }
 
     public void processProgramEncounters() {
         while (true) {
-            AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.ProgramEncounter);
-            ProgramEncountersResponse response = avniProgramEncounterRepository.getProgramEncounters(status.getReadUpto());
+            IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(AvniEntityType.ProgramEncounter.name());
+            ProgramEncountersResponse response = avniProgramEncounterRepository.getProgramEncounters(status.getReadUptoDateTime());
             ProgramEncounter[] programEncounters = response.getContent();
             int totalPages = response.getTotalPages();
-            logger.info(String.format("Found %d program encounters that are newer than %s", programEncounters.length, status.getReadUpto()));
+            logger.info(String.format("Found %d program encounters that are newer than %s", programEncounters.length, status.getReadUptoDateTime()));
             if (programEncounters.length == 0) break;
             for (ProgramEncounter programEncounter : programEncounters) {
                 processProgramEncounter(programEncounter, true);
@@ -86,7 +85,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
 
     private void updateSyncStatus(ProgramEncounter programEncounter, boolean updateSyncStatus) {
         if (updateSyncStatus)
-            entityStatusService.saveEntityStatus(programEncounter);
+            avniEntityStatusService.saveEntityStatus(programEncounter);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -97,9 +96,9 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
             return;
         }
 
-        if (errorService.hasAvniMultipleSubjectsError(programEncounter.getSubjectId())) {
+        if (avniBahmniErrorService.hasAvniMultipleSubjectsError(programEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni encounter %s because of multiple subjects with same id error", programEncounter.getUuid()));
-            errorService.errorOccurred(programEncounter, BahmniErrorType.MultipleSubjectsWithId);
+            avniBahmniErrorService.errorOccurred(programEncounter, BahmniErrorType.MultipleSubjectsWithId);
             updateSyncStatus(programEncounter, updateSyncStatus);
             return;
         }
@@ -140,7 +139,7 @@ public class ProgramEncounterWorker implements ErrorRecordWorker {
         ProgramEncounter programEncounter = avniProgramEncounterRepository.getProgramEncounter(entityUuid);
         if (programEncounter == null) {
             logger.warn(String.format("ProgramEncounter has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.ProgramEncounter);
+            avniBahmniErrorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.ProgramEncounter);
             return;
         }
 

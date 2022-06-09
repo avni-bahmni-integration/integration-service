@@ -1,21 +1,20 @@
 package org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.bahmni.BahmniEntityType;
-import org.avni_integration_service.bahmni.BahmniErrorType;
-import org.avni_integration_service.bahmni.service.*;
 import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.ProgramEncounter;
+import org.avni_integration_service.avni.worker.ErrorRecordWorker;
+import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
+import org.avni_integration_service.bahmni.BahmniEntityType;
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.contract.OpenMRSDefaultEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
-import org.avni_integration_service.integration_data.domain.MappingMetaData;
-import org.avni_integration_service.bahmni.BahmniEncounterToAvniEncounterMetaData;
-import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.bahmni.repository.BahmniEncounter;
 import org.avni_integration_service.bahmni.repository.BahmniSplitEncounter;
-import org.avni_integration_service.bahmni.worker.ErrorRecordWorker;
+import org.avni_integration_service.bahmni.service.*;
+import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
     @Autowired
     private AvniProgramEncounterService programEncounterService;
     @Autowired
-    private ErrorService errorService;
+    private AvniBahmniErrorService avniBahmniErrorService;
     @Autowired
     private MappingMetaDataService mappingMetaDataService;
 
@@ -80,12 +79,12 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
                     }
                 }
             }
-            errorService.successfullyProcessed(bahmniEncounter.getOpenMRSEncounter());
+            avniBahmniErrorService.successfullyProcessed(bahmniEncounter.getOpenMRSEncounter());
         } catch (NoSubjectWithIdException e) {
-            errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), BahmniErrorType.NoSubjectWithId);
+            avniBahmniErrorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), BahmniErrorType.NoSubjectWithId);
             logger.info("No subject found with the identifier");
         } catch (SubjectIdChangedException e) {
-            errorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), BahmniErrorType.SubjectIdChanged);
+            avniBahmniErrorService.errorOccurred(bahmniEncounter.getOpenMRSEncounter(), BahmniErrorType.SubjectIdChanged);
             logger.info("Subject id changed!!");
         }
     }
@@ -193,7 +192,7 @@ public class PatientEncounterEventWorker implements EventWorker, ErrorRecordWork
         BahmniEncounter bahmniEncounter = encounterService.getEncounter(entityUuid, metaData);
         if (bahmniEncounter == null) {
             logger.warn(String.format("Encounter has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, BahmniEntityType.Encounter);
+            avniBahmniErrorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, BahmniEntityType.Encounter);
             return;
         }
 

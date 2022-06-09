@@ -11,13 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-@SpringBootTest(classes = {SalesForceUserRepository.class, DispatchRepository.class})
+@SpringBootTest(classes = {SalesForceUserRepository.class, DispatchRepositoryGoonj.class})
 @Disabled
 public class DispatchRepositoryExternalTest extends BaseGoonjSpringTest {
     @Autowired
     private SalesForceUserRepository salesForceUserRepository;
     @Autowired
-    private DispatchRepository dispatchRepository;
+    private DispatchRepositoryGoonj dispatchRepository;
 
     @Test
     public void dispatchDownload() {

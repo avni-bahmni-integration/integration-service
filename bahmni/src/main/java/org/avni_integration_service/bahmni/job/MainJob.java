@@ -2,16 +2,16 @@ package org.avni_integration_service.bahmni.job;
 
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
-import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.bahmni.SyncDirection;
-import org.avni_integration_service.integration_data.repository.ConstantsRepository;
-import org.avni_integration_service.bahmni.worker.ErrorRecordsWorker;
-import org.avni_integration_service.util.HealthCheckService;
+import org.avni_integration_service.avni.SyncDirection;
+import org.avni_integration_service.bahmni.worker.AvniBahmniErrorRecordsWorker;
 import org.avni_integration_service.bahmni.worker.avni.EnrolmentWorker;
 import org.avni_integration_service.bahmni.worker.avni.GeneralEncounterWorker;
 import org.avni_integration_service.bahmni.worker.avni.ProgramEncounterWorker;
 import org.avni_integration_service.bahmni.worker.avni.SubjectWorker;
 import org.avni_integration_service.bahmni.worker.bahmni.*;
+import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.repository.ConstantsRepository;
+import org.avni_integration_service.util.HealthCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -59,7 +59,7 @@ public class MainJob {
     private boolean isFirstRun;
 
     @Autowired
-    private ErrorRecordsWorker errorRecordsWorker;
+    private AvniBahmniErrorRecordsWorker avniBahmniErrorRecordsWorker;
 
     @Autowired
     private BahmniEntityDateWorker bahmniEntityDateWorker;
@@ -133,8 +133,8 @@ public class MainJob {
     }
 
     private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) {
-        errorRecordsWorker.cacheRunImmutables(allConstants);
-        errorRecordsWorker.process(syncDirection, false);
+        avniBahmniErrorRecordsWorker.cacheRunImmutables(allConstants);
+        avniBahmniErrorRecordsWorker.process(syncDirection, false);
     }
 
     public PatientEncounterFirstRunWorker getPatientEncounterFirstRunWorker(Constants constants) {

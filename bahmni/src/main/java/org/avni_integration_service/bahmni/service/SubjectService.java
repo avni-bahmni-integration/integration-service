@@ -1,36 +1,38 @@
 package org.avni_integration_service.bahmni.service;
 
-import org.avni_integration_service.bahmni.*;
-import org.avni_integration_service.bahmni.mapper.OpenMRSPatientMapper;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
-import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
+import org.avni_integration_service.bahmni.*;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.bahmni.mapper.OpenMRSPatientMapper;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
-import org.avni_integration_service.integration_data.domain.*;
+import org.avni_integration_service.integration_data.domain.Constants;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 
 @Service
 public class SubjectService {
     private final AvniEncounterRepository avniEncounterRepository;
     private final AvniSubjectRepository avniSubjectRepository;
     private final MappingService mappingService;
-    private final ErrorService errorService;
+    private final AvniBahmniErrorService avniBahmniErrorService;
     private final OpenMRSPatientMapper openMRSPatientMapper;
     private final BahmniMappingGroup bahmniMappingGroup;
     private final BahmniMappingType bahmniMappingType;
 
     public SubjectService(AvniEncounterRepository avniEncounterRepository, AvniSubjectRepository avniSubjectRepository,
-                          MappingService mappingService, ErrorService errorService,
+                          MappingService mappingService, AvniBahmniErrorService avniBahmniErrorService,
                           OpenMRSPatientMapper openMRSPatientMapper, BahmniMappingGroup bahmniMappingGroup,
                           BahmniMappingType bahmniMappingType) {
         this.avniEncounterRepository = avniEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.mappingService = mappingService;
-        this.errorService = errorService;
+        this.avniBahmniErrorService = avniBahmniErrorService;
         this.openMRSPatientMapper = openMRSPatientMapper;
         this.bahmniMappingGroup = bahmniMappingGroup;
         this.bahmniMappingType = bahmniMappingType;
@@ -65,7 +67,7 @@ public class SubjectService {
         GeneralEncounter encounterRequest = openMRSPatientMapper.mapToAvniEncounter(openMRSPatient, subject, patientToSubjectMetaData, conceptMetaData);
         avniEncounterRepository.create(encounterRequest);
 
-        errorService.successfullyProcessed(openMRSPatient);
+        avniBahmniErrorService.successfullyProcessed(openMRSPatient);
     }
 
     public void updateRegistrationEncounter(GeneralEncounter encounterRequest, OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
@@ -74,7 +76,7 @@ public class SubjectService {
         encounterRequest.setVoided(openMRSPatient.isVoided());
         avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);
 
-        errorService.successfullyProcessed(openMRSPatient);
+        avniBahmniErrorService.successfullyProcessed(openMRSPatient);
     }
 
     // Patient from OpenMRS/Bahmni is saved as Encounter in Avni
@@ -85,14 +87,14 @@ public class SubjectService {
     }
 
     public void processSubjectIdChanged(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, BahmniErrorType.SubjectIdChanged);
+        avniBahmniErrorService.errorOccurred(patient, BahmniErrorType.SubjectIdChanged);
     }
 
     public void processSubjectNotFound(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, BahmniErrorType.NoSubjectWithId);
+        avniBahmniErrorService.errorOccurred(patient, BahmniErrorType.NoSubjectWithId);
     }
 
     public void processMultipleSubjectsFound(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, BahmniErrorType.MultipleSubjectsWithId);
+        avniBahmniErrorService.errorOccurred(patient, BahmniErrorType.MultipleSubjectsWithId);
     }
 }

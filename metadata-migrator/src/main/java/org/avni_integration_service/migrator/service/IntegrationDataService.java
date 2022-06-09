@@ -2,7 +2,10 @@ package org.avni_integration_service.migrator.service;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
-import org.avni_integration_service.integration_data.domain.*;
+import org.avni_integration_service.integration_data.domain.Constant;
+import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
+import org.avni_integration_service.integration_data.domain.MappingGroup;
+import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.*;
 import org.avni_integration_service.migrator.repository.BahmniConfigurationRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
@@ -27,7 +30,7 @@ public class IntegrationDataService {
     @Autowired
     private IgnoredIntegratingConceptRepository ignoredBahmniConceptRepository;
     @Autowired
-    private AvniEntityStatusRepository avniEntityStatusRepository;
+    private IntegratingEntityStatusRepository avniEntityStatusRepository;
     @Autowired
     private ErrorRecordRepository errorRecordRepository;
     @Autowired
@@ -68,9 +71,9 @@ public class IntegrationDataService {
     }
 
     public void cleanupAvniToBahmniTxData() {
-        Iterable<AvniEntityStatus> all = avniEntityStatusRepository.findAll();
+        Iterable<IntegratingEntityStatus> all = avniEntityStatusRepository.findAll();
         all.forEach(avniEntityStatus -> {
-            avniEntityStatus.setReadUpto(FormatAndParseUtil.fromAvniDate("1900-01-01"));
+            avniEntityStatus.setReadUptoDateTime(FormatAndParseUtil.fromAvniDate("1900-01-01"));
             avniEntityStatusRepository.save(avniEntityStatus);
         });
 

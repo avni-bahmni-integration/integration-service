@@ -14,21 +14,21 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(classes = {ErrorService.class, ErrorRecordRepository.class})
+@SpringBootTest(classes = {AvniBahmniErrorService.class, ErrorRecordRepository.class})
 class ErrorServiceTest extends BaseSpringTest {
     @Autowired
-    private ErrorService errorService;
+    private AvniBahmniErrorService avniBahmniErrorService;
     @Autowired
     private ErrorRecordRepository errorRecordRepository;
 
     @Test
     public void errorOccurred() {
-        ErrorRecord errorRecord = errorService.errorOccurred(UUID.randomUUID().toString(), BahmniErrorType.PatientIdChanged, BahmniEntityType.Patient);
+        ErrorRecord errorRecord = avniBahmniErrorService.errorOccurred(UUID.randomUUID().toString(), BahmniErrorType.PatientIdChanged, BahmniEntityType.Patient);
         assertNotNull(errorRecord);
     }
 
     @Test
     public void findAllByErrorRecordLogsErrorTypeIn() {
-        errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(errorService.getUnprocessableErrorTypes(), PageRequest.of(1, 20));
+        errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(avniBahmniErrorService.getUnprocessableErrorTypes(), PageRequest.of(1, 20));
     }
 }

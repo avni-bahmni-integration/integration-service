@@ -1,19 +1,19 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.apache.http.HttpStatus;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.bahmni.BahmniErrorType;
+import org.avni_integration_service.bahmni.ConstantKey;
+import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.bahmni.client.WebClientsException;
 import org.avni_integration_service.bahmni.contract.*;
 import org.avni_integration_service.bahmni.mapper.avni.SubjectMapper;
-import org.avni_integration_service.bahmni.repository.openmrs.OpenMRSPersonRepository;
-import org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
-import org.avni_integration_service.avni.domain.Subject;
-import org.avni_integration_service.bahmni.ConstantKey;
-import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
 import org.avni_integration_service.bahmni.repository.OpenMRSPatientRepository;
+import org.avni_integration_service.bahmni.repository.openmrs.OpenMRSPersonRepository;
+import org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
+import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.javatuples.Pair;
@@ -26,15 +26,15 @@ public class PatientService {
     private final SubjectMapper subjectMapper;
     private final OpenMRSEncounterRepository openMRSEncounterRepository;
     private final OpenMRSPatientRepository openMRSPatientRepository;
-    private final ErrorService errorService;
+    private final AvniBahmniErrorService avniBahmniErrorService;
     private final OpenMRSPersonRepository openMRSPersonRepository;
     private final VisitService visitService;
 
-    public PatientService(SubjectMapper subjectMapper, OpenMRSEncounterRepository openMRSEncounterRepository, OpenMRSPatientRepository openMRSPatientRepository, ErrorService errorService, OpenMRSPersonRepository openMRSPersonRepository, VisitService visitService) {
+    public PatientService(SubjectMapper subjectMapper, OpenMRSEncounterRepository openMRSEncounterRepository, OpenMRSPatientRepository openMRSPatientRepository, AvniBahmniErrorService avniBahmniErrorService, OpenMRSPersonRepository openMRSPersonRepository, VisitService visitService) {
         this.subjectMapper = subjectMapper;
         this.openMRSEncounterRepository = openMRSEncounterRepository;
         this.openMRSPatientRepository = openMRSPatientRepository;
-        this.errorService = errorService;
+        this.avniBahmniErrorService = avniBahmniErrorService;
         this.openMRSPersonRepository = openMRSPersonRepository;
         this.visitService = visitService;
     }
@@ -45,7 +45,7 @@ public class PatientService {
         } else {
             OpenMRSEncounter encounter = subjectMapper.mapSubjectToExistingEncounter(existingEncounter, subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants);
             openMRSEncounterRepository.updateEncounter(encounter);
-            errorService.successfullyProcessed(subject);
+            avniBahmniErrorService.successfullyProcessed(subject);
         }
     }
 
@@ -57,7 +57,7 @@ public class PatientService {
         OpenMRSEncounter encounter = subjectMapper.mapSubjectToEncounter(subject, patient.getUuid(), subjectToPatientMetaData.encounterTypeUuid(), constants, visit);
         OpenMRSFullEncounter savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
-        errorService.successfullyProcessed(subject);
+        avniBahmniErrorService.successfullyProcessed(subject);
         return savedEncounter;
     }
 
@@ -90,7 +90,7 @@ public class PatientService {
     }
 
     public void processPatientIdChanged(Subject subject, SubjectToPatientMetaData metaData) {
-        errorService.errorOccurred(subject, BahmniErrorType.PatientIdChanged);
+        avniBahmniErrorService.errorOccurred(subject, BahmniErrorType.PatientIdChanged);
     }
 
     private OpenMRSPatient createPatient(Subject subject, SubjectToPatientMetaData metaData, Constants constants) {
@@ -147,18 +147,18 @@ public class PatientService {
     }
 
     public void patientDeleted(String patientUuid) {
-        errorService.errorOccurred(patientUuid, BahmniErrorType.EntityIsDeleted, BahmniEntityType.Patient);
+        avniBahmniErrorService.errorOccurred(patientUuid, BahmniErrorType.EntityIsDeleted, BahmniEntityType.Patient);
     }
 
     public void notACommunityMember(OpenMRSPatient patient) {
-        errorService.errorOccurred(patient, BahmniErrorType.NotACommunityMember);
+        avniBahmniErrorService.errorOccurred(patient, BahmniErrorType.NotACommunityMember);
     }
 
     public void processMultipleSubjectsFound(Subject subject) {
-        errorService.errorOccurred(subject, BahmniErrorType.MultipleSubjectsWithId);
+        avniBahmniErrorService.errorOccurred(subject, BahmniErrorType.MultipleSubjectsWithId);
     }
 
     public void processSubjectIdNull(Subject subject) {
-        errorService.errorOccurred(subject, BahmniErrorType.SubjectIdNull);
+        avniBahmniErrorService.errorOccurred(subject, BahmniErrorType.SubjectIdNull);
     }
 }

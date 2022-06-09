@@ -1,21 +1,22 @@
 package org.avni_integration_service.bahmni.worker.avni;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.bahmni.BahmniErrorType;
-import org.avni_integration_service.bahmni.ConstantKey;
-import org.avni_integration_service.bahmni.service.*;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.domain.SubjectsResponse;
-import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
-import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
-import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
-import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
-import org.avni_integration_service.bahmni.worker.ErrorRecordWorker;
+import org.avni_integration_service.avni.worker.ErrorRecordWorker;
+import org.avni_integration_service.bahmni.BahmniErrorType;
+import org.avni_integration_service.bahmni.ConstantKey;
+import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.bahmni.service.*;
 import org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker.PatientEncounterEventWorker;
+import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
+import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 @Component
 public class SubjectWorker implements ErrorRecordWorker {
     @Autowired
-    private AvniEntityStatusRepository avniEntityStatusRepository;
+    private IntegratingEntityStatusRepository integrationEntityStatusRepository;
     @Autowired
     private MappingMetaDataService mappingMetaDataService;
     @Autowired
@@ -37,9 +38,9 @@ public class SubjectWorker implements ErrorRecordWorker {
     @Autowired
     private PatientService patientService;
     @Autowired
-    private EntityStatusService entityStatusService;
+    private AvniEntityStatusService avniEntityStatusService;
     @Autowired
-    private ErrorService errorService;
+    private AvniBahmniErrorService avniBahmniErrorService;
     @Autowired
     private AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
     @Autowired
@@ -51,11 +52,11 @@ public class SubjectWorker implements ErrorRecordWorker {
 
     public void processSubjects() {
         while (true) {
-            AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Subject);
-            SubjectsResponse response = avniSubjectRepository.getSubjects(status.getReadUpto(), constants.getValue(ConstantKey.IntegrationAvniSubjectType.name()));
+            IntegratingEntityStatus status = integrationEntityStatusRepository.findByEntityType(AvniEntityType.Subject.name());
+            SubjectsResponse response = avniSubjectRepository.getSubjects(status.getReadUptoDateTime(), constants.getValue(ConstantKey.IntegrationAvniSubjectType.name()));
             Subject[] subjects = response.getContent();
             int totalPages = response.getTotalPages();
-            logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUpto()));
+            logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUptoDateTime()));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {
                 processSubject(subject, true);
@@ -75,7 +76,7 @@ public class SubjectWorker implements ErrorRecordWorker {
 
     private void updateSyncStatus(Subject subject, boolean updateSyncStatus) {
         if (updateSyncStatus)
-            entityStatusService.saveEntityStatus(subject);
+            avniEntityStatusService.saveEntityStatus(subject);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -122,7 +123,7 @@ public class SubjectWorker implements ErrorRecordWorker {
             }
             logger.debug(String.format("Saving entity status for subject %s", subject.getLastModifiedDate()));
         } catch (PatientEncounterEventWorker.SubjectIdChangedException e) {
-            errorService.errorOccurred(subject.getUuid(), BahmniErrorType.SubjectIdChanged, AvniEntityType.Subject);
+            avniBahmniErrorService.errorOccurred(subject.getUuid(), BahmniErrorType.SubjectIdChanged, AvniEntityType.Subject);
         }
 
         updateSyncStatus(subject, updateSyncStatus);
@@ -149,7 +150,7 @@ public class SubjectWorker implements ErrorRecordWorker {
         Subject subject = avniSubjectRepository.getSubject(entityUuid);
         if (subject == null) {
             logger.warn(String.format("Subject has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.Subject);
+            avniBahmniErrorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.Subject);
             return;
         }
 
