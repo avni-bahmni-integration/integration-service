@@ -7,15 +7,15 @@ import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.repository.AvniEnrolmentRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
+import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.bahmni.service.*;
-import org.avni_integration_service.bahmni.worker.ErrorRecordWorker;
-import org.avni_integration_service.integration_data.domain.AvniEntityStatus;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
+import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
+import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +24,12 @@ import java.util.LinkedHashMap;
 
 @Component
 public class EnrolmentWorker implements ErrorRecordWorker {
-    private final AvniEntityStatusRepository avniEntityStatusRepository;
+    private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final AvniEnrolmentRepository avniEnrolmentRepository;
-    private final EntityStatusService entityStatusService;
+    private final AvniEntityStatusService avniEntityStatusService;
     private final EnrolmentService enrolmentService;
     private final PatientService patientService;
-    private final ErrorService errorService;
+    private final AvniBahmniErrorService avniBahmniErrorService;
     private final AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
 
     private static final Logger logger = Logger.getLogger(EnrolmentWorker.class);
@@ -38,32 +38,32 @@ public class EnrolmentWorker implements ErrorRecordWorker {
     private SubjectToPatientMetaData metaData;
     private Constants constants;
 
-    public EnrolmentWorker(AvniEntityStatusRepository avniEntityStatusRepository,
+    public EnrolmentWorker(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                            MappingMetaDataService mappingMetaDataService,
                            AvniEnrolmentRepository avniEnrolmentRepository,
-                           EntityStatusService entityStatusService,
+                           AvniEntityStatusService avniEntityStatusService,
                            EnrolmentService enrolmentService,
                            PatientService patientService,
-                           ErrorService errorService,
+                           AvniBahmniErrorService avniBahmniErrorService,
                            AvniIgnoredConceptsRepository avniIgnoredConceptsRepository, AvniSubjectRepository avniSubjectRepository) {
-        this.avniEntityStatusRepository = avniEntityStatusRepository;
+        this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.mappingMetaDataService = mappingMetaDataService;
         this.avniEnrolmentRepository = avniEnrolmentRepository;
-        this.entityStatusService = entityStatusService;
+        this.avniEntityStatusService = avniEntityStatusService;
         this.enrolmentService = enrolmentService;
         this.patientService = patientService;
-        this.errorService = errorService;
+        this.avniBahmniErrorService = avniBahmniErrorService;
         this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
         this.avniSubjectRepository = avniSubjectRepository;
     }
 
     public void processEnrolments() {
         while (true) {
-            AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment);
-            EnrolmentsResponse response = avniEnrolmentRepository.getEnrolments(status.getReadUpto());
+            IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(AvniEntityType.Enrolment.name());
+            EnrolmentsResponse response = avniEnrolmentRepository.getEnrolments(status.getReadUptoDateTime());
             int totalPages = response.getTotalPages();
             Enrolment[] enrolments = response.getContent();
-            logger.info(String.format("Found %d enrolments that are newer than %s", enrolments.length, status.getReadUpto()));
+            logger.info(String.format("Found %d enrolments that are newer than %s", enrolments.length, status.getReadUptoDateTime()));
             if (enrolments.length == 0) break;
             for (Enrolment enrolment : enrolments) {
                 processEnrolment(enrolment, true);
@@ -88,14 +88,14 @@ public class EnrolmentWorker implements ErrorRecordWorker {
 
     private void updateSyncStatus(Enrolment enrolment, boolean updateSyncStatus) {
         if (updateSyncStatus)
-            entityStatusService.saveEntityStatus(enrolment);
+            avniEntityStatusService.saveEntityStatus(enrolment);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processEnrolment(Enrolment enrolment, boolean updateSyncStatus) {
-        if (errorService.hasAvniMultipleSubjectsError(enrolment.getSubjectId())) {
+        if (avniBahmniErrorService.hasAvniMultipleSubjectsError(enrolment.getSubjectId())) {
             logger.error(String.format("Skipping Avni enrolment %s because of multiple subjects with same id error", enrolment.getUuid()));
-            errorService.errorOccurred(enrolment, BahmniErrorType.MultipleSubjectsWithId);
+            avniBahmniErrorService.errorOccurred(enrolment, BahmniErrorType.MultipleSubjectsWithId);
             updateSyncStatus(enrolment, updateSyncStatus);
             return;
         }
@@ -125,7 +125,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
             if (enrolment.isExited()) {
                 processExitedEnrolment(constants, enrolment, patient);
             }
-            errorService.successfullyProcessed(enrolment);
+            avniBahmniErrorService.successfullyProcessed(enrolment);
         }
 
         updateSyncStatus(enrolment, updateSyncStatus);
@@ -147,7 +147,7 @@ public class EnrolmentWorker implements ErrorRecordWorker {
         Enrolment enrolment = avniEnrolmentRepository.getEnrolment(entityUuid);
         if (enrolment == null) {
             logger.warn(String.format("Enrolment has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.Enrolment);
+            avniBahmniErrorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.Enrolment);
             return;
         }
 

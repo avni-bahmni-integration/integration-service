@@ -1,16 +1,16 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.avni_integration_service.avni.domain.*;
-import org.avni_integration_service.integration_data.domain.AvniEntityStatus;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
-import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
+import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
+import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EntityStatusService {
+public class AvniEntityStatusService {
     @Autowired
-    private AvniEntityStatusRepository avniEntityStatusRepository;
+    private IntegratingEntityStatusRepository integratingEntityStatusRepository;
 
     public void saveEntityStatus(Subject subject) {
         saveEntityStatus(AvniEntityType.Subject, subject);
@@ -29,8 +29,8 @@ public class EntityStatusService {
     }
 
     private void saveEntityStatus(AvniEntityType avniEntityType, AvniBaseContract avniBaseContract) {
-        AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(avniEntityType);
-        status.setReadUpto(avniBaseContract.getLastModifiedDate());
-        avniEntityStatusRepository.save(status);
+        IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(avniEntityType.name());
+        status.setReadUptoDateTime(avniBaseContract.getLastModifiedDate());
+        integratingEntityStatusRepository.save(status);
     }
 }

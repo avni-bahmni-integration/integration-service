@@ -3,6 +3,8 @@ package org.avni_integration_service.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 
@@ -76,5 +78,11 @@ public class FormatAndParseUtil {
         if (Objects.equals(gender, "Female")) return "F";
         if (Objects.equals(gender, "Other")) return "U";
         return null;
+    }
+
+    public static LocalDateTime toLocalDateTime(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 }

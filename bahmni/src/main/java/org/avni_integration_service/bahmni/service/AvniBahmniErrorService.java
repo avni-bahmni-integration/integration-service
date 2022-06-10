@@ -1,11 +1,11 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.ProgramEncounter;
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
@@ -22,15 +22,15 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class ErrorService {
-    private static final Logger logger = Logger.getLogger(ErrorService.class);
+public class AvniBahmniErrorService {
+    private static final Logger logger = Logger.getLogger(AvniBahmniErrorService.class);
 
     private final ErrorRecordRepository errorRecordRepository;
     private final IntegrationSystemRepository integrationSystemRepository;
     private final ErrorTypeRepository errorTypeRepository;
 
     @Autowired
-    public ErrorService(ErrorRecordRepository errorRecordRepository, IntegrationSystemRepository integrationSystemRepository, ErrorTypeRepository errorTypeRepository) {
+    public AvniBahmniErrorService(ErrorRecordRepository errorRecordRepository, IntegrationSystemRepository integrationSystemRepository, ErrorTypeRepository errorTypeRepository) {
         this.errorRecordRepository = errorRecordRepository;
         this.integrationSystemRepository = integrationSystemRepository;
         this.errorTypeRepository = errorTypeRepository;

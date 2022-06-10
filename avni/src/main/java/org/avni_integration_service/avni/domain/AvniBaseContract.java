@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.avni_integration_service.util.FormatAndParseUtil;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,11 @@ public class AvniBaseContract {
         Map<String, Object> audit = (Map<String, Object>) map.get("audit");
         String lastModifiedAtString = (String) audit.get("Last modified at");
         return FormatAndParseUtil.fromAvniDateTime(lastModifiedAtString);
+    }
+
+    @JsonIgnore
+    public LocalDateTime getLastModifiedDateTime() {
+        return FormatAndParseUtil.toLocalDateTime(getLastModifiedDate());
     }
 
     @JsonIgnore

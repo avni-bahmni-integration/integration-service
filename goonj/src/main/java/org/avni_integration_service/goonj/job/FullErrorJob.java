@@ -1,9 +1,9 @@
-package org.avni_integration_service.bahmni.job;
+package org.avni_integration_service.goonj.job;
 
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.SyncDirection;
-import org.avni_integration_service.bahmni.worker.AvniBahmniErrorRecordsWorker;
+import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class FullErrorJob {
     private ConstantsRepository constantsRepository;
 
     @Autowired
-    private AvniBahmniErrorRecordsWorker avniBahmniErrorRecordsWorker;
+    private AvniGoonjErrorRecordsWorker avniGoonjErrorRecordsWorker;
 
     @Autowired
     private Bugsnag bugsnag;
@@ -25,8 +25,8 @@ public class FullErrorJob {
     public void execute() {
         try {
             Constants allConstants = constantsRepository.findAllConstants();
-            avniBahmniErrorRecordsWorker.cacheRunImmutables(allConstants);
-            avniBahmniErrorRecordsWorker.process(SyncDirection.BahmniToAvni, true);
+            avniGoonjErrorRecordsWorker.cacheRunImmutables(allConstants);
+            avniGoonjErrorRecordsWorker.process(SyncDirection.GoonjToAvni, true);
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
