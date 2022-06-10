@@ -42,7 +42,8 @@ public class GoonjIntegrationService {
     public void pushDemandToAvni(LocalDateTime localDateTime) {
         HashMap<String, Object>[] demands = demandRepository.getDemands(localDateTime);
         for (Map<String, Object> demand : demands) {
-            Subject subject = Demand.from(demand);
+            Demand demandDto = Demand.from(demand);
+            Subject subject = Demand.subjectFrom(demandDto);
             avniSubjectRepository.create(subject);
         }
     }

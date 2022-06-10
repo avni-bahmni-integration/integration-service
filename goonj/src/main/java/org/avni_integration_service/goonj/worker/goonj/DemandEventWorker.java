@@ -3,6 +3,7 @@ package org.avni_integration_service.goonj.worker.goonj;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
+import org.avni_integration_service.goonj.domain.Demand;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DemandService;
 import org.avni_integration_service.integration_data.domain.Constants;
@@ -19,9 +20,6 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
 
     @Autowired
     private DemandService demandService;
-    //TODO
-//    @Autowired
-//    private MappingMetaDataService mappingMetaDataService;
 
     @Autowired
     private AvniGoonjErrorService avniGoonjErrorService;
@@ -30,8 +28,7 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
     private AvniSubjectRepository avniSubjectRepository;
 
     private Constants constants;
-    //TODO
-//    private DemandToSubjectMetaData metaData;
+
 
     @Value("${goonj.app.first.run}")
     private boolean isFirstRun;
@@ -42,6 +39,7 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
 
     private void processDemand(Map<String, Object> demand) {
         logger.debug(String.format("Processing demand: name %s || uuid %s", demand.get("DemandName"), demand.get("DemandId")));
+        Demand demandDto = Demand.from(demand);
         //TODO
 //        avniSubjectRepository.createDemand(demand);
     }
