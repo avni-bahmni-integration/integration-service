@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class MainJob {
-    private static final Logger logger = Logger.getLogger(MainJob.class);
+public class AvniGoonjMainJob {
+    private static final Logger logger = Logger.getLogger(AvniGoonjMainJob.class);
 
     @Value("${healthcheck.mainJob}")
     private String mainJobId;
@@ -26,9 +26,9 @@ public class MainJob {
 
     @Autowired
     private ConstantsRepository constantsRepository;
-    @Value("${app.tasks}")
+    @Value("${goonj.app.tasks}")
     private String tasks;
-    @Value("${app.first.run}")
+    @Value("${goonj.app.first.run}")
     private boolean isFirstRun;
 
     @Autowired

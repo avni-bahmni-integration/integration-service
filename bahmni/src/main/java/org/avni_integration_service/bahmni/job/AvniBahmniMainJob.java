@@ -20,8 +20,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Component
-public class MainJob {
-    private static final Logger logger = Logger.getLogger(MainJob.class);
+public class AvniBahmniMainJob {
+    private static final Logger logger = Logger.getLogger(AvniBahmniMainJob.class);
 
     @Value("${healthcheck.mainJob}")
     private String mainJobId;
@@ -53,9 +53,9 @@ public class MainJob {
 
     @Autowired
     private ConstantsRepository constantsRepository;
-    @Value("${app.tasks}")
+    @Value("${bahmni.app.tasks}")
     private String tasks;
-    @Value("${app.first.run}")
+    @Value("${bahmni.app.first.run}")
     private boolean isFirstRun;
 
     @Autowired

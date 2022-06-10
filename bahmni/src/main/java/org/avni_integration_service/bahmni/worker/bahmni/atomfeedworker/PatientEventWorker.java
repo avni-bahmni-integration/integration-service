@@ -38,7 +38,7 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
     private Constants constants;
     private PatientToSubjectMetaData metaData;
 
-    @Value("${app.first.run}")
+    @Value("${bahmni.app.first.run}")
     private boolean isFirstRun;
 
     @Override

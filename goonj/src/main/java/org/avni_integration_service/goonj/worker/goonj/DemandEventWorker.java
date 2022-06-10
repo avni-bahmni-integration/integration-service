@@ -33,7 +33,7 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
     //TODO
 //    private DemandToSubjectMetaData metaData;
 
-    @Value("${app.first.run}")
+    @Value("${goonj.app.first.run}")
     private boolean isFirstRun;
 
     public void process(Map<String, Object> event) {

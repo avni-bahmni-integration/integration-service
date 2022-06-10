@@ -5,8 +5,22 @@ import org.avni_integration_service.integration_data.domain.framework.NamedInteg
 
 import java.util.Map;
 
-public class Demand extends NamedIntegrationSpecificEntity {
-
+/*
+[
+    {
+        "TypeOfDisaster": "Not Applicable",
+        "TargetCommunity": "None",
+        "State": "Maharashtra",
+        "NumberOfPeople": null,
+        "District": "Mumbai City",
+        "DemandName": "2022/ACC-145990/MHR/027",
+        "DemandId": "a1CC20000007q6jMAA",
+        "AccountName": "Mumbai"
+    }
+]
+ */
+public class Demand {
+    //TODO make these a DTO
     public static Subject from(Map<String, Object> dispatch) {
         Subject subject = new Subject();
         subject.setSubjectType("Demand");
