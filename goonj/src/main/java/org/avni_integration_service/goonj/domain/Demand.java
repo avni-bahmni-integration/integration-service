@@ -146,7 +146,9 @@ public class Demand {
         demandDTO.setTypeOfDisaster((String) demand.get("TypeOfDisaster"));
         demandDTO.setState((String) demand.get("State"));
         demandDTO.setDistrict((String) demand.get("District"));
-        demandDTO.setNumberOfPeople((Integer) demand.get("NumberOfPeople"));
+        if(demand.get("NumberOfPeople") != null) {
+            demandDTO.setNumberOfPeople((Integer)demand.get("NumberOfPeople"));
+        }
         return demandDTO;
     }
 
