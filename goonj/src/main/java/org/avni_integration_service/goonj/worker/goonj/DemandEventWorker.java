@@ -8,9 +8,7 @@ import org.avni_integration_service.goonj.domain.Demand;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DemandService;
 import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -38,8 +36,8 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
     private void processDemand(Map<String, Object> demandResponse) {
         logger.debug(String.format("Processing demand: name %s || uuid %s", demandResponse.get("DemandName"), demandResponse.get("DemandId")));
         Demand demand = Demand.from(demandResponse);
-        Subject subject = demand.fromSubject();
-
+        Subject subject = demand.subjectWithoutObservations();
+        demandService.populateObservations(subject, demand);
         avniSubjectRepository.create(subject);
     }
 

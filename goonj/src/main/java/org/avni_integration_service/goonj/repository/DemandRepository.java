@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Component("DemandRepository")
-public class DemandRepositoryGoonj extends GoonjBaseRepository {
+public class DemandRepository extends GoonjBaseRepository {
     @Autowired
-    public DemandRepositoryGoonj(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                                 @Qualifier("GoonjRestTemplate")RestTemplate restTemplate, GoonjConfig goonjConfig) {
+    public DemandRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                            @Qualifier("GoonjRestTemplate")RestTemplate restTemplate, GoonjConfig goonjConfig) {
         super(integratingEntityStatusRepository, restTemplate,
                 goonjConfig, GoonjEntityType.Demand.name());
     }
