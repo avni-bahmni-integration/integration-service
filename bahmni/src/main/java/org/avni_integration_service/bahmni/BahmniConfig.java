@@ -17,7 +17,7 @@ public class BahmniConfig {
     @Value("${openmrs.mysql.port}")
     private int openMrsMySqlPort;
 
-    @Value("${app.config.tx.rollback}")
+    @Value("${bahmni.app.config.tx.rollback}")
     private boolean txRollback;
 
     public String getOpenMrsMySqlUser() {

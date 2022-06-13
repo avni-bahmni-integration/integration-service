@@ -1,23 +1,23 @@
 package org.avni_integration_service.bahmni.worker.bahmni.atomfeedworker;
 
-import org.avni_integration_service.bahmni.BahmniEntityType;
+import org.apache.log4j.Logger;
+import org.avni_integration_service.avni.MultipleResultsFoundException;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
-import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.avni.worker.ErrorRecordWorker;
+import org.avni_integration_service.bahmni.BahmniEntityType;
 import org.avni_integration_service.bahmni.PatientToSubjectMetaData;
-import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.avni.MultipleResultsFoundException;
-import org.avni_integration_service.bahmni.service.ErrorService;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.bahmni.service.AvniBahmniErrorService;
 import org.avni_integration_service.bahmni.service.MappingMetaDataService;
 import org.avni_integration_service.bahmni.service.PatientService;
 import org.avni_integration_service.bahmni.service.SubjectService;
-import org.avni_integration_service.bahmni.worker.ErrorRecordWorker;
+import org.avni_integration_service.integration_data.domain.Constants;
 import org.ict4h.atomfeed.client.domain.Event;
 import org.ict4h.atomfeed.client.service.EventWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.apache.log4j.Logger;
 
 @Component
 public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
@@ -30,7 +30,7 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
     private MappingMetaDataService mappingMetaDataService;
 
     @Autowired
-    private ErrorService errorService;
+    private AvniBahmniErrorService avniBahmniErrorService;
 
     @Autowired
     private SubjectService subjectService;
@@ -38,7 +38,7 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
     private Constants constants;
     private PatientToSubjectMetaData metaData;
 
-    @Value("${app.first.run}")
+    @Value("${bahmni.app.first.run}")
     private boolean isFirstRun;
 
     @Override
@@ -60,7 +60,7 @@ public class PatientEventWorker implements EventWorker, ErrorRecordWorker {
 
         GeneralEncounter patientEncounter = subjectService.findPatient(metaData, patient.getUuid());
         if (isFirstRun) {
-            if (patientEncounter != null || errorService.hasError(patient.getUuid(), BahmniEntityType.Patient)) {
+            if (patientEncounter != null || avniBahmniErrorService.hasError(patient.getUuid(), BahmniEntityType.Patient)) {
                 logger.info("Early return for first run, as the record is already processed before");
                 return;
             }

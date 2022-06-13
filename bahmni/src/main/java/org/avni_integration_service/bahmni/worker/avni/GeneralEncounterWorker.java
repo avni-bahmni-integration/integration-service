@@ -1,24 +1,25 @@
 package org.avni_integration_service.bahmni.worker.avni;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.bahmni.BahmniErrorType;
-import org.avni_integration_service.bahmni.Names;
-import org.avni_integration_service.bahmni.service.EntityStatusService;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.GeneralEncountersResponse;
-import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
-import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
-import org.avni_integration_service.integration_data.domain.*;
-import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
-import org.avni_integration_service.integration_data.domain.error.ErrorType;
-import org.avni_integration_service.integration_data.repository.AvniEntityStatusRepository;
 import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
+import org.avni_integration_service.avni.worker.ErrorRecordWorker;
+import org.avni_integration_service.bahmni.BahmniErrorType;
+import org.avni_integration_service.bahmni.Names;
+import org.avni_integration_service.bahmni.SubjectToPatientMetaData;
+import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
+import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
+import org.avni_integration_service.bahmni.service.AvniBahmniErrorService;
 import org.avni_integration_service.bahmni.service.AvniEncounterService;
-import org.avni_integration_service.bahmni.service.ErrorService;
+import org.avni_integration_service.bahmni.service.AvniEntityStatusService;
 import org.avni_integration_service.bahmni.service.MappingMetaDataService;
-import org.avni_integration_service.bahmni.worker.ErrorRecordWorker;
+import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
+import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.javatuples.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,7 +29,7 @@ import java.util.LinkedHashMap;
 
 @Component
 public class GeneralEncounterWorker implements ErrorRecordWorker {
-    private final AvniEntityStatusRepository avniEntityStatusRepository;
+    private final IntegratingEntityStatusRepository integrationEntityStatusRepository;
     private final AvniEncounterRepository avniEncounterRepository;
     private final MappingMetaDataService mappingMetaDataService;
     private final AvniSubjectRepository avniSubjectRepository;
@@ -36,36 +37,36 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
     private final AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
 
     private static final Logger logger = Logger.getLogger(GeneralEncounterWorker.class);
-    private final EntityStatusService entityStatusService;
+    private final AvniEntityStatusService avniEntityStatusService;
     private Constants constants;
     private SubjectToPatientMetaData metaData;
-    private final ErrorService errorService;
+    private final AvniBahmniErrorService avniBahmniErrorService;
 
-    public GeneralEncounterWorker(AvniEntityStatusRepository avniEntityStatusRepository,
+    public GeneralEncounterWorker(IntegratingEntityStatusRepository integrationEntityStatusRepository,
                                   MappingMetaDataService mappingMetaDataService,
                                   AvniEncounterRepository avniEncounterRepository,
                                   AvniSubjectRepository avniSubjectRepository,
                                   AvniEncounterService encounterService,
                                   AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
-                                  EntityStatusService entityStatusService,
-                                  ErrorService errorService) {
-        this.avniEntityStatusRepository = avniEntityStatusRepository;
+                                  AvniEntityStatusService avniEntityStatusService,
+                                  AvniBahmniErrorService avniBahmniErrorService) {
+        this.integrationEntityStatusRepository = integrationEntityStatusRepository;
         this.mappingMetaDataService = mappingMetaDataService;
         this.avniEncounterRepository = avniEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.encounterService = encounterService;
         this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
-        this.entityStatusService = entityStatusService;
-        this.errorService = errorService;
+        this.avniEntityStatusService = avniEntityStatusService;
+        this.avniBahmniErrorService = avniBahmniErrorService;
     }
 
     public void processEncounters() {
         while (true) {
-            AvniEntityStatus status = avniEntityStatusRepository.findByEntityType(AvniEntityType.GeneralEncounter);
-            GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(status.getReadUpto());
+            IntegratingEntityStatus status = integrationEntityStatusRepository.findByEntityType(AvniEntityType.GeneralEncounter.name());
+            GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(status.getReadUptoDateTime());
             GeneralEncounter[] generalEncounters = response.getContent();
             int totalPages = response.getTotalPages();
-            logger.info(String.format("Found %d encounters that are newer than %s", generalEncounters.length, status.getReadUpto()));
+            logger.info(String.format("Found %d encounters that are newer than %s", generalEncounters.length, status.getReadUptoDateTime()));
             if (generalEncounters.length == 0) break;
             for (GeneralEncounter generalEncounter : generalEncounters) {
                 processGeneralEncounter(generalEncounter, true);
@@ -86,7 +87,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
 
     private void updateSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
         if (updateSyncStatus)
-            entityStatusService.saveEntityStatus(generalEncounter);
+            avniEntityStatusService.saveEntityStatus(generalEncounter);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -97,9 +98,9 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
             return;
         }
 
-        if (errorService.hasAvniMultipleSubjectsError(generalEncounter.getSubjectId())) {
+        if (avniBahmniErrorService.hasAvniMultipleSubjectsError(generalEncounter.getSubjectId())) {
             logger.error(String.format("Skipping Avni general encounter %s because of multiple subjects with same id error", generalEncounter.getUuid()));
-            errorService.errorOccurred(generalEncounter, BahmniErrorType.MultipleSubjectsWithId);
+            avniBahmniErrorService.errorOccurred(generalEncounter, BahmniErrorType.MultipleSubjectsWithId);
             updateSyncStatus(generalEncounter, updateSyncStatus);
             return;
         }
@@ -140,7 +141,7 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
         GeneralEncounter generalEncounter = avniEncounterRepository.getGeneralEncounter(entityUuid);
         if (generalEncounter == null) {
             logger.warn(String.format("GeneralEncounter has been deleted now: %s", entityUuid));
-            errorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.GeneralEncounter);
+            avniBahmniErrorService.errorOccurred(entityUuid, BahmniErrorType.EntityIsDeleted, AvniEntityType.GeneralEncounter);
             return;
         }
 

@@ -1,23 +1,22 @@
 package org.avni_integration_service.bahmni.service;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.bahmni.BahmniErrorType;
-import org.avni_integration_service.bahmni.mapper.avni.EncounterMapper;
 import org.avni_integration_service.avni.domain.ProgramEncounter;
+import org.avni_integration_service.avni.repository.AvniEnrolmentRepository;
+import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
-import org.avni_integration_service.avni.repository.AvniEnrolmentRepository;
+import org.avni_integration_service.bahmni.mapper.avni.EncounterMapper;
+import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
 import org.avni_integration_service.bahmni.repository.intmapping.MappingService;
 import org.avni_integration_service.integration_data.domain.Constants;
-
-import org.avni_integration_service.bahmni.repository.OpenMRSEncounterRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProgramEncounterService extends BaseAvniEncounterService {
     private final VisitService visitService;
     private final EncounterMapper encounterMapper;
-    private final ErrorService errorService;
+    private final AvniBahmniErrorService avniBahmniErrorService;
     private final AvniEnrolmentRepository avniEnrolmentRepository;
     private static final Logger logger = Logger.getLogger(ProgramEncounterService.class);
 
@@ -26,12 +25,12 @@ public class ProgramEncounterService extends BaseAvniEncounterService {
                                    OpenMRSEncounterRepository openMRSEncounterRepository,
                                    VisitService visitService,
                                    EncounterMapper encounterMapper,
-                                   ErrorService errorService,
+                                   AvniBahmniErrorService avniBahmniErrorService,
                                    AvniEnrolmentRepository avniEnrolmentRepository) {
         super(patientService, mappingService, openMRSEncounterRepository);
         this.visitService = visitService;
         this.encounterMapper = encounterMapper;
-        this.errorService = errorService;
+        this.avniBahmniErrorService = avniBahmniErrorService;
         this.avniEnrolmentRepository = avniEnrolmentRepository;
     }
 
@@ -47,7 +46,7 @@ public class ProgramEncounterService extends BaseAvniEncounterService {
         var encounter = encounterMapper.mapEncounter(programEncounter, patient.getUuid(), constants, visit);
         var savedEncounter = openMRSEncounterRepository.createEncounter(encounter);
 
-        errorService.successfullyProcessed(programEncounter);
+        avniBahmniErrorService.successfullyProcessed(programEncounter);
         return savedEncounter;
     }
 
@@ -56,7 +55,7 @@ public class ProgramEncounterService extends BaseAvniEncounterService {
     }
 
     public void processPatientNotFound(ProgramEncounter programEncounter) {
-        errorService.errorOccurred(programEncounter, BahmniErrorType.NoPatientWithId);
+        avniBahmniErrorService.errorOccurred(programEncounter, BahmniErrorType.NoPatientWithId);
     }
 
     public void updateCommunityEncounter(OpenMRSFullEncounter existingEncounter, ProgramEncounter programEncounter, Constants constants) {
@@ -71,7 +70,7 @@ public class ProgramEncounterService extends BaseAvniEncounterService {
                     programEncounter,
                     constants);
             openMRSEncounterRepository.updateEncounter(openMRSEncounter);
-            errorService.successfullyProcessed(programEncounter);
+            avniBahmniErrorService.successfullyProcessed(programEncounter);
         }
     }
 }

@@ -20,6 +20,6 @@ class MappingMetaDataRepositoryTest extends AbstractSpringTest {
         Iterable<MappingMetaData> all = mappingMetaDataRepository.findAll();
         List<MappingMetaData> list = new ArrayList<>();
         all.forEach(list::add);
-        assertEquals(0, list.size());
+        assertEquals(1, list.size());
     }
 }

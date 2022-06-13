@@ -66,14 +66,16 @@ public class MappingMetadataController extends BaseController {
         return toContractPage(mappingMetaDataRepository.findAllByAvniValueContainsAndIntegrationSystem(avniValue, getCurrentIntegrationSystem(principal), pageable));
     }
 
-    @RequestMapping(value = "/int/mappingMetadata/search/findByBahmniValue", method = {RequestMethod.GET})
-    public Page<MappingMetadataWebContract> findByBahmniValue(@RequestParam("bahmniValue") String bahmniValue, Pageable pageable, Principal principal) {
-        return toContractPage(mappingMetaDataRepository.findAllByIntSystemValueContainsAndIntegrationSystem(bahmniValue, getCurrentIntegrationSystem(principal), pageable));
+    @RequestMapping(value = "/int/mappingMetadata/search/findByIntSystemValue", method = {RequestMethod.GET})
+    public Page<MappingMetadataWebContract> findByBahmniValue(@RequestParam("intSystemValue") String intSystemValue, Pageable pageable, Principal principal) {
+        return toContractPage(mappingMetaDataRepository.findAllByIntSystemValueContainsAndIntegrationSystem(intSystemValue, getCurrentIntegrationSystem(principal), pageable));
     }
 
     @RequestMapping(value = "/int/mappingMetadata/search/find", method = {RequestMethod.GET})
-    public Page<MappingMetadataWebContract> find(@RequestParam("avniValue") String avniValue, @RequestParam("bahmniValue") String bahmniValue, Pageable pageable, Principal principal) {
-        return toContractPage(mappingMetaDataRepository.findAllByAvniValueContainsAndIntSystemValueContainsAndIntegrationSystem(avniValue, bahmniValue, getCurrentIntegrationSystem(principal), pageable));
+    public Page<MappingMetadataWebContract> find(@RequestParam("avniValue") String avniValue,
+                                                 @RequestParam("intSystemValue") String intSystemValue,
+                                                 Pageable pageable, Principal principal) {
+        return toContractPage(mappingMetaDataRepository.findAllByAvniValueContainsAndIntSystemValueContainsAndIntegrationSystem(avniValue, intSystemValue, getCurrentIntegrationSystem(principal), pageable));
     }
 
     @RequestMapping(value = "/int/mappingMetadata", method = {RequestMethod.POST})
