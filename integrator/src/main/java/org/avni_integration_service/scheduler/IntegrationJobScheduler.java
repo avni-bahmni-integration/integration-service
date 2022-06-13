@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EnableScheduling
+@ConditionalOnProperty(value = "avni.int.auto.close", havingValue = "false")
 public class IntegrationJobScheduler {
     private final AvniBahmniMainJob avniBahmniMainJob;
     private final AvniBahmniFullErrorJob avniBahmniFullErrorJob;
