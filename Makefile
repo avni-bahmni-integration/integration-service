@@ -161,3 +161,5 @@ deploy-to-vagrant: build-server deploy-to-vagrant-only
 ### Setup
 setup: setup-log-dir
 	touch goonj/src/test/resources/goonj-secret.properties
+	touch goonj/src/test/resources/avni-secret.properties
+	touch goonj/src/test/resources/bahmni-secret.properties

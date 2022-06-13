@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Component("DispatchRepository")
-public class DispatchRepositoryGoonj extends GoonjBaseRepository {
+public class DispatchRepository extends GoonjBaseRepository {
     @Autowired
-    public DispatchRepositoryGoonj(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                                   @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig) {
+    public DispatchRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                            @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig) {
         super(integratingEntityStatusRepository, restTemplate,
                 goonjConfig, GoonjEntityType.Dispatch.name());
     }
@@ -27,5 +27,9 @@ public class DispatchRepositoryGoonj extends GoonjBaseRepository {
 
     public HashMap<String, Object>[] getDispatches(LocalDateTime dateTime) {
         return super.getResponse( dateTime, "DispatchService/getDispatches");
+    }
+
+    public HashMap<String, Object> getDispatch(String uuid) {
+        return super.getSingleEntityResponse("DispatchService/getDispatch", uuid);
     }
 }

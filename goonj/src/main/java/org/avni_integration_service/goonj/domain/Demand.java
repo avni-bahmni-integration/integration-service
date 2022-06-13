@@ -10,12 +10,15 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Demand {
     private static final String DemandStateField = "State";
+    private static final String DemandDistrictField = "District";
     private static final String DemandNameField = "DemandName";
     private static final String DemandIdField = "DemandId";
+    private static final String DemandIsVoidedField = "IsVoided";
 
     private Map<String, Object> response;
 
-    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DemandNameField, DemandStateField);
+    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DemandNameField, DemandDistrictField,
+            DemandStateField, DemandIsVoidedField);
 
     public static Demand from(Map<String, Object> demandResponse) {
         Demand demand = new Demand();
@@ -30,7 +33,7 @@ public class Demand {
         subject.setAddress(MapUtil.getString(DemandStateField, response));
         subject.setExternalId(MapUtil.getString(DemandNameField, response));
         subject.setFirstName(MapUtil.getString(DemandIdField, response));
-
+        subject.setVoided(MapUtil.getBoolean(DemandIsVoidedField, response));
 //        subject.addObservation("Type of Disaster", demandDto.getTypeOfDisaster());
 //        subject.addObservation("Target Community", demandDto.getTargetCommunity());
 //        subject.addObservation("Number of people", this.getNumberOfPeople());
