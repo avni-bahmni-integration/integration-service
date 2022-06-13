@@ -55,7 +55,7 @@ public class SubjectMapperExternalTest {
         var avniObservations = new LinkedHashMap<String, Object>();
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
-        subject.set("observations", avniObservations);
+        subject.setObservations(avniObservations);
         subject.set("Registration date", FormatAndParseUtil.toISODateTimeString(new Date()));
         var formConcept = mappingService.getBahmniValue(bahmniMappingGroup.patientSubject, bahmniMappingType.communityRegistrationBahmniForm);
         var entityUuidConcept = mappingService.getBahmniValueForAvniIdConcept();
@@ -83,7 +83,7 @@ public class SubjectMapperExternalTest {
         var avniObservations = new LinkedHashMap<String, Object>();
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
-        subject.set("observations", avniObservations);
+        subject.setObservations(avniObservations);
         var formConcept = mappingService.getBahmniValue(bahmniMappingGroup.patientSubject, bahmniMappingType.communityRegistrationBahmniForm);
         var openMRSEncounter = subjectMapper.mapSubjectToExistingEncounter(getExistingEncounter(), subject,
                 "cc0369c8-748c-42cc-a534-5ab40855c3f8",

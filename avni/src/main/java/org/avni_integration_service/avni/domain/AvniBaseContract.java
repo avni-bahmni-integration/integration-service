@@ -8,9 +8,11 @@ import org.avni_integration_service.util.FormatAndParseUtil;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AvniBaseContract {
+    private static final String ObservationsFieldName = "observations";
     protected Map<String, Object> map = new HashMap<>();
 
     public Object get(String name) {
@@ -51,7 +53,7 @@ public class AvniBaseContract {
 
     @JsonIgnore
     public Object getObservation(String conceptName) {
-        Map<String, Object> observations = (Map<String, Object>) get("observations");
+        Map<String, Object> observations = getObservations();
         return observations.get(conceptName);
     }
 
@@ -61,10 +63,7 @@ public class AvniBaseContract {
     }
 
     public void addObservation(String conceptName, Object value) {
-        Object observations = get("observations");
-        if (observations == null) set("observations", new HashMap<String, Object>());
-
-        Map<String, Object> map = (Map<String, Object>) get("observations");
+        Map<String, Object> map = getObservations();
         map.put(conceptName, value);
     }
 
@@ -74,5 +73,16 @@ public class AvniBaseContract {
 
     public Boolean getVoided() {
         return (Boolean) get("Voided");
+    }
+
+    public void setObservations(Map<String, Object> observations) {
+        set(ObservationsFieldName, observations);
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getObservations() {
+        Object observations = get(ObservationsFieldName);
+        if (observations == null) return new HashMap<>();
+        return (Map<String, Object>) observations;
     }
 }

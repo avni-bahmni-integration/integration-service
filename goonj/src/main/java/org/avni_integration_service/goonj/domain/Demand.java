@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Demand {
-    private static final String DemandStateField = "DemandState";
+    private static final String DemandStateField = "State";
     private static final String DemandNameField = "DemandName";
 
     private String demandName;
@@ -20,22 +20,6 @@ public class Demand {
 
     public Demand() {
         super();
-    }
-
-    public String getDemandName() {
-        return demandName;
-    }
-
-    public void setDemandName(String demandName) {
-        this.demandName = demandName;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public static Demand from(Map<String, Object> demandResponse) {
@@ -47,8 +31,8 @@ public class Demand {
     public Subject subjectWithoutObservations() {
         Subject subject = new Subject();
         subject.setSubjectType("Demand");
-        subject.setAddress(MapUtil.getString("DemandState", response));
-        subject.setExternalId(MapUtil.getString("DemandName", response));
+        subject.setAddress(MapUtil.getString(DemandStateField, response));
+        subject.setExternalId(MapUtil.getString(DemandNameField, response));
 
 //        subject.addObservation("Type of Disaster", demandDto.getTypeOfDisaster());
 //        subject.addObservation("Target Community", demandDto.getTargetCommunity());

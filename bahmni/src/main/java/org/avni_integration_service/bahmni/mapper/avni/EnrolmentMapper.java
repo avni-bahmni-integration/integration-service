@@ -36,7 +36,7 @@ public class EnrolmentMapper {
         var encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
         var formGroupObservation = formGroupObservation(enrolment, bahmniMappingType.communityEnrolmentBahmniForm);
         return mapEnrolmentToEncounter(enrolment,
-                (LinkedHashMap<String, Object>) enrolment.get("observations"),
+                enrolment.getObservations(),
                 formGroupObservation,
                 patientUuid,
                 encounterTypeUuid,
@@ -50,7 +50,7 @@ public class EnrolmentMapper {
         var encounterTypeUuid = encounterTypes.getBahmniValueForAvniValue(enrolment.getProgram());
         var formGroupObservation = formGroupObservation(enrolment, bahmniMappingType.communityEnrolmentExitBahmniForm);
         return mapEnrolmentToEncounter(enrolment,
-                (LinkedHashMap<String, Object>) enrolment.get("exitObservations"),
+                (Map<String, Object>) enrolment.get("exitObservations"),
                 formGroupObservation,
                 patientUuid,
                 encounterTypeUuid,
@@ -60,7 +60,7 @@ public class EnrolmentMapper {
     }
 
     private OpenMRSEncounter mapEnrolmentToEncounter(Enrolment enrolment,
-                                                     LinkedHashMap<String, Object> avniObservations,
+                                                     Map<String, Object> avniObservations,
                                                      OpenMRSSaveObservation formGroupObservation,
                                                      String patientUuid,
                                                      String encounterTypeUuid,
@@ -109,7 +109,7 @@ public class EnrolmentMapper {
                 enrolment.getProgram());
         OpenMRSSaveObservation formGroupObservation = existingGroupObs(enrolment, bahmniMappingType.communityEnrolmentBahmniForm, existingEncounter);
         return mapEnrolmentToExistingEncounter(existingEncounter,
-                (Map<String, Object>) enrolment.get("observations"),
+                enrolment.getObservations(),
                 formGroupObservation,
                 encounterTypeUuid,
                 constants);

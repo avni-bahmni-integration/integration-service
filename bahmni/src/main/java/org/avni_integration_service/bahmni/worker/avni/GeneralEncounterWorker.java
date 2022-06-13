@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class GeneralEncounterWorker implements ErrorRecordWorker {
@@ -80,9 +81,9 @@ public class GeneralEncounterWorker implements ErrorRecordWorker {
     }
 
     private void removeIgnoredObservations(GeneralEncounter generalEncounter) {
-        var observations = (LinkedHashMap<String, Object>) generalEncounter.get("observations");
+        var observations = generalEncounter.getObservations();
         avniIgnoredConceptsRepository.getIgnoredConcepts().forEach(observations::remove);
-        generalEncounter.set("observations", observations);
+        generalEncounter.setObservations(observations);
     }
 
     private void updateSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus) {

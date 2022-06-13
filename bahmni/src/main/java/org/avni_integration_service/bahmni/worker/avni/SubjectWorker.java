@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -69,9 +70,9 @@ public class SubjectWorker implements ErrorRecordWorker {
     }
 
     private void removeIgnoredObservations(Subject subject) {
-        var observations = (LinkedHashMap<String, Object>) subject.get("observations");
+        var observations = (Map<String, Object>) subject.getObservations();
         avniIgnoredConceptsRepository.getIgnoredConcepts().forEach(observations::remove);
-        subject.set("observations", observations);
+        subject.setObservations(observations);
     }
 
     private void updateSyncStatus(Subject subject, boolean updateSyncStatus) {

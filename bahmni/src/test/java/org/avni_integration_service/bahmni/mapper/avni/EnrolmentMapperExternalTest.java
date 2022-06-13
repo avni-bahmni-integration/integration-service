@@ -60,7 +60,7 @@ public class EnrolmentMapperExternalTest {
         var avniObservations = new LinkedHashMap<String, Object>();
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
-        enrolment.set("observations", avniObservations);
+        enrolment.setObservations(avniObservations);
         var formConcept = mappingService.getBahmniValue(bahmniMappingGroup.programEnrolment, bahmniMappingType.communityEnrolmentBahmniForm, program);
 
         enrolment.set("Enrolment datetime", FormatAndParseUtil.toISODateTimeString(new Date()));
@@ -95,7 +95,7 @@ public class EnrolmentMapperExternalTest {
         var avniObservations = new LinkedHashMap<String, Object>();
         int numberOfBabies = 4;
         avniObservations.put("Number of babies", numberOfBabies);
-        enrolment.set("observations", avniObservations);
+        enrolment.setObservations(avniObservations);
         var formConcept = mappingService.getBahmniValue(bahmniMappingGroup.programEnrolment, bahmniMappingType.communityEnrolmentBahmniForm, program);
 
         var openMRSEncounter = enrolmentMapper.mapEnrolmentToExistingEnrolmentEncounter(getExistingEncounter(), enrolment,

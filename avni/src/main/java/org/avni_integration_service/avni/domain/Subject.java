@@ -1,5 +1,6 @@
 package org.avni_integration_service.avni.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.util.MapUtil;
 
@@ -8,7 +9,7 @@ import java.util.Date;
 public class Subject extends AvniBaseContract {
     public static final String SubjectTypeFieldName = "Subject type";
     public static final String AddressFieldName = "Address";
-    public static final String ExternalIdFieldName = "ExternalId";
+    public static final String ExternalIdFieldName = "External ID";
 
     public String getId(String avniIdentifierConcept) {
         return (String) getObservation(avniIdentifierConcept);
@@ -39,6 +40,7 @@ public class Subject extends AvniBaseContract {
         map.put(ExternalIdFieldName, externalId);
     }
 
+    @JsonIgnore
     public String getExternalId() {
         return MapUtil.getString(ExternalIdFieldName, this.map);
     }
@@ -47,6 +49,7 @@ public class Subject extends AvniBaseContract {
         map.put(AddressFieldName, address);
     }
 
+    @JsonIgnore
     public String getAddress() {
         return MapUtil.getString(AddressFieldName, this.map);
     }

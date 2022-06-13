@@ -39,7 +39,7 @@ public class OpenMRSPatientMapper {
         encounterRequest.setSubjectId(subject.getUuid());
         encounterRequest.setEncounterType(patientToSubjectMetaData.patientEncounterType());
         encounterRequest.setEncounterDateTime(FormatAndParseUtil.now());
-        encounterRequest.set("observations", observations);
+        encounterRequest.setObservations(observations);
         encounterRequest.set("cancelObservations", new HashMap<>());
         return encounterRequest;
     }

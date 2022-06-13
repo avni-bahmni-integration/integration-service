@@ -57,7 +57,7 @@ public class EncounterMapper {
         openMRSEncounter.addEncounterProvider(new OpenMRSEncounterProvider(constants.getValue(ConstantKey.IntegrationBahmniProvider.name()),
                 constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name())));
 
-        List<OpenMRSSaveObservation> observations = observationMapper.mapObservations((LinkedHashMap<String, Object>) baseEncounter.get("observations"));
+        List<OpenMRSSaveObservation> observations = observationMapper.mapObservations(baseEncounter.getObservations());
         observations.add(avniUuidObs(baseEncounter));
         observations.add(eventDateObs(baseEncounter));
         OpenMRSSaveObservation formGroupObservation = formGroupObservation(formConceptUuid);
@@ -112,7 +112,7 @@ public class EncounterMapper {
         String eventDateConcept = mappingService.getBahmniValue(bahmniMappingGroup.common, bahmniMappingType.avniEventDateConcept);
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
-                (Map<String, Object>) avniBaseEncounter.get("observations"),
+                avniBaseEncounter.getObservations(),
                 List.of(avniUuidConcept, eventDateConcept));
         OpenMRSSaveObservation formGroupObservation = existingGroupObs(existingEncounter, formConceptUuid);
         formGroupObservation.setGroupMembers(observations);

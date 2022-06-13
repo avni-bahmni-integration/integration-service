@@ -72,7 +72,7 @@ public class SubjectService {
 
     public void updateRegistrationEncounter(GeneralEncounter encounterRequest, OpenMRSPatient openMRSPatient, PatientToSubjectMetaData patientToSubjectMetaData) {
         MappingMetaDataCollection conceptMetaData = mappingService.findAll(bahmniMappingGroup.patientSubject, bahmniMappingType.personAttributeConcept);
-        encounterRequest.set("observations", openMRSPatientMapper.mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData));
+        encounterRequest.setObservations(openMRSPatientMapper.mapToAvniObservations(openMRSPatient, patientToSubjectMetaData, conceptMetaData));
         encounterRequest.setVoided(openMRSPatient.isVoided());
         avniEncounterRepository.update((String) encounterRequest.get("ID"), encounterRequest);
 

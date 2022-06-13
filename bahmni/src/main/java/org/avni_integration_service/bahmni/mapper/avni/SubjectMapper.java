@@ -39,7 +39,7 @@ public class SubjectMapper {
                 constants.getValue(ConstantKey.IntegrationBahmniEncounterRole.name()));
         openMRSEncounter.addEncounterProvider(encounterProvider);
 
-        var observations = observationMapper.mapObservations((LinkedHashMap<String, Object>) subject.get("observations"));
+        var observations = observationMapper.mapObservations(subject.getObservations());
         observations.add(avniUuidObs(subject.getUuid()));
         observations.add(eventDateObs(subject));
         openMRSEncounter.setObservations(groupObs(observations));
@@ -61,7 +61,7 @@ public class SubjectMapper {
 
         var observations = observationMapper.updateOpenMRSObservationsFromAvniObservations(
                 existingEncounter.getLeafObservations(),
-                (Map<String, Object>) subject.get("observations"),
+                subject.getObservations(),
                 List.of(mappingService.getBahmniValueForAvniIdConcept(),
                         mappingService.getBahmniValue(bahmniMappingGroup.common, bahmniMappingType.avniEventDateConcept)));
         openMRSEncounter.setObservations(existingGroupObs(existingEncounter, observations));

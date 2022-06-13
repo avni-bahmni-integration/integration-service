@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class EnrolmentWorker implements ErrorRecordWorker {
@@ -76,13 +77,13 @@ public class EnrolmentWorker implements ErrorRecordWorker {
     }
 
     private void removeIgnoredObservations(Enrolment enrolment) {
-        var observations = (LinkedHashMap<String, Object>) enrolment.get("observations");
-        var exitObservations = (LinkedHashMap<String, Object>) enrolment.get("exitObservations");
+        var observations = enrolment.getObservations();
+        var exitObservations = (Map<String, Object>) enrolment.get("exitObservations");
         for (var ignoredConcept : avniIgnoredConceptsRepository.getIgnoredConcepts()) {
             observations.remove(ignoredConcept);
             exitObservations.remove(ignoredConcept);
         }
-        enrolment.set("observations", observations);
+        enrolment.setObservations(observations);
         enrolment.set("exitObservations", exitObservations);
     }
 

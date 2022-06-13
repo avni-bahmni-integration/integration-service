@@ -134,7 +134,7 @@ public class ObservationMapper {
         return voidedObservations;
     }
 
-    public List<OpenMRSSaveObservation> mapObservations(LinkedHashMap<String, Object> avniObservations) {
+    public List<OpenMRSSaveObservation> mapObservations(Map<String, Object> avniObservations) {
         List<OpenMRSSaveObservation> openMRSObservations = new ArrayList<>();
         MappingMetaDataCollection conceptMappings = mappingService.findAll(bahmniMappingGroup.observation, bahmniMappingType.concept);
         for (Map.Entry<String, Object> entry : avniObservations.entrySet()) {
