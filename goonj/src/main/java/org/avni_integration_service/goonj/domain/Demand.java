@@ -4,23 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.util.MapUtil;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Demand {
     private static final String DemandStateField = "State";
     private static final String DemandNameField = "DemandName";
+    private static final String DemandIdField = "DemandId";
 
-    private String demandName;
-    private String state;
     private Map<String, Object> response;
 
-    public Demand() {
-        super();
-    }
+    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DemandNameField, DemandStateField);
 
     public static Demand from(Map<String, Object> demandResponse) {
         Demand demand = new Demand();
@@ -31,8 +26,10 @@ public class Demand {
     public Subject subjectWithoutObservations() {
         Subject subject = new Subject();
         subject.setSubjectType("Demand");
+        subject.setRegistrationDate(new Date());
         subject.setAddress(MapUtil.getString(DemandStateField, response));
         subject.setExternalId(MapUtil.getString(DemandNameField, response));
+        subject.setFirstName(MapUtil.getString(DemandIdField, response));
 
 //        subject.addObservation("Type of Disaster", demandDto.getTypeOfDisaster());
 //        subject.addObservation("Target Community", demandDto.getTargetCommunity());
@@ -45,7 +42,7 @@ public class Demand {
     }
 
     public List<String> getObservationFields() {
-        return response.keySet().stream().filter(s -> !s.equals(DemandNameField) && !s.equals(DemandStateField)).collect(Collectors.toList());
+        return response.keySet().stream().filter(s -> !Core_Fields.contains(s)).collect(Collectors.toList());
     }
 
     public Object getValue(String responseField) {

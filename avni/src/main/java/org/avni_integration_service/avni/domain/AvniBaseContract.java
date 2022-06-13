@@ -15,6 +15,10 @@ public class AvniBaseContract {
     private static final String ObservationsFieldName = "observations";
     protected Map<String, Object> map = new HashMap<>();
 
+    public AvniBaseContract() {
+        setObservations(new HashMap<>());
+    }
+
     public Object get(String name) {
         return map.get(name);
     }
@@ -71,6 +75,7 @@ public class AvniBaseContract {
         set("Voided", voided);
     }
 
+    @JsonIgnore
     public Boolean getVoided() {
         return (Boolean) get("Voided");
     }
