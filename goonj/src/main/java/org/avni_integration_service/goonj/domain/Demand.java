@@ -154,7 +154,15 @@ public class Demand {
         Subject subject = new Subject();
         subject.setSubjectType("Demand");
         subject.setVoided(false);
-        //TODO complete init of all vars
+        subject.set("legacyId", demandDto.getDemandName());
+        subject.set("accountName", demandDto.getAccountName());
+        subject.set("demandId", demandDto.getDemandId());
+        subject.set("demandName", demandDto.getDemandName());
+        subject.set("state", demandDto.getState());
+        subject.set("district", demandDto.getDistrict());
+        subject.set("numberOfPeople", demandDto.getNumberOfPeople());
+        subject.set("targetCommunity", demandDto.getTargetCommunity());
+        subject.set("typeOfDisaster", demandDto.getTypeOfDisaster());
         return subject;
     }
 

@@ -39,9 +39,7 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
 
     private void processDemand(Map<String, Object> demand) {
         logger.debug(String.format("Processing demand: name %s || uuid %s", demand.get("DemandName"), demand.get("DemandId")));
-        Demand demandDto = Demand.from(demand);
-        //TODO
-//        avniSubjectRepository.createDemand(demand);
+        avniSubjectRepository.create(Demand.subjectFrom(Demand.from(demand)));
     }
 
     public void processError(String demandUuid) {
