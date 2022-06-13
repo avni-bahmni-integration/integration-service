@@ -1,5 +1,6 @@
 package org.avni_integration_service.goonj.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,9 @@ public class GoonjConfig {
     @Value("${goonj.sf.appUrl}")
     private String appUrl;
 
+    @Autowired
+    private SalesForceUserRepository salesForceUserRepository;
+
     public String getSalesForceAuthUrl() {
         return salesForceAuthUrl;
     }
@@ -61,15 +65,10 @@ public class GoonjConfig {
     RestTemplate restTemplate(OAuth2AuthorizedClientService clientService) {
         return new RestTemplateBuilder()
                 .interceptors((ClientHttpRequestInterceptor) (httpRequest, bytes, execution) -> {
+                //TODO , do token fetch only on first attempt or if it has expired
 
-                    OAuth2AuthenticationToken token = OAuth2AuthenticationToken.class.cast(
-                            SecurityContextHolder.getContext().getAuthentication());
-
-                    OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
-                            token.getAuthorizedClientRegistrationId(),
-                            token.getName());
-
-                    httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION, "Bearer " + client.getAccessToken().getTokenValue());
+                httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION, "Bearer " + salesForceUserRepository
+                        .login().getAccessToken());
 
                     return execution.execute(httpRequest, bytes);
                 })

@@ -42,6 +42,7 @@ public class AvniGoonjMainJob {
 
     public void execute() {
         try {
+            logger.info("Inside  Goonj execute");
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
             Constants allConstants = constantsRepository.findAllConstants();
 

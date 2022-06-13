@@ -5,10 +5,12 @@ import org.avni_integration_service.bahmni.job.AvniBahmniMainJob;
 import org.avni_integration_service.goonj.job.AvniGoonjFullErrorJob;
 import org.avni_integration_service.goonj.job.AvniGoonjMainJob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
+@EnableScheduling
 public class IntegrationJobScheduler {
     private final AvniBahmniMainJob avniBahmniMainJob;
     private final AvniBahmniFullErrorJob avniBahmniFullErrorJob;
