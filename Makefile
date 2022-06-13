@@ -95,9 +95,13 @@ run-server-without-background: build-server
 run-migrator: build-server
 	$(call _run_migrator)
 
-test-server: drop-test-db build-test-db
+test-server-only:
 	./gradlew clean build
-	java -jar integrator/build/libs/$(application_jar) CloseOnStart
+
+test-server-starts: build-server
+	AVNI_INT_AUTO_CLOSE=true java -jar integrator/build/libs/$(application_jar)
+
+test-server: drop-test-db build-test-db test-server-only test-server-starts
 
 setup-external-test-db: drop-test-db create-test-db
 	sudo -u ${postgres_user} psql avni_int_test -f dump.sql

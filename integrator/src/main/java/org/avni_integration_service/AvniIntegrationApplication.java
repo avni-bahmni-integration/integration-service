@@ -6,9 +6,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class AvniIntegrationApplication {
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 	    ConfigurableApplicationContext context = SpringApplication.run(AvniIntegrationApplication.class, args);
-	    if (args.length > 0 && args[0].equals("CloseOnStart"))
+        String autoClose = context.getEnvironment().getProperty("avni.int.auto.close");
+        if ("true".equals(autoClose))
 	        context.close();
     }
 }
