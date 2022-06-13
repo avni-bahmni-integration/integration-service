@@ -1,12 +1,14 @@
 package org.avni_integration_service.avni.domain;
 
 import org.avni_integration_service.util.FormatAndParseUtil;
+import org.avni_integration_service.util.MapUtil;
 
 import java.util.Date;
 
 public class Subject extends AvniBaseContract {
     public static final String SubjectTypeFieldName = "Subject type";
     public static final String AddressFieldName = "Address";
+    public static final String ExternalIdFieldName = "ExternalId";
 
     public String getId(String avniIdentifierConcept) {
         return (String) getObservation(avniIdentifierConcept);
@@ -31,5 +33,21 @@ public class Subject extends AvniBaseContract {
 
     public void setSubjectType(String subjectTYpe) {
         this.set(Subject.SubjectTypeFieldName, subjectTYpe);
+    }
+
+    public void setExternalId(String externalId) {
+        map.put(ExternalIdFieldName, externalId);
+    }
+
+    public String getExternalId() {
+        return MapUtil.getString(ExternalIdFieldName, this.map);
+    }
+
+    public void setAddress(String address) {
+        map.put(AddressFieldName, address);
+    }
+
+    public String getAddress() {
+        return MapUtil.getString(AddressFieldName, this.map);
     }
 }

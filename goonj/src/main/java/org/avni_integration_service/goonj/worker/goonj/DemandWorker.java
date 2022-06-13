@@ -10,7 +10,6 @@ import java.util.Map;
 
 @Component
 public class DemandWorker extends BaseGoonjWorker {
-
     @Autowired
     public DemandWorker(@Qualifier("DemandRepository") GoonjBaseRepository crudRepository,
                         DemandEventWorker demandEventWorker) {

@@ -5,8 +5,7 @@ import org.avni_integration_service.integration_data.domain.Constants;
 import java.util.Map;
 
 public interface IGoonjEventWorker {
-
-    public void process(Map<String, Object> event);
-    public void processError(String uuid);
-    public void cacheRunImmutables(Constants constants);
+    void process(Map<String, Object> event);
+    void processError(String uuid);
+    void cacheRunImmutables(Constants constants);
 }

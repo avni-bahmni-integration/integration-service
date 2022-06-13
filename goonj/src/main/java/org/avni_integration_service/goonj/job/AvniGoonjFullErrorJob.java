@@ -14,9 +14,6 @@ public class AvniGoonjFullErrorJob {
     private static final Logger logger = Logger.getLogger(AvniGoonjFullErrorJob.class);
 
     @Autowired
-    private ConstantsRepository constantsRepository;
-
-    @Autowired
     private AvniGoonjErrorRecordsWorker avniGoonjErrorRecordsWorker;
 
     @Autowired
@@ -24,8 +21,6 @@ public class AvniGoonjFullErrorJob {
 
     public void execute() {
         try {
-            Constants allConstants = constantsRepository.findAllConstants();
-            avniGoonjErrorRecordsWorker.cacheRunImmutables(allConstants);
             avniGoonjErrorRecordsWorker.process(SyncDirection.GoonjToAvni, true);
         } catch (Exception e) {
             logger.error("Failed", e);

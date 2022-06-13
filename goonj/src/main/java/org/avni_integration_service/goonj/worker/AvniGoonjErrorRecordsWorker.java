@@ -6,7 +6,6 @@ import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.worker.goonj.DemandEventWorker;
-import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,18 +68,5 @@ public class AvniGoonjErrorRecordsWorker {
 //            if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Distribution)) return distributionEncounterEventWorker;
         }
         throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s and GoonjEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getIntegratingEntityType()));
-    }
-
-    public void cacheRunImmutables(Constants constants) {
-//        subjectWorker.cacheRunImmutables(constants);
-//        enrolmentWorker.cacheRunImmutables(constants);
-//        programEncounterWorker.cacheRunImmutables(constants);
-//        generalEncounterWorker.cacheRunImmutables(constants);
-        //TODO
-//        activityEventWorker.cacheRunImmutables(constants);
-        demandEventWorker.cacheRunImmutables(constants);
-//        dispatchEncounterEventWorker.cacheRunImmutables(constants);
-//        dispatchReceiptEventWorker.cacheRunImmutables(constants);
-//        distributionEncounterEventWorker.cacheRunImmutables(constants);
     }
 }

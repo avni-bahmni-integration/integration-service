@@ -70,6 +70,7 @@ public class GoonjConfig {
                 .interceptors((ClientHttpRequestInterceptor) (httpRequest, bytes, execution) -> {
                     httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION,
                             "Bearer " + tokenService.getRefreshedToken().getTokenValue());
+                //TODO , do token fetch only on first attempt or if it has expired
                     return execution.execute(httpRequest, bytes);
                 })
                 .build();

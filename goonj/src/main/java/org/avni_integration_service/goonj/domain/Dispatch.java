@@ -24,6 +24,7 @@ package org.avni_integration_service.goonj.domain;
  */
 
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.util.MapUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class Dispatch {
     public static Subject from(Map<String, Object> dispatch) {
         Subject subject = new Subject();
         subject.setSubjectType("Dispatch");
-        subject.set(Subject.AddressFieldName, dispatch.get("foo"));
+        subject.setAddress(MapUtil.getString("foo", dispatch));
         dispatch.forEach((field, value) -> {
             if (!field.equals("DispatchLineItemId"))
                 subject.addObservation(field, value);

@@ -26,22 +26,12 @@ public class IntegrationJobScheduler {
         this.avniGoonjFullErrorJob = avniGoonjFullErrorJob;
     }
 
-    @Scheduled(cron = "${bahmni.app.cron.main}")
-    public void mainBahmniJob() {
-        avniBahmniMainJob.execute();
-    }
-
-    @Scheduled(cron = "${bahmni.app.cron.full.error}")
-    public void fullErrorBahmniJob() {
-        avniBahmniFullErrorJob.execute();
-    }
-
     @Scheduled(cron = "${goonj.app.cron.main}")
     public void mainGoonjJob() {
         avniGoonjMainJob.execute();
     }
 
-    @Scheduled(cron = "${goonj.app.cron.full.error}")
+//    @Scheduled(cron = "${goonj.app.cron.full.error}")
     public void fullErrorGoonjJob() {
         avniGoonjFullErrorJob.execute();
     }

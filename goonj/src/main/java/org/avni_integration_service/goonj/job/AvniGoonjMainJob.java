@@ -33,7 +33,7 @@ public class AvniGoonjMainJob {
 
     @Autowired
     private AvniGoonjErrorRecordsWorker errorRecordsWorker;
-    
+
     @Autowired
     private Bugsnag bugsnag;
 
@@ -67,7 +67,6 @@ public class AvniGoonjMainJob {
     }
 
     private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) {
-        errorRecordsWorker.cacheRunImmutables(allConstants);
         errorRecordsWorker.process(syncDirection, false);
     }
 

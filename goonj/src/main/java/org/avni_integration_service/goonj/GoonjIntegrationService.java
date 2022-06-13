@@ -21,30 +21,11 @@ public class GoonjIntegrationService {
     private final DispatchRepositoryGoonj dispatchRepository;
     private final DemandRepositoryGoonj demandRepository;
 
-
-
     @Autowired
     public GoonjIntegrationService(MappingMetaDataRepository mappingMetaDataRepository, AvniSubjectRepository avniSubjectRepository, DispatchRepositoryGoonj dispatchRepository, DemandRepositoryGoonj demandRepository) {
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.dispatchRepository = dispatchRepository;
         this.demandRepository = demandRepository;
-    }
-
-    public void pushDispatchToAvni(LocalDateTime localDateTime) {
-        HashMap<String, Object>[] dispatches = dispatchRepository.getDispatches(localDateTime);
-        for (Map<String, Object> dispatch : dispatches) {
-            Subject subject = Dispatch.from(dispatch);
-            avniSubjectRepository.create(subject);
-        }
-    }
-
-    public void pushDemandToAvni(LocalDateTime localDateTime) {
-        HashMap<String, Object>[] demands = demandRepository.getDemands(localDateTime);
-        for (Map<String, Object> demand : demands) {
-            Demand demandDto = Demand.from(demand);
-            Subject subject = Demand.subjectFrom(demandDto);
-            avniSubjectRepository.create(subject);
-        }
     }
 }

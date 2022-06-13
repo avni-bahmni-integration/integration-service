@@ -1,12 +1,14 @@
 package org.avni_integration_service.goonj.worker.goonj;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.domain.Demand;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DemandService;
 import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,28 +20,27 @@ import java.util.Map;
 public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(DemandEventWorker.class);
 
-    @Autowired
-    private DemandService demandService;
+    private final DemandService demandService;
+    private final AvniGoonjErrorService avniGoonjErrorService;
+    private final AvniSubjectRepository avniSubjectRepository;
 
     @Autowired
-    private AvniGoonjErrorService avniGoonjErrorService;
-
-    @Autowired
-    private AvniSubjectRepository avniSubjectRepository;
-
-    private Constants constants;
-
-
-    @Value("${goonj.app.first.run}")
-    private boolean isFirstRun;
+    public DemandEventWorker(DemandService demandService, AvniGoonjErrorService avniGoonjErrorService, AvniSubjectRepository avniSubjectRepository) {
+        this.demandService = demandService;
+        this.avniGoonjErrorService = avniGoonjErrorService;
+        this.avniSubjectRepository = avniSubjectRepository;
+    }
 
     public void process(Map<String, Object> event) {
         processDemand(event);
     }
 
-    private void processDemand(Map<String, Object> demand) {
-        logger.debug(String.format("Processing demand: name %s || uuid %s", demand.get("DemandName"), demand.get("DemandId")));
-        avniSubjectRepository.create(Demand.subjectFrom(Demand.from(demand)));
+    private void processDemand(Map<String, Object> demandResponse) {
+        logger.debug(String.format("Processing demand: name %s || uuid %s", demandResponse.get("DemandName"), demandResponse.get("DemandId")));
+        Demand demand = Demand.from(demandResponse);
+        Subject subject = demand.fromSubject();
+
+        avniSubjectRepository.create(subject);
     }
 
     public void processError(String demandUuid) {
@@ -54,10 +55,7 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
         processDemand(demand);
     }
 
-    //    avoid loading of constants for every event
+    @Override
     public void cacheRunImmutables(Constants constants) {
-        this.constants = constants;
-        //TODO
-//        metaData = mappingMetaDataService.getForDemandToSubject();
     }
 }
