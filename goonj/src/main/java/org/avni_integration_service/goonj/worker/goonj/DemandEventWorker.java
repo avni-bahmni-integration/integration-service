@@ -37,7 +37,7 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
         logger.debug(String.format("Processing demand: name %s || uuid %s", demandResponse.get("DemandName"), demandResponse.get("DemandId")));
         Demand demand = Demand.from(demandResponse);
         Subject subject = demand.subjectWithoutObservations();
-//        demandService.populateObservations(subject, demand);
+        demandService.populateObservations(subject, demand);
         avniSubjectRepository.create(subject);
     }
 

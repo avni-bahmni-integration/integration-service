@@ -43,12 +43,22 @@ public class DemandService {
 
         for (String obsField : observationFields) {
             MappingMetaData mapping = mappingMetaDataRepository.getAvniMapping(MappingGroup_Demand, MappingType_Obs, obsField, integrationSystem);
-            ObsDataType dataTypeHint = mapping.getDataTypeHint();
-            if (dataTypeHint == null)
-                subject.addObservation(mapping.getAvniValue(), demand.getValue(obsField));
-            else if (dataTypeHint == ObsDataType.Coded) {
-                MappingMetaData answerMapping = mappingMetaDataRepository.getAvniMapping(MappingGroup_Demand, MappingType_Obs, demand.getValue(obsField).toString(), integrationSystem);
-                subject.addObservation(mapping.getAvniValue(), answerMapping.getAvniValue());
+            if (mapping == null) {
+                // use convention
+                subject.addObservation(obsField, demand.getValue(obsField));
+            } else {
+                ObsDataType dataTypeHint = mapping.getDataTypeHint();
+                if (dataTypeHint == null)
+                    subject.addObservation(mapping.getAvniValue(), demand.getValue(obsField));
+                else if (dataTypeHint == ObsDataType.Coded) {
+                    MappingMetaData answerMapping = mappingMetaDataRepository.getAvniMapping(MappingGroup_Demand, MappingType_Obs, demand.getValue(obsField).toString(), integrationSystem);
+                    if (answerMapping == null) {
+                        // use convention for coded answer
+                        subject.addObservation(mapping.getAvniValue(), demand.getValue(obsField));
+                    } else {
+                        subject.addObservation(mapping.getAvniValue(), answerMapping.getAvniValue());
+                    }
+                }
             }
         }
     }
