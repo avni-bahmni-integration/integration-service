@@ -14,4 +14,10 @@ public class MapUtil {
         if (value == null) return null;
         return (Integer) value;
     }
+
+    public static boolean getBoolean(String key, Map map) {
+        Object value = map.get(key);
+        if (value == null) return false;
+        return Boolean.parseBoolean((String)value);
+    }
 }

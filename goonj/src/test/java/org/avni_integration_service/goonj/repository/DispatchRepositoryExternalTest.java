@@ -1,7 +1,6 @@
 package org.avni_integration_service.goonj.repository;
 
 import org.avni_integration_service.goonj.BaseGoonjSpringTest;
-import org.avni_integration_service.goonj.domain.AuthResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -11,11 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-@SpringBootTest(classes = {DispatchRepositoryGoonj.class})
+@SpringBootTest(classes = {DispatchRepository.class})
 @Disabled
 public class DispatchRepositoryExternalTest extends BaseGoonjSpringTest {
     @Autowired
-    private DispatchRepositoryGoonj dispatchRepository;
+    private DispatchRepository dispatchRepository;
 
     @Test
     public void dispatchDownload() {
