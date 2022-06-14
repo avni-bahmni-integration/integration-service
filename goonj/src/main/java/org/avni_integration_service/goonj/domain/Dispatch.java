@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
 ]
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Dispatch {
+public class Dispatch implements GoonjEntity {
 
     private static final String DemandField = "Demand";
     private static final String DispatchStatusNameField = "DispatchStatusName";
@@ -84,10 +84,12 @@ public class Dispatch {
         return encounterRequest;
     }
 
+    @Override
     public List<String> getObservationFields() {
         return response.keySet().stream().filter(s -> !Core_Fields.contains(s)).collect(Collectors.toList());
     }
 
+    @Override
     public Object getValue(String responseField) {
         return this.response.get(responseField);
     }

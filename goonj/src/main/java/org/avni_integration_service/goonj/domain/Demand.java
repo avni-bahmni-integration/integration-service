@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Demand {
+public class Demand implements GoonjEntity{
     private static final String DemandDistrictField = "District";
     private static final String DemandStateField = "State";
     private static final String DemandNameField = "DemandName";
@@ -45,10 +45,12 @@ public class Demand {
         return subject;
     }
 
+    @Override
     public List<String> getObservationFields() {
         return response.keySet().stream().filter(s -> !Core_Fields.contains(s)).collect(Collectors.toList());
     }
 
+    @Override
     public Object getValue(String responseField) {
         return this.response.get(responseField);
     }
