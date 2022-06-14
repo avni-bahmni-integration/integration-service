@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DispatchLineItem implements GoonjEntity {
-    private static final List<String> Ignored_Fields = Arrays.asList("OtherKitDetails");
+    private static final List<String> Ignored_Fields = Arrays.asList("OtherKitDetails", "ItemCategory");
 
     private final Map<String, Object> lineItemMap;
 
