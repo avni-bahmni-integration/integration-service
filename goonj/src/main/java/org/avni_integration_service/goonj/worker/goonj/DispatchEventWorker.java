@@ -37,7 +37,7 @@ public class DispatchEventWorker implements IGoonjEventWorker, ErrorRecordWorker
         logger.debug(String.format("Processing dispatch: name %s || uuid %s", dispatchResponse.get("DispatchName"), dispatchResponse.get("DispatchId")));
         Dispatch dispatch = Dispatch.from(dispatchResponse);
         GeneralEncounter encounter = dispatch.mapToAvniEncounter();
-//        dispatchService.populateObservations(encounter, dispatch);
+        dispatchService.populateObservations(encounter, dispatch);
         avniEncounterRepository.create(encounter);
     }
 

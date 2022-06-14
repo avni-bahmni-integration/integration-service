@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class AvniBaseContract {
+public class AvniBaseContract implements ObservationHolder {
     private static final String ObservationsFieldName = "observations";
     protected Map<String, Object> map = new HashMap<>();
 
@@ -66,6 +66,7 @@ public class AvniBaseContract {
         return map.toString();
     }
 
+    @Override
     public void addObservation(String conceptName, Object value) {
         Map<String, Object> map = getObservations();
         map.put(conceptName, value);

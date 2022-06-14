@@ -1,3 +1,5 @@
+set role goonj;
+
 delete
 from individual
 where id in (
