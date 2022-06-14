@@ -10,14 +10,13 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Demand {
     private static final String DemandStateField = "State";
-    private static final String DemandDistrictField = "District";
     private static final String DemandNameField = "DemandName";
     private static final String DemandIdField = "DemandId";
     private static final String DemandIsVoidedField = "IsVoided";
 
     private Map<String, Object> response;
 
-    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DemandNameField, DemandDistrictField,
+    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DemandNameField,
             DemandStateField, DemandIsVoidedField);
 
     public static Demand from(Map<String, Object> demandResponse) {
