@@ -3,14 +3,15 @@ package org.avni_integration_service.goonj.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.util.MapUtil;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Demand {
-    private static final String DemandStateField = "State";
     private static final String DemandDistrictField = "District";
+    private static final String DemandStateField = "State";
     private static final String DemandNameField = "DemandName";
     private static final String DemandIdField = "DemandId";
     private static final String DemandIsVoidedField = "IsVoided";
@@ -30,7 +31,7 @@ public class Demand {
         Subject subject = new Subject();
         subject.setSubjectType("Demand");
         subject.setRegistrationDate(new Date());
-        subject.setAddress(MapUtil.getString(DemandStateField, response));
+        subject.setAddress(MapUtil.getString(DemandStateField, response) +","+MapUtil.getString(DemandDistrictField, response));
         subject.setExternalId(MapUtil.getString(DemandNameField, response));
         subject.setFirstName(MapUtil.getString(DemandIdField, response));
         subject.setVoided(MapUtil.getBoolean(DemandIsVoidedField, response));

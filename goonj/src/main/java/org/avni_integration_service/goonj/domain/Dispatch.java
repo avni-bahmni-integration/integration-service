@@ -59,9 +59,9 @@ import java.util.stream.Collectors;
 public class Dispatch {
 
     private static final String DemandField = "Demand";
-    private static final String DispatchStatusIdField = "DispatchStatusId";
+    private static final String DispatchStatusNameField = "DispatchStatusName";
     private static final String DemandIsVoidedField = "IsVoided";
-    private static final List<String> Core_Fields = Arrays.asList(DemandField, DispatchStatusIdField, DemandIsVoidedField);
+    private static final List<String> Core_Fields = Arrays.asList(DemandField, DispatchStatusNameField, DemandIsVoidedField);
 
     private Map<String, Object> response;
 
@@ -73,8 +73,9 @@ public class Dispatch {
 
     public GeneralEncounter mapToAvniEncounter() {
         GeneralEncounter encounterRequest = new GeneralEncounter();
-        encounterRequest.setSubjectId(MapUtil.getString(DemandField, response));
-        encounterRequest.setExternalId(MapUtil.getString(DispatchStatusIdField, response));
+        //TODO Use Subject External Id
+        encounterRequest.setSubjectExternalID(MapUtil.getString(DemandField, response));
+        encounterRequest.setExternalID(MapUtil.getString(DispatchStatusNameField, response));
         encounterRequest.setEncounterType("Dispatch");
         encounterRequest.setEncounterDateTime(FormatAndParseUtil.now());
         encounterRequest.setObservations(new LinkedHashMap<>());

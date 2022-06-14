@@ -1,17 +1,26 @@
 package org.avni_integration_service.avni.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.avni_integration_service.util.MapUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GeneralEncounter extends AvniBaseEncounter {
-    public static final String ExternalIdFieldName = "External ID";
-    public void setExternalId(String externalId) {
-        map.put(ExternalIdFieldName, externalId);
-    }
-    @JsonIgnore
-    public String getExternalId() {
-        return MapUtil.getString(ExternalIdFieldName, this.map);
+    @JsonProperty("External ID")
+    private String externalID;
+    @JsonProperty("Subject external ID")
+    private String subjectExternalID;
+
+    public String getExternalID() {
+        return externalID;
     }
 
+    public void setExternalID(String externalID) {
+        this.externalID = externalID;
+    }
 
+    public String getSubjectExternalID() {
+        return subjectExternalID;
+    }
+
+    public void setSubjectExternalID(String subjectExternalID) {
+        this.subjectExternalID = subjectExternalID;
+    }
 }
