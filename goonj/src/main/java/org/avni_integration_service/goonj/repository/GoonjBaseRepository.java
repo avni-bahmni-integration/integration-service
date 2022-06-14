@@ -34,7 +34,6 @@ public abstract class GoonjBaseRepository {
 
     protected HashMap<String, Object>[] getResponse(LocalDateTime dateTime, String resource) {
         URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource, DateTimeUtil.formatDateTime(dateTime)));
-        System.out.println(String.format("Calling: %s", uri.toString()));
         ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
         ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, responseType);
         return responseEntity.getBody();
@@ -50,7 +49,7 @@ public abstract class GoonjBaseRepository {
     public abstract HashMap<String, Object>[] fetchEvents();
 
     protected HashMap<String, Object> getSingleEntityResponse(String resource, String uuid) {
-        URI uri = URI.create(String.format("%s/services/apexrest/v1/%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource, uuid));
+        URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource, uuid));
         ParameterizedTypeReference<HashMap<String, Object>> responseType = new ParameterizedTypeReference<>() {};
         ResponseEntity<HashMap<String, Object>> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, responseType);
         return responseEntity.getBody();

@@ -22,10 +22,14 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     MappingMetaData findByMappingGroupNameAndMappingTypeNameAndIntSystemValueAndIntegrationSystem(String mappingGroup, String mappingType, String intSystemValue, IntegrationSystem integrationSystem);
 
     default MappingMetaData getAvniMapping(String mappingGroup, String mappingType, String intSystemValue, IntegrationSystem integrationSystem) {
-        MappingMetaData mapping = findByMappingGroupNameAndMappingTypeNameAndIntSystemValueAndIntegrationSystem(mappingGroup, mappingType, intSystemValue, integrationSystem);
+        MappingMetaData mapping = this.getAvniMappingIfPresent(mappingGroup, mappingType, intSystemValue, integrationSystem);
         if (mapping == null)
             throw new MappingException(String.format("No mapping found for MappingGroup: %s, MappingType: %s, IntSystemValue: %s", mappingGroup, mappingType, intSystemValue));
         return mapping;
+    }
+
+    default MappingMetaData getAvniMappingIfPresent(String mappingGroup, String mappingType, String intSystemValue, IntegrationSystem integrationSystem) {
+        return findByMappingGroupNameAndMappingTypeNameAndIntSystemValueAndIntegrationSystem(mappingGroup, mappingType, intSystemValue, integrationSystem);
     }
 
     MappingMetaData findByMappingGroupAndMappingTypeAndIntSystemValue(MappingGroup mappingGroup, MappingType mappingType, String intSystemValue);
