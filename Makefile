@@ -99,7 +99,7 @@ test-server-only:
 	./gradlew clean build
 
 test-server-starts: build-server
-	AVNI_INT_AUTO_CLOSE=true java -jar integrator/build/libs/$(application_jar)
+	AVNI_INT_DATASOURCE=jdbc:postgresql://localhost:5432/avni_int_test AVNI_INT_AUTO_CLOSE=true java -jar integrator/build/libs/$(application_jar)
 
 test-server: drop-test-db build-test-db test-server-only test-server-starts
 

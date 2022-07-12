@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class AmritUserRepository {
@@ -25,12 +26,18 @@ public class AmritUserRepository {
         this.restTemplate = restTemplate;
     }
 
-    public void login() {
+    public String login() {
         URI uri = URI.create(String.format("%s/commonapi-v1.0/user/userAuthenticate/", amritConfig.getAmritServerUrl()));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         ParameterizedTypeReference<HashMap<String, Object>> responseType = new ParameterizedTypeReference<>() {};
         LoginContract loginContract = new LoginContract(amritConfig.getAmritApiUser(), amritConfig.getAmritApiPassword());
         ResponseEntity<HashMap<String, Object>> responseEntity = restTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(loginContract, headers), responseType);
+        HashMap<String, Object> body = responseEntity.getBody();
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            Map map = (Map) body.get("data");
+            return (String) map.get("key");
+        }
+        throw new RuntimeException("Error during login");
     }
 }

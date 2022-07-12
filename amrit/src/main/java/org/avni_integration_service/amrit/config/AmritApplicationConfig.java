@@ -16,7 +16,7 @@ public class AmritApplicationConfig {
     @Value("${amrit.api.user}")
     private String amritApiUser;
 
-    @Value("${amrit.server.password}")
+    @Value("${amrit.api.password}")
     private String amritApiPassword;
 
     public String getAmritServerUrl() {
