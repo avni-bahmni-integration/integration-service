@@ -9,12 +9,15 @@ import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.ObsDataType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.MappingType_Obs;
 
 public abstract class BaseGoonjService {
+    protected static final Logger logger = LoggerFactory.getLogger(BaseGoonjService.class);
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final IntegrationSystemRepository integrationSystemRepository;
 
@@ -29,6 +32,11 @@ public abstract class BaseGoonjService {
 
         for (String obsField : observationFields) {
             MappingMetaData mapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, obsField, integrationSystem);
+            if(mapping == null) {
+                //TODO Should we throw error here instead of continue
+                logger.error("Mapping entry not found for observation field: " + obsField);
+                continue;
+            }
             ObsDataType dataTypeHint = mapping.getDataTypeHint();
             if (dataTypeHint == null)
                 observationHolder.addObservation(mapping.getAvniValue(), goonjEntity.getValue(obsField));

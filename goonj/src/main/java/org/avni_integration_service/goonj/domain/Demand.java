@@ -32,13 +32,14 @@ public class Demand implements GoonjEntity{
         subject.setSubjectType("Demand");
         subject.setRegistrationDate(new Date());
         subject.setAddress(MapUtil.getString(DemandStateField, response) +", "+MapUtil.getString(DemandDistrictField, response));
-        subject.setExternalId(MapUtil.getString(DemandNameField, response));
-        subject.setFirstName(MapUtil.getString(DemandIdField, response));
+        subject.setExternalId(MapUtil.getString(DemandIdField, response));
+        subject.setFirstName(MapUtil.getString(DemandNameField, response));
         subject.setVoided(MapUtil.getBoolean(DemandIsVoidedField, response));
 //        subject.addObservation("Type of Disaster", demandDto.getTypeOfDisaster());
 //        subject.addObservation("Target Community", demandDto.getTargetCommunity());
 //        subject.addObservation("Number of people", this.getNumberOfPeople());
 //        subject.addObservation("Account Name", this.getAccountName());
+//        subject.addObservation("AccountId", this.getAccountId());
 //        subject.addObservation("DemandId", demandDto.getDemandId());
 //        subject.addObservation("demandName", demandDto.getDemandName());
 //        subject.addObservation("District", demandDto.getDistrict());

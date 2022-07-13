@@ -16,10 +16,11 @@ DB=avni_int
 ADMIN_USER=avni_int
 postgres_user := $(shell id -un)
 application_jar=integrator-0.0.2-SNAPSHOT.jar
+dbPort=5432
 
 define _build_db
-	-psql -h localhost -U $(SU) -d postgres -c "create user $(ADMIN_USER) with password 'password' createrole";
-	-psql -h localhost -U $(SU) -d postgres -c 'create database $1 with owner $(ADMIN_USER)';
+	-psql -h localhost -p $(dbPort) -U $(SU) -d postgres -c "create user $(ADMIN_USER) with password 'password' createrole";
+	-psql -h localhost -p $(dbPort) -U $(SU) -d postgres -c 'create database $1 with owner $(ADMIN_USER)';
 endef
 
 define _drop_db
@@ -55,7 +56,7 @@ build-db-schema:
 	./gradlew --stacktrace :bahmni:migrateDb
 	./gradlew --stacktrace :goonj:migrateDb
 	./gradlew --stacktrace :amrit:migrateDb
-	psql -h localhost -U avni_int -d avni_int < integration-data/src/main/resources/db/util/superadmin.sql;
+	psql -h localhost -p $(dbPort) -U avni_int -d avni_int < integration-data/src/main/resources/db/util/superadmin.sql;
 
 drop-db:
 	$(call _drop_db,avni_int)
@@ -75,7 +76,7 @@ drop-test-db:
 rebuild-test-db: drop-test-db build-test-db
 
 drop-roles:
-	-psql -h localhost -U $(SU) -d postgres -c 'drop role $(ADMIN_USER)';
+	-psql -h localhost -p $(dbPort) -U $(SU) -d postgres -c 'drop role $(ADMIN_USER)';
 #######
 
 ####### BUILD, TEST, LOCAL RUN
