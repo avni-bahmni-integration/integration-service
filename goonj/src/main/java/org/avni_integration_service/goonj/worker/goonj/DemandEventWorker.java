@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
+import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.domain.Demand;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DemandService;
@@ -11,6 +12,7 @@ import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +28,7 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
     @Autowired
     public DemandEventWorker(DemandService demandService, AvniGoonjErrorService avniGoonjErrorService,
                              AvniSubjectRepository avniSubjectRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository) {
-        super(integratingEntityStatusRepository);
+        super(integratingEntityStatusRepository, GoonjEntityType.Demand.name());
         this.demandService = demandService;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.avniSubjectRepository = avniSubjectRepository;
@@ -34,7 +36,7 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
 
     public void process(Map<String, Object> event) {
         processDemand(event);
-        updateLastDateTime("Demand", event);
+        updateReadUptoDateTime(event);
     }
 
     private void processDemand(Map<String, Object> demandResponse) {
@@ -59,5 +61,19 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
 
     @Override
     public void cacheRunImmutables(Constants constants) {
+    }
+
+    @Override
+    public void processDeletion(String deletedEntity) {
+        processDemandDeletion(deletedEntity);
+    }
+
+    private void processDemandDeletion(String deletedEntity) {
+        try {
+            logger.debug(String.format("Processing demand deletion: externalId %s", deletedEntity));
+            avniSubjectRepository.delete(deletedEntity);
+        } catch (HttpClientErrorException.NotFound e) {
+            logger.error(String.format("Failed to delete non-existent demand: externalId %s", deletedEntity));
+        }
     }
 }

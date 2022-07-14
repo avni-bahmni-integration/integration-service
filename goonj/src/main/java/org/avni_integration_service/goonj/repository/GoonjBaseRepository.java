@@ -15,13 +15,13 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class GoonjBaseRepository {
+    private static final Logger logger = Logger.getLogger(GoonjBaseRepository.class);
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final RestTemplate goonjRestTemplate;
     private final GoonjConfig goonjConfig;
-    private static final Logger logger = Logger.getLogger(GoonjBaseRepository.class);
-
     private final String entityType;
 
     public GoonjBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
@@ -49,7 +49,6 @@ public abstract class GoonjBaseRepository {
     protected LocalDateTime getCutOffDateTime() {
         return FormatAndParseUtil.toLocalDateTime(getCutOffDate());
     }
-    public abstract HashMap<String, Object>[] fetchEvents();
 
     protected HashMap<String, Object> getSingleEntityResponse(String resource, String uuid) {
         URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource, uuid));
@@ -57,4 +56,9 @@ public abstract class GoonjBaseRepository {
         ResponseEntity<HashMap<String, Object>> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, responseType);
         return responseEntity.getBody();
     }
+
+    public abstract HashMap<String, Object>[] fetchEvents();
+
+    public abstract List<String> fetchDeletionEvents();
+
 }

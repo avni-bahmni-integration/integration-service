@@ -4,7 +4,9 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
 import org.avni_integration_service.integration_data.domain.Constants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class BaseGoonjWorker {
     private static final Logger logger = Logger.getLogger(BaseGoonjWorker.class);
@@ -17,8 +19,6 @@ public abstract class BaseGoonjWorker {
         this.eventWorker = eventWorker;
     }
 
-    public abstract void process();
-
     protected HashMap<String, Object>[] fetchEvents() {
         HashMap<String, Object>[] events = crudRepository.fetchEvents();
         if(events == null) {
@@ -27,7 +27,18 @@ public abstract class BaseGoonjWorker {
         return events;
     }
 
+    protected List<String> fetchDeletionEvents() {
+        List<String> deletionEvents = crudRepository.fetchDeletionEvents();
+        if(deletionEvents == null) {
+            return new ArrayList<>();
+        }
+        return deletionEvents;
+    }
+
     public void cacheRunImmutables(Constants constants) {
         eventWorker.cacheRunImmutables(constants);
     }
+
+    public abstract void process();
+    public abstract void processDeletions();
 }

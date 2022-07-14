@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -21,6 +22,14 @@ public class DemandWorker extends BaseGoonjWorker {
         HashMap<String, Object>[] demands = fetchEvents();
         for (Map<String, Object> demand : demands) {
             eventWorker.process(demand);
+        }
+    }
+
+    @Override
+    public void processDeletions() {
+        List<String> deletedDemands = fetchDeletionEvents();
+        for (String deletedDemand : deletedDemands) {
+            eventWorker.processDeletion(deletedDemand);
         }
     }
 }

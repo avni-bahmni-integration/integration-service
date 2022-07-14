@@ -55,4 +55,11 @@ public class AvniEnrolmentRepository extends BaseAvniRepository {
         ResponseEntity<EnrolmentsResponse> responseEntity = avniHttpClient.get("/api/programEnrolments", queryParams, EnrolmentsResponse.class);
         return responseEntity.getBody().getContent();
     }
+
+    public Enrolment delete(String deletedEntity) {
+        String json = null;
+        HashMap<String, String> queryParams = new HashMap<>();
+        ResponseEntity<Enrolment> responseEntity = avniHttpClient.delete(String.format("/api/programEnrolment/%s", deletedEntity), queryParams, json, Enrolment.class);
+        return responseEntity.getBody();
+    }
 }

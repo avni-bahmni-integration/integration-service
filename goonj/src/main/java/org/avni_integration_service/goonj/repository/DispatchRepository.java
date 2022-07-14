@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 
 @Component("DispatchRepository")
 public class DispatchRepository extends GoonjBaseRepository {
@@ -24,6 +25,11 @@ public class DispatchRepository extends GoonjBaseRepository {
     @Override
     public HashMap<String, Object>[] fetchEvents() {
         return getDispatches(getCutOffDateTime()).getDispatchStatuses();
+    }
+
+    @Override
+    public List<String> fetchDeletionEvents() {
+        return getDispatches(getCutOffDateTime()).getDeletedObjects().getDeletedDispatchStatuses();
     }
 
     public DispatchesResponseDTO getDispatches(LocalDateTime dateTime) {

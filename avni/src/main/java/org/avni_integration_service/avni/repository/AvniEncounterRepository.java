@@ -1,9 +1,9 @@
 package org.avni_integration_service.avni.repository;
 
-import org.avni_integration_service.avni.domain.GeneralEncounter;
-import org.avni_integration_service.avni.domain.EncountersResponse;
-import org.avni_integration_service.avni.domain.GeneralEncountersResponse;
 import org.avni_integration_service.avni.client.AvniHttpClient;
+import org.avni_integration_service.avni.domain.EncountersResponse;
+import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.GeneralEncountersResponse;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +70,12 @@ public class AvniEncounterRepository extends BaseAvniRepository {
         queryParams.put("encounterType", encounterType);
         ResponseEntity<GeneralEncountersResponse> responseEntity = avniHttpClient.get("/api/encounters", queryParams, GeneralEncountersResponse.class);
         return pickAndExpectOne(responseEntity.getBody().getContent());
+    }
+
+    public GeneralEncounter delete(String deletedEntity) {
+        String json = null;
+        HashMap<String, String> queryParams = new HashMap<>();
+        ResponseEntity<GeneralEncounter> responseEntity = avniHttpClient.delete(String.format("/api/encounters/%s", deletedEntity), queryParams, json, GeneralEncounter.class);
+        return responseEntity.getBody();
     }
 }

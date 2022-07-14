@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 
 @Component("DemandRepository")
 public class DemandRepository extends GoonjBaseRepository {
@@ -24,6 +25,11 @@ public class DemandRepository extends GoonjBaseRepository {
     @Override
     public HashMap<String, Object>[] fetchEvents() {
         return getDemands(getCutOffDateTime()).getDemands();
+    }
+
+    @Override
+    public List<String> fetchDeletionEvents() {
+        return getDemands(getCutOffDateTime()).getDeletedDemands();
     }
 
     public DemandsResponseDTO getDemands(LocalDateTime dateTime) {

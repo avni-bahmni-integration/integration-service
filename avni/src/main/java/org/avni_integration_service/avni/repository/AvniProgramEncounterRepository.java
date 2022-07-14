@@ -1,8 +1,8 @@
 package org.avni_integration_service.avni.repository;
 
+import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.ProgramEncounter;
 import org.avni_integration_service.avni.domain.ProgramEncountersResponse;
-import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +55,13 @@ public class AvniProgramEncounterRepository extends BaseAvniRepository {
 
     public ProgramEncounter update(String id, ProgramEncounter encounter) {
         ResponseEntity<ProgramEncounter> responseEntity = avniHttpClient.put(String.format("/api/programEncounter/%s", id), encounter, ProgramEncounter.class);
+        return responseEntity.getBody();
+    }
+
+    public ProgramEncounter delete(String deletedEntity) {
+        String json = null;
+        HashMap<String, String> queryParams = new HashMap<>();
+        ResponseEntity<ProgramEncounter> responseEntity = avniHttpClient.delete(String.format("/api/programEncounter/%s", deletedEntity), queryParams, json, ProgramEncounter.class);
         return responseEntity.getBody();
     }
 }

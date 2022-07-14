@@ -54,4 +54,11 @@ public class AvniSubjectRepository extends BaseAvniRepository {
         ResponseEntity<Subject> responseEntity = avniHttpClient.post("/api/subject", subject, Subject.class);
         return responseEntity.getBody();
     }
+
+    public Subject delete(String deletedEntity) {
+        String json = null;
+        HashMap<String, String> queryParams = new HashMap<>();
+        ResponseEntity<Subject> responseEntity = avniHttpClient.delete(String.format("/api/subject/%s", deletedEntity), queryParams, json, Subject.class);
+        return responseEntity.getBody();
+    }
 }

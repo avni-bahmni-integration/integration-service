@@ -53,10 +53,12 @@ public class AvniGoonjMainJob {
             if (hasTask(tasks, IntegrationTask.GoonjDemand)) {
                 logger.info("Processing GoonjDemand");
                 getDemandWorker(allConstants).process();
+                getDemandWorker(allConstants).processDeletions();
             }
             if (hasTask(tasks, IntegrationTask.GoonjDispatch)) {
                 logger.info("Processing GoonjDispatch");
                 getDispatchWorker(allConstants).process();
+                getDispatchWorker(allConstants).processDeletions();
             }
             if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
                 logger.info("Processing AvniErrorRecords");
