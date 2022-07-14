@@ -2,6 +2,7 @@ package org.avni_integration_service.goonj.repository;
 
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.dto.DemandsResponseDTO;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,11 +23,11 @@ public class DemandRepository extends GoonjBaseRepository {
 
     @Override
     public HashMap<String, Object>[] fetchEvents() {
-        return getDemands(getCutOffDateTime());
+        return getDemands(getCutOffDateTime()).getDemands();
     }
 
-    public HashMap<String, Object>[] getDemands(LocalDateTime dateTime) {
-        return super.getResponse( dateTime, "DemandService/getDemands");
+    public DemandsResponseDTO getDemands(LocalDateTime dateTime) {
+        return super.getResponse( dateTime, "DemandService/getDemands", DemandsResponseDTO.class);
     }
 
     public HashMap<String, Object> getDemand(String uuid) {

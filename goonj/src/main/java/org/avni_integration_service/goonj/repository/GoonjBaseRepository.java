@@ -3,12 +3,12 @@ package org.avni_integration_service.goonj.repository;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
-import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -32,11 +32,14 @@ public abstract class GoonjBaseRepository {
         this.entityType = entityType;
     }
 
-    protected HashMap<String, Object>[] getResponse(LocalDateTime dateTime, String resource) {
+    protected <T> T getResponse(LocalDateTime dateTime, String resource,  Class<T> returnType) {
         URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource, DateTimeUtil.formatDateTime(dateTime)));
-        ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
-        ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, responseType);
-        return responseEntity.getBody();
+        ResponseEntity<T> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, returnType);
+        if(responseEntity.getStatusCode().is2xxSuccessful()) {
+            return responseEntity.getBody();
+        }
+        logger.error(String.format("Failed to fetch data for resource %s with response status code %s", resource, responseEntity.getStatusCode()));
+        throw new HttpServerErrorException(responseEntity.getStatusCode());
     }
 
     protected Date getCutOffDate() {

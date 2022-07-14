@@ -1,6 +1,5 @@
 package org.avni_integration_service.goonj.service;
 
-import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.ObservationHolder;
 import org.avni_integration_service.goonj.config.GoonjMappingDbConstants;
 import org.avni_integration_service.goonj.domain.GoonjEntity;
@@ -33,7 +32,6 @@ public abstract class BaseGoonjService {
         for (String obsField : observationFields) {
             MappingMetaData mapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, obsField, integrationSystem);
             if(mapping == null) {
-                //TODO Should we throw error here instead of continue
                 logger.error("Mapping entry not found for observation field: " + obsField);
                 continue;
             }

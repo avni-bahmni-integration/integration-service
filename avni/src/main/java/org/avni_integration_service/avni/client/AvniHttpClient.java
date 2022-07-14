@@ -31,6 +31,10 @@ public class AvniHttpClient {
     @Value("${avni.impl.password}")
     private String AVNI_IMPL_PASSWORD;
 
+
+    @Value("${authenticate.with.avni}")
+    private Boolean AUTH_WITH_AVNI;
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -107,6 +111,9 @@ public class AvniHttpClient {
     }
 
     public String fetchAuthToken() {
+        if(!AUTH_WITH_AVNI) {
+            return "";//Skip Cognito Auth Token fetch in local
+        }
         if (authenticationResultType != null && !authenticationResultType.getIdToken().isEmpty()) {
             return authenticationResultType.getIdToken();
         }

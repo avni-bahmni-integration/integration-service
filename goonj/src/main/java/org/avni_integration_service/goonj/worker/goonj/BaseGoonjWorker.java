@@ -20,7 +20,11 @@ public abstract class BaseGoonjWorker {
     public abstract void process();
 
     protected HashMap<String, Object>[] fetchEvents() {
-       return crudRepository.fetchEvents();
+        HashMap<String, Object>[] events = crudRepository.fetchEvents();
+        if(events == null) {
+            return new HashMap[0];
+        }
+        return events;
     }
 
     public void cacheRunImmutables(Constants constants) {

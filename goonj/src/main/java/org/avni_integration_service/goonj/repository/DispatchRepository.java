@@ -2,6 +2,7 @@ package org.avni_integration_service.goonj.repository;
 
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.dto.DispatchesResponseDTO;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,11 +23,11 @@ public class DispatchRepository extends GoonjBaseRepository {
 
     @Override
     public HashMap<String, Object>[] fetchEvents() {
-        return getDispatches(getCutOffDateTime());
+        return getDispatches(getCutOffDateTime()).getDispatchStatuses();
     }
 
-    public HashMap<String, Object>[] getDispatches(LocalDateTime dateTime) {
-        return super.getResponse( dateTime, "DispatchService/getDispatches");
+    public DispatchesResponseDTO getDispatches(LocalDateTime dateTime) {
+        return super.getResponse( dateTime, "DispatchService/getDispatches", DispatchesResponseDTO.class);
     }
 
     public HashMap<String, Object> getDispatch(String uuid) {

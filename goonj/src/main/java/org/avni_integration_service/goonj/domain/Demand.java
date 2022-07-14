@@ -18,7 +18,7 @@ public class Demand implements GoonjEntity{
 
     private Map<String, Object> response;
 
-    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DemandNameField, DemandDistrictField,
+    private static final List<String> Core_Fields = Arrays.asList(DemandNameField, DemandDistrictField,
             DemandStateField, DemandIsVoidedField);
 
     public static Demand from(Map<String, Object> demandResponse) {
