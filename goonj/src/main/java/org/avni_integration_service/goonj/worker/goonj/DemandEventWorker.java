@@ -8,6 +8,7 @@ import org.avni_integration_service.goonj.domain.Demand;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DemandService;
 import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
+public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(DemandEventWorker.class);
 
     private final DemandService demandService;
@@ -23,7 +24,9 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
     private final AvniSubjectRepository avniSubjectRepository;
 
     @Autowired
-    public DemandEventWorker(DemandService demandService, AvniGoonjErrorService avniGoonjErrorService, AvniSubjectRepository avniSubjectRepository) {
+    public DemandEventWorker(DemandService demandService, AvniGoonjErrorService avniGoonjErrorService,
+                             AvniSubjectRepository avniSubjectRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository) {
+        super(integratingEntityStatusRepository);
         this.demandService = demandService;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.avniSubjectRepository = avniSubjectRepository;
@@ -31,6 +34,7 @@ public class DemandEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
 
     public void process(Map<String, Object> event) {
         processDemand(event);
+        updateLastDateTime("Demand", event);
     }
 
     private void processDemand(Map<String, Object> demandResponse) {

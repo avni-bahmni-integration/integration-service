@@ -8,6 +8,7 @@ import org.avni_integration_service.goonj.domain.Dispatch;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DispatchService;
 import org.avni_integration_service.integration_data.domain.Constants;
+import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class DispatchEventWorker implements IGoonjEventWorker, ErrorRecordWorker {
+public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(DispatchEventWorker.class);
 
     private final DispatchService dispatchService;
@@ -23,7 +24,9 @@ public class DispatchEventWorker implements IGoonjEventWorker, ErrorRecordWorker
     private final AvniEncounterRepository avniEncounterRepository;
 
     @Autowired
-    public DispatchEventWorker(DispatchService dispatchService, AvniGoonjErrorService avniGoonjErrorService, AvniEncounterRepository avniEncounterRepository) {
+    public DispatchEventWorker(DispatchService dispatchService, AvniGoonjErrorService avniGoonjErrorService,
+                               AvniEncounterRepository avniEncounterRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository) {
+        super(integratingEntityStatusRepository);
         this.dispatchService = dispatchService;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.avniEncounterRepository = avniEncounterRepository;
@@ -31,6 +34,7 @@ public class DispatchEventWorker implements IGoonjEventWorker, ErrorRecordWorker
 
     public void process(Map<String, Object> event) {
         processDispatch(event);
+        updateLastDateTime("Dispatch", event);
     }
 
     private void processDispatch(Map<String, Object> dispatchResponse) {

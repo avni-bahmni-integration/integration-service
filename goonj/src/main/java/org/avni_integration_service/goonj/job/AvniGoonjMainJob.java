@@ -69,6 +69,9 @@ public class AvniGoonjMainJob {
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
+        } catch (Throwable t) {
+            logger.error("Failed", t);
+            bugsnag.notify(t);
         } finally {
             healthCheckService.verify(mainJobId);
         }

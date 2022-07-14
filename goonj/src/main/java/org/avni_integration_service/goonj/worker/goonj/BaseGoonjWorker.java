@@ -10,9 +10,9 @@ public abstract class BaseGoonjWorker {
     private static final Logger logger = Logger.getLogger(BaseGoonjWorker.class);
 
     private final GoonjBaseRepository crudRepository;
-    protected final IGoonjEventWorker eventWorker;
+    protected final GoonjEventWorker eventWorker;
 
-    public BaseGoonjWorker(GoonjBaseRepository crudRepository, IGoonjEventWorker eventWorker) {
+    public BaseGoonjWorker(GoonjBaseRepository crudRepository, GoonjEventWorker eventWorker) {
         this.crudRepository = crudRepository;
         this.eventWorker = eventWorker;
     }
