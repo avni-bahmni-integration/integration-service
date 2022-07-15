@@ -8,8 +8,8 @@ import java.util.Date;
 
 public class DateTimeUtil {
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private static final SimpleDateFormat goonjDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public static String formatDateTime(LocalDateTime localDateTime) {
         return dateTimeFormat.format(localDateTime);
@@ -18,6 +18,14 @@ public class DateTimeUtil {
     public static Date convertToDate(String localDateTime) {
         try {
             return simpleDateFormat.parse(localDateTime);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Date convertToDateFromGoonjDateString(String goonjDateString) {
+        try {
+            return goonjDateFormat.parse(goonjDateString);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

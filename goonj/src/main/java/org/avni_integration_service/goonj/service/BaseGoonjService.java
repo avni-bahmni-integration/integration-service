@@ -38,7 +38,7 @@ public abstract class BaseGoonjService {
             ObsDataType dataTypeHint = mapping.getDataTypeHint();
             if (dataTypeHint == null)
                 observationHolder.addObservation(mapping.getAvniValue(), goonjEntity.getValue(obsField));
-            else if (dataTypeHint == ObsDataType.Coded) {
+            else if (dataTypeHint == ObsDataType.Coded && goonjEntity.getValue(obsField) != null) {
                 MappingMetaData answerMapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, goonjEntity.getValue(obsField).toString(), integrationSystem);
                 observationHolder.addObservation(mapping.getAvniValue(), answerMapping.getAvniValue());
             }

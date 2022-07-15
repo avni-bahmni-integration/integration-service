@@ -2,7 +2,7 @@ package org.avni_integration_service.goonj.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
-import org.avni_integration_service.util.FormatAndParseUtil;
+import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.util.MapUtil;
 
 import java.util.*;
@@ -11,12 +11,17 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Dispatch implements GoonjEntity {
 
-    private static final String DemandField = "Demand";
+    private static final String DemandIdField = "DemandId";
     private static final String DispatchLineItemsField = "DispatchLineItems";
+    private static final String DispatchStatusIdField = "DispatchStatusId";
     private static final String DispatchStatusNameField = "DispatchStatusName";
-    private static final String DemandIsVoidedField = "IsVoided";
-    private static final List<String> Core_Fields = Arrays.asList(DemandField, DispatchStatusNameField, DemandIsVoidedField, DispatchLineItemsField);
-    private static final List<String> Ignored_Fields = Arrays.asList("TargetCommunity", "DispatchDistrict", "DispatchState", "LocalDemand", "DisasterType", "AccountName", "AccountCode");
+    private static final String DispatchDateField = "DispatchDate";
+    private static final String DispatchStateField = "DispatchState";
+    private static final String DispatchDistrictField = "DispatchDistrict";
+    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DispatchStatusIdField, DispatchStatusNameField,
+            DispatchDateField, DispatchStateField, DispatchDistrictField, DispatchLineItemsField);
+    private static final List<String> Ignored_Fields = Arrays.asList( "LastUpdatedDateTime",
+            "TargetCommunity",  "LocalDemand", "DisasterType", "Demand", "AccountId", "AccountName", "AccountCode");
 
     private Map<String, Object> response;
 
@@ -29,12 +34,12 @@ public class Dispatch implements GoonjEntity {
     public GeneralEncounter mapToAvniEncounter() {
         GeneralEncounter encounterRequest = new GeneralEncounter();
         //TODO Use Subject External Id
-        encounterRequest.setSubjectExternalID(MapUtil.getString(DemandField, response));
+        encounterRequest.setSubjectExternalID(MapUtil.getString(DemandIdField, response));
         encounterRequest.setExternalID(MapUtil.getString(DispatchStatusNameField, response));
         encounterRequest.setEncounterType("Dispatch");
-        encounterRequest.setEncounterDateTime(FormatAndParseUtil.now());
+        encounterRequest.setEncounterDateTime(DateTimeUtil.convertToDateFromGoonjDateString(MapUtil.getString(DispatchDateField, response)));
         encounterRequest.setObservations(new LinkedHashMap<>());
-        encounterRequest.setVoided(MapUtil.getBoolean(DemandIsVoidedField, response));
+        encounterRequest.setVoided(false);
         encounterRequest.set("cancelObservations", new HashMap<>());
         return encounterRequest;
     }

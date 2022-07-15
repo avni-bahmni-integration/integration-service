@@ -60,14 +60,15 @@ public class AvniGoonjMainJob {
                 getDispatchWorker(allConstants).process();
                 getDispatchWorker(allConstants).processDeletions();
             }
-            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
-                logger.info("Processing AvniErrorRecords");
-                processErrorRecords(allConstants, SyncDirection.AvniToGoonj);
-            }
-            if (hasTask(tasks, IntegrationTask.GoonjErrorRecords)) {
-                logger.info("Processing GoonjErrorRecords");
-                processErrorRecords(allConstants, SyncDirection.GoonjToAvni);
-            }
+            //TODO ENable Error record processing
+//            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
+//                logger.info("Processing AvniErrorRecords");
+//                processErrorRecords(allConstants, SyncDirection.AvniToGoonj);
+//            }
+//            if (hasTask(tasks, IntegrationTask.GoonjErrorRecords)) {
+//                logger.info("Processing GoonjErrorRecords");
+//                processErrorRecords(allConstants, SyncDirection.GoonjToAvni);
+//            }
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);

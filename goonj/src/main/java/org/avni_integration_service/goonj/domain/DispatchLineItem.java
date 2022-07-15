@@ -3,9 +3,16 @@ package org.avni_integration_service.goonj.domain;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DispatchLineItem implements GoonjEntity {
-    private static final List<String> Ignored_Fields = Arrays.asList("OtherKitDetails", "ItemCategory");
+
+    private static final List<String> Core_Fields = Arrays.asList("Unit","TypeOfMaterial","Type","Quantity",
+            "PurchaseItemCategory","OtherKitDetails","MaterialName",
+            "KitSubType","KitName","ItemName","ItemCategory","DispatchLineItemId","ContributedItem");
+
+    private static final List<String> Ignored_Fields = Arrays.asList("LastUpdatedDateTime", "MaterialId", "KitId",
+            "OtherKitDetails", "ItemCategory");
 
     private final Map<String, Object> lineItemMap;
 
@@ -15,7 +22,9 @@ public class DispatchLineItem implements GoonjEntity {
 
     @Override
     public List<String> getObservationFields() {
-        return lineItemMap.keySet().stream().toList();
+        return lineItemMap.keySet().stream()
+                .filter(s -> Core_Fields.contains(s))
+                .collect(Collectors.toList());
     }
 
     @Override
