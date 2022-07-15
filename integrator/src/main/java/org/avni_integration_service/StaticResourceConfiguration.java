@@ -20,11 +20,11 @@ public class StaticResourceConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         if (staticPath != null) {
             registry
-                    .addResourceHandler("/static/**")
+                    .addResourceHandler("/avni-int-admin-app/static/**")
                     .addResourceLocations("file:" + staticPath + "static/")
                     .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
             registry
-                    .addResourceHandler("/**")
+                    .addResourceHandler("/avni-int-admin-app/**")
                     .addResourceLocations("file:" + staticPath);
         }
     }
@@ -41,8 +41,8 @@ public class StaticResourceConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/")
-                .setViewName("forward:/index.html");
+        registry.addViewController("/avni-int-admin-app/")
+                .setViewName("forward:/avni-int-admin-app/index.html");
     }
 
 }
