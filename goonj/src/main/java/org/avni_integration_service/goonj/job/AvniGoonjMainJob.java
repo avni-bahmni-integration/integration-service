@@ -53,11 +53,23 @@ public class AvniGoonjMainJob {
             if (hasTask(tasks, IntegrationTask.GoonjDemand)) {
                 logger.info("Processing GoonjDemand");
                 getDemandWorker(allConstants).process();
+                /**
+                 * We are triggering deletion tagged along with Demand creations, as the Goonj System sends
+                 * the Deleted Demands info as part of the same getDemands API, but as a separate list,
+                 * without any TimeStamp and other minimal information details required to make an Update Subject as Voided call.
+                 * Therefore, we invoke the Delete API for subject using DemandId as externalId to mark a Demand as Voided.
+                 */
                 getDemandWorker(allConstants).processDeletions();
             }
             if (hasTask(tasks, IntegrationTask.GoonjDispatch)) {
                 logger.info("Processing GoonjDispatch");
                 getDispatchWorker(allConstants).process();
+                /**
+                 * We are triggering deletion tagged along with DispatchStatus creations, as the Goonj System sends
+                 * the Deleted DispatchStatuses info as part of the same getDispatchStatus API, but as a separate list,
+                 * without any TimeStamp and other minimal information details required to make an Update DispatchStatus as Voided call.
+                 * Therefore, we invoke the Delete API for DispatchStatus using DispatchStatusId as externalId to mark a DispatchStatus as Voided.
+                 */
                 getDispatchWorker(allConstants).processDeletions();
             }
             //TODO ENable Error record processing
