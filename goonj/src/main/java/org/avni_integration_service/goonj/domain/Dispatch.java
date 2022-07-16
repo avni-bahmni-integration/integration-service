@@ -18,7 +18,7 @@ public class Dispatch implements GoonjEntity {
     private static final String DispatchDateField = "DispatchDate";
     private static final String DispatchStateField = "DispatchState";
     private static final String DispatchDistrictField = "DispatchDistrict";
-    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DispatchStatusIdField, DispatchStatusNameField,
+    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DispatchStatusIdField,
             DispatchDateField, DispatchStateField, DispatchDistrictField, DispatchLineItemsField);
     private static final List<String> Ignored_Fields = Arrays.asList( "LastUpdatedDateTime",
             "TargetCommunity",  "LocalDemand", "DisasterType", "Demand", "AccountId", "AccountName", "AccountCode");
@@ -35,7 +35,7 @@ public class Dispatch implements GoonjEntity {
         GeneralEncounter encounterRequest = new GeneralEncounter();
         //TODO Use Subject External Id
         encounterRequest.setSubjectExternalID(MapUtil.getString(DemandIdField, response));
-        encounterRequest.setExternalID(MapUtil.getString(DispatchStatusNameField, response));
+        encounterRequest.setExternalID(MapUtil.getString(DispatchStatusIdField, response));
         encounterRequest.setEncounterType("Dispatch");
         encounterRequest.setEncounterDateTime(DateTimeUtil.convertToDateFromGoonjDateString(MapUtil.getString(DispatchDateField, response)));
         encounterRequest.setObservations(new LinkedHashMap<>());
