@@ -3,6 +3,7 @@ package org.avni_integration_service.goonj.job;
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.SyncDirection;
+import org.avni_integration_service.goonj.worker.avni.SyncFromAvniToGoonjWorker;
 import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
 import org.avni_integration_service.goonj.worker.goonj.DemandWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchWorker;
@@ -27,6 +28,9 @@ public class AvniGoonjMainJob {
 
     @Autowired
     private DispatchWorker dispatchWorker;
+
+    @Autowired
+    private SyncFromAvniToGoonjWorker syncFromAvniToGoonjWorker;
 
     @Autowired
     private ConstantsRepository constantsRepository;
@@ -72,7 +76,11 @@ public class AvniGoonjMainJob {
                  */
                 getDispatchWorker(allConstants).processDeletions();
             }
-            //TODO ENable Error record processing
+            if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
+                logger.info("Processing AvniDispatchReceipt");
+                getSyncFromAvniToGoonjWorker(allConstants).process();
+            }
+            //TODO Enable Error record processing
 //            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
 //                logger.info("Processing AvniErrorRecords");
 //                processErrorRecords(allConstants, SyncDirection.AvniToGoonj);
@@ -104,6 +112,11 @@ public class AvniGoonjMainJob {
     public DispatchWorker getDispatchWorker(Constants constants) {
         dispatchWorker.cacheRunImmutables(constants);
         return dispatchWorker;
+    }
+
+    private SyncFromAvniToGoonjWorker getSyncFromAvniToGoonjWorker(Constants constants) {
+        syncFromAvniToGoonjWorker.cacheRunImmutables(constants);
+        return syncFromAvniToGoonjWorker;
     }
 
     private boolean hasTask(List<IntegrationTask> tasks, IntegrationTask task) {

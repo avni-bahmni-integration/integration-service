@@ -11,6 +11,8 @@ public class DateTimeUtil {
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private static final SimpleDateFormat goonjDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+    private static final SimpleDateFormat goonjRequestDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     public static String formatDateTime(LocalDateTime localDateTime) {
         return dateTimeFormat.format(localDateTime);
     }
@@ -29,5 +31,9 @@ public class DateTimeUtil {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String formatDate(Date encounterDateTime) {
+        return goonjRequestDateFormat.format(encounterDateTime);
     }
 }

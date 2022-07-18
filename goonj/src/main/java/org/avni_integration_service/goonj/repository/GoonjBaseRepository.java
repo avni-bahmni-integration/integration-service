@@ -1,11 +1,13 @@
 package org.avni_integration_service.goonj.repository;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpServerErrorException;
@@ -38,7 +40,7 @@ public abstract class GoonjBaseRepository {
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             return responseEntity.getBody();
         }
-        logger.error(String.format("Failed to fetch data for resource %s with response status code %s", resource, responseEntity.getStatusCode()));
+        logger.error(String.format("Failed to fetch data for resource %s, response status code is %s", resource, responseEntity.getStatusCode()));
         throw new HttpServerErrorException(responseEntity.getStatusCode());
     }
 
@@ -51,14 +53,30 @@ public abstract class GoonjBaseRepository {
     }
 
     protected HashMap<String, Object> getSingleEntityResponse(String resource, String uuid) {
-        URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource, uuid));
+        URI uri = URI.create(String.format("%s/%s?uuid=%s", goonjConfig.getAppUrl(), resource, uuid));
         ParameterizedTypeReference<HashMap<String, Object>> responseType = new ParameterizedTypeReference<>() {};
         ResponseEntity<HashMap<String, Object>> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, responseType);
         return responseEntity.getBody();
     }
 
+    protected HashMap<String, Object>[] createSingleEntity(String resource, HttpEntity<?> requestEntity) {
+        URI uri = URI.create(String.format("%s/%s", goonjConfig.getAppUrl(), resource));
+        ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
+        ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
+        if(responseEntity.getStatusCode().is2xxSuccessful()) {
+            return responseEntity.getBody();
+        }
+        logger.error(String.format("Failed to create resource %s,  response status code is %s", resource, responseEntity.getStatusCode()));
+        throw new HttpServerErrorException(responseEntity.getStatusCode());
+    }
+
     public abstract HashMap<String, Object>[] fetchEvents();
 
     public abstract List<String> fetchDeletionEvents();
+
+    public abstract HashMap<String, Object>[] createEvent(GeneralEncounter encounter);
+    public boolean wasEventCreatedSuccessfully(HashMap<String, Object>[] response) {
+        return (response != null && response[0].get("errorCode") == null);
+    }
 
 }

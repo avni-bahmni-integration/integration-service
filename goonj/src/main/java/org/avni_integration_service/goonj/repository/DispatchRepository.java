@@ -1,5 +1,6 @@
 package org.avni_integration_service.goonj.repository;
 
+import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.dto.DispatchesResponseDTO;
@@ -30,6 +31,11 @@ public class DispatchRepository extends GoonjBaseRepository {
     @Override
     public List<String> fetchDeletionEvents() {
         return getDispatches(getCutOffDateTime()).getDeletedObjects().getDeletedDispatchStatuses();
+    }
+
+    @Override
+    public HashMap<String, Object>[] createEvent(GeneralEncounter encounter) {
+        throw new UnsupportedOperationException();
     }
 
     public DispatchesResponseDTO getDispatches(LocalDateTime dateTime) {

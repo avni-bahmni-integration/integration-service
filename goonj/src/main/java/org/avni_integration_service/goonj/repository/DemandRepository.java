@@ -1,5 +1,6 @@
 package org.avni_integration_service.goonj.repository;
 
+import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.dto.DemandsResponseDTO;
@@ -30,6 +31,11 @@ public class DemandRepository extends GoonjBaseRepository {
     @Override
     public List<String> fetchDeletionEvents() {
         return getDemands(getCutOffDateTime()).getDeletedDemands();
+    }
+
+    @Override
+    public HashMap<String, Object>[] createEvent(GeneralEncounter encounter) {
+        throw new UnsupportedOperationException();
     }
 
     public DemandsResponseDTO getDemands(LocalDateTime dateTime) {
