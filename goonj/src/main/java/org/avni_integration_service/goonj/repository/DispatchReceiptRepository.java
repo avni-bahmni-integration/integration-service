@@ -14,10 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component("DispatchReceiptRepository")
@@ -56,8 +53,8 @@ public class DispatchReceiptRepository extends GoonjBaseRepository {
         return requestDTO;
     }
     private List<DispatchReceivedStatusLineItem> fetchDrsLineItemsFromEncounter(GeneralEncounter encounter) {
-        HashMap<String, Object>[] md = (HashMap<String, Object>[]) encounter.getObservations().get("Received Material");
-        return Arrays.stream(md).map(entry -> createDispatchReceivedStatusLineItem(entry)).collect(Collectors.toList());
+        ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) encounter.getObservations().get("Received Material");
+        return md.stream().map(entry -> createDispatchReceivedStatusLineItem(entry)).collect(Collectors.toList());
     }
 
     public DispatchReceivedStatusLineItem createDispatchReceivedStatusLineItem(HashMap<String, Object> entry) {
@@ -69,8 +66,8 @@ public class DispatchReceiptRepository extends GoonjBaseRepository {
                 (typeOfMaterial.equals("Purchased item") ? (String) entry.get("Purchased /High Value") : "");
         String unit = (String) entry.get("Unit");
         String receivingStatus = YES.equalsIgnoreCase((String) entry.get("Quantity matching")) ? "" : "recievedPartially";
-        long dispatchedQuantity = (long) entry.get("Quantity (Dispatched)");
-        long receivedQuantity = (long) entry.get("Quantity");
+        long dispatchedQuantity = ((Integer) entry.get("Quantity (Dispatched)"));
+        long receivedQuantity = ((Integer) entry.get("Quantity"));
         return new DispatchReceivedStatusLineItem(dispatchStatusLineItemId, typeOfMaterial, itemName,
                 unit, receivingStatus, dispatchedQuantity, receivedQuantity);
     }
