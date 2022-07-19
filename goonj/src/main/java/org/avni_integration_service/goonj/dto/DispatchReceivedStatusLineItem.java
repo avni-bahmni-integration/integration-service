@@ -18,8 +18,6 @@ import java.util.HashMap;
     "ReceivedQuantity"
 })
 public class DispatchReceivedStatusLineItem {
-
-    public static final String YES = "yes";
     @JsonProperty("SourceId")
     private String sourceId;
     @JsonProperty("TypeOfMaterial")
@@ -61,14 +59,6 @@ public class DispatchReceivedStatusLineItem {
         this.receivingStatus = receivingStatus;
         this.dispatchedQuantity = dispatchedQuantity;
         this.receivedQuantity = receivedQuantity;
-    }
-
-    //TODO Verify if the DispatchReceivedStatus request lineItems are created as required by Goonj SF application
-    public DispatchReceivedStatusLineItem(HashMap<String, Object> entry) {
-        this((String) entry.get("Dispatch Line Item Id"), (String) entry.get("Type Of Material")
-                , (String) entry.get("Item Name"), (String) entry.get("Unit"),
-                YES.equalsIgnoreCase((String) entry.get("Quantity matching")) ? "":"recievedPartially",
-                (long) entry.get("Quantity (Dispatched)"), (long) entry.get("Quantity"));
     }
 
     @JsonProperty("SourceId")

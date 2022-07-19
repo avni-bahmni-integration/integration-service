@@ -15,12 +15,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component("DispatchReceiptRepository")
 public class DispatchReceiptRepository extends GoonjBaseRepository {
+
+    public static final String YES = "yes";
     @Autowired
     public DispatchReceiptRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                      @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig) {
@@ -44,15 +47,31 @@ public class DispatchReceiptRepository extends GoonjBaseRepository {
     private DispatchReceivedStatusRequestDTO convertGeneralEncounterToDispatchReceivedStatusRequest(GeneralEncounter encounter) {
         DispatchReceivedStatusRequestDTO requestDTO = new DispatchReceivedStatusRequestDTO();
         DispatchReceivedstatus drsDTO = new DispatchReceivedstatus();
-        drsDTO.setSourceId(encounter.getExternalID());
+        drsDTO.setSourceId(encounter.getUuid());
         drsDTO.setDispatchStatusId((String) encounter.getObservation("Dispatch Status Id"));
-        drsDTO.setReceivedDate(DateTimeUtil.formatDate(encounter.getEncounterDateTime()));
+        Date dispatchReceivedDate = DateTimeUtil.convertToDate((String) encounter.getObservation("Dispatch Received Date"));
+        drsDTO.setReceivedDate(DateTimeUtil.formatDate(dispatchReceivedDate));
         drsDTO.setDispatchReceivedStatusLineItems(fetchDrsLineItemsFromEncounter(encounter));
         requestDTO.setDispatchReceivedStatus(Arrays.asList(drsDTO));
         return requestDTO;
     }
     private List<DispatchReceivedStatusLineItem> fetchDrsLineItemsFromEncounter(GeneralEncounter encounter) {
-        HashMap<String, Object>[] md = (HashMap<String, Object>[]) encounter.getObservations().get("Materials Dispatched");
-        return Arrays.stream(md).map(entry -> new DispatchReceivedStatusLineItem(entry)).collect(Collectors.toList());
+        HashMap<String, Object>[] md = (HashMap<String, Object>[]) encounter.getObservations().get("Received Material");
+        return Arrays.stream(md).map(entry -> createDispatchReceivedStatusLineItem(entry)).collect(Collectors.toList());
+    }
+
+    public DispatchReceivedStatusLineItem createDispatchReceivedStatusLineItem(HashMap<String, Object> entry) {
+        //TODO Verify if the DispatchReceivedStatus request lineItems are created as required by Goonj SF application
+        String dispatchStatusLineItemId = (String) entry.get("Dispatch Status Line Item Id");
+        String typeOfMaterial = (String) entry.get("Type Of Material");
+        String itemName = typeOfMaterial.equals("Contributed item")?
+                (String) entry.get("Contributed Item"):
+                (typeOfMaterial.equals("Purchased item") ? (String) entry.get("Purchased /High Value") : "");
+        String unit = (String) entry.get("Unit");
+        String receivingStatus = YES.equalsIgnoreCase((String) entry.get("Quantity matching")) ? "" : "recievedPartially";
+        long dispatchedQuantity = (long) entry.get("Quantity (Dispatched)");
+        long receivedQuantity = (long) entry.get("Quantity");
+        return new DispatchReceivedStatusLineItem(dispatchStatusLineItemId, typeOfMaterial, itemName,
+                unit, receivingStatus, dispatchedQuantity, receivedQuantity);
     }
 }
