@@ -60,7 +60,6 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
                 logger.info("Finished processing all pages");
                 break;
             }
-            ;
         }
     }
     @Override
@@ -77,7 +76,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     @Transactional(propagation = Propagation.REQUIRES_NEW) //TODO @Vivek, should we retain this transactional.?
     public void processGeneralEncounter(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
         if (goonjMappingGroup.isGoonjEncounterInAvni(generalEncounter.getEncounterType())) {
-            logger.debug(String.format("Skipping Avni general encounter %s because it was created from Bahmni", generalEncounter.getEncounterType()));
+            logger.debug(String.format("Skipping Avni general encounter %s because it was created from Goonj. ", generalEncounter.getEncounterType()));
             updateSyncStatus(generalEncounter, updateSyncStatus);
             return;
         }
@@ -91,6 +90,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
             return;
         }
 
+        //TODO Should we stop sync back of counters if the Goonj Demand is voided.?
         var subject = avniSubjectRepository.getSubject(generalEncounter.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
         if (subject.getVoided()) {
@@ -104,7 +104,8 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
             updateSyncStatus(generalEncounter, updateSyncStatus);
             return;
         } catch (Exception e) {
-            logger.error(String.format("Avni encounter 5s could not be synced to Goonj Salesforce. ", generalEncounter.getUuid()), e);
+            logger.error(String.format("Avni encounter %s could not be synced to Goonj Salesforce. ", generalEncounter.getUuid()), e);
+            throw e; //Throw exception, so that we stop at the failed encounter and not proceed to the next one
         }
     }
     protected abstract void createOrUpdateGeneralEncounter(GeneralEncounter generalEncounter, Subject subject);

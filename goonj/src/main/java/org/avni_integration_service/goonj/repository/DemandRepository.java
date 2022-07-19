@@ -1,6 +1,7 @@
 package org.avni_integration_service.goonj.repository;
 
 import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.dto.DemandsResponseDTO;
@@ -34,7 +35,7 @@ public class DemandRepository extends GoonjBaseRepository {
     }
 
     @Override
-    public HashMap<String, Object>[] createEvent(GeneralEncounter encounter) {
+    public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
         throw new UnsupportedOperationException();
     }
 

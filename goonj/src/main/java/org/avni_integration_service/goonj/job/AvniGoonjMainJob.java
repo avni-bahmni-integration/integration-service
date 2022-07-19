@@ -76,8 +76,8 @@ public class AvniGoonjMainJob {
                  */
                 getDispatchWorker(allConstants).processDeletions();
             }
-            if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
-                logger.info("Processing AvniDispatchReceipt");
+            if (hasTask(tasks, IntegrationTask.AvniEncounters)) {
+                logger.info("Processing AvniEncounters");
                 getSyncFromAvniToGoonjWorker(allConstants).process();
             }
             //TODO Enable Error record processing

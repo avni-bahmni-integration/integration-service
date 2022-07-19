@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 public enum IntegrationTask {
     AvniDispatchReceipt, AvniActivity, AvniDistribution,
+    AvniEncounters,
     GoonjDemand, GoonjDispatch,
     AvniErrorRecords, GoonjErrorRecords;
 

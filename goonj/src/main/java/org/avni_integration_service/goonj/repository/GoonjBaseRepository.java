@@ -2,6 +2,7 @@ package org.avni_integration_service.goonj.repository;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
@@ -74,7 +75,7 @@ public abstract class GoonjBaseRepository {
 
     public abstract List<String> fetchDeletionEvents();
 
-    public abstract HashMap<String, Object>[] createEvent(GeneralEncounter encounter);
+    public abstract HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter);
     public boolean wasEventCreatedSuccessfully(HashMap<String, Object>[] response) {
         return (response != null && response[0].get("errorCode") == null);
     }
