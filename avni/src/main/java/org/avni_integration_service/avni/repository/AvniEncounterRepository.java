@@ -8,6 +8,7 @@ import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -44,8 +45,18 @@ public class AvniEncounterRepository extends BaseAvniRepository {
         return responseEntity.getBody();
     }
 
-    public GeneralEncountersResponse getGeneralEncounters(Date lastModifiedDateTime) {
+    public GeneralEncountersResponse getGeneralEncounters(@NonNull Date lastModifiedDateTime) {
         Map<String, String> queryParams = Map.of(
+                "lastModifiedDateTime", FormatAndParseUtil.toISODateTimeString(lastModifiedDateTime),
+                "size", "10");
+        ResponseEntity<GeneralEncountersResponse> responseEntity = avniHttpClient.get("/api/encounters", queryParams, GeneralEncountersResponse.class);
+        return responseEntity.getBody();
+    }
+
+
+    public GeneralEncountersResponse getGeneralEncounters(@NonNull  Date lastModifiedDateTime, @NonNull String encounterType) {
+        Map<String, String> queryParams = Map.of(
+                "encounterType", encounterType,
                 "lastModifiedDateTime", FormatAndParseUtil.toISODateTimeString(lastModifiedDateTime),
                 "size", "10");
         ResponseEntity<GeneralEncountersResponse> responseEntity = avniHttpClient.get("/api/encounters", queryParams, GeneralEncountersResponse.class);

@@ -10,6 +10,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
+import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
@@ -17,8 +18,8 @@ import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
 
 @Component
 public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
@@ -28,19 +29,23 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     private final AvniGoonjErrorService avniGoonjErrorService;
     private final GoonjMappingGroup goonjMappingGroup;
     private final IntegratingEntityStatusRepository integrationEntityStatusRepository;
-    private static final Logger logger = Logger.getLogger(GeneralEncounterWorker.class);
+    private final String encounterType;
+    private final Logger logger;
     private Constants constants;
 
     public GeneralEncounterWorker(AvniEncounterRepository avniEncounterRepository, AvniSubjectRepository avniSubjectRepository,
                                   AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
                                   AvniGoonjErrorService avniGoonjErrorService,
-                                  GoonjMappingGroup goonjMappingGroup, IntegratingEntityStatusRepository integrationEntityStatusRepository) {
+                                  GoonjMappingGroup goonjMappingGroup, IntegratingEntityStatusRepository integrationEntityStatusRepository,
+                                  String encounterType, Logger logger) {
         this.avniEncounterRepository = avniEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.goonjMappingGroup = goonjMappingGroup;
         this.integrationEntityStatusRepository = integrationEntityStatusRepository;
+        this.encounterType = encounterType;
+        this.logger = logger;
     }
     public void cacheRunImmutables(Constants constants) {
         this.constants = constants;
@@ -48,7 +53,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     public void processEncounters() {
         while (true) {
             IntegratingEntityStatus status = integrationEntityStatusRepository.findByEntityType(AvniEntityType.GeneralEncounter.name());
-            GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(status.getReadUptoDateTime());
+            GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(status.getReadUptoDateTime(), encounterType);
             GeneralEncounter[] generalEncounters = response.getContent();
             int totalPages = response.getTotalPages();
             logger.info(String.format("Found %d encounters that are newer than %s", generalEncounters.length, status.getReadUptoDateTime()));
@@ -73,7 +78,6 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
 
         processGeneralEncounter(generalEncounter, false);
     }
-    @Transactional(propagation = Propagation.REQUIRES_NEW) //TODO @Vivek, should we retain this transactional.?
     public void processGeneralEncounter(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
         if (goonjMappingGroup.isGoonjEncounterInAvni(generalEncounter.getEncounterType())) {
             logger.debug(String.format("Skipping Avni general encounter %s because it was created from Goonj. ", generalEncounter.getEncounterType()));
@@ -109,6 +113,14 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
         }
     }
     protected abstract void createOrUpdateGeneralEncounter(GeneralEncounter generalEncounter, Subject subject);
+    protected void syncEncounterToGoonj(Subject subject, GeneralEncounter generalEncounter, GoonjBaseRepository repository, String encounterTypeId) {
+        HashMap<String, Object>[] response = repository.createEvent(subject, generalEncounter);
+        if(repository.wasEventCreatedSuccessfully(response)) {
+            logger.debug(String.format("%s %s synced successfully. ", encounterTypeId, response[0].get(encounterTypeId)));
+        } else {
+            logger.error(String.format("Failed to sync %s with uuid %s ", encounterTypeId, generalEncounter.getUuid()));
+        }
+    }
     private void removeIgnoredObservations(GeneralEncounter generalEncounter) {
         var observations = generalEncounter.getObservations();
         avniIgnoredConceptsRepository.getIgnoredConcepts().forEach(observations::remove);

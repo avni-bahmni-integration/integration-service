@@ -3,8 +3,10 @@ package org.avni_integration_service.goonj.job;
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.SyncDirection;
-import org.avni_integration_service.goonj.worker.avni.SyncFromAvniToGoonjWorker;
+import org.avni_integration_service.goonj.worker.avni.ActivityWorker;
+import org.avni_integration_service.goonj.worker.avni.DispatchReceiptWorker;
 import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
+import org.avni_integration_service.goonj.worker.avni.DistributionWorker;
 import org.avni_integration_service.goonj.worker.goonj.DemandWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchWorker;
 import org.avni_integration_service.integration_data.domain.Constants;
@@ -30,7 +32,13 @@ public class AvniGoonjMainJob {
     private DispatchWorker dispatchWorker;
 
     @Autowired
-    private SyncFromAvniToGoonjWorker syncFromAvniToGoonjWorker;
+    private DispatchReceiptWorker dispatchReceiptWorker;
+
+    @Autowired
+    private DistributionWorker distributionWorker;
+
+    @Autowired
+    private ActivityWorker activityWorker;
 
     @Autowired
     private ConstantsRepository constantsRepository;
@@ -76,9 +84,17 @@ public class AvniGoonjMainJob {
                  */
                 getDispatchWorker(allConstants).processDeletions();
             }
-            if (hasTask(tasks, IntegrationTask.AvniEncounters)) {
-                logger.info("Processing AvniEncounters");
-                getSyncFromAvniToGoonjWorker(allConstants).process();
+            if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
+                logger.info("Processing AvniDispatchReceipt");
+                getDispatchReceiptWorker(allConstants).process();
+            }
+            if (hasTask(tasks, IntegrationTask.AvniDistribution)) {
+                logger.info("Processing AvniDistribution");
+                getDistributionWorker(allConstants).process();
+            }
+            if (hasTask(tasks, IntegrationTask.AvniActivity)) {
+                logger.info("Processing AvniActivity");
+                getActivityWorker(allConstants).process();
             }
             //TODO Enable Error record processing
 //            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
@@ -114,9 +130,19 @@ public class AvniGoonjMainJob {
         return dispatchWorker;
     }
 
-    private SyncFromAvniToGoonjWorker getSyncFromAvniToGoonjWorker(Constants constants) {
-        syncFromAvniToGoonjWorker.cacheRunImmutables(constants);
-        return syncFromAvniToGoonjWorker;
+    private DispatchReceiptWorker getDispatchReceiptWorker(Constants constants) {
+        dispatchReceiptWorker.cacheRunImmutables(constants);
+        return dispatchReceiptWorker;
+    }
+
+    private DistributionWorker getDistributionWorker(Constants constants) {
+        distributionWorker.cacheRunImmutables(constants);
+        return distributionWorker;
+    }
+
+    private ActivityWorker getActivityWorker(Constants constants) {
+        activityWorker.cacheRunImmutables(constants);
+        return activityWorker;
     }
 
     private boolean hasTask(List<IntegrationTask> tasks, IntegrationTask task) {

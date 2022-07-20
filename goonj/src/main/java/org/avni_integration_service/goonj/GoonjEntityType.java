@@ -3,5 +3,15 @@ package org.avni_integration_service.goonj;
 import org.avni_integration_service.integration_data.domain.framework.IntegrationEntityType;
 
 public enum GoonjEntityType implements IntegrationEntityType {
-    Demand, Dispatch, Activity, DispatchReceipt, Distribution
+    Demand("Demand"), Dispatch("Dispatch"), Activity("Activity"), DispatchReceipt("Dispatch receipt"), Distribution( "Distribution");
+
+    String dbName;
+
+    GoonjEntityType(String dbName) {
+        this.dbName = dbName;
+    }
+
+    public String getDbName() {
+        return dbName;
+    }
 }
