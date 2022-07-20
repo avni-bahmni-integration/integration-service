@@ -52,7 +52,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     }
     public void processEncounters() {
         while (true) {
-            IntegratingEntityStatus status = integrationEntityStatusRepository.findByEntityType(AvniEntityType.GeneralEncounter.name());
+            IntegratingEntityStatus status = integrationEntityStatusRepository.findByEntityType(encounterType);
             GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(status.getReadUptoDateTime(), encounterType);
             GeneralEncounter[] generalEncounters = response.getContent();
             int totalPages = response.getTotalPages();
