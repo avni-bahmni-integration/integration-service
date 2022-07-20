@@ -135,7 +135,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
         }
     }
     void updateReadUptoDateTime(GeneralEncounter generalEncounter) {
-        IntegratingEntityStatus intEnt = integrationEntityStatusRepository.findByEntityType(AvniEntityType.GeneralEncounter.name());
+        IntegratingEntityStatus intEnt = integrationEntityStatusRepository.findByEntityType(encounterType);
         intEnt.setReadUptoDateTime(DateTimeUtil.convertToDate(generalEncounter.getLastModifiedDateTime().toString()));
         integrationEntityStatusRepository.save(intEnt);
     }
