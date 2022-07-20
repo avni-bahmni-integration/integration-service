@@ -17,6 +17,6 @@ public interface DispatchReceivedStatusLineItemConstants {
     String QUANTITY = "Quantity";
     String EMPTY_STRING = "";
     String RECIEVED_PARTIALLY = "recievedPartially";
-    String RECIEVED_FULLY = "recievedFully";
+    String RECIEVED_FULLY = "recievedInFull";
     String YES = "yes";
 }
