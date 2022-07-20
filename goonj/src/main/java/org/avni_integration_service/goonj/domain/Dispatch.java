@@ -2,6 +2,7 @@ package org.avni_integration_service.goonj.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.util.MapUtil;
 
@@ -11,17 +12,24 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Dispatch implements GoonjEntity {
 
+    private static final String DispatchDateField = "DispatchDate";
     private static final String DemandIdField = "DemandId";
     private static final String DispatchLineItemsField = "DispatchLineItems";
-    private static final String DispatchStatusIdField = "DispatchStatusId";
-    private static final String DispatchStatusNameField = "DispatchStatusName";
-    private static final String DispatchDateField = "DispatchDate";
-    private static final String DispatchStateField = "DispatchState";
-    private static final String DispatchDistrictField = "DispatchDistrict";
-    private static final List<String> Core_Fields = Arrays.asList(DemandIdField, DispatchStatusIdField,
-            DispatchDateField, DispatchStateField, DispatchDistrictField, DispatchLineItemsField);
-    private static final List<String> Ignored_Fields = Arrays.asList( "LastUpdatedDateTime",
-            "TargetCommunity",  "LocalDemand", "DisasterType", "Demand", "AccountId", "AccountName", "AccountCode");
+    private static final String DispatchStatusIdField = "DispatchStatusId"; //2 mappings, 1 as setExternalID and another as Dispatch Status Id concept
+    private static final List<String> Core_Fields = Arrays.asList(DispatchDateField, DemandIdField, DispatchLineItemsField);
+
+    public static final String LAST_UPDATED_DATE_TIME = "LastUpdatedDateTime";
+    public static final String TARGET_COMMUNITY = "TargetCommunity";
+    public static final String LOCAL_DEMAND = "LocalDemand";
+    public static final String DISASTER_TYPE = "DisasterType";
+    public static final String DEMAND = "Demand";
+    public static final String ACCOUNT_ID = "AccountId";
+    public static final String ACCOUNT_NAME = "AccountName";
+    public static final String ACCOUNT_CODE = "AccountCode";
+    public static final String DISPATCH_STATE = "DispatchState";
+    public static final String DISPATCH_DISTRICT = "DispatchDistrict";
+    private static final List<String> Ignored_Fields = Arrays.asList(LAST_UPDATED_DATE_TIME, TARGET_COMMUNITY,
+            LOCAL_DEMAND, DISASTER_TYPE, DEMAND, ACCOUNT_ID, ACCOUNT_NAME, ACCOUNT_CODE, DISPATCH_STATE, DISPATCH_DISTRICT);
 
     private Map<String, Object> response;
 
@@ -33,10 +41,9 @@ public class Dispatch implements GoonjEntity {
 
     public GeneralEncounter mapToAvniEncounter() {
         GeneralEncounter encounterRequest = new GeneralEncounter();
-        //TODO Use Subject External Id
         encounterRequest.setSubjectExternalID(MapUtil.getString(DemandIdField, response));
         encounterRequest.setExternalID(MapUtil.getString(DispatchStatusIdField, response));
-        encounterRequest.setEncounterType("Dispatch");
+        encounterRequest.setEncounterType(GoonjEntityType.Dispatch.getDbName());
         encounterRequest.setEncounterDateTime(DateTimeUtil.convertToDateFromGoonjDateString(MapUtil.getString(DispatchDateField, response)));
         encounterRequest.setObservations(new LinkedHashMap<>());
         encounterRequest.setVoided(false);
