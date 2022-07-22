@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 public class DispatchLineItem implements GoonjEntity {
 
     private static final List<String> Core_Fields = Arrays.asList("Unit","TypeOfMaterial","Type","Quantity",
-            "PurchaseItemCategory","OtherKitDetails","MaterialName",
+            "PurchaseItemCategory","OtherKitDetails","MaterialName", "MaterialId", "KitId",
             "KitSubType","KitName","ItemName","ItemCategory","DispatchLineItemId","ContributedItem");
 
-    private static final List<String> Ignored_Fields = Arrays.asList("LastUpdatedDateTime", "MaterialId", "KitId",
+    private static final List<String> Ignored_Fields = Arrays.asList("LastUpdatedDateTime",
             "OtherKitDetails", "ItemCategory");
 
     private final Map<String, Object> lineItemMap;

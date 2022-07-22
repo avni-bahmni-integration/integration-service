@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "SourceId",
     "RecordType",
@@ -32,21 +32,21 @@ public class DistributionLine {
     @JsonProperty("DistributedTo")
     private String distributedTo;
     @JsonProperty("Eachlineitemquantity")
-    private long eachlineitemquantity;
+    private Long eachlineitemquantity;
     @JsonProperty("Kit")
     private String kit;
     @JsonProperty("Kitlineitem")
     private String kitlineitem;
     @JsonProperty("KitQuantity")
-    private long kitQuantity;
+    private Long kitQuantity;
     @JsonProperty("MaterialInventory")
     private String materialInventory;
     @JsonProperty("MaterialName")
     private String materialName;
     @JsonProperty("Numberofdistributions")
-    private long numberofdistributions;
+    private Long numberofdistributions;
     @JsonProperty("Quantity")
-    private long quantity;
+    private Long quantity;
     @JsonProperty("Unit")
     private String unit;
 
@@ -73,7 +73,7 @@ public class DistributionLine {
      * @param kitQuantity
      * @param numberofdistributions
      */
-    public DistributionLine(String sourceId, String recordType, String contributedItem, String distributedTo, long eachlineitemquantity, String kit, String kitlineitem, long kitQuantity, String materialInventory, String materialName, long numberofdistributions, long quantity, String unit) {
+    public DistributionLine(String sourceId, String recordType, String contributedItem, String distributedTo, Long eachlineitemquantity, String kit, String kitlineitem, Long kitQuantity, String materialInventory, String materialName, Long numberofdistributions, Long quantity, String unit) {
         super();
         this.sourceId = sourceId;
         this.recordType = recordType;
@@ -131,12 +131,12 @@ public class DistributionLine {
     }
 
     @JsonProperty("Eachlineitemquantity")
-    public long getEachlineitemquantity() {
+    public Long getEachlineitemquantity() {
         return eachlineitemquantity;
     }
 
     @JsonProperty("Eachlineitemquantity")
-    public void setEachlineitemquantity(long eachlineitemquantity) {
+    public void setEachlineitemquantity(Long eachlineitemquantity) {
         this.eachlineitemquantity = eachlineitemquantity;
     }
 
@@ -161,12 +161,12 @@ public class DistributionLine {
     }
 
     @JsonProperty("KitQuantity")
-    public long getKitQuantity() {
+    public Long getKitQuantity() {
         return kitQuantity;
     }
 
     @JsonProperty("KitQuantity")
-    public void setKitQuantity(long kitQuantity) {
+    public void setKitQuantity(Long kitQuantity) {
         this.kitQuantity = kitQuantity;
     }
 
@@ -191,22 +191,22 @@ public class DistributionLine {
     }
 
     @JsonProperty("Numberofdistributions")
-    public long getNumberofdistributions() {
+    public Long getNumberofdistributions() {
         return numberofdistributions;
     }
 
     @JsonProperty("Numberofdistributions")
-    public void setNumberofdistributions(long numberofdistributions) {
+    public void setNumberofdistributions(Long numberofdistributions) {
         this.numberofdistributions = numberofdistributions;
     }
 
     @JsonProperty("Quantity")
-    public long getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
     @JsonProperty("Quantity")
-    public void setQuantity(long quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

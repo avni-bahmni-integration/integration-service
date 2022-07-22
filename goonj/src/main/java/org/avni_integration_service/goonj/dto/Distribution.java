@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "SourceId",
     "Block",
@@ -42,8 +42,6 @@ public class Distribution {
     private String dispatchStatus;
     @JsonProperty("District")
     private String district;
-    @JsonProperty("Duplicate")
-    private boolean duplicate;
     @JsonProperty("LocalityVillageName")
     private String localityVillageName;
     @JsonProperty("NameofAccount")
@@ -78,7 +76,6 @@ public class Distribution {
      * @param distributionLines
      * @param disasterType
      * @param photographInformation
-     * @param duplicate
      * @param pictureStatus
      * @param dispatchStatus
      * @param nameofAccount
@@ -92,7 +89,7 @@ public class Distribution {
      * @param state
      * @param remarks
      */
-    public Distribution(String sourceId, String block, String dateOfDistribution, String disasterType, String dispatchStatus, String district, boolean duplicate, String localityVillageName, String nameofAccount, String photographInformation, String pictureStatus, String pOCId, String remarks, String state, String typeofCommunity, String typeofInitiative, List<DistributionLine> distributionLines) {
+    public Distribution(String sourceId, String block, String dateOfDistribution, String disasterType, String dispatchStatus, String district, String localityVillageName, String nameofAccount, String photographInformation, String pictureStatus, String pOCId, String remarks, String state, String typeofCommunity, String typeofInitiative, List<DistributionLine> distributionLines) {
         super();
         this.sourceId = sourceId;
         this.block = block;
@@ -100,7 +97,6 @@ public class Distribution {
         this.disasterType = disasterType;
         this.dispatchStatus = dispatchStatus;
         this.district = district;
-        this.duplicate = duplicate;
         this.localityVillageName = localityVillageName;
         this.nameofAccount = nameofAccount;
         this.photographInformation = photographInformation;
@@ -171,16 +167,6 @@ public class Distribution {
     @JsonProperty("District")
     public void setDistrict(String district) {
         this.district = district;
-    }
-
-    @JsonProperty("Duplicate")
-    public boolean isDuplicate() {
-        return duplicate;
-    }
-
-    @JsonProperty("Duplicate")
-    public void setDuplicate(boolean duplicate) {
-        this.duplicate = duplicate;
     }
 
     @JsonProperty("LocalityVillageName")

@@ -8,6 +8,7 @@ import org.avni_integration_service.goonj.domain.DistributionConstants;
 import org.avni_integration_service.goonj.dto.Distribution;
 import org.avni_integration_service.goonj.dto.DistributionLine;
 import org.avni_integration_service.goonj.dto.DistributionRequestDTO;
+import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,10 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.avni_integration_service.goonj.domain.DispatchReceivedStatusLineItemConstants.*;
@@ -54,17 +52,18 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     }
     private Distribution createDistributionRequest(Subject subject, GeneralEncounter encounter) {
         Distribution distribution = new Distribution();
-        distribution.setBlock((String) encounter.getObservation(BLOCK));//TODO Set this info correctly
-        distribution.setDispatchStatus((String) encounter.getObservation(DISPATCH_STATUS_ID));//TODO set this or Demand and never both
-        distribution.setDistrict((String) encounter.getObservation(DISTRICT)); //TODO Set this and Block info correctly
-        distribution.setLocalityVillageName((String) encounter.getObservation(VILLAGE));
+        distribution.setDispatchStatus((String) encounter.getObservation(DISPATCH_STATUS_ID));
+        HashMap<String, String> location = (HashMap<String, String>) encounter.getObservations().get(LOCATION);
+        distribution.setLocalityVillageName((String) location.get(VILLAGE));
+        distribution.setBlock((String) location.get(BLOCK));
+        distribution.setDistrict((String) location.get(DISTRICT));
+        distribution.setState((String) location.get(STATE));
         distribution.setSourceId(encounter.getUuid());
-        distribution.setState((String) encounter.getObservation(STATE)); //TODO UUID being returned in encounters response
         distribution.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
-        distribution.setDateOfDistribution((String) encounter.getObservation(DISTRIBUTION_DATE));
+        Date distributionDate = DateTimeUtil.convertToDate((String) encounter.getObservation(DISTRIBUTION_DATE));
+        distribution.setDateOfDistribution(DateTimeUtil.formatDate(distributionDate));
         distribution.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
-        distribution.setDuplicate(false); //TODO always false.?
-        distribution.setNameofAccount((String) subject.getObservation(ACCOUNT_NAME));
+        distribution.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));
         distribution.setRemarks((String) encounter.getObservation(REMARKS));
         String photoInfo = (String) encounter.getObservation(IMAGES);
         String picStatus = StringUtils.hasText(photoInfo) ? RECEIVED : NOT_RECEIVED;
@@ -82,22 +81,23 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     }
 
     private DistributionLine createDistributionLine(Subject subject, GeneralEncounter encounter, HashMap<String, Object> entry) {
-        //TODO Check mapping and availability of DistributionLineitems values
         String typeOfMaterial = (String) entry.get(TYPE_OF_MATERIAL);
         String recordType = typeOfMaterial.equals(KIT)? KIT_DISPATCH : NON_KIT_MATERIAL_DISPATCH;
-        String sourceId = encounter.getUuid()+ DISTRIBUTION_LI_NAME_CONNECTOR + entry.get(DISPATCH_STATUS_LINE_ITEM_ID); //TODO does this work.?
-        String kitLineItem = sourceId; //TODO is this correct.?
-        String materialInventory = sourceId; //TODO is this correct.?
-        String kit = (String) entry.get(KIT_NAME); //TODO is this available.?
-        String contributedItem = (String) entry.get(CONTRIBUTED_ITEM_NAME);
-        String materialName =  (String) entry.get(PURCHASED_ITEM_NAME);
-        String distributedTo = (String) entry.get(DISTRIBUTION_DONE_TO);
-        String unit = (String) entry.get(UNIT);
-        long noOfDistributions = ((Integer) entry.get(NUMBER_OF_DISTRIBUTIONS));
-        long eliQuantity = ((Integer) entry.get(QUANTITY));
-        long kitQuantity = ((Integer) entry.get(QUANTITY));
-        long quantity = ((Integer) entry.get(QUANTITY));
-        return new DistributionLine(sourceId, recordType, contributedItem, distributedTo, eliQuantity,
-                kit, kitLineItem, kitQuantity, materialInventory, materialName, noOfDistributions, quantity, unit);
+        String sourceId = getSourceId(encounter.getUuid(), (String) entry.get(DISPATCH_STATUS_LINE_ITEM_ID));
+        String kit = typeOfMaterial.equals(KIT) && StringUtils.hasText((String) entry.get(KIT_ID))? (String) entry.get(KIT_ID) : EMPTY_STRING;
+        String materialInventory = !typeOfMaterial.equals(KIT)? (String) entry.get(MATERIAL_ID) : EMPTY_STRING;
+        String contributedItem = !typeOfMaterial.equals(KIT)?(String) entry.get(CONTRIBUTED_ITEM_NAME):EMPTY_STRING;
+        String distributedTo = !typeOfMaterial.equals(KIT)?(String) entry.get(DISTRIBUTION_DONE_TO):EMPTY_STRING;
+        String unit = !typeOfMaterial.equals(KIT) && StringUtils.hasText((String) entry.get(UNIT))?(String) entry.get(UNIT):EMPTY_STRING;
+        Long noOfDistributions = !typeOfMaterial.equals(KIT)?((Integer) entry.get(NUMBER_OF_DISTRIBUTIONS)):0l;
+        Long kitQuantity = typeOfMaterial.equals(KIT)? ((Integer) entry.get(QUANTITY)):0l;
+        Long quantity = !typeOfMaterial.equals(KIT)?((Integer) entry.get(QUANTITY)):0l;
+        return new DistributionLine(sourceId, recordType, contributedItem, distributedTo, null,
+                kit, EMPTY_STRING, kitQuantity, materialInventory, EMPTY_STRING, noOfDistributions, quantity, unit);
+    }
+
+    public String getSourceId(String encounterUUID, String dispatchLineItemId) {
+        String sourceId = encounterUUID+ DISTRIBUTION_LI_NAME_CONNECTOR +dispatchLineItemId ;
+        return sourceId;
     }
 }

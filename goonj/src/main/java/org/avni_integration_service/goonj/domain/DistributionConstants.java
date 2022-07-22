@@ -7,11 +7,12 @@ public interface DistributionConstants {
     String DISTRICT = "District";
     String VILLAGE = "Village";
     String STATE = "State";
+    String LOCATION = "Location";
     String TYPE_OF_INITIATIVE = "Type of Initiative";
     String DISPATCH_STATUS_ID = "Dispatch status id (Dispatch)";
     String DISTRIBUTION_DATE = "Distribution Date";
     String TYPE_OF_DISASTER = "Type of Disaster";
-    String ACCOUNT_NAME = "Account name";
+    String ACCOUNT_ID = "AccountId";
     String REMARKS = "Remarks";
     String IMAGES = "Images";
     String RECEIVED = "Received";

@@ -1,7 +1,7 @@
 package org.avni_integration_service.goonj.domain;
 
 public interface DispatchReceivedStatusLineItemConstants {
-    String DISPATCH_STATUS_LINE_ITEM_ID = "Dispatch Status Line Item Id";
+    String DISPATCH_STATUS_LINE_ITEM_ID = "Dispatch Line Item Id";
     String TYPE_OF_MATERIAL = "Type Of Material";
 
     String KIT = "Kit";
@@ -19,4 +19,6 @@ public interface DispatchReceivedStatusLineItemConstants {
     String RECIEVED_PARTIALLY = "recievedPartially";
     String RECIEVED_FULLY = "recievedInFull";
     String YES = "yes";
+    String KIT_ID = "Kit Id";
+    String MATERIAL_ID = "Material Id";
 }

@@ -50,6 +50,10 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
         drsDTO.setSourceId(encounter.getUuid());
         drsDTO.setDispatchStatusId((String) encounter.getObservation(DISPATCH_STATUS_ID));
         Date dispatchReceivedDate = DateTimeUtil.convertToDate((String) encounter.getObservation(DISPATCH_RECEIVED_DATE));
+        Calendar c = Calendar.getInstance();
+        c.setTime(dispatchReceivedDate);
+        c.add(Calendar.DATE, 1);
+        dispatchReceivedDate = c.getTime();
         drsDTO.setReceivedDate(DateTimeUtil.formatDate(dispatchReceivedDate));
         drsDTO.setDispatchReceivedStatusLineItems(fetchDrsLineItemsFromEncounter(encounter));
         requestDTO.setDispatchReceivedStatus(Arrays.asList(drsDTO));
@@ -65,7 +69,7 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
         String typeOfMaterial = (String) entry.get(TYPE_OF_MATERIAL);
         String itemName = typeOfMaterial.equals(CONTRIBUTED_ITEM)?
                 (String) entry.get(CONTRIBUTED_ITEM_NAME):
-                (typeOfMaterial.equals(PURCHASED_ITEM) ? (String) entry.get(PURCHASED_ITEM_NAME) : EMPTY_STRING);
+                (typeOfMaterial.equals(PURCHASED_ITEM) ? (String) entry.get(PURCHASED_ITEM_NAME) : (String) entry.get(KIT_NAME));
         String unit = (String) entry.get(UNIT);
         String receivingStatus = YES.equalsIgnoreCase((String) entry.get(QUANTITY_MATCHING)) ? RECIEVED_FULLY : RECIEVED_PARTIALLY;
         long dispatchedQuantity = ((Integer) entry.get(QUANTITY_DISPATCHED));
