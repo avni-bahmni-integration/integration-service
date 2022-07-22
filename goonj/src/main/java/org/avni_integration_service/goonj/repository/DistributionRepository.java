@@ -61,6 +61,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distribution.setSourceId(encounter.getUuid());
         distribution.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
         Date distributionDate = DateTimeUtil.convertToDate((String) encounter.getObservation(DISTRIBUTION_DATE));
+        distributionDate = DateTimeUtil.offsetTimeZone(distributionDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         distribution.setDateOfDistribution(DateTimeUtil.formatDate(distributionDate));
         distribution.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         distribution.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));

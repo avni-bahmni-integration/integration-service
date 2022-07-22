@@ -8,7 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.HashMap;
 
 @SpringBootTest(classes = {DispatchRepository.class})
@@ -19,7 +22,8 @@ public class DispatchRepositoryExternalTest extends BaseGoonjSpringTest {
 
     @Test
     public void dispatchDownload() {
-        DispatchesResponseDTO dispatchesResponse = dispatchRepository.getDispatches( LocalDateTime.of(2021, 4, 1, 0, 0));
+        Instant instant = LocalDateTime.of(2021, 4, 1, 0, 0).toInstant(ZoneOffset.UTC);
+        DispatchesResponseDTO dispatchesResponse = dispatchRepository.getDispatches(Date.from(instant));
         Assertions.assertNotNull(dispatchesResponse);
         Assertions.assertNotEquals(0, dispatchesResponse.getDispatchStatuses().length);
         HashMap<String, Object>[] dispatches = dispatchesResponse.getDispatchStatuses();

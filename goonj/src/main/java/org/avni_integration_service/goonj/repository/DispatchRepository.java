@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class DispatchRepository extends GoonjBaseRepository {
         throw new UnsupportedOperationException();
     }
 
-    public DispatchesResponseDTO getDispatches(LocalDateTime dateTime) {
+    public DispatchesResponseDTO getDispatches(Date dateTime) {
         return super.getResponse( dateTime, "DispatchService/getDispatches", DispatchesResponseDTO.class);
     }
 

@@ -44,7 +44,9 @@ public class Dispatch implements GoonjEntity {
         encounterRequest.setSubjectExternalID(MapUtil.getString(DemandIdField, response));
         encounterRequest.setExternalID(MapUtil.getString(DispatchStatusIdField, response));
         encounterRequest.setEncounterType(GoonjEntityType.Dispatch.getDbName());
-        encounterRequest.setEncounterDateTime(DateTimeUtil.convertToDateFromGoonjDateString(MapUtil.getString(DispatchDateField, response)));
+        Date dispatchDate = DateTimeUtil.convertToDateFromGoonjDateString(MapUtil.getString(DispatchDateField, response));
+        dispatchDate = DateTimeUtil.offsetTimeZone(dispatchDate, DateTimeUtil.IST, DateTimeUtil.UTC);
+        encounterRequest.setEncounterDateTime(dispatchDate);
         encounterRequest.setObservations(new LinkedHashMap<>());
         encounterRequest.setVoided(false);
         encounterRequest.set("cancelObservations", new HashMap<>());

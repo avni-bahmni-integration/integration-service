@@ -50,10 +50,7 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
         drsDTO.setSourceId(encounter.getUuid());
         drsDTO.setDispatchStatusId((String) encounter.getObservation(DISPATCH_STATUS_ID));
         Date dispatchReceivedDate = DateTimeUtil.convertToDate((String) encounter.getObservation(DISPATCH_RECEIVED_DATE));
-        Calendar c = Calendar.getInstance();
-        c.setTime(dispatchReceivedDate);
-        c.add(Calendar.DATE, 1);
-        dispatchReceivedDate = c.getTime();
+        dispatchReceivedDate = DateTimeUtil.offsetTimeZone(dispatchReceivedDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         drsDTO.setReceivedDate(DateTimeUtil.formatDate(dispatchReceivedDate));
         drsDTO.setDispatchReceivedStatusLineItems(fetchDrsLineItemsFromEncounter(encounter));
         requestDTO.setDispatchReceivedStatus(Arrays.asList(drsDTO));

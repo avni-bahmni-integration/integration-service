@@ -8,7 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @SpringBootTest(classes = {DemandRepository.class})
 @Disabled
@@ -18,7 +21,8 @@ public class DemandDTORepositoryExternalTest extends BaseGoonjSpringTest {
 
     @Test
     public void demandDownload() {
-        DemandsResponseDTO demands = demandRepositoryGoonj.getDemands(LocalDateTime.of(2021, 4, 1, 0, 0));
+        Instant instant = LocalDateTime.of(2021, 4, 1, 0, 0).toInstant(ZoneOffset.UTC);
+        DemandsResponseDTO demands = demandRepositoryGoonj.getDemands(Date.from(instant));
         Assertions.assertNotNull(demands);
         Assertions.assertNotEquals(0, demands.getDemands().length);
         Assertions.assertNotNull(demands.getDemands()[0].get("DemandId"));

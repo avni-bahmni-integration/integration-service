@@ -6,7 +6,6 @@ import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
-import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,7 +14,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +33,9 @@ public abstract class GoonjBaseRepository {
         this.entityType = entityType;
     }
 
-    protected <T> T getResponse(LocalDateTime dateTime, String resource,  Class<T> returnType) {
-        URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource, DateTimeUtil.formatDateTime(dateTime)));
+    protected <T> T getResponse(Date dateTime, String resource,  Class<T> returnType) {
+        URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource,
+                DateTimeUtil.formatDateTime(dateTime)));
         ResponseEntity<T> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, returnType);
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             return responseEntity.getBody();
@@ -49,8 +48,8 @@ public abstract class GoonjBaseRepository {
         return integratingEntityStatusRepository.findByEntityType(entityType).getReadUptoDateTime();
     }
 
-    protected LocalDateTime getCutOffDateTime() {
-        return FormatAndParseUtil.toLocalDateTime(getCutOffDate());
+    protected Date getCutOffDateTime() {
+        return getCutOffDate();
     }
 
     protected HashMap<String, Object> getSingleEntityResponse(String resource, String uuid) {
