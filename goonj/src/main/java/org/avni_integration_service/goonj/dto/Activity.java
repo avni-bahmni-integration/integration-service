@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "SourceId",
     "ActivityCategory",
@@ -62,11 +62,11 @@ public class Activity {
     @JsonProperty("Block")
     private String block;
     @JsonProperty("Breadth")
-    private long breadth;
+    private Long breadth;
     @JsonProperty("DepthHeight")
-    private long depthHeight;
+    private Long depthHeight;
     @JsonProperty("Diameter")
-    private long diameter;
+    private Long diameter;
     @JsonProperty("Demand")
     private String demand;
     @JsonProperty("Distribution")
@@ -74,35 +74,35 @@ public class Activity {
     @JsonProperty("District")
     private String district;
     @JsonProperty("Length")
-    private long length;
+    private Long length;
     @JsonProperty("LocalityVillageName")
     private String localityVillageName;
     @JsonProperty("MeasurementType")
     private String measurementType;
     @JsonProperty("NoofdaysofParticipationNJPC")
-    private long noofdaysofParticipationNJPC;
+    private Long noofdaysofParticipationNJPC;
     @JsonProperty("NoofdaysofParticipationS2S")
-    private long noofdaysofParticipationS2S;
+    private Long noofdaysofParticipationS2S;
     @JsonProperty("NoofparticipantsFemaleDFW")
-    private long noofparticipantsFemaleDFW;
+    private Long noofparticipantsFemaleDFW;
     @JsonProperty("NoofparticipantsFemaleNJPC")
-    private long noofparticipantsFemaleNJPC;
+    private Long noofparticipantsFemaleNJPC;
     @JsonProperty("NoofparticipantsFemaleS2S")
-    private long noofparticipantsFemaleS2S;
+    private Long noofparticipantsFemaleS2S;
     @JsonProperty("NoofparticipantsMaleDFW")
-    private long noofparticipantsMaleDFW;
+    private Long noofparticipantsMaleDFW;
     @JsonProperty("NoofparticipantsMaleNJPC")
-    private long noofparticipantsMaleNJPC;
+    private Long noofparticipantsMaleNJPC;
     @JsonProperty("NoofparticipantsMaleS2S")
-    private long noofparticipantsMaleS2S;
+    private Long noofparticipantsMaleS2S;
     @JsonProperty("NoofparticipantsNJPC")
-    private long noofparticipantsNJPC;
+    private Long noofparticipantsNJPC;
     @JsonProperty("NoofparticipantsS2S")
-    private long noofparticipantsS2S;
+    private Long noofparticipantsS2S;
     @JsonProperty("NoofWorkingDays")
-    private long noofWorkingDays;
+    private Long noofWorkingDays;
     @JsonProperty("Nos")
-    private long nos;
+    private Long nos;
     @JsonProperty("ObjectiveofDFWwork")
     private String objectiveofDFWwork;
     @JsonProperty("OtherObjective")
@@ -164,7 +164,7 @@ public class Activity {
      * @param otherObjective
      * @param otherSubType
      */
-    public Activity(String sourceId, String activityCategory, String activityConductedWithStudents, String activityEndDate, String activityStartDate, String activitySubType, String activityType, String block, long breadth, long depthHeight, long diameter, String demand, String distribution, String district, long length, String localityVillageName, String measurementType, long noofdaysofParticipationNJPC, long noofdaysofParticipationS2S, long noofparticipantsFemaleDFW, long noofparticipantsFemaleNJPC, long noofparticipantsFemaleS2S, long noofparticipantsMaleDFW, long noofparticipantsMaleNJPC, long noofparticipantsMaleS2S, long noofparticipantsNJPC, long noofparticipantsS2S, long noofWorkingDays, long nos, String objectiveofDFWwork, String schoolAanganwadiLearningCenterName, String state, String targetCommunity, String typeofInitiative,
+    public Activity(String sourceId, String activityCategory, String activityConductedWithStudents, String activityEndDate, String activityStartDate, String activitySubType, String activityType, String block, Long breadth, Long depthHeight, Long diameter, String demand, String distribution, String district, Long length, String localityVillageName, String measurementType, Long noofdaysofParticipationNJPC, Long noofdaysofParticipationS2S, Long noofparticipantsFemaleDFW, Long noofparticipantsFemaleNJPC, Long noofparticipantsFemaleS2S, Long noofparticipantsMaleDFW, Long noofparticipantsMaleNJPC, Long noofparticipantsMaleS2S, Long noofparticipantsNJPC, Long noofparticipantsS2S, Long noofWorkingDays, Long nos, String objectiveofDFWwork, String schoolAanganwadiLearningCenterName, String state, String targetCommunity, String typeofInitiative,
                     String otherObjective, String otherSubType) {
         super();
         this.sourceId = sourceId;
@@ -286,32 +286,32 @@ public class Activity {
     }
 
     @JsonProperty("Breadth")
-    public long getBreadth() {
+    public Long getBreadth() {
         return breadth;
     }
 
     @JsonProperty("Breadth")
-    public void setBreadth(long breadth) {
+    public void setBreadth(Long breadth) {
         this.breadth = breadth;
     }
 
     @JsonProperty("DepthHeight")
-    public long getDepthHeight() {
+    public Long getDepthHeight() {
         return depthHeight;
     }
 
     @JsonProperty("DepthHeight")
-    public void setDepthHeight(long depthHeight) {
+    public void setDepthHeight(Long depthHeight) {
         this.depthHeight = depthHeight;
     }
 
     @JsonProperty("Diameter")
-    public long getDiameter() {
+    public Long getDiameter() {
         return diameter;
     }
 
     @JsonProperty("Diameter")
-    public void setDiameter(long diameter) {
+    public void setDiameter(Long diameter) {
         this.diameter = diameter;
     }
 
@@ -346,12 +346,12 @@ public class Activity {
     }
 
     @JsonProperty("Length")
-    public long getLength() {
+    public Long getLength() {
         return length;
     }
 
     @JsonProperty("Length")
-    public void setLength(long length) {
+    public void setLength(Long length) {
         this.length = length;
     }
 
@@ -376,122 +376,122 @@ public class Activity {
     }
 
     @JsonProperty("NoofdaysofParticipationNJPC")
-    public long getNoofdaysofParticipationNJPC() {
+    public Long getNoofdaysofParticipationNJPC() {
         return noofdaysofParticipationNJPC;
     }
 
     @JsonProperty("NoofdaysofParticipationNJPC")
-    public void setNoofdaysofParticipationNJPC(long noofdaysofParticipationNJPC) {
+    public void setNoofdaysofParticipationNJPC(Long noofdaysofParticipationNJPC) {
         this.noofdaysofParticipationNJPC = noofdaysofParticipationNJPC;
     }
 
     @JsonProperty("NoofdaysofParticipationS2S")
-    public long getNoofdaysofParticipationS2S() {
+    public Long getNoofdaysofParticipationS2S() {
         return noofdaysofParticipationS2S;
     }
 
     @JsonProperty("NoofdaysofParticipationS2S")
-    public void setNoofdaysofParticipationS2S(long noofdaysofParticipationS2S) {
+    public void setNoofdaysofParticipationS2S(Long noofdaysofParticipationS2S) {
         this.noofdaysofParticipationS2S = noofdaysofParticipationS2S;
     }
 
     @JsonProperty("NoofparticipantsFemaleDFW")
-    public long getNoofparticipantsFemaleDFW() {
+    public Long getNoofparticipantsFemaleDFW() {
         return noofparticipantsFemaleDFW;
     }
 
     @JsonProperty("NoofparticipantsFemaleDFW")
-    public void setNoofparticipantsFemaleDFW(long noofparticipantsFemaleDFW) {
+    public void setNoofparticipantsFemaleDFW(Long noofparticipantsFemaleDFW) {
         this.noofparticipantsFemaleDFW = noofparticipantsFemaleDFW;
     }
 
     @JsonProperty("NoofparticipantsFemaleNJPC")
-    public long getNoofparticipantsFemaleNJPC() {
+    public Long getNoofparticipantsFemaleNJPC() {
         return noofparticipantsFemaleNJPC;
     }
 
     @JsonProperty("NoofparticipantsFemaleNJPC")
-    public void setNoofparticipantsFemaleNJPC(long noofparticipantsFemaleNJPC) {
+    public void setNoofparticipantsFemaleNJPC(Long noofparticipantsFemaleNJPC) {
         this.noofparticipantsFemaleNJPC = noofparticipantsFemaleNJPC;
     }
 
     @JsonProperty("NoofparticipantsFemaleS2S")
-    public long getNoofparticipantsFemaleS2S() {
+    public Long getNoofparticipantsFemaleS2S() {
         return noofparticipantsFemaleS2S;
     }
 
     @JsonProperty("NoofparticipantsFemaleS2S")
-    public void setNoofparticipantsFemaleS2S(long noofparticipantsFemaleS2S) {
+    public void setNoofparticipantsFemaleS2S(Long noofparticipantsFemaleS2S) {
         this.noofparticipantsFemaleS2S = noofparticipantsFemaleS2S;
     }
 
     @JsonProperty("NoofparticipantsMaleDFW")
-    public long getNoofparticipantsMaleDFW() {
+    public Long getNoofparticipantsMaleDFW() {
         return noofparticipantsMaleDFW;
     }
 
     @JsonProperty("NoofparticipantsMaleDFW")
-    public void setNoofparticipantsMaleDFW(long noofparticipantsMaleDFW) {
+    public void setNoofparticipantsMaleDFW(Long noofparticipantsMaleDFW) {
         this.noofparticipantsMaleDFW = noofparticipantsMaleDFW;
     }
 
     @JsonProperty("NoofparticipantsMaleNJPC")
-    public long getNoofparticipantsMaleNJPC() {
+    public Long getNoofparticipantsMaleNJPC() {
         return noofparticipantsMaleNJPC;
     }
 
     @JsonProperty("NoofparticipantsMaleNJPC")
-    public void setNoofparticipantsMaleNJPC(long noofparticipantsMaleNJPC) {
+    public void setNoofparticipantsMaleNJPC(Long noofparticipantsMaleNJPC) {
         this.noofparticipantsMaleNJPC = noofparticipantsMaleNJPC;
     }
 
     @JsonProperty("NoofparticipantsMaleS2S")
-    public long getNoofparticipantsMaleS2S() {
+    public Long getNoofparticipantsMaleS2S() {
         return noofparticipantsMaleS2S;
     }
 
     @JsonProperty("NoofparticipantsMaleS2S")
-    public void setNoofparticipantsMaleS2S(long noofparticipantsMaleS2S) {
+    public void setNoofparticipantsMaleS2S(Long noofparticipantsMaleS2S) {
         this.noofparticipantsMaleS2S = noofparticipantsMaleS2S;
     }
 
     @JsonProperty("NoofparticipantsNJPC")
-    public long getNoofparticipantsNJPC() {
+    public Long getNoofparticipantsNJPC() {
         return noofparticipantsNJPC;
     }
 
     @JsonProperty("NoofparticipantsNJPC")
-    public void setNoofparticipantsNJPC(long noofparticipantsNJPC) {
+    public void setNoofparticipantsNJPC(Long noofparticipantsNJPC) {
         this.noofparticipantsNJPC = noofparticipantsNJPC;
     }
 
     @JsonProperty("NoofparticipantsS2S")
-    public long getNoofparticipantsS2S() {
+    public Long getNoofparticipantsS2S() {
         return noofparticipantsS2S;
     }
 
     @JsonProperty("NoofparticipantsS2S")
-    public void setNoofparticipantsS2S(long noofparticipantsS2S) {
+    public void setNoofparticipantsS2S(Long noofparticipantsS2S) {
         this.noofparticipantsS2S = noofparticipantsS2S;
     }
 
     @JsonProperty("NoofWorkingDays")
-    public long getNoofWorkingDays() {
+    public Long getNoofWorkingDays() {
         return noofWorkingDays;
     }
 
     @JsonProperty("NoofWorkingDays")
-    public void setNoofWorkingDays(long noofWorkingDays) {
+    public void setNoofWorkingDays(Long noofWorkingDays) {
         this.noofWorkingDays = noofWorkingDays;
     }
 
     @JsonProperty("Nos")
-    public long getNos() {
+    public Long getNos() {
         return nos;
     }
 
     @JsonProperty("Nos")
-    public void setNos(long nos) {
+    public void setNos(Long nos) {
         this.nos = nos;
     }
 

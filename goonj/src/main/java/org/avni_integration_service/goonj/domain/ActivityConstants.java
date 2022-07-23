@@ -13,7 +13,8 @@ public interface ActivityConstants {
     String BLOCK = "Block";
     String BREADTH = "Breadth";
     String DIAMETER = "Diameter";
-    String DISTRIBUTION_ID = "DistributionId";
+    String ACTIVITY_S_DISTRIBUTION = "Activity's Distribution";
+    String LOCATION = "Location";
     String DISTRICT = "District";
     String LENGTH = "Length";
     String HEIGHT_DEPTH = "Height / Depth";

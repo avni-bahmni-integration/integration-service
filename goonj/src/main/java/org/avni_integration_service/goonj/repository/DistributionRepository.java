@@ -66,11 +66,11 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distribution.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         distribution.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));
         distribution.setRemarks((String) encounter.getObservation(REMARKS));
-        String photoInfo = (String) encounter.getObservation(IMAGES);
-        String picStatus = StringUtils.hasText(photoInfo) ? RECEIVED : NOT_RECEIVED;
+        ArrayList<String> photoInfo = (ArrayList<String>) encounter.getObservation(IMAGES);
+        String picStatus = photoInfo != null && photoInfo.size() > 0 ? RECEIVED : NOT_RECEIVED;
         distribution.setPictureStatus(picStatus);
         distribution.setPOCId((String) encounter.getObservation(POC_ID));
-        distribution.setPhotographInformation(photoInfo);
+        distribution.setPhotographInformation(photoInfo != null ? photoInfo.toString():null);//TODO, Change to array
         distribution.setTypeofCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
         distribution.setDistributionLines(fetchDistributionLines(subject, encounter));
         return distribution;
