@@ -5,7 +5,7 @@ import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.domain.DistributionConstants;
-import org.avni_integration_service.goonj.dto.Distribution;
+import org.avni_integration_service.goonj.dto.DistributionDTO;
 import org.avni_integration_service.goonj.dto.DistributionLine;
 import org.avni_integration_service.goonj.dto.DistributionRequestDTO;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
@@ -50,30 +50,30 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         requestDTO.setDistributions(Arrays.asList(createDistributionRequest(subject, encounter)));
         return requestDTO;
     }
-    private Distribution createDistributionRequest(Subject subject, GeneralEncounter encounter) {
-        Distribution distribution = new Distribution();
-        distribution.setDispatchStatus((String) encounter.getObservation(DISPATCH_STATUS_ID));
+    private DistributionDTO createDistributionRequest(Subject subject, GeneralEncounter encounter) {
+        DistributionDTO distributionDTO = new DistributionDTO();
+        distributionDTO.setDispatchStatus((String) encounter.getObservation(DISPATCH_STATUS_ID));
         HashMap<String, String> location = (HashMap<String, String>) encounter.getObservations().get(LOCATION);
-        distribution.setLocalityVillageName((String) location.get(VILLAGE));
-        distribution.setBlock((String) location.get(BLOCK));
-        distribution.setDistrict((String) location.get(DISTRICT));
-        distribution.setState((String) location.get(STATE));
-        distribution.setSourceId(encounter.getUuid());
-        distribution.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
+        distributionDTO.setLocalityVillageName((String) location.get(VILLAGE));
+        distributionDTO.setBlock((String) location.get(BLOCK));
+        distributionDTO.setDistrict((String) location.get(DISTRICT));
+        distributionDTO.setState((String) location.get(STATE));
+        distributionDTO.setSourceId(encounter.getUuid());
+        distributionDTO.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
         Date distributionDate = DateTimeUtil.convertToDate((String) encounter.getObservation(DISTRIBUTION_DATE));
         distributionDate = DateTimeUtil.offsetTimeZone(distributionDate, DateTimeUtil.UTC, DateTimeUtil.IST);
-        distribution.setDateOfDistribution(DateTimeUtil.formatDate(distributionDate));
-        distribution.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
-        distribution.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));
-        distribution.setRemarks((String) encounter.getObservation(REMARKS));
+        distributionDTO.setDateOfDistribution(DateTimeUtil.formatDate(distributionDate));
+        distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
+        distributionDTO.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));
+        distributionDTO.setRemarks((String) encounter.getObservation(REMARKS));
         ArrayList<String> photoInfo = (ArrayList<String>) encounter.getObservation(IMAGES);
         String picStatus = photoInfo != null && photoInfo.size() > 0 ? RECEIVED : NOT_RECEIVED;
-        distribution.setPictureStatus(picStatus);
-        distribution.setPOCId((String) encounter.getObservation(POC_ID));
-        distribution.setPhotographInformation(photoInfo != null ? photoInfo.toString():null);//TODO, Change to array
-        distribution.setTypeofCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
-        distribution.setDistributionLines(fetchDistributionLines(subject, encounter));
-        return distribution;
+        distributionDTO.setPictureStatus(picStatus);
+        distributionDTO.setPOCId((String) encounter.getObservation(POC_ID));
+        distributionDTO.setPhotographInformation(photoInfo != null ? photoInfo.toString():null);//TODO, Change to array
+        distributionDTO.setTypeofCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
+        distributionDTO.setDistributionLines(fetchDistributionLines(subject, encounter));
+        return distributionDTO;
     }
 
     private List<DistributionLine> fetchDistributionLines(Subject subject, GeneralEncounter encounter) {

@@ -28,7 +28,7 @@ import java.util.List;
     "TypeofInitiative",
     "DistributionLines"
 })
-public class Distribution {
+public class DistributionDTO {
 
     @JsonProperty("SourceId")
     private String sourceId;
@@ -67,7 +67,7 @@ public class Distribution {
      * No args constructor for use in serialization
      * 
      */
-    public Distribution() {
+    public DistributionDTO() {
     }
 
     /**
@@ -89,7 +89,7 @@ public class Distribution {
      * @param state
      * @param remarks
      */
-    public Distribution(String sourceId, String block, String dateOfDistribution, String disasterType, String dispatchStatus, String district, String localityVillageName, String nameofAccount, String photographInformation, String pictureStatus, String pOCId, String remarks, String state, String typeofCommunity, String typeofInitiative, List<DistributionLine> distributionLines) {
+    public DistributionDTO(String sourceId, String block, String dateOfDistribution, String disasterType, String dispatchStatus, String district, String localityVillageName, String nameofAccount, String photographInformation, String pictureStatus, String pOCId, String remarks, String state, String typeofCommunity, String typeofInitiative, List<DistributionLine> distributionLines) {
         super();
         this.sourceId = sourceId;
         this.block = block;

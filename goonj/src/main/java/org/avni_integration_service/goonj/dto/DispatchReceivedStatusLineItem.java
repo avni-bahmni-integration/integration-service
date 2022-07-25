@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "SourceId",
     "TypeOfMaterial",
     "ItemName",
+    "DispatchStatusLineItem",
     "Unit",
     "ReceivingStatus",
     "DispatchedQuantity",
@@ -22,14 +23,16 @@ public class DispatchReceivedStatusLineItem {
     private String typeOfMaterial;
     @JsonProperty("ItemName")
     private String itemName;
+    @JsonProperty("DispatchStatusLineItem")
+    private String dispatchStatusLineItem;
     @JsonProperty("Unit")
     private String unit;
     @JsonProperty("ReceivingStatus")
     private String receivingStatus;
     @JsonProperty("DispatchedQuantity")
-    private long dispatchedQuantity;
+    private Long dispatchedQuantity;
     @JsonProperty("ReceivedQuantity")
-    private long receivedQuantity;
+    private Long receivedQuantity;
 
     /**
      * No args constructor for use in serialization
@@ -39,20 +42,21 @@ public class DispatchReceivedStatusLineItem {
     }
 
     /**
-     * 
      * @param sourceId
-     * @param itemName
-     * @param unit
      * @param typeOfMaterial
+     * @param itemName
+     * @param dispatchStatusLineItem
+     * @param unit
      * @param receivingStatus
-     * @param receivedQuantity
      * @param dispatchedQuantity
+     * @param receivedQuantity
      */
-    public DispatchReceivedStatusLineItem(String sourceId, String typeOfMaterial, String itemName, String unit, String receivingStatus, long dispatchedQuantity, long receivedQuantity) {
+    public DispatchReceivedStatusLineItem(String sourceId, String typeOfMaterial, String itemName, String dispatchStatusLineItem, String unit, String receivingStatus, Long dispatchedQuantity, Long receivedQuantity) {
         super();
         this.sourceId = sourceId;
         this.typeOfMaterial = typeOfMaterial;
         this.itemName = itemName;
+        this.dispatchStatusLineItem = dispatchStatusLineItem;
         this.unit = unit;
         this.receivingStatus = receivingStatus;
         this.dispatchedQuantity = dispatchedQuantity;
@@ -89,6 +93,16 @@ public class DispatchReceivedStatusLineItem {
         this.itemName = itemName;
     }
 
+    @JsonProperty("DispatchStatusLineItem")
+    public String getDispatchStatusLineItem() {
+        return dispatchStatusLineItem;
+    }
+
+    @JsonProperty("DispatchStatusLineItem")
+    public void setDispatchStatusLineItem(String dispatchStatusLineItem) {
+        this.dispatchStatusLineItem = dispatchStatusLineItem;
+    }
+
     @JsonProperty("Unit")
     public String getUnit() {
         return unit;
@@ -110,22 +124,22 @@ public class DispatchReceivedStatusLineItem {
     }
 
     @JsonProperty("DispatchedQuantity")
-    public long getDispatchedQuantity() {
+    public Long getDispatchedQuantity() {
         return dispatchedQuantity;
     }
 
     @JsonProperty("DispatchedQuantity")
-    public void setDispatchedQuantity(long dispatchedQuantity) {
+    public void setDispatchedQuantity(Long dispatchedQuantity) {
         this.dispatchedQuantity = dispatchedQuantity;
     }
 
     @JsonProperty("ReceivedQuantity")
-    public long getReceivedQuantity() {
+    public Long getReceivedQuantity() {
         return receivedQuantity;
     }
 
     @JsonProperty("ReceivedQuantity")
-    public void setReceivedQuantity(long receivedQuantity) {
+    public void setReceivedQuantity(Long receivedQuantity) {
         this.receivedQuantity = receivedQuantity;
     }
 

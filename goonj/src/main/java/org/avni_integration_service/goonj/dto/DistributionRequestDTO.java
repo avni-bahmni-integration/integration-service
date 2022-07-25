@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class DistributionRequestDTO {
 
     @JsonProperty("Distributions")
-    private List<Distribution> distributions = new ArrayList<Distribution>();
+    private List<DistributionDTO> distributionDTOS = new ArrayList<DistributionDTO>();
 
     /**
      * No args constructor for use in serialization
@@ -25,21 +25,21 @@ public class DistributionRequestDTO {
 
     /**
      * 
-     * @param distributions
+     * @param distributionDTOS
      */
-    public DistributionRequestDTO(List<Distribution> distributions) {
+    public DistributionRequestDTO(List<DistributionDTO> distributionDTOS) {
         super();
-        this.distributions = distributions;
+        this.distributionDTOS = distributionDTOS;
     }
 
     @JsonProperty("Distributions")
-    public List<Distribution> getDistributions() {
-        return distributions;
+    public List<DistributionDTO> getDistributions() {
+        return distributionDTOS;
     }
 
     @JsonProperty("Distributions")
-    public void setDistributions(List<Distribution> distributions) {
-        this.distributions = distributions;
+    public void setDistributions(List<DistributionDTO> distributionDTOS) {
+        this.distributionDTOS = distributionDTOS;
     }
 
 }

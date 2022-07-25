@@ -43,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "TargetCommunity",
     "TypeofInitiative"
 })
-public class Activity {
+public class ActivityDTO {
 
     @JsonProperty("SourceId")
     private String sourceId;
@@ -122,7 +122,7 @@ public class Activity {
      * No args constructor for use in serialization
      * 
      */
-    public Activity() {
+    public ActivityDTO() {
     }
 
     /**
@@ -164,8 +164,8 @@ public class Activity {
      * @param otherObjective
      * @param otherSubType
      */
-    public Activity(String sourceId, String activityCategory, String activityConductedWithStudents, String activityEndDate, String activityStartDate, String activitySubType, String activityType, String block, Long breadth, Long depthHeight, Long diameter, String demand, String distribution, String district, Long length, String localityVillageName, String measurementType, Long noofdaysofParticipationNJPC, Long noofdaysofParticipationS2S, Long noofparticipantsFemaleDFW, Long noofparticipantsFemaleNJPC, Long noofparticipantsFemaleS2S, Long noofparticipantsMaleDFW, Long noofparticipantsMaleNJPC, Long noofparticipantsMaleS2S, Long noofparticipantsNJPC, Long noofparticipantsS2S, Long noofWorkingDays, Long nos, String objectiveofDFWwork, String schoolAanganwadiLearningCenterName, String state, String targetCommunity, String typeofInitiative,
-                    String otherObjective, String otherSubType) {
+    public ActivityDTO(String sourceId, String activityCategory, String activityConductedWithStudents, String activityEndDate, String activityStartDate, String activitySubType, String activityType, String block, Long breadth, Long depthHeight, Long diameter, String demand, String distribution, String district, Long length, String localityVillageName, String measurementType, Long noofdaysofParticipationNJPC, Long noofdaysofParticipationS2S, Long noofparticipantsFemaleDFW, Long noofparticipantsFemaleNJPC, Long noofparticipantsFemaleS2S, Long noofparticipantsMaleDFW, Long noofparticipantsMaleNJPC, Long noofparticipantsMaleS2S, Long noofparticipantsNJPC, Long noofparticipantsS2S, Long noofWorkingDays, Long nos, String objectiveofDFWwork, String schoolAanganwadiLearningCenterName, String state, String targetCommunity, String typeofInitiative,
+                       String otherObjective, String otherSubType) {
         super();
         this.sourceId = sourceId;
         this.activityCategory = activityCategory;

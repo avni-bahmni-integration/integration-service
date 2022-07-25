@@ -115,11 +115,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     protected abstract void createOrUpdateGeneralEncounter(GeneralEncounter generalEncounter, Subject subject);
     protected void syncEncounterToGoonj(Subject subject, GeneralEncounter generalEncounter, GoonjBaseRepository repository, String encounterTypeId) {
         HashMap<String, Object>[] response = repository.createEvent(subject, generalEncounter);
-        if(repository.wasEventCreatedSuccessfully(response)) {
-            logger.debug(String.format("%s %s synced successfully. ", encounterTypeId, response[0].get(encounterTypeId)));
-        } else {
-            logger.error(String.format("Failed to sync %s with uuid %s ", encounterTypeId, generalEncounter.getUuid()));
-        }
+        logger.debug(String.format("%s %s synced successfully. ", encounterTypeId, response[0].get(encounterTypeId)));
     }
     private void removeIgnoredObservations(GeneralEncounter generalEncounter) {
         var observations = generalEncounter.getObservations();

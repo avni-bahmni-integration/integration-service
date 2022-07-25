@@ -9,9 +9,9 @@ import org.avni_integration_service.integration_data.repository.IntegratingEntit
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
 import java.net.URI;
 import java.util.Date;
@@ -59,7 +59,7 @@ public abstract class GoonjBaseRepository {
         return responseEntity.getBody();
     }
 
-    protected HashMap<String, Object>[] createSingleEntity(String resource, HttpEntity<?> requestEntity) {
+    protected HashMap<String, Object>[] createSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
         URI uri = URI.create(String.format("%s/%s", goonjConfig.getAppUrl(), resource));
         ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
         ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
@@ -67,7 +67,21 @@ public abstract class GoonjBaseRepository {
             return responseEntity.getBody();
         }
         logger.error(String.format("Failed to create resource %s,  response status code is %s", resource, responseEntity.getStatusCode()));
-        throw new HttpServerErrorException(responseEntity.getStatusCode());
+        throw handleError(responseEntity, responseEntity.getStatusCode());
+    }
+
+    protected RestClientException handleError(ResponseEntity<HashMap<String, Object>[]> responseEntity, HttpStatus statusCode) {
+        HashMap<String, Object>[] responseBody = responseEntity.getBody();
+        String message = (String) responseBody[0].get("message");
+
+        switch (statusCode.series()) {
+            case CLIENT_ERROR:
+                return HttpClientErrorException.create(message, statusCode, null, responseEntity.getHeaders(), null, null);
+            case SERVER_ERROR:
+                return HttpServerErrorException.create(message, statusCode, null, responseEntity.getHeaders(), null, null);
+            default:
+                return new UnknownHttpStatusCodeException(message, statusCode.value(), null, responseEntity.getHeaders(), null, null);
+        }
     }
 
     public abstract HashMap<String, Object>[] fetchEvents();

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class ActivityRequestDTO {
 
     @JsonProperty("Activities")
-    private List<Activity> activities = new ArrayList<Activity>();
+    private List<ActivityDTO> activities = new ArrayList<ActivityDTO>();
 
     /**
      * No args constructor for use in serialization
@@ -27,18 +27,18 @@ public class ActivityRequestDTO {
      * 
      * @param activities
      */
-    public ActivityRequestDTO(List<Activity> activities) {
+    public ActivityRequestDTO(List<ActivityDTO> activities) {
         super();
         this.activities = activities;
     }
 
     @JsonProperty("Activities")
-    public List<Activity> getActivities() {
+    public List<ActivityDTO> getActivities() {
         return activities;
     }
 
     @JsonProperty("Activities")
-    public void setActivities(List<Activity> activities) {
+    public void setActivities(List<ActivityDTO> activities) {
         this.activities = activities;
     }
 
