@@ -6,6 +6,7 @@ import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.domain.Dispatch;
+import org.avni_integration_service.goonj.dto.DeletedDispatchStatusLineItem;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DispatchService;
 import org.avni_integration_service.integration_data.domain.Constants;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -70,6 +72,21 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
     @Override
     public void processDeletion(String deletedEntity) {
         processDispatchDeletion(deletedEntity);
+    }
+
+    public void processDispatchLineItemDeletion(DeletedDispatchStatusLineItem deletedEntity) {
+        processDispatchStatusLineItemDeletion(deletedEntity);
+    }
+
+    private void processDispatchStatusLineItemDeletion(DeletedDispatchStatusLineItem deletedEntity) {
+        deletedEntity.setDispatchStatusLineItemId("a19C200000014G5IAI");
+        GeneralEncounter dispatchStatus = avniEncounterRepository.getGeneralEncounter((String) deletedEntity.getDispatchStatusId());
+        List<HashMap<String, Object>> materialsDispatched = (List<HashMap<String, Object>>) dispatchStatus
+                .getObservation("Materials Dispatched");
+        if(materialsDispatched != null && materialsDispatched.size() > 0) {
+            materialsDispatched.removeIf(md -> md.get("Dispatch Line Item Id").equals(deletedEntity.getDispatchStatusLineItemId()));
+        }
+        avniEncounterRepository.update(dispatchStatus.getUuid(), dispatchStatus);
     }
 
     private void processDispatchDeletion(String deletedEntity) {

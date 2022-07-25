@@ -44,6 +44,7 @@ public class DemandRepository extends GoonjBaseRepository {
     }
 
     public HashMap<String, Object> getDemand(String uuid) {
-        return super.getSingleEntityResponse("DemandService/getDemand", uuid);
+        DemandsResponseDTO response = super.getSingleEntityResponse("DemandService/getDemand", "demandId", uuid, DemandsResponseDTO.class);
+        return response.getDemands()[0];
     }
 }

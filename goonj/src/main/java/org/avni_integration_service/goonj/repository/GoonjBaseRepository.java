@@ -7,10 +7,7 @@ import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.*;
 
 import java.net.URI;
@@ -52,11 +49,14 @@ public abstract class GoonjBaseRepository {
         return getCutOffDate();
     }
 
-    protected HashMap<String, Object> getSingleEntityResponse(String resource, String uuid) {
-        URI uri = URI.create(String.format("%s/%s?uuid=%s", goonjConfig.getAppUrl(), resource, uuid));
-        ParameterizedTypeReference<HashMap<String, Object>> responseType = new ParameterizedTypeReference<>() {};
-        ResponseEntity<HashMap<String, Object>> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, responseType);
-        return responseEntity.getBody();
+    protected <T> T getSingleEntityResponse(String resource, String filter, String uuid, Class<T> returnType) {
+        URI uri = URI.create(String.format("%s/%s?%s=%s", goonjConfig.getAppUrl(), resource, filter, uuid));
+        ResponseEntity<T> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, returnType);
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            return responseEntity.getBody();
+        }
+        logger.error(String.format("Failed to fetch data for resource %s, response status code is %s", resource, responseEntity.getStatusCode()));
+        throw getRestClientResponseException(responseEntity.getHeaders(), responseEntity.getStatusCode(), null);
     }
 
     protected HashMap<String, Object>[] createSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
@@ -73,14 +73,17 @@ public abstract class GoonjBaseRepository {
     protected RestClientException handleError(ResponseEntity<HashMap<String, Object>[]> responseEntity, HttpStatus statusCode) {
         HashMap<String, Object>[] responseBody = responseEntity.getBody();
         String message = (String) responseBody[0].get("message");
+        return getRestClientResponseException(responseEntity.getHeaders(), statusCode, message);
+    }
 
+    private RestClientResponseException getRestClientResponseException(HttpHeaders headers, HttpStatus statusCode, String message) {
         switch (statusCode.series()) {
             case CLIENT_ERROR:
-                return HttpClientErrorException.create(message, statusCode, null, responseEntity.getHeaders(), null, null);
+                return HttpClientErrorException.create(message, statusCode, null, headers, null, null);
             case SERVER_ERROR:
-                return HttpServerErrorException.create(message, statusCode, null, responseEntity.getHeaders(), null, null);
+                return HttpServerErrorException.create(message, statusCode, null, headers, null, null);
             default:
-                return new UnknownHttpStatusCodeException(message, statusCode.value(), null, responseEntity.getHeaders(), null, null);
+                return new UnknownHttpStatusCodeException(message, statusCode.value(), null, headers, null, null);
         }
     }
 

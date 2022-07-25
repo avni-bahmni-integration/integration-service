@@ -4,6 +4,7 @@ import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.dto.DeletedDispatchStatusLineItem;
 import org.avni_integration_service.goonj.dto.DispatchesResponseDTO;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,10 @@ public class DispatchRepository extends GoonjBaseRepository {
         return getDispatches(getCutOffDateTime()).getDeletedObjects().getDeletedDispatchStatuses();
     }
 
+    public List<DeletedDispatchStatusLineItem> fetchDispatchLineItemDeletionEvents() {
+        return getDispatches(getCutOffDateTime()).getDeletedObjects().getDeletedDispatchStatusLineItems();
+    }
+
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
         throw new UnsupportedOperationException();
@@ -44,6 +49,7 @@ public class DispatchRepository extends GoonjBaseRepository {
     }
 
     public HashMap<String, Object> getDispatch(String uuid) {
-        return super.getSingleEntityResponse("DispatchService/getDispatch", uuid);
+        DispatchesResponseDTO response = super.getSingleEntityResponse("DispatchService/getDispatch", "dispatchStatusId", uuid, DispatchesResponseDTO.class);
+        return response.getDispatchStatuses()[0];
     }
 }

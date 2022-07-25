@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class BaseGoonjWorker {
     private static final Logger logger = Logger.getLogger(BaseGoonjWorker.class);
 
-    private final GoonjBaseRepository crudRepository;
+    protected final GoonjBaseRepository crudRepository;
     protected final GoonjEventWorker eventWorker;
 
     public BaseGoonjWorker(GoonjBaseRepository crudRepository, GoonjEventWorker eventWorker) {

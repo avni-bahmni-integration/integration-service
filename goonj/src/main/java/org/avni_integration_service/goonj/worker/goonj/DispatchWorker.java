@@ -1,5 +1,7 @@
 package org.avni_integration_service.goonj.worker.goonj;
 
+import org.avni_integration_service.goonj.dto.DeletedDispatchStatusLineItem;
+import org.avni_integration_service.goonj.repository.DispatchRepository;
 import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +32,15 @@ public class DispatchWorker extends BaseGoonjWorker {
         List<String> deletedDispatchStatuses = fetchDeletionEvents();
         for (String deletedDS : deletedDispatchStatuses) {
             eventWorker.processDeletion(deletedDS);
+        }
+    }
+
+
+    public void processDispatchLineItemDeletions() {
+        List<DeletedDispatchStatusLineItem> deletedDispatchStatusLineItems = ((DispatchRepository)crudRepository)
+                .fetchDispatchLineItemDeletionEvents();
+        for (DeletedDispatchStatusLineItem deletedDSLI : deletedDispatchStatusLineItems) {
+            ((DispatchEventWorker)eventWorker).processDispatchLineItemDeletion(deletedDSLI);
         }
     }
 }

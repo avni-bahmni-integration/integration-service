@@ -83,6 +83,7 @@ public class AvniGoonjMainJob {
                  * Therefore, we invoke the Delete API for DispatchStatus using DispatchStatusId as externalId to mark a DispatchStatus as Voided.
                  */
                 getDispatchWorker(allConstants).processDeletions();
+                getDispatchWorker(allConstants).processDispatchLineItemDeletions();
             }
             if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
                 logger.info("Processing AvniDispatchReceipt");
