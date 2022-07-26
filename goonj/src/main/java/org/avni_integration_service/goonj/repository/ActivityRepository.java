@@ -71,7 +71,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setSourceId(encounter.getUuid());
         Object activityDistribution = encounter.getObservation(ACTIVITY_S_DISTRIBUTION);
         if(activityDistribution != null) {
-            activityDTO.setDistribution((String) activityDistribution);
+            activityDTO.setDistributionSourceId((String) activityDistribution);
         } else {
             activityDTO.setDemand(encounter.getSubjectExternalID());
         }

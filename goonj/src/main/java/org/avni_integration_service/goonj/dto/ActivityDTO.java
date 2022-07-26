@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "DepthHeight",
     "Diameter",
     "Demand",
-    "Distribution",
+    "DistributionSourceId",
     "District",
     "Length",
     "LocalityVillageName",
@@ -69,7 +69,7 @@ public class ActivityDTO {
     private Long diameter;
     @JsonProperty("Demand")
     private String demand;
-    @JsonProperty("Distribution")
+    @JsonProperty("DistributionSourceId")
     private String distribution;
     @JsonProperty("District")
     private String district;
@@ -325,13 +325,13 @@ public class ActivityDTO {
         this.demand = demand;
     }
 
-    @JsonProperty("Distribution")
-    public String getDistribution() {
+    @JsonProperty("DistributionSourceId")
+    public String getDistributionSourceId() {
         return distribution;
     }
 
-    @JsonProperty("Distribution")
-    public void setDistribution(String distribution) {
+    @JsonProperty("DistributionSourceId")
+    public void setDistributionSourceId(String distribution) {
         this.distribution = distribution;
     }
 

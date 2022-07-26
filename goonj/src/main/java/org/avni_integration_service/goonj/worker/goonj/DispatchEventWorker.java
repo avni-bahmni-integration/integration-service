@@ -42,7 +42,7 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
             updateReadUptoDateTime(event);
         } catch (Exception e) {
             logger.error(String.format("Goonj Dispatch %s could not be synced to Goonj Salesforce. ", event.get("DispatchId")), e);
-            throw e; //Throw exception, so that we stop at the failed Dispatch and not proceed to the next one
+//            throw e; //Throw exception, so that we stop at the failed Dispatch and not proceed to the next one
         }
     }
 

@@ -17,11 +17,9 @@ import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
-@Component
 public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     private final AvniEncounterRepository avniEncounterRepository;
     private final AvniSubjectRepository avniSubjectRepository;
@@ -109,7 +107,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
             return;
         } catch (Exception e) {
             logger.error(String.format("Avni encounter %s could not be synced to Goonj Salesforce. ", generalEncounter.getUuid()), e);
-            throw e; //Throw exception, so that we stop at the failed encounter and not proceed to the next one
+//            throw e; //Throw exception, so that we stop at the failed encounter and not proceed to the next one
         }
     }
     protected abstract void createOrUpdateGeneralEncounter(GeneralEncounter generalEncounter, Subject subject);

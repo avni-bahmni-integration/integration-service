@@ -40,7 +40,7 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
             updateReadUptoDateTime(event);
         } catch (Exception e) {
             logger.error(String.format("Goonj Demand %s could not be synced to Goonj Salesforce. ", event.get("DemandId")), e);
-            throw e; //Throw exception, so that we stop at the failed demand and not proceed to the next one
+//            throw e; //Throw exception, so that we stop at the failed demand and not proceed to the next one
         }
     }
 
