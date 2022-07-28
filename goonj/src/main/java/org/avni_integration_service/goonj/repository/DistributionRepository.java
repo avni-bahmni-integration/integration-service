@@ -63,7 +63,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         Date distributionDate = DateTimeUtil.convertToDate((String) encounter.getObservation(DISTRIBUTION_DATE));
         distributionDate = DateTimeUtil.offsetTimeZone(distributionDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         distributionDTO.setDateOfDistribution(DateTimeUtil.formatDate(distributionDate));
-        distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
+        distributionDTO.setDisasterType((String) encounter.getObservation(TYPE_OF_DISASTER));
         distributionDTO.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));
         distributionDTO.setRemarks((String) encounter.getObservation(REMARKS));
         ArrayList<String> photoInfo = (ArrayList<String>) encounter.getObservation(IMAGES);
@@ -73,6 +73,11 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setPhotographInformation(photoInfo != null ? photoInfo.toString():null);//TODO, Change to array
         distributionDTO.setTypeofCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
         distributionDTO.setDistributionLines(fetchDistributionLines(subject, encounter));
+        ArrayList<String> relatedActivities = (ArrayList<String>) encounter.getObservation(ACTIVITIES_DONE);
+        if(relatedActivities == null) {
+            relatedActivities = new ArrayList<>();
+        }
+        distributionDTO.setActivityIds(relatedActivities);
         return distributionDTO;
     }
 

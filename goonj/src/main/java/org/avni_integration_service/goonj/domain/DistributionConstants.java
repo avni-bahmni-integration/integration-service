@@ -25,4 +25,5 @@ public interface DistributionConstants {
     String NUMBER_OF_DISTRIBUTIONS = "Number of distributions";
     String DISTRIBUTION_DONE_TO = "Distribution done to";
     String DISTRIBUTION_LI_NAME_CONNECTOR = "#";
+    String ACTIVITIES_DONE = "Activities Done";
 }

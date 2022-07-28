@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+//@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
     "SourceId",
     "Block",
@@ -26,7 +26,8 @@ import java.util.List;
     "State",
     "TypeofCommunity",
     "TypeofInitiative",
-    "DistributionLines"
+    "DistributionLines",
+        "ActivityIds"
 })
 public class DistributionDTO {
 
@@ -63,6 +64,9 @@ public class DistributionDTO {
     @JsonProperty("DistributionLines")
     private List<DistributionLine> distributionLines = new ArrayList<DistributionLine>();
 
+    @JsonProperty("ActivityIds")
+    private List<String> activityIds = new ArrayList<String>();
+
     /**
      * No args constructor for use in serialization
      * 
@@ -89,7 +93,11 @@ public class DistributionDTO {
      * @param state
      * @param remarks
      */
-    public DistributionDTO(String sourceId, String block, String dateOfDistribution, String disasterType, String dispatchStatus, String district, String localityVillageName, String nameofAccount, String photographInformation, String pictureStatus, String pOCId, String remarks, String state, String typeofCommunity, String typeofInitiative, List<DistributionLine> distributionLines) {
+    public DistributionDTO(String sourceId, String block, String dateOfDistribution, String disasterType,
+                           String dispatchStatus, String district, String localityVillageName, String nameofAccount,
+                           String photographInformation, String pictureStatus, String pOCId, String remarks, String state,
+                           String typeofCommunity, String typeofInitiative, List<DistributionLine> distributionLines,
+                           List<String> activityIds) {
         super();
         this.sourceId = sourceId;
         this.block = block;
@@ -107,6 +115,7 @@ public class DistributionDTO {
         this.typeofCommunity = typeofCommunity;
         this.typeofInitiative = typeofInitiative;
         this.distributionLines = distributionLines;
+        this.activityIds = activityIds;
     }
 
     @JsonProperty("SourceId")
@@ -269,4 +278,13 @@ public class DistributionDTO {
         this.distributionLines = distributionLines;
     }
 
+    @JsonProperty("ActivityIds")
+    public List<String> getActivityIds() {
+        return activityIds;
+    }
+
+    @JsonProperty("ActivityIds")
+    public void setActivityIds(List<String> activityIds) {
+        this.activityIds = activityIds;
+    }
 }

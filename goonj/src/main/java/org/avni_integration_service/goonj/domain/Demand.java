@@ -13,13 +13,14 @@ public class Demand implements GoonjEntity{
     private static final String DemandDistrictField = "District";
     private static final String DemandStateField = "State";
     private static final String DemandNameField = "DemandName";
+    private static final String DemandTargetCommunity = "TargetCommunity";
     private static final String DemandIdField = "DemandId";
     private static final String DemandIsVoidedField = "IsVoided";
 
     private Map<String, Object> response;
 
     private static final List<String> Core_Fields = Arrays.asList(DemandNameField, DemandDistrictField,
-            DemandStateField, DemandIsVoidedField);
+            DemandStateField, DemandIsVoidedField, DemandTargetCommunity);
 
     public static Demand from(Map<String, Object> demandResponse) {
         Demand demand = new Demand();
@@ -35,8 +36,9 @@ public class Demand implements GoonjEntity{
         subject.setExternalId(MapUtil.getString(DemandIdField, response));
         subject.setFirstName(MapUtil.getString(DemandNameField, response));
         subject.setVoided(MapUtil.getBoolean(DemandIsVoidedField, response));
+        String[] arrayOfTCs = MapUtil.getString(DemandTargetCommunity, response).split(";");
+        subject.addObservation("Target Community", arrayOfTCs);
 //        subject.addObservation("Type of Disaster", demandDto.getTypeOfDisaster());
-//        subject.addObservation("Target Community", demandDto.getTargetCommunity());
 //        subject.addObservation("Number of people", this.getNumberOfPeople());
 //        subject.addObservation("Account Name", this.getAccountName());
 //        subject.addObservation("AccountId", this.getAccountId());

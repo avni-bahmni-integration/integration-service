@@ -23,10 +23,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.*;
 
@@ -89,7 +86,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setDistrict((String) location.get(DISTRICT));
         activityDTO.setState((String) location.get(STATE));
         /* Activity description fields */
-        activityDTO.setTargetCommunity((String) subject.getObservation(TARGET_COMMUNITY));
+        activityDTO.setTargetCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
         activityDTO.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
         mapActivityType(activityDTO, encounter);
         activityDTO.setActivitySubType((String) encounter.getObservation(ACTIVITY_SUB_TYPE));
