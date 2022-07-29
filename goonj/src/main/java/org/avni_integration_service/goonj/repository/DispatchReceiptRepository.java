@@ -4,13 +4,18 @@ import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.config.GoonjMappingDbConstants;
 import org.avni_integration_service.goonj.domain.DispatchReceiptConstants;
 import org.avni_integration_service.goonj.domain.DispatchReceivedStatusLineItemConstants;
 import org.avni_integration_service.goonj.dto.DispatchReceivedStatusLineItem;
 import org.avni_integration_service.goonj.dto.DispatchReceivedStatusRequestDTO;
 import org.avni_integration_service.goonj.dto.DispatchReceivedstatus;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
+import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
+import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
+import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -20,15 +25,24 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.MappingGroup_DispatchReceipt;
+import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.MappingType_Obs;
+
 @Component("DispatchReceiptRepository")
 public class DispatchReceiptRepository extends GoonjBaseRepository
         implements DispatchReceiptConstants, DispatchReceivedStatusLineItemConstants {
 
+    private final MappingMetaDataRepository mappingMetaDataRepository;
+    private final IntegrationSystem integrationSystem;
+
     @Autowired
     public DispatchReceiptRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                                     @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig) {
+                                     @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig,
+                                     MappingMetaDataRepository mappingMetaDataRepository, IntegrationSystemRepository integrationSystemRepository) {
         super(integratingEntityStatusRepository, restTemplate,
                 goonjConfig, GoonjEntityType.DispatchReceipt.name());
+        this.mappingMetaDataRepository = mappingMetaDataRepository;
+        this.integrationSystem = integrationSystemRepository.findByName(GoonjMappingDbConstants.IntSystemName);
     }
     @Override
     public HashMap<String, Object>[] fetchEvents() {
@@ -68,7 +82,18 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
                 (String) entry.get(CONTRIBUTED_ITEM_NAME):
                 (typeOfMaterial.equals(PURCHASED_ITEM) ? (String) entry.get(MATERIAL_NAME) : (String) entry.get(KIT_NAME));
         long receivedQuantity = ((Integer) entry.get(QUANTITY));
-        return new DispatchReceivedStatusLineItem(dispatchStatusLineItemId, typeOfMaterial, itemName,
+        return new DispatchReceivedStatusLineItem(dispatchStatusLineItemId, mapTypeOfMaterial(entry), itemName,
                 dispatchStatusLineItemId, EMPTY_STRING, EMPTY_STRING, null, receivedQuantity);
+    }
+
+    protected String mapTypeOfMaterial(HashMap<String, Object> encounter) {
+        if(encounter.get(TYPE_OF_MATERIAL) != null) {
+            MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(MappingGroup_DispatchReceipt, MappingType_Obs,
+                    (String) encounter.get(TYPE_OF_MATERIAL), integrationSystem);
+            if (answerMapping != null) {
+                return answerMapping.getIntSystemValue();
+            }
+        }
+        throw new RuntimeException("Type of Material not specified or Mapping not found for Dispatch Receipt");
     }
 }
