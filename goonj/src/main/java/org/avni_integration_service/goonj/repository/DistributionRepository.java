@@ -71,11 +71,9 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));
         distributionDTO.setRemarks((String) encounter.getObservation(REMARKS));
         String photoInfo = (String) encounter.getObservation(IMAGES);
-        String picStatus = photoInfo != null ? RECEIVED : NOT_RECEIVED;
-        distributionDTO.setPictureStatus(picStatus);
+        distributionDTO.setPictureStatus(StringUtils.hasText(photoInfo) ? RECEIVED : NOT_RECEIVED);
+        distributionDTO.setPhotographInformation(StringUtils.hasText(photoInfo) ? getPicSignedUrl(photoInfo):null);
         distributionDTO.setPOCId((String) encounter.getObservation(POC_ID));
-        String picSignedUrl = getPicSignedUrl(photoInfo);
-        distributionDTO.setPhotographInformation(picSignedUrl != null ? picSignedUrl:null);
         distributionDTO.setTypeofCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
         distributionDTO.setDistributionLines(fetchDistributionLines(subject, encounter));
         ArrayList<String> relatedActivities = (ArrayList<String>) encounter.getObservation(ACTIVITIES_DONE);
