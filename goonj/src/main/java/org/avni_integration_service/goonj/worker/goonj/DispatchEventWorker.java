@@ -41,13 +41,13 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
             processDispatch(event);
             updateReadUptoDateTime(event);
         } catch (Exception e) {
-            logger.error(String.format("Goonj Dispatch %s could not be synced to Goonj Salesforce. ", event.get("DispatchId")), e);
+            logger.error(String.format("Goonj Dispatch %s could not be synced to Goonj Salesforce. ", event.get("DispatchStatusId")), e);
 //            throw e; //Throw exception, so that we stop at the failed Dispatch and not proceed to the next one
         }
     }
 
     private void processDispatch(Map<String, Object> dispatchResponse) {
-        logger.debug(String.format("Processing dispatch: name %s || uuid %s", dispatchResponse.get("DispatchName"), dispatchResponse.get("DispatchId")));
+        logger.debug(String.format("Processing dispatch: name %s || uuid %s", dispatchResponse.get("DispatchStatusName"), dispatchResponse.get("DispatchStatusId")));
         Dispatch dispatch = Dispatch.from(dispatchResponse);
         GeneralEncounter encounter = dispatch.mapToAvniEncounter();
         dispatchService.populateObservations(encounter, dispatch);
