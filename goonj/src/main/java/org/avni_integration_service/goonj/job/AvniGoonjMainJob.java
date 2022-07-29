@@ -89,13 +89,13 @@ public class AvniGoonjMainJob {
                 logger.info("Processing AvniDispatchReceipt");
                 getDispatchReceiptWorker(allConstants).process();
             }
-            if (hasTask(tasks, IntegrationTask.AvniDistribution)) {
-                logger.info("Processing AvniDistribution");
-                getDistributionWorker(allConstants).process();
-            }
             if (hasTask(tasks, IntegrationTask.AvniActivity)) {
                 logger.info("Processing AvniActivity");
                 getActivityWorker(allConstants).process();
+            }
+            if (hasTask(tasks, IntegrationTask.AvniDistribution)) {
+                logger.info("Processing AvniDistribution");
+                getDistributionWorker(allConstants).process();
             }
             //TODO Enable Error record processing
 //            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {

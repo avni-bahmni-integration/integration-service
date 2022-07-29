@@ -92,7 +92,6 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
             return;
         }
 
-        //TODO Should we stop sync back of counters if the Goonj Demand is voided.?
         var subject = avniSubjectRepository.getSubject(generalEncounter.getSubjectId());
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
         if (subject.getVoided()) {
