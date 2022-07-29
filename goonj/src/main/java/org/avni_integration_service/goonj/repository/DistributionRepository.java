@@ -14,10 +14,8 @@ import org.avni_integration_service.integration_data.repository.IntegratingEntit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -27,6 +25,8 @@ import static org.avni_integration_service.goonj.domain.DispatchReceivedStatusLi
 
 @Component("DistributionRepository")
 public class DistributionRepository extends GoonjBaseRepository implements DistributionConstants {
+
+    public static final String WEB_MEDIA = "/web/media";
 
     @Autowired
     public DistributionRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
@@ -89,7 +89,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     private String getPicSignedUrl(String photoInfo) {
         HashMap<String, String> queryParams = new HashMap<>(1);
         queryParams.put("url", photoInfo);
-        return getResponseEntity("/media/signedUrl", queryParams, String.class);
+        return avniHttpClient.getUri(WEB_MEDIA, queryParams);
     }
 
 

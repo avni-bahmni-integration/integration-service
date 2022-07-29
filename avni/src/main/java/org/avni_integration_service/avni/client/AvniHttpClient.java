@@ -137,6 +137,15 @@ public class AvniHttpClient {
         return authenticationResultType.getIdToken();
     }
 
+    public String getUri(String url, HashMap<String, String> queryParams) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
+        for (var entry : queryParams.entrySet()) {
+            builder.queryParam(entry.getKey(), entry.getValue());
+        }
+        URI uri = builder.build().toUri();
+        return uri.toString();
+    }
+
     private String apiUrl(String url) {
         return String.format("%s%s", AVNI_API_URL, url);
     }
