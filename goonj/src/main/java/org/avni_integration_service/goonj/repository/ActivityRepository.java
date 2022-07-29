@@ -1,5 +1,6 @@
 package org.avni_integration_service.goonj.repository;
 
+import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
@@ -37,9 +38,10 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
     @Autowired
     public ActivityRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                               @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig,
-                              MappingMetaDataRepository mappingMetaDataRepository, IntegrationSystemRepository integrationSystemRepository) {
+                              MappingMetaDataRepository mappingMetaDataRepository, IntegrationSystemRepository integrationSystemRepository,
+                              AvniHttpClient avniHttpClient) {
         super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Activity.name());
+                goonjConfig, GoonjEntityType.Activity.name(), avniHttpClient);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.integrationSystem = integrationSystemRepository.findByName(GoonjMappingDbConstants.IntSystemName);
     }

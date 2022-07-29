@@ -1,5 +1,6 @@
 package org.avni_integration_service.goonj.repository;
 
+import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
@@ -19,9 +20,10 @@ import java.util.List;
 public class DemandRepository extends GoonjBaseRepository {
     @Autowired
     public DemandRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                            @Qualifier("GoonjRestTemplate")RestTemplate restTemplate, GoonjConfig goonjConfig) {
+                            @Qualifier("GoonjRestTemplate")RestTemplate restTemplate,
+                            GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
         super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Demand.name());
+                goonjConfig, GoonjEntityType.Demand.name(), avniHttpClient);
     }
 
     @Override

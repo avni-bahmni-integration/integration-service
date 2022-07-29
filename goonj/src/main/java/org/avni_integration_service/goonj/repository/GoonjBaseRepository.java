@@ -1,6 +1,7 @@
 package org.avni_integration_service.goonj.repository;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.config.GoonjConfig;
@@ -21,13 +22,27 @@ public abstract class GoonjBaseRepository {
     private final RestTemplate goonjRestTemplate;
     private final GoonjConfig goonjConfig;
     private final String entityType;
+    protected final AvniHttpClient avniHttpClient;
 
     public GoonjBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                               RestTemplate restTemplate, GoonjConfig goonjConfig, String entityType) {
+                               RestTemplate restTemplate, GoonjConfig goonjConfig, String entityType,
+                               AvniHttpClient avniHttpClient) {
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.goonjRestTemplate = restTemplate;
         this.goonjConfig = goonjConfig;
         this.entityType = entityType;
+        this.avniHttpClient = avniHttpClient;
+    }
+
+
+    protected <T> T getResponseEntity(String resource, HashMap<String, String> queryParams, Class<T> returnType) {
+        ResponseEntity<T> responseEntity = avniHttpClient.get(resource, queryParams, returnType);
+        if(responseEntity.getStatusCode().is2xxSuccessful()) {
+            return responseEntity.getBody();
+        }
+        logger.error(String.format("Failed to fetch resource %s, response status code is %s", resource, responseEntity.getStatusCode()));
+        throw new HttpServerErrorException(responseEntity.getStatusCode());
+
     }
 
     protected <T> T getResponse(Date dateTime, String resource,  Class<T> returnType) {

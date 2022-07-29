@@ -1,5 +1,6 @@
 package org.avni_integration_service.goonj.repository;
 
+import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
@@ -13,8 +14,10 @@ import org.avni_integration_service.integration_data.repository.IntegratingEntit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -27,9 +30,10 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
 
     @Autowired
     public DistributionRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                                  @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig) {
+                                  @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
+                                  GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
         super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Distribution.name());
+                goonjConfig, GoonjEntityType.Distribution.name(), avniHttpClient);
     }
     @Override
     public HashMap<String, Object>[] fetchEvents() {
@@ -66,11 +70,12 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setDisasterType((String) encounter.getObservation(TYPE_OF_DISASTER));
         distributionDTO.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));
         distributionDTO.setRemarks((String) encounter.getObservation(REMARKS));
-        ArrayList<String> photoInfo = (ArrayList<String>) encounter.getObservation(IMAGES);
-        String picStatus = photoInfo != null && photoInfo.size() > 0 ? RECEIVED : NOT_RECEIVED;
+        String photoInfo = (String) encounter.getObservation(IMAGES);
+        String picStatus = photoInfo != null ? RECEIVED : NOT_RECEIVED;
         distributionDTO.setPictureStatus(picStatus);
         distributionDTO.setPOCId((String) encounter.getObservation(POC_ID));
-        distributionDTO.setPhotographInformation(photoInfo != null ? photoInfo.toString():null);//TODO, Change to array
+        String picSignedUrl = getPicSignedUrl(photoInfo);
+        distributionDTO.setPhotographInformation(picSignedUrl != null ? picSignedUrl:null);
         distributionDTO.setTypeofCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
         distributionDTO.setDistributionLines(fetchDistributionLines(subject, encounter));
         ArrayList<String> relatedActivities = (ArrayList<String>) encounter.getObservation(ACTIVITIES_DONE);
@@ -80,6 +85,13 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setActivityIds(relatedActivities);
         return distributionDTO;
     }
+
+    private String getPicSignedUrl(String photoInfo) {
+        HashMap<String, String> queryParams = new HashMap<>(1);
+        queryParams.put("url", photoInfo);
+        return getResponseEntity("/media/signedUrl", queryParams, String.class);
+    }
+
 
     private List<DistributionLine> fetchDistributionLines(Subject subject, GeneralEncounter encounter) {
         ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) encounter.getObservations().get(MATERIALS);
