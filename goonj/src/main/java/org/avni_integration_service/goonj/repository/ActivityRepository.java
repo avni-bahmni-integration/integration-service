@@ -101,7 +101,6 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         /* Participation fields */
         Long nos = ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE))
                 + ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-        activityDTO.setNos(nos);
         activityDTO.setNoofparticipantsNJPC(nos);
         activityDTO.setNoofparticipantsS2S(nos);
         activityDTO.setNoofdaysofParticipationNJPC((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
@@ -114,6 +113,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setNoofparticipantsMaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
         activityDTO.setNoofparticipantsMaleS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
         /* Measurement fields */
+        activityDTO.setNos((encounter.getObservation(NOS)==null)?0l:(Integer) encounter.getObservation(NOS));
         activityDTO.setBreadth((encounter.getObservation(BREADTH)==null)?0l:(Integer) encounter.getObservation(BREADTH));
         activityDTO.setDiameter((encounter.getObservation(DIAMETER)==null)?0l:(Integer) encounter.getObservation(DIAMETER));
         activityDTO.setLength((encounter.getObservation(LENGTH)==null)?0l:(Integer) encounter.getObservation(LENGTH));

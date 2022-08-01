@@ -11,6 +11,7 @@ public interface ActivityConstants {
     String ACTIVITY_CATEGORY = "Activity category";
     String S_2_S_RELATED_ACTIVITY = "S2S related activity";
     String BLOCK = "Block";
+    String NOS = "Numbers";
     String BREADTH = "Breadth";
     String DIAMETER = "Diameter";
     String ACTIVITY_S_DISTRIBUTION = "Activity's Distribution";
