@@ -79,7 +79,6 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
     }
 
     private void processDispatchStatusLineItemDeletion(DeletedDispatchStatusLineItem deletedEntity) {
-        deletedEntity.setDispatchStatusLineItemId("a19C200000014G5IAI");
         GeneralEncounter dispatchStatus = avniEncounterRepository.getGeneralEncounter((String) deletedEntity.getDispatchStatusId());
         List<HashMap<String, Object>> materialsDispatched = (List<HashMap<String, Object>>) dispatchStatus
                 .getObservation("Materials Dispatched");
