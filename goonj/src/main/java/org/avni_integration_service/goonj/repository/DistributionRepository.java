@@ -81,6 +81,8 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
             relatedActivities = new ArrayList<>();
         }
         distributionDTO.setActivityIds(relatedActivities);
+        distributionDTO.setCreatedBy(encounter.getCreatedBy());
+        distributionDTO.setModifiedBy(encounter.getLastModifiedBy());
         return distributionDTO;
     }
 

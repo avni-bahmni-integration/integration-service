@@ -41,7 +41,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "SchoolAanganwadiLearningCenterName",
     "State",
     "TargetCommunity",
-    "TypeofInitiative"
+    "TypeofInitiative",
+        "CreatedBy",
+        "ModifiedBy"
 })
 public class ActivityDTO {
 
@@ -117,6 +119,10 @@ public class ActivityDTO {
     private String targetCommunity;
     @JsonProperty("TypeofInitiative")
     private String typeofInitiative;
+    @JsonProperty("CreatedBy")
+    private String createdBy;
+    @JsonProperty("ModifiedBy")
+    private String modifiedBy;
 
     /**
      * No args constructor for use in serialization
@@ -163,9 +169,11 @@ public class ActivityDTO {
      * @param noofdaysofParticipationS2S
      * @param otherObjective
      * @param otherSubType
+     * @param createdBy
+     * @param modifiedBy
      */
     public ActivityDTO(String sourceId, String activityCategory, String activityConductedWithStudents, String activityEndDate, String activityStartDate, String activitySubType, String activityType, String block, Long breadth, Long depthHeight, Long diameter, String demand, String distribution, String district, Long length, String localityVillageName, String measurementType, Long noofdaysofParticipationNJPC, Long noofdaysofParticipationS2S, Long noofparticipantsFemaleDFW, Long noofparticipantsFemaleNJPC, Long noofparticipantsFemaleS2S, Long noofparticipantsMaleDFW, Long noofparticipantsMaleNJPC, Long noofparticipantsMaleS2S, Long noofparticipantsNJPC, Long noofparticipantsS2S, Long noofWorkingDays, Long nos, String objectiveofDFWwork, String schoolAanganwadiLearningCenterName, String state, String targetCommunity, String typeofInitiative,
-                       String otherObjective, String otherSubType) {
+                       String otherObjective, String otherSubType, String createdBy, String modifiedBy) {
         super();
         this.sourceId = sourceId;
         this.activityCategory = activityCategory;
@@ -203,6 +211,8 @@ public class ActivityDTO {
         this.state = state;
         this.targetCommunity = targetCommunity;
         this.typeofInitiative = typeofInitiative;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
     }
 
     @JsonProperty("SourceId")
@@ -565,4 +575,20 @@ public class ActivityDTO {
         this.typeofInitiative = typeofInitiative;
     }
 
+    @JsonProperty("CreatedBy")
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    @JsonProperty("CreatedBy")
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    @JsonProperty("ModifiedBy")
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    @JsonProperty("ModifiedBy")
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 }

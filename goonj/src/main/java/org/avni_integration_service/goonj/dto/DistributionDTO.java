@@ -27,7 +27,9 @@ import java.util.List;
     "TypeofCommunity",
     "TypeofInitiative",
     "DistributionLines",
-        "ActivityIds"
+        "ActivityIds",
+        "CreatedBy",
+        "ModifiedBy"
 })
 public class DistributionDTO {
 
@@ -63,9 +65,12 @@ public class DistributionDTO {
     private String typeofInitiative;
     @JsonProperty("DistributionLines")
     private List<DistributionLine> distributionLines = new ArrayList<DistributionLine>();
-
     @JsonProperty("ActivityIds")
     private List<String> activityIds = new ArrayList<String>();
+    @JsonProperty("CreatedBy")
+    private String createdBy;
+    @JsonProperty("ModifiedBy")
+    private String modifiedBy;
 
     /**
      * No args constructor for use in serialization
@@ -92,12 +97,14 @@ public class DistributionDTO {
      * @param block
      * @param state
      * @param remarks
+     * @param createdBy
+     * @param modifiedBy
      */
     public DistributionDTO(String sourceId, String block, String dateOfDistribution, String disasterType,
                            String dispatchStatus, String district, String localityVillageName, String nameofAccount,
                            String photographInformation, String pictureStatus, String pOCId, String remarks, String state,
                            String typeofCommunity, String typeofInitiative, List<DistributionLine> distributionLines,
-                           List<String> activityIds) {
+                           List<String> activityIds, String createdBy, String modifiedBy) {
         super();
         this.sourceId = sourceId;
         this.block = block;
@@ -116,6 +123,8 @@ public class DistributionDTO {
         this.typeofInitiative = typeofInitiative;
         this.distributionLines = distributionLines;
         this.activityIds = activityIds;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
     }
 
     @JsonProperty("SourceId")
@@ -286,5 +295,22 @@ public class DistributionDTO {
     @JsonProperty("ActivityIds")
     public void setActivityIds(List<String> activityIds) {
         this.activityIds = activityIds;
+    }
+
+    @JsonProperty("CreatedBy")
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    @JsonProperty("CreatedBy")
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    @JsonProperty("ModifiedBy")
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    @JsonProperty("ModifiedBy")
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }

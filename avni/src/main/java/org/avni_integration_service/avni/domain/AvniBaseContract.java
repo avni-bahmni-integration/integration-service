@@ -8,7 +8,6 @@ import org.avni_integration_service.util.FormatAndParseUtil;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AvniBaseContract implements ObservationHolder {
@@ -41,6 +40,18 @@ public class AvniBaseContract implements ObservationHolder {
     @JsonIgnore
     public void setUuid(String uuid) {
         set("ID", uuid);
+    }
+
+    @JsonIgnore
+    public String getCreatedBy() {
+        Map<String, Object> audit = (Map<String, Object>) map.get("audit");
+        return (String) audit.get("Created by");
+    }
+
+    @JsonIgnore
+    public String getLastModifiedBy() {
+        Map<String, Object> audit = (Map<String, Object>) map.get("audit");
+        return (String) audit.get("Last modified by");
     }
 
     @JsonIgnore

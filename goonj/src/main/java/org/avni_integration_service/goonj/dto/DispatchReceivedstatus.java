@@ -13,7 +13,9 @@ import java.util.List;
     "SourceId",
     "DispatchStatusId",
     "ReceivedDate",
-    "DispatchReceivedStatusLineItems"
+    "DispatchReceivedStatusLineItems",
+        "CreatedBy",
+        "ModifiedBy"
 })
 public class DispatchReceivedstatus {
 
@@ -25,7 +27,10 @@ public class DispatchReceivedstatus {
     private String receivedDate;
     @JsonProperty("DispatchReceivedStatusLineItems")
     private List<DispatchReceivedStatusLineItem> dispatchReceivedStatusLineItems = new ArrayList<DispatchReceivedStatusLineItem>();
-
+    @JsonProperty("CreatedBy")
+    private String createdBy;
+    @JsonProperty("ModifiedBy")
+    private String modifiedBy;
     /**
      * No args constructor for use in serialization
      * 
@@ -39,13 +44,18 @@ public class DispatchReceivedstatus {
      * @param dispatchStatusId
      * @param dispatchReceivedStatusLineItems
      * @param receivedDate
+     * @param createdBy
+     * @param modifiedBy
      */
-    public DispatchReceivedstatus(String sourceId, String dispatchStatusId, String receivedDate, List<DispatchReceivedStatusLineItem> dispatchReceivedStatusLineItems) {
+    public DispatchReceivedstatus(String sourceId, String dispatchStatusId, String receivedDate
+            , List<DispatchReceivedStatusLineItem> dispatchReceivedStatusLineItems, String createdBy, String modifiedBy) {
         super();
         this.sourceId = sourceId;
         this.dispatchStatusId = dispatchStatusId;
         this.receivedDate = receivedDate;
         this.dispatchReceivedStatusLineItems = dispatchReceivedStatusLineItems;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
     }
 
     @JsonProperty("SourceId")
@@ -86,6 +96,23 @@ public class DispatchReceivedstatus {
     @JsonProperty("DispatchReceivedStatusLineItems")
     public void setDispatchReceivedStatusLineItems(List<DispatchReceivedStatusLineItem> dispatchReceivedStatusLineItems) {
         this.dispatchReceivedStatusLineItems = dispatchReceivedStatusLineItems;
+    }
+
+    @JsonProperty("CreatedBy")
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    @JsonProperty("CreatedBy")
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    @JsonProperty("ModifiedBy")
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    @JsonProperty("ModifiedBy")
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
 }

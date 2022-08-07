@@ -119,6 +119,8 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setLength((encounter.getObservation(LENGTH)==null)?0l:(Integer) encounter.getObservation(LENGTH));
         activityDTO.setDepthHeight((encounter.getObservation(HEIGHT_DEPTH)==null)?0l:(Integer) encounter.getObservation(HEIGHT_DEPTH));
         activityDTO.setMeasurementType((String) encounter.getObservation(MEASUREMENTS_TYPE));
+        activityDTO.setCreatedBy(encounter.getCreatedBy());
+        activityDTO.setModifiedBy(encounter.getLastModifiedBy());
         return activityDTO;
     }
 
