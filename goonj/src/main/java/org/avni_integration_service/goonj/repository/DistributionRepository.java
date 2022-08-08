@@ -107,9 +107,9 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         String contributedItem = !typeOfMaterial.equals(KIT)?(String) entry.get(CONTRIBUTED_ITEM_NAME):EMPTY_STRING;
         String distributedTo = !typeOfMaterial.equals(KIT)?(String) entry.get(DISTRIBUTION_DONE_TO):EMPTY_STRING;
         String unit = !typeOfMaterial.equals(KIT) && StringUtils.hasText((String) entry.get(UNIT))?(String) entry.get(UNIT):EMPTY_STRING;
-        Long noOfDistributions = !typeOfMaterial.equals(KIT)?((Integer) entry.get(NUMBER_OF_DISTRIBUTIONS)):0l;
-        Long kitQuantity = typeOfMaterial.equals(KIT)? ((Integer) entry.get(QUANTITY)):0l;
-        Long quantity = !typeOfMaterial.equals(KIT)?((Integer) entry.get(QUANTITY)):0l;
+        Long noOfDistributions = !typeOfMaterial.equals(KIT) && entry.get(NUMBER_OF_DISTRIBUTIONS) != null ? ((Integer) entry.get(NUMBER_OF_DISTRIBUTIONS)):0l;
+        Long kitQuantity = typeOfMaterial.equals(KIT) && entry.get(QUANTITY) != null ? ((Integer) entry.get(QUANTITY)):0l;
+        Long quantity = !typeOfMaterial.equals(KIT) && entry.get(QUANTITY) != null ? ((Integer) entry.get(QUANTITY)):0l;
         return new DistributionLine(sourceId, recordType, contributedItem, distributedTo, null,
                 kit, EMPTY_STRING, kitQuantity, materialInventory, EMPTY_STRING, noOfDistributions, quantity, unit);
     }

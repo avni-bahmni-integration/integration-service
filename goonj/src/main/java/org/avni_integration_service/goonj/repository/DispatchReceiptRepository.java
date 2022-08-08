@@ -85,7 +85,7 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
         String itemName = typeOfMaterial.equals(CONTRIBUTED_ITEM)?
                 (String) entry.get(CONTRIBUTED_ITEM_NAME):
                 (typeOfMaterial.equals(PURCHASED_ITEM) ? (String) entry.get(MATERIAL_NAME) : (String) entry.get(KIT_NAME));
-        long receivedQuantity = ((Integer) entry.get(QUANTITY));
+        long receivedQuantity = entry.get(QUANTITY) != null ? ((Integer) entry.get(QUANTITY)):0l;
         return new DispatchReceivedStatusLineItem(dispatchStatusLineItemId, mapTypeOfMaterial(entry), itemName,
                 dispatchStatusLineItemId, EMPTY_STRING, EMPTY_STRING, null, receivedQuantity);
     }
