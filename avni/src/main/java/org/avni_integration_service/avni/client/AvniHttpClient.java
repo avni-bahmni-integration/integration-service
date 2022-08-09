@@ -105,7 +105,6 @@ public class AvniHttpClient {
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
                 this.clearAuthInformation();
-                return restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE, getRequestEntity(json), returnType);
             }
             throw e;
         }
