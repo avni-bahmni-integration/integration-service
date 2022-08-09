@@ -96,11 +96,19 @@ public class AvniHttpClient {
 
     public <T> ResponseEntity<T> delete(String url,  Map<String, String> queryParams, String json, Class<T> returnType) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
-        for (var entry : queryParams.entrySet()) {
-            builder.queryParam(entry.getKey(), entry.getValue());
+        try {
+            for (var entry : queryParams.entrySet()) {
+                builder.queryParam(entry.getKey(), entry.getValue());
+            }
+            return restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE,
+                    new HttpEntity<>(getRequestEntity(json), authHeaders()), returnType);
+        } catch (HttpServerErrorException.InternalServerError e) {
+            if (e.getMessage().contains("TokenExpiredException")) {
+                this.clearAuthInformation();
+                return restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE, getRequestEntity(json), returnType);
+            }
+            throw e;
         }
-        return restTemplate.exchange(builder.build().toUri(), HttpMethod.DELETE,
-                new HttpEntity<>(getRequestEntity(json), authHeaders()), returnType);
     }
 
 
