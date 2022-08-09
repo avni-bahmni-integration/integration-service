@@ -65,7 +65,7 @@ public class GoonjConfig {
     }
 
     @Bean("GoonjRestTemplate")
-    RestTemplate restTemplate(OAuth2AuthorizedClientService clientService) {
+    RestTemplate restTemplate() {
         return new RestTemplateBuilder()
                 .interceptors((ClientHttpRequestInterceptor) (httpRequest, bytes, execution) -> {
                     httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION,
