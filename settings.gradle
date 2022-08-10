@@ -7,3 +7,5 @@ include 'integration-data'
 include 'bahmni'
 include 'util'
 include 'amrit'
+include 'power'
+

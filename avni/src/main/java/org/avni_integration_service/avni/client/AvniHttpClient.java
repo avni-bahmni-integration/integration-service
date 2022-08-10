@@ -110,15 +110,16 @@ public class AvniHttpClient {
 
     private HttpHeaders authHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("auth-token", fetchAuthToken());
+        if (!getAvniSession().getAuthWithAvni()) { //Skip Cognito Auth Token fetch in local
+            headers.add("user-name", getAvniSession().getAvniImplUser());
+        } else {
+            headers.add("auth-token", fetchAuthToken());
+        }
         headers.add("content-type", "application/json");
         return headers;
     }
 
     String fetchAuthToken() {
-        if(!getAvniSession().getAuthWithAvni()) {
-            return "";//Skip Cognito Auth Token fetch in local
-        }
         String idToken = getAvniSession().getIdToken();
         if (idToken != null) return idToken;
 
