@@ -3,6 +3,7 @@ package org.avni_integration_service.service;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.PowerEntityType;
 import org.avni_integration_service.config.PowerConfig;
+import org.avni_integration_service.dto.CallDTO;
 import org.avni_integration_service.dto.CallDetailsDTO;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.avni_integration_service.repository.ExotelRepository;
@@ -49,13 +50,23 @@ public class CallDetailsService {
         }
     }
 
+    public CallDTO fetchCallBySID(String sid) {
+        try {
+            URI uri = new URI(powerConfig.getCallDetailsAPI(sid));
+            logger.info(String.format("Fetching call details by sid %s", sid));
+            return exotelRepository.getSingleCallDetails(uri, getRequestEntity());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("error while creating call fetch uri:" + e);
+        }
+    }
+
     private URI getCallDetailsURI() {
         Date readUptoDateTime = integratingEntityStatusRepository.findByEntityType(PowerEntityType.CALL_DETAILS.getDbName()).getReadUptoDateTime();
         String fromDateQuery = URLEncoder.encode(String.format("gte:%s;", DateTimeUtil.formatDateTime(readUptoDateTime)), StandardCharsets.UTF_8);
         String toDateQuery = URLEncoder.encode(String.format("lte:%s", DateTimeUtil.formatDateTime(new Date())), StandardCharsets.UTF_8);
         try {
             return new URI(String.format("%s?DateCreated=%s&SortBy=%s&PageSize=100",
-                    powerConfig.getBulkCallDetailsAPI(),
+                    powerConfig.getCallDetailsAPI(null),
                     String.format("%s%s", fromDateQuery, toDateQuery),
                     URLEncoder.encode("DateCreated:asc", StandardCharsets.UTF_8)
             ));

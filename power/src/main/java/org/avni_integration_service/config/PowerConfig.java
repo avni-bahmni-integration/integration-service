@@ -39,8 +39,9 @@ public class PowerConfig {
         return exotelSubdomain;
     }
 
-    public String getBulkCallDetailsAPI() {
-        return String.format("https://%s/v1/Accounts/%s/Calls", this.exotelSubdomain, this.exotelAccountSID);
+    public String getCallDetailsAPI(String sid) {
+        String baseURI = String.format("https://%s/v1/Accounts/%s/Calls", this.exotelSubdomain, this.exotelAccountSID);
+        return sid == null ? baseURI : baseURI + String.format("/%s", sid);
     }
 
     @Bean("PowerRestTemplate")

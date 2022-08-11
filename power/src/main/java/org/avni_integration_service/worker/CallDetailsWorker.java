@@ -2,14 +2,16 @@ package org.avni_integration_service.worker;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.PowerEntityType;
+import org.avni_integration_service.PowerErrorType;
 import org.avni_integration_service.avni.domain.Task;
 import org.avni_integration_service.avni.repository.AvniTaskRepository;
 import org.avni_integration_service.domain.CallDetails;
-import org.avni_integration_service.domain.TaskCreationStatusHolder.TaskCreationStatus;
 import org.avni_integration_service.domain.TaskCreationStatusHolder;
+import org.avni_integration_service.domain.TaskCreationStatusHolder.TaskCreationStatus;
 import org.avni_integration_service.dto.CallDetailsDTO;
 import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
+import org.avni_integration_service.service.AvniPowerErrorService;
 import org.avni_integration_service.service.CallDetailsService;
 import org.avni_integration_service.util.DateTimeUtil;
 import org.springframework.stereotype.Component;
@@ -25,13 +27,15 @@ public class CallDetailsWorker {
     private final CallDetailsService callDetailsService;
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final AvniTaskRepository avniTaskRepository;
+    private final AvniPowerErrorService avniPowerErrorService;
 
     public CallDetailsWorker(CallDetailsService callDetailsService,
                              IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                             AvniTaskRepository avniTaskRepository) {
+                             AvniTaskRepository avniTaskRepository, AvniPowerErrorService avniPowerErrorService) {
         this.callDetailsService = callDetailsService;
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.avniTaskRepository = avniTaskRepository;
+        this.avniPowerErrorService = avniPowerErrorService;
     }
 
     public void fetchCallDetails() {
@@ -53,26 +57,41 @@ public class CallDetailsWorker {
     private List<TaskCreationStatus> processCalls(List<HashMap<String, Object>> newCalls) {
         List<TaskCreationStatus> statuses = new ArrayList<>();
         for (Map<String, Object> call : newCalls) {
-            TaskCreationStatus status = processCall(call);
+            TaskCreationStatus status = processCall(call, true);
             statuses.add(status);
         }
         return statuses;
     }
 
-    private TaskCreationStatus processCall(Map<String, Object> callResponse) {
+    public TaskCreationStatus processCall(Map<String, Object> callResponse, boolean updateSyncStatus) {
+        String sid = (String) callResponse.get("Sid");
         try {
-            logger.debug(String.format("Processing call details Sid %s", callResponse.get("Sid")));
+            logger.debug(String.format("Processing call details Sid %s", sid));
             if (isTaskExistsForCallInAvni(callResponse)) {
                 logger.debug(String.format("Skipping task creation. Task with Number %s already exists", callResponse.get("From")));
+                updateErrorRecordAndSyncStatus(callResponse, updateSyncStatus, sid);
                 return TaskCreationStatus.Skipped;
             } else {
                 createTaskForCall(callResponse);
-                updateReadUptoDateTime(callResponse);
+                updateErrorRecordAndSyncStatus(callResponse, updateSyncStatus, sid);
                 return TaskCreationStatus.Success;
             }
         } catch (Exception e) {
-            logger.error(String.format("Could not process the call details Sid %s", callResponse.get("Sid")), e);
+            logger.error(String.format("Could not process the call details Sid %s", sid), e);
+            avniPowerErrorService.errorOccurred(sid, PowerErrorType.TaskNotSaved, PowerEntityType.CALL_DETAILS);
+            updateSyncStatus(callResponse, updateSyncStatus);
             return TaskCreationStatus.Failure;
+        }
+    }
+
+    private void updateErrorRecordAndSyncStatus(Map<String, Object> callResponse, boolean updateSyncStatus, String sid) {
+        avniPowerErrorService.successfullyProcessed(sid, PowerEntityType.CALL_DETAILS);
+        updateSyncStatus(callResponse, updateSyncStatus);
+    }
+
+    private void updateSyncStatus(Map<String, Object> callResponse, boolean updateSyncStatus) {
+        if (updateSyncStatus) {
+            updateReadUptoDateTime(callResponse);
         }
     }
 

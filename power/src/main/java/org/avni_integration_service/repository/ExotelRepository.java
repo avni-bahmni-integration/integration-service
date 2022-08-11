@@ -1,6 +1,9 @@
 package org.avni_integration_service.repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.log4j.Logger;
+import org.avni_integration_service.dto.CallDTO;
 import org.avni_integration_service.dto.CallDetailsDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -28,6 +31,20 @@ public class ExotelRepository {
             return responseEntity.getBody();
         }
         logger.error(String.format("Failed to fetch data for resource Call Details, response status code is %s", responseEntity.getStatusCode()));
+        throw new HttpServerErrorException(responseEntity.getStatusCode());
+    }
+
+    public CallDTO getSingleCallDetails(URI uri, HttpEntity<?> requestEntity) {
+        ResponseEntity<String> responseEntity = powerRestTemplate.exchange(uri, HttpMethod.GET, requestEntity, String.class);
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            XmlMapper xmlMapper = new XmlMapper();
+            try {
+                return xmlMapper.readValue(responseEntity.getBody(), CallDTO.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Error while parsing the call Request : ", e);
+            }
+        }
+        logger.error(String.format("Failed to fetch data for the call, response status code is %s", responseEntity.getStatusCode()));
         throw new HttpServerErrorException(responseEntity.getStatusCode());
     }
 
