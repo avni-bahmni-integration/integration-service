@@ -1,25 +1,32 @@
 package org.avni_integration_service.avni.client;
 
-import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import java.util.HashMap;
 
-@SpringBootTest
+@SpringBootTest(classes = AvniHttpClient.class)
 @Disabled
 class AvniHttpClientExternalTest {
     @Autowired
     private AvniHttpClient avniHttpClient;
+    private AvniSession avniConnectionDetails;
+
+    @BeforeTestClass
+    public void setup() {
+        avniConnectionDetails = new AvniSession(null, null, null, true);
+        avniHttpClient.setAvniSession(avniConnectionDetails);
+    }
 
     @Test
     @Disabled
     void refreshAuthToken() {
         avniHttpClient.fetchAuthToken();
         avniHttpClient.get("/concept", HashMap.class);
-        avniHttpClient.refreshToken();
+        avniConnectionDetails.refreshToken();
         avniHttpClient.get("/concept", HashMap.class);
     }
 
@@ -27,7 +34,7 @@ class AvniHttpClientExternalTest {
     void clearAuthInformation() {
         avniHttpClient.fetchAuthToken();
         avniHttpClient.get("/concept", HashMap.class);
-        avniHttpClient.clearAuthInformation();
+        avniConnectionDetails.clearAuthInformation();
         avniHttpClient.get("/concept", HashMap.class);
     }
 }

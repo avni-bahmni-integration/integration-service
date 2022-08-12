@@ -1,12 +1,9 @@
 package org.avni_integration_service.avni.client;
 
-import com.amazonaws.services.cognitoidp.model.AuthenticationResultType;
 import org.apache.log4j.Logger;
-import org.avni_integration_service.avni.auth.AuthenticationHelper;
 import org.avni_integration_service.avni.domain.CognitoDetailsResponse;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,28 +19,29 @@ import java.util.Map;
 
 @Component
 public class AvniHttpClient {
-    @Value("${avni.api.url}")
-    private String AVNI_API_URL;
-
-    @Value("${avni.impl.username}")
-    private String AVNI_IMPL_USER;
-
-    @Value("${avni.impl.password}")
-    private String AVNI_IMPL_PASSWORD;
-
-
-    @Value("${authenticate.with.avni}")
-    private Boolean AUTH_WITH_AVNI;
-
     @Autowired
     private RestTemplate restTemplate;
 
     private static final Logger logger = Logger.getLogger(AvniHttpClient.class);
-    private AuthenticationResultType authenticationResultType;
-    private AuthenticationHelper helper;
 
-    public <T> ResponseEntity<T> get(String url, Map<String, String> queryParams, Class<T> returnType) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
+    private static ThreadLocal<AvniSession> avniSessions = new ThreadLocal<>();
+//    private AvniSession avniSession;
+
+    public void setAvniSession(AvniSession avniSession) {
+//        this.avniSession = avniSession;
+        avniSessions.set(avniSession);
+    }
+
+    AvniSession getAvniSession() {
+//        return avniSession;
+        AvniSession avniSession = avniSessions.get();
+        if (avniSession == null)
+            throw new IllegalStateException("No Avni connection available. Have you called setAvniConnectionDetails.");
+        return avniSession;
+    }
+
+    public <T> ResponseEntity<T> get(String path, Map<String, String> queryParams, Class<T> returnType) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getAvniSession().apiUrl(path));
         for (var entry : queryParams.entrySet()) {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
@@ -58,7 +56,7 @@ public class AvniHttpClient {
             return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
-                this.clearAuthInformation();
+                getAvniSession().clearAuthInformation();
                 return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
             }
             throw e;
@@ -75,19 +73,19 @@ public class AvniHttpClient {
 
     public <T, U> ResponseEntity<U> post(String url, T t, Class<U> returnType) {
         logger.info(String.format("POST: %s", url));
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getAvniSession().apiUrl(url));
         String json = ObjectJsonMapper.writeValueAsString(t);
         return getResponseEntity(returnType, builder.build().toUri(), HttpMethod.POST, json);
     }
 
     public <T, U> ResponseEntity<U> put(String url, T requestBody, Class<U> returnType) {
         logger.info(String.format("PUT: %s", url));
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getAvniSession().apiUrl(url));
         try {
             return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
-                clearAuthInformation();
+                getAvniSession().clearAuthInformation();
                 return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
             }
             throw e;
@@ -95,7 +93,7 @@ public class AvniHttpClient {
     }
 
     public <T> ResponseEntity<T> delete(String url,  Map<String, String> queryParams, String json, Class<T> returnType) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getAvniSession().apiUrl(url));
         try {
             for (var entry : queryParams.entrySet()) {
                 builder.queryParam(entry.getKey(), entry.getValue());
@@ -104,20 +102,10 @@ public class AvniHttpClient {
                     new HttpEntity<>(getRequestEntity(json), authHeaders()), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
-                this.clearAuthInformation();
+                getAvniSession().clearAuthInformation();
             }
             throw e;
         }
-    }
-
-
-    public void refreshToken() {
-        authenticationResultType = helper.refresh(authenticationResultType.getRefreshToken(), authenticationResultType.getIdToken());
-    }
-
-    //        couldn't get refresh token to work hence clearing auth information when token expires so that a new token is taken
-    public void clearAuthInformation() {
-        authenticationResultType = null;
     }
 
     private HttpHeaders authHeaders() {
@@ -127,33 +115,21 @@ public class AvniHttpClient {
         return headers;
     }
 
-    public String fetchAuthToken() {
-        if(!AUTH_WITH_AVNI) {
+    String fetchAuthToken() {
+        if(!getAvniSession().getAuthWithAvni()) {
             return "";//Skip Cognito Auth Token fetch in local
         }
-        if (authenticationResultType != null && !authenticationResultType.getIdToken().isEmpty()) {
-            return authenticationResultType.getIdToken();
-        }
+        String idToken = getAvniSession().getIdToken();
+        if (idToken != null) return idToken;
 
         RestTemplate restTemplate = new RestTemplate();
         logger.debug("Getting cognito details");
-        ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(apiUrl("/cognito-details"), CognitoDetailsResponse.class);
+        ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(getAvniSession().apiUrl("/cognito-details"), CognitoDetailsResponse.class);
         CognitoDetailsResponse cognitoDetails = response.getBody();
-        helper = new AuthenticationHelper(cognitoDetails.getPoolId(), cognitoDetails.getClientId());
-        authenticationResultType = helper.performSRPAuthentication(AVNI_IMPL_USER, AVNI_IMPL_PASSWORD);
-        return authenticationResultType.getIdToken();
+        return getAvniSession().fetchIdToken(cognitoDetails);
     }
 
     public String getUri(String url, HashMap<String, String> queryParams) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
-        for (var entry : queryParams.entrySet()) {
-            builder.queryParam(entry.getKey(), entry.getValue());
-        }
-        URI uri = builder.build().toUri();
-        return uri.toString();
-    }
-
-    private String apiUrl(String url) {
-        return String.format("%s%s", AVNI_API_URL, url);
+        return getAvniSession().getUri(url, queryParams);
     }
 }

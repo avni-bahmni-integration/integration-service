@@ -21,7 +21,6 @@ public abstract class GoonjEventWorker {
 
     abstract void process(Map<String, Object> event);
     abstract void processError(String uuid);
-    abstract void cacheRunImmutables(Constants constants);
 
     <T> void updateReadUptoDateTime(Map<String, Object> event) {
         IntegratingEntityStatus intEnt = integratingEntityStatusRepository.findByEntityType(entityType);

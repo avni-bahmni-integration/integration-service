@@ -3,6 +3,8 @@ package org.avni_integration_service.goonj.job;
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.SyncDirection;
+import org.avni_integration_service.avni.client.AvniHttpClient;
+import org.avni_integration_service.goonj.config.GoonjAvniSessionFactory;
 import org.avni_integration_service.goonj.worker.avni.ActivityWorker;
 import org.avni_integration_service.goonj.worker.avni.DispatchReceiptWorker;
 import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
@@ -42,10 +44,9 @@ public class AvniGoonjMainJob {
 
     @Autowired
     private ConstantsRepository constantsRepository;
+
     @Value("${goonj.app.tasks}")
     private String tasks;
-    @Value("${goonj.app.first.run}")
-    private boolean isFirstRun;
 
     @Autowired
     private AvniGoonjErrorRecordsWorker errorRecordsWorker;
@@ -54,48 +55,55 @@ public class AvniGoonjMainJob {
     private Bugsnag bugsnag;
 
     @Autowired
+    private AvniHttpClient avniHttpClient;
+
+    @Autowired
+    private GoonjAvniSessionFactory goonjAvniSessionFactory;
+
+    @Autowired
     private HealthCheckService healthCheckService;
 
     public void execute() {
         try {
-            logger.info("Inside  Goonj execute");
+            logger.info("Executing Goonj Main Job");
+            avniHttpClient.setAvniSession(goonjAvniSessionFactory.createSession());
+
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
-            Constants allConstants = constantsRepository.findAllConstants();
 
             if (hasTask(tasks, IntegrationTask.GoonjDemand)) {
                 logger.info("Processing GoonjDemand");
-                getDemandWorker(allConstants).process();
-                /**
-                 * We are triggering deletion tagged along with Demand creations, as the Goonj System sends
-                 * the Deleted Demands info as part of the same getDemands API, but as a separate list,
-                 * without any TimeStamp and other minimal information details required to make an Update Subject as Voided call.
-                 * Therefore, we invoke the Delete API for subject using DemandId as externalId to mark a Demand as Voided.
+                demandWorker.process();
+                /*
+                  We are triggering deletion tagged along with Demand creations, as the Goonj System sends
+                  the Deleted Demands info as part of the same getDemands API, but as a separate list,
+                  without any TimeStamp and other minimal information details required to make an Update Subject as Voided call.
+                  Therefore, we invoke the Delete API for subject using DemandId as externalId to mark a Demand as Voided.
                  */
-                getDemandWorker(allConstants).processDeletions();
+                demandWorker.processDeletions();
             }
             if (hasTask(tasks, IntegrationTask.GoonjDispatch)) {
                 logger.info("Processing GoonjDispatch");
-                getDispatchWorker(allConstants).process();
-                /**
-                 * We are triggering deletion tagged along with DispatchStatus creations, as the Goonj System sends
-                 * the Deleted DispatchStatuses info as part of the same getDispatchStatus API, but as a separate list,
-                 * without any TimeStamp and other minimal information details required to make an Update DispatchStatus as Voided call.
-                 * Therefore, we invoke the Delete API for DispatchStatus using DispatchStatusId as externalId to mark a DispatchStatus as Voided.
+                demandWorker.process();
+                /*
+                  We are triggering deletion tagged along with DispatchStatus creations, as the Goonj System sends
+                  the Deleted DispatchStatuses info as part of the same getDispatchStatus API, but as a separate list,
+                  without any TimeStamp and other minimal information details required to make an Update DispatchStatus as Voided call.
+                  Therefore, we invoke the Delete API for DispatchStatus using DispatchStatusId as externalId to mark a DispatchStatus as Voided.
                  */
-                getDispatchWorker(allConstants).processDeletions();
-                getDispatchWorker(allConstants).processDispatchLineItemDeletions();
+                demandWorker.processDeletions();
+                dispatchWorker.processDispatchLineItemDeletions();
             }
             if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
                 logger.info("Processing AvniDispatchReceipt");
-                getDispatchReceiptWorker(allConstants).process();
+                dispatchReceiptWorker.process();
             }
             if (hasTask(tasks, IntegrationTask.AvniActivity)) {
                 logger.info("Processing AvniActivity");
-                getActivityWorker(allConstants).process();
+                activityWorker.process();
             }
             if (hasTask(tasks, IntegrationTask.AvniDistribution)) {
                 logger.info("Processing AvniDistribution");
-                getDistributionWorker(allConstants).process();
+                distributionWorker.process();
             }
             //TODO Enable Error record processing
 //            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
@@ -106,12 +114,9 @@ public class AvniGoonjMainJob {
 //                logger.info("Processing GoonjErrorRecords");
 //                processErrorRecords(allConstants, SyncDirection.GoonjToAvni);
 //            }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
-        } catch (Throwable t) {
-            logger.error("Failed", t);
-            bugsnag.notify(t);
         } finally {
             healthCheckService.verify(mainJobId);
         }
@@ -119,31 +124,6 @@ public class AvniGoonjMainJob {
 
     private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) {
         errorRecordsWorker.process(syncDirection, false);
-    }
-
-    public DemandWorker getDemandWorker(Constants constants) {
-        demandWorker.cacheRunImmutables(constants);
-        return demandWorker;
-    }
-
-    public DispatchWorker getDispatchWorker(Constants constants) {
-        dispatchWorker.cacheRunImmutables(constants);
-        return dispatchWorker;
-    }
-
-    private DispatchReceiptWorker getDispatchReceiptWorker(Constants constants) {
-        dispatchReceiptWorker.cacheRunImmutables(constants);
-        return dispatchReceiptWorker;
-    }
-
-    private DistributionWorker getDistributionWorker(Constants constants) {
-        distributionWorker.cacheRunImmutables(constants);
-        return distributionWorker;
-    }
-
-    private ActivityWorker getActivityWorker(Constants constants) {
-        activityWorker.cacheRunImmutables(constants);
-        return activityWorker;
     }
 
     private boolean hasTask(List<IntegrationTask> tasks, IntegrationTask task) {

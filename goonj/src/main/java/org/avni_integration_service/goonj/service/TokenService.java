@@ -1,6 +1,7 @@
-package org.avni_integration_service.goonj.config;
+package org.avni_integration_service.goonj.service;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.domain.AuthResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,8 +23,8 @@ import java.time.Instant;
 public class TokenService {
 
     private static final Logger logger = Logger.getLogger(TokenService.class);
-    private Duration clockSkew = Duration.ofSeconds(60);
-    private Clock clock = Clock.systemUTC();
+    private final Duration clockSkew = Duration.ofSeconds(60);
+    private final Clock clock = Clock.systemUTC();
     private final GoonjConfig goonjConfig;
     private final RestTemplate restTemplate;
     private OAuth2AccessToken tokenCache;

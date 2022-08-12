@@ -35,10 +35,6 @@ public abstract class BaseGoonjWorker {
         return deletionEvents;
     }
 
-    public void cacheRunImmutables(Constants constants) {
-        eventWorker.cacheRunImmutables(constants);
-    }
-
     public abstract void process();
     public abstract void processDeletions();
 }

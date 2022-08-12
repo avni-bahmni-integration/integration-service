@@ -65,10 +65,6 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
     }
 
     @Override
-    public void cacheRunImmutables(Constants constants) {
-    }
-
-    @Override
     public void processDeletion(String deletedEntity) {
         processDemandDeletion(deletedEntity);
     }

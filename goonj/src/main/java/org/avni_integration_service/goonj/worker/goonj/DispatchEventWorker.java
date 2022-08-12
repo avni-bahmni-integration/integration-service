@@ -66,10 +66,6 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
     }
 
     @Override
-    public void cacheRunImmutables(Constants constants) {
-    }
-
-    @Override
     public void processDeletion(String deletedEntity) {
         processDispatchDeletion(deletedEntity);
     }

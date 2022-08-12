@@ -13,7 +13,7 @@ public class GoonjModuleSpringTest extends BaseGoonjSpringTest {
     private GoonjConfig config;
 
     @Test
-    public void contextLoads() {
+    public void goonjContextLoads() {
         System.out.println(config.getAppUrl());
     }
 }

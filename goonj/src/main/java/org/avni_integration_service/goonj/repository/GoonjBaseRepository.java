@@ -92,14 +92,11 @@ public abstract class GoonjBaseRepository {
     }
 
     private RestClientResponseException getRestClientResponseException(HttpHeaders headers, HttpStatus statusCode, String message) {
-        switch (statusCode.series()) {
-            case CLIENT_ERROR:
-                return HttpClientErrorException.create(message, statusCode, null, headers, null, null);
-            case SERVER_ERROR:
-                return HttpServerErrorException.create(message, statusCode, null, headers, null, null);
-            default:
-                return new UnknownHttpStatusCodeException(message, statusCode.value(), null, headers, null, null);
-        }
+        return switch (statusCode.series()) {
+            case CLIENT_ERROR -> HttpClientErrorException.create(message, statusCode, null, headers, null, null);
+            case SERVER_ERROR -> HttpServerErrorException.create(message, statusCode, null, headers, null, null);
+            default -> new UnknownHttpStatusCodeException(message, statusCode.value(), null, headers, null, null);
+        };
     }
 
     public abstract HashMap<String, Object>[] fetchEvents();

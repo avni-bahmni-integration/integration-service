@@ -45,31 +45,36 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.integrationSystem = integrationSystemRepository.findByName(GoonjMappingDbConstants.IntSystemName);
     }
+
     @Override
     public HashMap<String, Object>[] fetchEvents() {
         throw new UnsupportedOperationException();
     }
+
     @Override
     public List<String> fetchDeletionEvents() {
         throw new UnsupportedOperationException();
     }
+
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
         ActivityRequestDTO requestDTO = convertGeneralEncounterToActivityRequest(subject, encounter);
         HttpEntity<ActivityRequestDTO> request = new HttpEntity<>(requestDTO);
         return super.createSingleEntity(RESOURCE_ACTIVITY, request);
     }
+
     private ActivityRequestDTO convertGeneralEncounterToActivityRequest(Subject subject, GeneralEncounter encounter) {
         ActivityRequestDTO requestDTO = new ActivityRequestDTO();
         requestDTO.setActivities(Arrays.asList(createActivityRequest(subject, encounter)));
         return requestDTO;
     }
+
     private ActivityDTO createActivityRequest(Subject subject, GeneralEncounter encounter) {
         ActivityDTO activityDTO = new ActivityDTO();
         /* Activity ID and relationship fields */
         activityDTO.setSourceId(encounter.getUuid());
         Object activityDistribution = encounter.getObservation(ACTIVITY_S_DISTRIBUTION);
-        if(activityDistribution != null) {
+        if (activityDistribution != null) {
             activityDTO.setDistributionSourceId((String) activityDistribution);
         } else {
             activityDTO.setDemand(encounter.getSubjectExternalID());
@@ -99,25 +104,25 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setActivityConductedWithStudents((String) encounter.getObservation(S_2_S_RELATED_ACTIVITY));
         activityDTO.setSchoolAanganwadiLearningCenterName((String) encounter.getObservation(NAME_OF_ORGANIZATION_SCHOOL));
         /* Participation fields */
-        Long nos = ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE))
-                + ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
+        Long nos = ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE))
+                + ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
         activityDTO.setNoofparticipantsNJPC(nos);
         activityDTO.setNoofparticipantsS2S(nos);
-        activityDTO.setNoofdaysofParticipationNJPC((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
-        activityDTO.setNoofdaysofParticipationS2S((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
-        activityDTO.setNoofWorkingDays((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
-        activityDTO.setNoofparticipantsFemaleDFW((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
-        activityDTO.setNoofparticipantsFemaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
-        activityDTO.setNoofparticipantsFemaleS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
-        activityDTO.setNoofparticipantsMaleDFW((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-        activityDTO.setNoofparticipantsMaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-        activityDTO.setNoofparticipantsMaleS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE)==null)?0l:(Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
+        activityDTO.setNoofdaysofParticipationNJPC((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
+        activityDTO.setNoofdaysofParticipationS2S((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
+        activityDTO.setNoofWorkingDays((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
+        activityDTO.setNoofparticipantsFemaleDFW((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
+        activityDTO.setNoofparticipantsFemaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
+        activityDTO.setNoofparticipantsFemaleS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
+        activityDTO.setNoofparticipantsMaleDFW((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
+        activityDTO.setNoofparticipantsMaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
+        activityDTO.setNoofparticipantsMaleS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
         /* Measurement fields */
-        activityDTO.setNos((encounter.getObservation(NOS)==null)?0l:(Integer) encounter.getObservation(NOS));
-        activityDTO.setBreadth((encounter.getObservation(BREADTH)==null)?0l:(Integer) encounter.getObservation(BREADTH));
-        activityDTO.setDiameter((encounter.getObservation(DIAMETER)==null)?0l:(Integer) encounter.getObservation(DIAMETER));
-        activityDTO.setLength((encounter.getObservation(LENGTH)==null)?0l:(Integer) encounter.getObservation(LENGTH));
-        activityDTO.setDepthHeight((encounter.getObservation(HEIGHT_DEPTH)==null)?0l:(Integer) encounter.getObservation(HEIGHT_DEPTH));
+        activityDTO.setNos((encounter.getObservation(NOS) == null) ? 0l : (Integer) encounter.getObservation(NOS));
+        activityDTO.setBreadth((encounter.getObservation(BREADTH) == null) ? 0l : (Integer) encounter.getObservation(BREADTH));
+        activityDTO.setDiameter((encounter.getObservation(DIAMETER) == null) ? 0l : (Integer) encounter.getObservation(DIAMETER));
+        activityDTO.setLength((encounter.getObservation(LENGTH) == null) ? 0l : (Integer) encounter.getObservation(LENGTH));
+        activityDTO.setDepthHeight((encounter.getObservation(HEIGHT_DEPTH) == null) ? 0l : (Integer) encounter.getObservation(HEIGHT_DEPTH));
         activityDTO.setMeasurementType((String) encounter.getObservation(MEASUREMENTS_TYPE));
         activityDTO.setCreatedBy(encounter.getCreatedBy());
         activityDTO.setModifiedBy(encounter.getLastModifiedBy());
@@ -125,7 +130,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
     }
 
     protected void mapActivityType(ActivityDTO activityDTO, AvniBaseContract encounter) {
-        if(encounter.getObservation(ACTIVITY_TYPE) != null) {
+        if (encounter.getObservation(ACTIVITY_TYPE) != null) {
             MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(MappingGroup_Activity, MappingType_Obs,
                     (String) encounter.getObservation(ACTIVITY_TYPE), integrationSystem);
             if (answerMapping != null) {
