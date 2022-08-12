@@ -6,9 +6,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 
 @Component
 public class GoonjConfig {
@@ -66,12 +70,15 @@ public class GoonjConfig {
 
     @Bean("GoonjRestTemplate")
     RestTemplate restTemplate() {
-        return new RestTemplateBuilder()
+        RestTemplate restTemplate = new RestTemplateBuilder()
                 .interceptors((ClientHttpRequestInterceptor) (httpRequest, bytes, execution) -> {
                     httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION,
                             "Bearer " + tokenService.getRefreshedToken().getTokenValue());
+                    httpRequest.getHeaders().remove(HttpHeaders.ACCEPT);
                     return execution.execute(httpRequest, bytes);
                 })
                 .build();
+        restTemplate.setMessageConverters(Arrays.asList(new MappingJackson2HttpMessageConverter()));
+        return restTemplate;
     }
 }
