@@ -1,9 +1,9 @@
 package org.avni_integration_service.domain;
 
 import org.avni_integration_service.avni.domain.Task;
+import org.avni_integration_service.util.DateTimeUtil;
 import org.avni_integration_service.util.MapUtil;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +32,7 @@ public class CallDetails {
         task.setTaskType("Call");
         task.setTaskStatus("New");
         task.setName("Call");
-        task.setScheduledOn(new Date());
+        task.setScheduledOn(DateTimeUtil.convertToDate((String) response.get("DateCreated")));
         StateProgram stateProgram = stateToNumberMap.get(MapUtil.getString(TO, response));
         if (stateProgram != null) {
             task.addMetadata("State", stateProgram.state);

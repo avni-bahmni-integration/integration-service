@@ -2,8 +2,6 @@ package org.avni_integration_service.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 
 public class DateTimeUtil {
