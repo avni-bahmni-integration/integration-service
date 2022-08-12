@@ -83,14 +83,14 @@ public class AvniGoonjMainJob {
             }
             if (hasTask(tasks, IntegrationTask.GoonjDispatch)) {
                 logger.info("Processing GoonjDispatch");
-                demandWorker.process();
+                dispatchWorker.process();
                 /*
                   We are triggering deletion tagged along with DispatchStatus creations, as the Goonj System sends
                   the Deleted DispatchStatuses info as part of the same getDispatchStatus API, but as a separate list,
                   without any TimeStamp and other minimal information details required to make an Update DispatchStatus as Voided call.
                   Therefore, we invoke the Delete API for DispatchStatus using DispatchStatusId as externalId to mark a DispatchStatus as Voided.
                  */
-                demandWorker.processDeletions();
+                dispatchWorker.processDeletions();
                 dispatchWorker.processDispatchLineItemDeletions();
             }
             if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
