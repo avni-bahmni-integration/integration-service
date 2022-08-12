@@ -4,10 +4,10 @@ import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.avni.client.AvniHttpClient;
-import org.avni_integration_service.goonj.config.GoonjAvniSessionFactory;
+import org.avni_integration_service.avni.client.AvniSession;
+import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
 import org.avni_integration_service.goonj.worker.avni.ActivityWorker;
 import org.avni_integration_service.goonj.worker.avni.DispatchReceiptWorker;
-import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
 import org.avni_integration_service.goonj.worker.avni.DistributionWorker;
 import org.avni_integration_service.goonj.worker.goonj.DemandWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchWorker;
@@ -15,6 +15,7 @@ import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.util.HealthCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -58,15 +59,16 @@ public class AvniGoonjMainJob {
     private AvniHttpClient avniHttpClient;
 
     @Autowired
-    private GoonjAvniSessionFactory goonjAvniSessionFactory;
+    private HealthCheckService healthCheckService;
 
     @Autowired
-    private HealthCheckService healthCheckService;
+    @Qualifier("GoonjAvniSession")
+    private AvniSession goonjAvniSession;
 
     public void execute() {
         try {
             logger.info("Executing Goonj Main Job");
-            avniHttpClient.setAvniSession(goonjAvniSessionFactory.createSession());
+            avniHttpClient.setAvniSession(goonjAvniSession);
 
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
 
