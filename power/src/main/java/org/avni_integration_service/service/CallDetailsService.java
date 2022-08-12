@@ -1,7 +1,7 @@
 package org.avni_integration_service.service;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.PowerEntityType;
+import org.avni_integration_service.config.PowerEntityType;
 import org.avni_integration_service.config.PowerConfig;
 import org.avni_integration_service.dto.CallDTO;
 import org.avni_integration_service.dto.CallDetailsDTO;

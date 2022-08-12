@@ -1,10 +1,10 @@
 package org.avni_integration_service.worker;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.PowerEntityType;
-import org.avni_integration_service.PowerErrorType;
 import org.avni_integration_service.avni.domain.Task;
 import org.avni_integration_service.avni.repository.AvniTaskRepository;
+import org.avni_integration_service.config.PowerEntityType;
+import org.avni_integration_service.config.PowerErrorType;
 import org.avni_integration_service.domain.CallDetails;
 import org.avni_integration_service.domain.TaskCreationStatusHolder;
 import org.avni_integration_service.domain.TaskCreationStatusHolder.TaskCreationStatus;
@@ -13,6 +13,7 @@ import org.avni_integration_service.integration_data.domain.IntegratingEntitySta
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.avni_integration_service.service.AvniPowerErrorService;
 import org.avni_integration_service.service.CallDetailsService;
+import org.avni_integration_service.service.PowerMappingMetadataService;
 import org.avni_integration_service.util.DateTimeUtil;
 import org.springframework.stereotype.Component;
 
@@ -28,14 +29,17 @@ public class CallDetailsWorker {
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final AvniTaskRepository avniTaskRepository;
     private final AvniPowerErrorService avniPowerErrorService;
+    private final PowerMappingMetadataService powerMappingMetadataService;
 
     public CallDetailsWorker(CallDetailsService callDetailsService,
                              IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                             AvniTaskRepository avniTaskRepository, AvniPowerErrorService avniPowerErrorService) {
+                             AvniTaskRepository avniTaskRepository, AvniPowerErrorService avniPowerErrorService,
+                             PowerMappingMetadataService powerMappingMetadataService) {
         this.callDetailsService = callDetailsService;
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.avniTaskRepository = avniTaskRepository;
         this.avniPowerErrorService = avniPowerErrorService;
+        this.powerMappingMetadataService = powerMappingMetadataService;
     }
 
     public void fetchCallDetails() {
@@ -98,6 +102,7 @@ public class CallDetailsWorker {
     private void createTaskForCall(Map<String, Object> callResponse) {
         CallDetails callDetails = CallDetails.from(callResponse);
         Task task = callDetails.createCallTask();
+        powerMappingMetadataService.addStateAndProgramToTaskMetadata(task, callResponse);
         avniTaskRepository.create(task);
     }
 

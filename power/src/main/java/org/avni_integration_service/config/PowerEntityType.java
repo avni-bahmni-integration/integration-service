@@ -1,4 +1,4 @@
-package org.avni_integration_service;
+package org.avni_integration_service.config;
 
 public enum PowerEntityType {
     CALL_DETAILS("Call Details");

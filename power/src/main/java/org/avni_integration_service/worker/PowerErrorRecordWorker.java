@@ -1,8 +1,8 @@
 package org.avni_integration_service.worker;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.PowerEntityType;
-import org.avni_integration_service.PowerErrorType;
+import org.avni_integration_service.config.PowerEntityType;
+import org.avni_integration_service.config.PowerErrorType;
 import org.avni_integration_service.dto.CallDTO;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
@@ -43,7 +43,6 @@ public class PowerErrorRecordWorker {
             pageNumber++;
         } while (errorRecordPage.getNumberOfElements() == pageSize);
     }
-
 
     public void processError(String sid) {
         CallDTO callDTO = callDetailsService.fetchCallBySID(sid);

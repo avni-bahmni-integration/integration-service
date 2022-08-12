@@ -1,8 +1,8 @@
 package org.avni_integration_service.service;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.PowerEntityType;
-import org.avni_integration_service.PowerErrorType;
+import org.avni_integration_service.config.PowerEntityType;
+import org.avni_integration_service.config.PowerErrorType;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;

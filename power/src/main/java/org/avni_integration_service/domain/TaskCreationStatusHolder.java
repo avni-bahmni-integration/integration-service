@@ -20,7 +20,7 @@ public class TaskCreationStatusHolder {
     }
 
     public String getTaskCreationStatus() {
-        return String.format("Total processed %d, newly created tasks %d, skipped calls %d, failed to process %d",
+        return String.format("Finished processing the calls, Job details: Total processed: %d, newly created tasks: %d, skipped calls: %d, failed to process: %d",
                 total(),
                 countByStatus(TaskCreationStatus.Success),
                 countByStatus(TaskCreationStatus.Skipped),
