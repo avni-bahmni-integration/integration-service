@@ -6,6 +6,7 @@ import org.avni_integration_service.config.PowerErrorType;
 import org.avni_integration_service.dto.CallDTO;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
+import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.service.AvniPowerErrorService;
 import org.avni_integration_service.service.CallDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class PowerErrorRecordWorker {
     private CallDetailsService callDetailsService;
     @Autowired
     private CallDetailsWorker callDetailsWorker;
+    @Autowired
+    private IntegrationSystemRepository integrationSystemRepository;
 
     public void processErrors() {
         Page<ErrorRecord> errorRecordPage;
@@ -34,7 +37,10 @@ public class PowerErrorRecordWorker {
         do {
             logger.info(String.format("Starting page number: %d", pageNumber));
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-            errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(avniPowerErrorService.getUnprocessableErrorTypes(), pageRequest);
+            errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
+                    avniPowerErrorService.getUnprocessableErrorTypes(),
+                    integrationSystemRepository.findByName("power"),
+                    pageRequest);
             List<ErrorRecord> errorRecords = errorRecordPage.getContent();
             for (ErrorRecord errorRecord : errorRecords) {
                 processError(errorRecord.getEntityId());

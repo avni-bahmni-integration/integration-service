@@ -1,6 +1,7 @@
 package org.avni_integration_service.integration_data.repository;
 
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ public interface ErrorRecordRepository extends PagingAndSortingRepository<ErrorR
     Page<ErrorRecord> findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(List<ErrorType> errorTypes, Pageable pageable);
     Page<ErrorRecord> findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(List<ErrorType> errorTypes, Pageable pageable);
     Page<ErrorRecord> findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(List<ErrorType> errorTypes, Pageable pageable);
+    Page<ErrorRecord> findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(List<ErrorType> errorTypes, IntegrationSystem integrationSystem, Pageable pageable);
 
     List<ErrorRecord> findAllByAvniEntityTypeNotNull();
 }
