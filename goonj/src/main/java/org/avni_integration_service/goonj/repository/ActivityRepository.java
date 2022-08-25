@@ -93,7 +93,6 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setDistrict((String) location.get(DISTRICT));
         activityDTO.setState((String) location.get(STATE));
         /* Activity description fields */
-        activityDTO.setTargetCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
         activityDTO.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
         mapActivityType(activityDTO, encounter);
         activityDTO.setActivitySubType((String) encounter.getObservation(ACTIVITY_SUB_TYPE));
