@@ -2,13 +2,13 @@ package org.avni_integration_service.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 public class DateTimeUtil {
 
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
 
     public static String formatDateTime(Date localDateTime) {
         return simpleDateFormat.format(localDateTime);
@@ -22,10 +22,9 @@ public class DateTimeUtil {
         }
     }
 
-    public static Date getCurrentDateInIST() {
-        TimeZone fromTimeZone = TimeZone.getTimeZone("Asia/Kolkata");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(fromTimeZone);
-        return calendar.getTime();
+    public static String getCurrentDateStringInIST() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        return simpleDateFormat.format(new Date());
     }
 }
