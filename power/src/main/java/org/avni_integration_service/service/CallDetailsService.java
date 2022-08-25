@@ -63,7 +63,7 @@ public class CallDetailsService {
     private URI getCallDetailsURI() {
         Date readUptoDateTime = integratingEntityStatusRepository.findByEntityType(PowerEntityType.CALL_DETAILS.getDbName()).getReadUptoDateTime();
         String fromDateQuery = URLEncoder.encode(String.format("gte:%s;", DateTimeUtil.formatDateTime(readUptoDateTime)), StandardCharsets.UTF_8);
-        String toDateQuery = URLEncoder.encode(String.format("lte:%s", DateTimeUtil.formatDateTime(new Date())), StandardCharsets.UTF_8);
+        String toDateQuery = URLEncoder.encode(String.format("lte:%s", DateTimeUtil.formatDateTime(DateTimeUtil.getCurrentDateInIST())), StandardCharsets.UTF_8);
         try {
             return new URI(String.format("%s?DateCreated=%s&SortBy=%s&PageSize=100",
                     powerConfig.getCallDetailsAPI(null),
