@@ -14,10 +14,10 @@ import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
-import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
@@ -48,10 +48,12 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     public void processEncounters() {
         while (true) {
             IntegratingEntityStatus status = integrationEntityStatusRepository.findByEntityType(encounterType);
-            GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(status.getReadUptoDateTime(), encounterType);
+            Date readUptoDateTime = status.getReadUptoDateTime();
+            readUptoDateTime = new Date(readUptoDateTime.toInstant().plusSeconds(1).toEpochMilli());
+            GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(readUptoDateTime, encounterType);
             GeneralEncounter[] generalEncounters = response.getContent();
             int totalPages = response.getTotalPages();
-            logger.info(String.format("Found %d encounters that are newer than %s", generalEncounters.length, status.getReadUptoDateTime()));
+            logger.info(String.format("Found %d encounters that are newer than %s", generalEncounters.length, readUptoDateTime));
             if (generalEncounters.length == 0) break;
             for (GeneralEncounter generalEncounter : generalEncounters) {
                 processGeneralEncounter(generalEncounter, true);
