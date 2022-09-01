@@ -61,7 +61,7 @@ public class AvniGoonjErrorService {
     }
 
     private ErrorType getErrorType(GoonjErrorType goonjErrorType) {
-        return errorTypeRepository.findByName(goonjErrorType.name());
+        return errorTypeRepository.findByNameAndIntegrationSystem(goonjErrorType.name(), integrationSystemRepository.findByName("Goonj"));
     }
 
     public boolean hasError(String entityId, GoonjEntityType goonjEntityType) {

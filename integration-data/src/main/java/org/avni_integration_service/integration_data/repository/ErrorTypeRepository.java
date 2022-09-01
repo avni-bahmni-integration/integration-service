@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ErrorTypeRepository extends BaseRepository<ErrorType> {
-    ErrorType findByName(String name);
+
+    ErrorType findByNameAndIntegrationSystem(String name, IntegrationSystem integrationSystem);
     List<ErrorType> findAllByIntegrationSystem(IntegrationSystem integrationSystem);
 }

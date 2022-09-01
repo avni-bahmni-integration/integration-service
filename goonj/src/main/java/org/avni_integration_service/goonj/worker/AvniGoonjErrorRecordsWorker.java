@@ -12,6 +12,7 @@ import org.avni_integration_service.goonj.worker.goonj.DemandEventWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchEventWorker;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
+import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +36,8 @@ public class AvniGoonjErrorRecordsWorker {
     private DistributionWorker distributionWorker;
     @Autowired
     private ActivityWorker activityWorker;
+    @Autowired
+    private IntegrationSystemRepository integrationSystemRepository;
 
     private static final Logger logger = Logger.getLogger(AvniGoonjErrorRecordsWorker.class);
 
@@ -47,11 +50,14 @@ public class AvniGoonjErrorRecordsWorker {
             logger.info(String.format("Starting page number: %d for sync direction: %s", pageNumber, syncDirection.name()));
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
             if (syncDirection.equals(SyncDirection.AvniToGoonj))
-                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(avniGoonjErrorService.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
+                        avniGoonjErrorService.getUnprocessableErrorTypes(), integrationSystemRepository.findByName("Goonj"), pageRequest);
             else if (syncDirection.equals(SyncDirection.GoonjToAvni) && !allErrors)
-                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInOrderById(avniGoonjErrorService.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
+                        avniGoonjErrorService.getUnprocessableErrorTypes(), integrationSystemRepository.findByName("Goonj"), pageRequest);
             else if (syncDirection.equals(SyncDirection.GoonjToAvni) && allErrors)
-                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInOrderById(avniGoonjErrorService.getUnprocessableErrorTypes(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
+                        avniGoonjErrorService.getUnprocessableErrorTypes(), integrationSystemRepository.findByName("Goonj"), pageRequest);
             else
                 throw new RuntimeException("Invalid arguments");
 

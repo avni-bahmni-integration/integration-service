@@ -30,7 +30,7 @@ public class AvniPowerErrorService {
     }
 
     private ErrorType getErrorType(PowerErrorType powerErrorType) {
-        return errorTypeRepository.findByName(powerErrorType.name());
+        return errorTypeRepository.findByNameAndIntegrationSystem(powerErrorType.name(), integrationSystemRepository.findByName("power"));
     }
 
     public List<ErrorType> getUnprocessableErrorTypes() {

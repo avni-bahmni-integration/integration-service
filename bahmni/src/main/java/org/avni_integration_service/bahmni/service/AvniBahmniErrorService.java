@@ -63,7 +63,7 @@ public class AvniBahmniErrorService {
     }
 
     private ErrorType getErrorType(BahmniErrorType bahmniErrorType) {
-        return errorTypeRepository.findByName(bahmniErrorType.name());
+        return errorTypeRepository.findByNameAndIntegrationSystem(bahmniErrorType.name(), integrationSystemRepository.findByName("bahmni"));
     }
 
     public boolean hasError(String entityId, BahmniEntityType bahmniEntityType) {
