@@ -50,7 +50,7 @@ public class IntegrationJobScheduler {
         avniPowerFullErrorJob.execute();
     }
 
-//    @Scheduled(cron = "${goonj.app.cron.full.error}")
+    @Scheduled(cron = "${goonj.app.cron.full.error}")
     public void fullErrorGoonjJob() {
         avniGoonjFullErrorJob.execute();
     }
