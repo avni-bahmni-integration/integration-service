@@ -58,7 +58,6 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
             updateErrorRecordAndSyncStatus(null, false, demandUuid);
             return;
         }
-
         process(demand);
     }
 

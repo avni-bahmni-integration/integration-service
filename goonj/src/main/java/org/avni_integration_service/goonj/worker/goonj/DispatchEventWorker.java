@@ -61,7 +61,7 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
             updateErrorRecordAndSyncStatus(null, false, dispatchUuid);
             return;
         }
-        processDispatch(dispatch);
+        process(dispatch);
     }
 
     @Override
