@@ -5,6 +5,9 @@ import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
+import org.avni_integration_service.goonj.worker.avni.ActivityWorker;
+import org.avni_integration_service.goonj.worker.avni.DispatchReceiptWorker;
+import org.avni_integration_service.goonj.worker.avni.DistributionWorker;
 import org.avni_integration_service.goonj.worker.goonj.DemandEventWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchEventWorker;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
@@ -26,6 +29,12 @@ public class AvniGoonjErrorRecordsWorker {
     private DemandEventWorker demandEventWorker;
     @Autowired
     private DispatchEventWorker dispatchEventWorker;
+    @Autowired
+    private DispatchReceiptWorker dispatchReceiptWorker;
+    @Autowired
+    private DistributionWorker distributionWorker;
+    @Autowired
+    private ActivityWorker activityWorker;
 
     private static final Logger logger = Logger.getLogger(AvniGoonjErrorRecordsWorker.class);
 
@@ -58,18 +67,13 @@ public class AvniGoonjErrorRecordsWorker {
 
     private ErrorRecordWorker getErrorRecordWorker(ErrorRecord errorRecord) {
         if (errorRecord.getAvniEntityType() != null) {
-//            if (errorRecord.getAvniEntityType().equals(AvniEntityType.Subject.name())) return subjectWorker;
-//            if (errorRecord.getAvniEntityType().equals(AvniEntityType.Enrolment.name())) return enrolmentWorker;
-//            if (errorRecord.getAvniEntityType().equals(AvniEntityType.ProgramEncounter.name())) return programEncounterWorker;
-//            if (errorRecord.getAvniEntityType().equals(AvniEntityType.GeneralEncounter.name())) return generalEncounterWorker;
+            if (errorRecord.getAvniEntityType().equals(GoonjEntityType.DispatchReceipt.name())) return dispatchReceiptWorker;
+            if (errorRecord.getAvniEntityType().equals(GoonjEntityType.Distribution.name())) return distributionWorker;
+            if (errorRecord.getAvniEntityType().equals(GoonjEntityType.Activity.name())) return activityWorker;
         } else if (errorRecord.getIntegratingEntityType() != null) {
-            //TODO
-//            if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Activity.name())) return activityEventWorker;
             if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Demand.name())) return demandEventWorker;
             if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Dispatch.name())) return dispatchEventWorker;
-//            if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.DispatchReceipt.name())) return dispatchReceiptEventWorker;
-//            if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Distribution.name())) return distributionEncounterEventWorker;
         }
-        throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s and GoonjEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getIntegratingEntityType()));
+        throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s / GoonjEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getIntegratingEntityType()));
     }
 }

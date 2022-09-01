@@ -7,6 +7,7 @@ import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
+import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
 import org.avni_integration_service.goonj.repository.ActivityRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
@@ -27,7 +28,7 @@ public class ActivityWorker extends GeneralEncounterWorker {
                           ActivityRepository activityRepository) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, goonjMappingGroup, integrationEntityStatusRepository,
-                GoonjEntityType.Activity.getDbName(), Logger.getLogger(ActivityWorker.class));
+                GoonjErrorType.ActivityAttributesMismatch, GoonjEntityType.Activity, Logger.getLogger(ActivityWorker.class));
         this.activityRepository = activityRepository;
     }
     public void process() {

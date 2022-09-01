@@ -11,7 +11,6 @@ import org.avni_integration_service.goonj.worker.avni.DispatchReceiptWorker;
 import org.avni_integration_service.goonj.worker.avni.DistributionWorker;
 import org.avni_integration_service.goonj.worker.goonj.DemandWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchWorker;
-import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.util.HealthCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,15 +106,14 @@ public class AvniGoonjMainJob {
                 logger.info("Processing AvniDistribution");
                 distributionWorker.process();
             }
-            //TODO Enable Error record processing
-//            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
-//                logger.info("Processing AvniErrorRecords");
-//                processErrorRecords(allConstants, SyncDirection.AvniToGoonj);
-//            }
-//            if (hasTask(tasks, IntegrationTask.GoonjErrorRecords)) {
-//                logger.info("Processing GoonjErrorRecords");
-//                processErrorRecords(allConstants, SyncDirection.GoonjToAvni);
-//            }
+            if (hasTask(tasks, IntegrationTask.GoonjErrorRecords)) {
+                logger.info("Processing GoonjErrorRecords");
+                processErrorRecords(SyncDirection.GoonjToAvni);
+            }
+            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
+                logger.info("Processing AvniErrorRecords");
+                processErrorRecords(SyncDirection.AvniToGoonj);
+            }
         } catch (Throwable e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
@@ -124,7 +122,7 @@ public class AvniGoonjMainJob {
         }
     }
 
-    private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) {
+    private void processErrorRecords(SyncDirection syncDirection) {
         errorRecordsWorker.process(syncDirection, false);
     }
 

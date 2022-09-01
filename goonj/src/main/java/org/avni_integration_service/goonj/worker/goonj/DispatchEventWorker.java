@@ -5,11 +5,11 @@ import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
+import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.domain.Dispatch;
 import org.avni_integration_service.goonj.dto.DeletedDispatchStatusLineItem;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DispatchService;
-import org.avni_integration_service.integration_data.domain.Constants;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
     @Autowired
     public DispatchEventWorker(DispatchService dispatchService, AvniGoonjErrorService avniGoonjErrorService,
                                AvniEncounterRepository avniEncounterRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository) {
-        super(integratingEntityStatusRepository, GoonjEntityType.Dispatch.name());
+        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Dispatch);
         this.dispatchService = dispatchService;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.avniEncounterRepository = avniEncounterRepository;
@@ -39,10 +39,10 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
     public void process(Map<String, Object> event) {
         try {
             processDispatch(event);
-            updateReadUptoDateTime(event);
+            updateErrorRecordAndSyncStatus(event, true, (String) event.get("DispatchStatusId"));
         } catch (Exception e) {
             logger.error(String.format("Goonj Dispatch %s could not be synced to Goonj Salesforce. ", event.get("DispatchStatusId")), e);
-//            throw e; //Throw exception, so that we stop at the failed Dispatch and not proceed to the next one
+            createOrUpdateErrorRecordAndSyncStatus(event, true, (String) event.get("DispatchStatusId"), GoonjErrorType.DispatchAttributesMismatch);
         }
     }
 
@@ -58,8 +58,7 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
         HashMap<String, Object> dispatch = dispatchService.getDispatch(dispatchUuid);
         if (dispatch == null) {
             logger.warn(String.format("Dispatch has been deleted now: %s", dispatchUuid));
-            //TODO
-//            avniEncounterRepository.dispatchDeleted(dispatchUuid);
+            updateErrorRecordAndSyncStatus(null, false, dispatchUuid);
             return;
         }
         processDispatch(dispatch);
@@ -71,7 +70,15 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
     }
 
     public void processDispatchLineItemDeletion(DeletedDispatchStatusLineItem deletedEntity) {
-        processDispatchStatusLineItemDeletion(deletedEntity);
+        try {
+            logger.debug(String.format("Processing dispatch line items deletion: externalId %s", deletedEntity.getDispatchStatusLineItemId()));
+            processDispatchStatusLineItemDeletion(deletedEntity);
+            updateErrorRecordAndSyncStatus(null, false, deletedEntity.getDispatchStatusLineItemId());
+        } catch (Exception e) {
+            logger.error(String.format("Failed to delete dispatch line items: externalId %s", deletedEntity.getDispatchStatusLineItemId()));
+            createOrUpdateErrorRecordAndSyncStatus(null, false, deletedEntity.getDispatchStatusLineItemId(),
+                    GoonjErrorType.DispatchLineItemsDeletionFailure);
+        }
     }
 
     private void processDispatchStatusLineItemDeletion(DeletedDispatchStatusLineItem deletedEntity) {
@@ -91,8 +98,13 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
         try {
             logger.debug(String.format("Processing dispatch deletion: externalId %s", deletedEntity));
             avniEncounterRepository.delete(deletedEntity);
+            updateErrorRecordAndSyncStatus(null, false, deletedEntity);
         } catch (HttpClientErrorException.NotFound e) {
             logger.error(String.format("Failed to delete non-existent dispatch: externalId %s", deletedEntity));
+        } catch (Exception e) {
+            logger.error(String.format("Failed to delete dispatch: externalId %s", deletedEntity));
+            createOrUpdateErrorRecordAndSyncStatus(null, false, deletedEntity,
+                    GoonjErrorType.DispatchDeletionFailure);
         }
     }
 }

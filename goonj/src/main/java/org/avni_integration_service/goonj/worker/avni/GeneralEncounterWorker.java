@@ -8,6 +8,7 @@ import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
+import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
 import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
@@ -27,6 +28,9 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     private final AvniGoonjErrorService avniGoonjErrorService;
     private final GoonjMappingGroup goonjMappingGroup;
     private final IntegratingEntityStatusRepository integrationEntityStatusRepository;
+
+    private final GoonjErrorType goonjErrorType;
+    private final GoonjEntityType entityType;
     private final String encounterType;
     private final Logger logger;
 
@@ -34,14 +38,16 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
                                   AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
                                   AvniGoonjErrorService avniGoonjErrorService,
                                   GoonjMappingGroup goonjMappingGroup, IntegratingEntityStatusRepository integrationEntityStatusRepository,
-                                  String encounterType, Logger logger) {
+                                  GoonjErrorType goonjErrorType, GoonjEntityType entityType, Logger logger) {
         this.avniEncounterRepository = avniEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.goonjMappingGroup = goonjMappingGroup;
         this.integrationEntityStatusRepository = integrationEntityStatusRepository;
-        this.encounterType = encounterType;
+        this.goonjErrorType = goonjErrorType;
+        this.entityType = entityType;
+        this.encounterType = entityType.getDbName();
         this.logger = logger;
     }
 
@@ -56,7 +62,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
             logger.info(String.format("Found %d encounters that are newer than %s", generalEncounters.length, readUptoDateTime));
             if (generalEncounters.length == 0) break;
             for (GeneralEncounter generalEncounter : generalEncounters) {
-                processGeneralEncounter(generalEncounter, true);
+                processGeneralEncounter(generalEncounter, true, goonjErrorType);
             }
             if (totalPages == 1) {
                 logger.info("Finished processing all pages");
@@ -74,13 +80,13 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
             return;
         }
 
-        processGeneralEncounter(generalEncounter, false);
+        processGeneralEncounter(generalEncounter, false, goonjErrorType);
     }
 
-    public void processGeneralEncounter(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
+    public void processGeneralEncounter(GeneralEncounter generalEncounter, boolean updateSyncStatus, GoonjErrorType goonjErrorType) {
         if (goonjMappingGroup.isGoonjEncounterInAvni(generalEncounter.getEncounterType())) {
             logger.debug(String.format("Skipping Avni general encounter %s because it was created from Goonj. ", generalEncounter.getEncounterType()));
-            updateSyncStatus(generalEncounter, updateSyncStatus);
+            updateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid());
             return;
         }
 
@@ -89,7 +95,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
 
         if (shouldFilterEncounter(generalEncounter)) {
             logger.warn(String.format("General encounter should be filtered out: %s", generalEncounter.getUuid()));
-            updateSyncStatus(generalEncounter, updateSyncStatus);
+            updateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid());
             return;
         }
 
@@ -97,17 +103,17 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
         logger.debug(String.format("Found avni subject %s", subject.getUuid()));
         if (subject.getVoided()) {
             logger.debug(String.format("Avni subject is voided. Skipping. %s", subject.getUuid()));
-            updateSyncStatus(generalEncounter, updateSyncStatus);
+            updateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid());
             return;
         }
 
         try {
             createOrUpdateGeneralEncounter(generalEncounter, subject);
-            updateSyncStatus(generalEncounter, updateSyncStatus);
+            updateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid());
             return;
         } catch (Exception e) {
             logger.error(String.format("Avni encounter %s could not be synced to Goonj Salesforce. ", generalEncounter.getUuid()), e);
-//            throw e; //Throw exception, so that we stop at the failed encounter and not proceed to the next one
+            createOrUpdateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid(), goonjErrorType);
         }
     }
 
@@ -128,13 +134,23 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
         return !generalEncounter.isCompleted();
     }
 
+    private void updateErrorRecordAndSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus, String sid) {
+        avniGoonjErrorService.successfullyProcessed(sid, entityType);
+        updateSyncStatus(generalEncounter, updateSyncStatus);
+    }
+
+    private void createOrUpdateErrorRecordAndSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus, String sid, GoonjErrorType goonjErrorType) {
+        avniGoonjErrorService.errorOccurred(sid, goonjErrorType, entityType);
+        updateSyncStatus(generalEncounter, updateSyncStatus);
+    }
+
     private void updateSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus) {
         if (updateSyncStatus) {
             updateReadUptoDateTime(generalEncounter);
         }
     }
 
-    void updateReadUptoDateTime(GeneralEncounter generalEncounter) {
+    private void updateReadUptoDateTime(GeneralEncounter generalEncounter) {
         IntegratingEntityStatus intEnt = integrationEntityStatusRepository.findByEntityType(encounterType);
         intEnt.setReadUptoDateTime(DateTimeUtil.convertToDate(generalEncounter.getLastModifiedDateTime().toString()));
         integrationEntityStatusRepository.save(intEnt);

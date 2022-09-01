@@ -7,6 +7,7 @@ import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
+import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
 import org.avni_integration_service.goonj.repository.DistributionRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
@@ -27,7 +28,7 @@ public class DistributionWorker extends GeneralEncounterWorker {
                               DistributionRepository distributionRepository) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, goonjMappingGroup, integrationEntityStatusRepository,
-                GoonjEntityType.Distribution.getDbName(), Logger.getLogger(DistributionWorker.class));
+                GoonjErrorType.DistributionAttributesMismatch, GoonjEntityType.Distribution, Logger.getLogger(DistributionWorker.class));
         this.distributionRepository = distributionRepository;
 
     }

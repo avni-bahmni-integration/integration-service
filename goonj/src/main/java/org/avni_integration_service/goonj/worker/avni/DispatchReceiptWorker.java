@@ -7,6 +7,7 @@ import org.avni_integration_service.avni.repository.AvniEncounterRepository;
 import org.avni_integration_service.avni.repository.AvniIgnoredConceptsRepository;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
+import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
 import org.avni_integration_service.goonj.repository.DispatchReceiptRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
@@ -27,7 +28,7 @@ public class DispatchReceiptWorker extends GeneralEncounterWorker {
                                  DispatchReceiptRepository dispatchReceiptRepository) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, goonjMappingGroup, integrationEntityStatusRepository,
-                GoonjEntityType.DispatchReceipt.getDbName(), Logger.getLogger(DispatchReceiptWorker.class));
+                GoonjErrorType.DispatchReceiptAttributesMismatch, GoonjEntityType.DispatchReceipt, Logger.getLogger(DispatchReceiptWorker.class));
         this.dispatchReceiptRepository = dispatchReceiptRepository;
     }
     public void process() {
