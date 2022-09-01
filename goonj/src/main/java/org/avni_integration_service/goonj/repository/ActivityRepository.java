@@ -106,16 +106,14 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         Long nos = ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE))
                 + ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
         activityDTO.setNoofparticipantsNJPC(nos);
-        activityDTO.setNoofparticipantsS2S(nos);
+        activityDTO.setNoofparticipantsS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS) == null) ? nos : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS));
         activityDTO.setNoofdaysofParticipationNJPC((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
         activityDTO.setNoofdaysofParticipationS2S((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
         activityDTO.setNoofWorkingDays((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
         activityDTO.setNoofparticipantsFemaleDFW((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
         activityDTO.setNoofparticipantsFemaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
-        activityDTO.setNoofparticipantsFemaleS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
         activityDTO.setNoofparticipantsMaleDFW((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
         activityDTO.setNoofparticipantsMaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-        activityDTO.setNoofparticipantsMaleS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
         /* Measurement fields */
         activityDTO.setNos((encounter.getObservation(NOS) == null) ? 0l : (Integer) encounter.getObservation(NOS));
         activityDTO.setBreadth((encounter.getObservation(BREADTH) == null) ? 0l : (Integer) encounter.getObservation(BREADTH));

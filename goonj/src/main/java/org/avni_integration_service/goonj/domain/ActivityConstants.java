@@ -24,6 +24,7 @@ public interface ActivityConstants {
     String NUMBER_OF_DAYS_OF_PARTICIPATION = "Number of Days of Participation";
     String NUMBER_OF_PARTICIPANTS_MALE = "Number of Participants (Male)";
     String NUMBER_OF_PARTICIPANTS_FEMALE = "Number of Participants (Female)";
+    String NUMBER_OF_PARTICIPANTS = "Number of participants";
     String OBJECTIVE_OF_WORK = "Objective of Work";
     String SPECIFY_OTHER_FOR_OBJECTIVE_OF_WORK = "Specify other for objective of work";
     String SPECIFY_OTHER_SUB_TYPE = "Specify Other Sub Type";
