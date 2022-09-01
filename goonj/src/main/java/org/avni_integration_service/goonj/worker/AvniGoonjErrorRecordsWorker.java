@@ -72,11 +72,10 @@ public class AvniGoonjErrorRecordsWorker {
     }
 
     private ErrorRecordWorker getErrorRecordWorker(ErrorRecord errorRecord) {
-        if (errorRecord.getAvniEntityType() != null) {
-            if (errorRecord.getAvniEntityType().equals(GoonjEntityType.DispatchReceipt.name())) return dispatchReceiptWorker;
-            if (errorRecord.getAvniEntityType().equals(GoonjEntityType.Distribution.name())) return distributionWorker;
-            if (errorRecord.getAvniEntityType().equals(GoonjEntityType.Activity.name())) return activityWorker;
-        } else if (errorRecord.getIntegratingEntityType() != null) {
+        if (errorRecord.getIntegratingEntityType() != null) {
+            if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.DispatchReceipt.name())) return dispatchReceiptWorker;
+            if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Distribution.name())) return distributionWorker;
+            if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Activity.name())) return activityWorker;
             if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Demand.name())) return demandEventWorker;
             if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Dispatch.name())) return dispatchEventWorker;
         }
