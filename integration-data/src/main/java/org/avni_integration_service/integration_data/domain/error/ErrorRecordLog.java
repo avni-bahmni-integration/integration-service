@@ -4,6 +4,7 @@ import org.avni_integration_service.integration_data.domain.framework.BaseEntity
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class ErrorRecordLog extends BaseEntity {
@@ -11,7 +12,7 @@ public class ErrorRecordLog extends BaseEntity {
     @JoinColumn(name = "error_record_id")
     private ErrorRecord errorRecord;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "error_type_id")
     private ErrorType errorType;
 
@@ -41,5 +42,18 @@ public class ErrorRecordLog extends BaseEntity {
 
     public Date getLoggedAt() {
         return loggedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ErrorRecordLog that = (ErrorRecordLog) o;
+        return errorRecord.equals(that.errorRecord) && errorType.equals(that.errorType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(errorRecord, errorType);
     }
 }

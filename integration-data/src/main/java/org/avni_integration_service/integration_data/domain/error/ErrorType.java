@@ -16,4 +16,15 @@ public class ErrorType extends NamedIntegrationSpecificEntity {
         this.setName(name);
         this.setIntegrationSystem(integrationSystem);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        ErrorType et = (ErrorType) obj;
+        return (obj != null && getName().equals(et.getName()));
+    }
 }
