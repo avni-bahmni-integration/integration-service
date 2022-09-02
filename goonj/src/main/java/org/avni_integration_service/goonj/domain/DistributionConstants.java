@@ -9,7 +9,8 @@ public interface DistributionConstants {
     String STATE = "State";
     String LOCATION = "Location";
     String TYPE_OF_INITIATIVE = "Type of Initiative";
-    String DISPATCH_STATUS_ID = "Dispatch status id (Dispatch)";
+    String DISPATCH_STATUS_ID_OLD = "Dispatch status id (Dispatch)";
+    String DISPATCH_STATUS_ID_NEW = "Dispatch Status Id";
     String DISTRIBUTION_DATE = "Distribution Date";
     String TYPE_OF_DISASTER = "Type of Disaster";
     String ACCOUNT_ID = "AccountId";

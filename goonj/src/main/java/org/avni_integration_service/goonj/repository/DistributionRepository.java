@@ -56,7 +56,11 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     }
     private DistributionDTO createDistributionRequest(Subject subject, GeneralEncounter encounter) {
         DistributionDTO distributionDTO = new DistributionDTO();
-        distributionDTO.setDispatchStatus((String) encounter.getObservation(DISPATCH_STATUS_ID));
+        String dispatchStatusId = (String) encounter.getObservation(DISPATCH_STATUS_ID_NEW);
+        if(!StringUtils.hasText(dispatchStatusId)) {
+            dispatchStatusId = (String) encounter.getObservation(DISPATCH_STATUS_ID_OLD);
+        }
+        distributionDTO.setDispatchStatus(dispatchStatusId);
         HashMap<String, String> location = (HashMap<String, String>) encounter.getObservations().get(LOCATION);
         distributionDTO.setLocalityVillageName((String) location.get(VILLAGE));
         distributionDTO.setBlock((String) location.get(BLOCK));
