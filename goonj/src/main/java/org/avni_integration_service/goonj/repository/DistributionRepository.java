@@ -99,7 +99,8 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
 
     private List<DistributionLine> fetchDistributionLines(Subject subject, GeneralEncounter encounter) {
         ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) encounter.getObservations().get(MATERIALS);
-        return md.stream().map(entry -> createDistributionLine(subject, encounter, entry)).collect( Collectors.toList());
+        return md.stream().filter(entry -> entry.get(QUANTITY) != null  && ((Integer) entry.get(QUANTITY)) > 0)
+                .map(entry -> createDistributionLine(subject, encounter, entry)).collect( Collectors.toList());
     }
 
     private DistributionLine createDistributionLine(Subject subject, GeneralEncounter encounter, HashMap<String, Object> entry) {
