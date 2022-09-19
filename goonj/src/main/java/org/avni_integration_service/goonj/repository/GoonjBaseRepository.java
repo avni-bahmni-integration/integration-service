@@ -7,6 +7,7 @@ import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
+import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.*;
@@ -77,12 +78,17 @@ public abstract class GoonjBaseRepository {
     protected HashMap<String, Object>[] createSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
         URI uri = URI.create(String.format("%s/%s", goonjConfig.getAppUrl(), resource));
         ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
-        ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
-        if(responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
+        try {
+            ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            }
+            logger.error(String.format("Failed to create resource %s,  response status code is %s", resource, responseEntity.getStatusCode()));
+            throw handleError(responseEntity, responseEntity.getStatusCode());
+        } catch(Exception e) {
+            logger.error("Error request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()), e);
+            throw e;
         }
-        logger.error(String.format("Failed to create resource %s,  response status code is %s", resource, responseEntity.getStatusCode()));
-        throw handleError(responseEntity, responseEntity.getStatusCode());
     }
 
     protected RestClientException handleError(ResponseEntity<HashMap<String, Object>[]> responseEntity, HttpStatus statusCode) {
