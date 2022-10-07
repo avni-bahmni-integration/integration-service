@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
+    public static final int SECONDS_TO_ADD = 1;
+    private static final int INT_CONSTANT_ONE = 1;
     private final AvniEncounterRepository avniEncounterRepository;
     private final AvniSubjectRepository avniSubjectRepository;
     private final AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
@@ -54,8 +56,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     public void processEncounters() {
         while (true) {
             IntegratingEntityStatus status = integrationEntityStatusRepository.findByEntityType(encounterType);
-            Date readUptoDateTime = status.getReadUptoDateTime();
-            readUptoDateTime = new Date(readUptoDateTime.toInstant().plusSeconds(1).toEpochMilli());
+            Date readUptoDateTime = getEffectiveCutoffDateTime(status);
             GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(readUptoDateTime, encounterType);
             GeneralEncounter[] generalEncounters = response.getContent();
             int totalPages = response.getTotalPages();
@@ -64,11 +65,21 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
             for (GeneralEncounter generalEncounter : generalEncounters) {
                 processGeneralEncounter(generalEncounter, true, goonjErrorType);
             }
-            if (totalPages == 1) {
+            if (totalPages == INT_CONSTANT_ONE) {
                 logger.info("Finished processing all pages");
                 break;
             }
         }
+    }
+
+    /**
+     * Add an offset to avoid syncing the last Avni encounter to Goonj
+     * @param status
+     * @return EffectiveCutoffDateTime
+     */
+    private Date getEffectiveCutoffDateTime(IntegratingEntityStatus status) {
+        return new Date(status.getReadUptoDateTime().toInstant().plusSeconds(SECONDS_TO_ADD)
+                .toEpochMilli());
     }
 
     @Override
