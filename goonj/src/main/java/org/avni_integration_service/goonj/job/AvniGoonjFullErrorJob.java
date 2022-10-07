@@ -21,6 +21,11 @@ public class AvniGoonjFullErrorJob {
 
     public void execute() {
         try {
+            /**
+             * All our Error Records for Goonj, i.e. Demand, Dispatch, Distro, DispatchReceipt and Activity
+             * are stored using integrating_entity_type column, hence only SyncDirection.GoonjToAvni matters
+             * and not the other-way(SyncDirection.AvniToGoonj) around.
+             */
             avniGoonjErrorRecordsWorker.process(SyncDirection.GoonjToAvni, true);
         } catch (Exception e) {
             logger.error("Failed", e);

@@ -57,6 +57,11 @@ public abstract class GoonjBaseRepository {
         throw new HttpServerErrorException(responseEntity.getStatusCode());
     }
 
+    /**
+     * All our Sync time-stamps for Goonj, i.e. Demand, Dispatch, Distro, DispatchReceipt and Activity
+     * are stored using integrating_entity_status DB and none in avniEntityStatus table.
+     * @return cutOffDate
+     */
     protected Date getCutOffDate() {
         return integratingEntityStatusRepository.findByEntityType(entityType).getReadUptoDateTime();
     }

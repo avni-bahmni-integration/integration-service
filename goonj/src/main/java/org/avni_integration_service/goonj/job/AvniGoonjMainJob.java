@@ -106,13 +106,14 @@ public class AvniGoonjMainJob {
                 logger.info("Processing AvniDistribution");
                 distributionWorker.process();
             }
+            /**
+             * All our Error Records for Goonj, i.e. Demand, Dispatch, Distro, DispatchReceipt and Activity
+             * are stored using integrating_entity_type column, hence only SyncDirection.GoonjToAvni matters
+             * and not the other-way(SyncDirection.AvniToGoonj) around.
+             */
             if (hasTask(tasks, IntegrationTask.GoonjErrorRecords)) {
                 logger.info("Processing GoonjErrorRecords");
                 processErrorRecords(SyncDirection.GoonjToAvni);
-            }
-            if (hasTask(tasks, IntegrationTask.AvniErrorRecords)) {
-                logger.info("Processing AvniErrorRecords");
-                processErrorRecords(SyncDirection.AvniToGoonj);
             }
         } catch (Throwable e) {
             logger.error("Failed", e);
