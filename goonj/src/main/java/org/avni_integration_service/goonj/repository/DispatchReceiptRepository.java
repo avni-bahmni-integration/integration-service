@@ -19,6 +19,7 @@ import org.avni_integration_service.integration_data.repository.IntegrationSyste
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -32,7 +33,7 @@ import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.
 @Component("DispatchReceiptRepository")
 public class DispatchReceiptRepository extends GoonjBaseRepository
         implements DispatchReceiptConstants, DispatchReceivedStatusLineItemConstants {
-
+    private final boolean deleteAndRecreateDispatchReceipt;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final IntegrationSystem integrationSystem;
 
@@ -40,11 +41,13 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
     public DispatchReceiptRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                      @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig,
                                      MappingMetaDataRepository mappingMetaDataRepository,
-                                     IntegrationSystemRepository integrationSystemRepository, AvniHttpClient avniHttpClient) {
+                                     IntegrationSystemRepository integrationSystemRepository, AvniHttpClient avniHttpClient,
+                                     @Value("${goonj.app.recreate.dispatch.receipt.enabled}") boolean deleteAndRecreateDispatchReceipt) {
         super(integratingEntityStatusRepository, restTemplate,
                 goonjConfig, GoonjEntityType.DispatchReceipt.name(), avniHttpClient);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.integrationSystem = integrationSystemRepository.findByName(GoonjMappingDbConstants.IntSystemName);
+        this.deleteAndRecreateDispatchReceipt = deleteAndRecreateDispatchReceipt;
     }
     @Override
     public HashMap<String, Object>[] fetchEvents() {
@@ -56,6 +59,9 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
     }
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
+        if(deleteAndRecreateDispatchReceipt) {
+            deleteEvent(RESOURCE_DELETE_DISPATCH_RECEIVED_STATUS, encounter);
+        }
         DispatchReceivedStatusRequestDTO requestDTO = convertGeneralEncounterToDispatchReceivedStatusRequest(encounter);
         HttpEntity<DispatchReceivedStatusRequestDTO> request = new HttpEntity<>(requestDTO);
         return super.createSingleEntity(RESOURCE_DISPATCH_RECEIVED_STATUS, request);

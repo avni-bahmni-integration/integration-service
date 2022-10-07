@@ -2,10 +2,13 @@ package org.avni_integration_service.goonj.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.util.MapUtil;
-import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -31,7 +34,8 @@ public class Demand implements GoonjEntity{
     public Subject subjectWithoutObservations() {
         Subject subject = new Subject();
         subject.setSubjectType("Demand");
-        subject.setRegistrationDate(new Date());
+        Date demandDate = DateTimeUtil.offsetTimeZone(new Date(), DateTimeUtil.UTC, DateTimeUtil.IST);
+        subject.setRegistrationDate(demandDate);
         subject.setAddress(MapUtil.getString(DemandStateField, response) +", "+MapUtil.getString(DemandDistrictField, response));
         subject.setExternalId(MapUtil.getString(DemandIdField, response));
         subject.setFirstName(MapUtil.getString(DemandNameField, response));

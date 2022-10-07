@@ -13,12 +13,12 @@ import org.springframework.http.*;
 import org.springframework.web.client.*;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class GoonjBaseRepository {
     private static final Logger logger = Logger.getLogger(GoonjBaseRepository.class);
+    private static final String DELETION_RECORD_ID = "recordId";
+    private static final String DELETION_SOURCE_ID = "sourceId";
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final RestTemplate goonjRestTemplate;
     private final GoonjConfig goonjConfig;
@@ -91,6 +91,22 @@ public abstract class GoonjBaseRepository {
         }
     }
 
+    protected Object deleteSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
+        URI uri = URI.create(String.format("%s/%s", goonjConfig.getAppUrl(), resource));
+        ParameterizedTypeReference<Object> responseType = new ParameterizedTypeReference<>() {};
+        try {
+            ResponseEntity<Object> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            }
+            logger.error(String.format("Failed to delete resource %s, response error message is %s", resource, responseEntity.getBody()));
+            throw getRestClientResponseException(responseEntity.getHeaders(), responseEntity.getStatusCode(), (String) responseEntity.getBody());
+        } catch(Exception e) {
+            logger.error("Error request body:" + requestEntity.getBody(), e);
+            throw e;
+        }
+    }
+
     protected RestClientException handleError(ResponseEntity<HashMap<String, Object>[]> responseEntity, HttpStatus statusCode) {
         HashMap<String, Object>[] responseBody = responseEntity.getBody();
         String message = (String) responseBody[0].get("message");
@@ -105,6 +121,12 @@ public abstract class GoonjBaseRepository {
         };
     }
 
+    private HttpEntity<Map<String, List>> getDeleteEncounterHttpRequestEntity(GeneralEncounter encounter) {
+        Map<String, List> deleteRequest = Map.of(DELETION_RECORD_ID, new ArrayList(), DELETION_SOURCE_ID, Arrays.asList(encounter.getUuid()) );
+        HttpEntity<Map<String, List>> requestEntity = new HttpEntity<>(deleteRequest);
+        return requestEntity;
+    }
+
     public abstract HashMap<String, Object>[] fetchEvents();
 
     public abstract List<String> fetchDeletionEvents();
@@ -112,6 +134,11 @@ public abstract class GoonjBaseRepository {
     public abstract HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter);
     public boolean wasEventCreatedSuccessfully(HashMap<String, Object>[] response) {
         return (response != null && response[0].get("errorCode") == null);
+    }
+
+    public Object deleteEvent(String resourceType, GeneralEncounter encounter) {
+        HttpEntity<Map<String, List>> requestEntity = getDeleteEncounterHttpRequestEntity(encounter);
+        return deleteSingleEntity(resourceType, requestEntity);
     }
 
 }
