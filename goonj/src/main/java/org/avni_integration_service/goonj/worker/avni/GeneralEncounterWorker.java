@@ -142,7 +142,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     }
 
     private boolean shouldFilterEncounter(GeneralEncounter generalEncounter) {
-        return !generalEncounter.isCompleted();
+        return !generalEncounter.isCompleted() || generalEncounter.getVoided();
     }
 
     private void updateErrorRecordAndSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus, String sid) {
