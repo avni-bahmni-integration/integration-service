@@ -1,5 +1,6 @@
 package org.avni_integration_service.goonj.repository;
 
+import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
@@ -21,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -33,6 +36,7 @@ import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.
 @Component("DispatchReceiptRepository")
 public class DispatchReceiptRepository extends GoonjBaseRepository
         implements DispatchReceiptConstants, DispatchReceivedStatusLineItemConstants {
+    private static final Logger logger = Logger.getLogger(DispatchReceiptRepository.class);
     private final boolean deleteAndRecreateDispatchReceipt;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final IntegrationSystem integrationSystem;
@@ -59,13 +63,26 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
     }
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
-        if(deleteAndRecreateDispatchReceipt) {
-            deleteEvent(RESOURCE_DELETE_DISPATCH_RECEIVED_STATUS, encounter);
-        }
+        deleteAndRecreateDispatchReceipt(encounter);
         DispatchReceivedStatusRequestDTO requestDTO = convertGeneralEncounterToDispatchReceivedStatusRequest(encounter);
         HttpEntity<DispatchReceivedStatusRequestDTO> request = new HttpEntity<>(requestDTO);
         return super.createSingleEntity(RESOURCE_DISPATCH_RECEIVED_STATUS, request);
     }
+
+    private void deleteAndRecreateDispatchReceipt(GeneralEncounter encounter) {
+        if(deleteAndRecreateDispatchReceipt) {
+            try {
+                deleteEvent(RESOURCE_DELETE_DISPATCH_RECEIVED_STATUS, encounter);
+            } catch (HttpClientErrorException hce) {
+                if (hce.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                    logger.info(String.format("Ignoring failure to delete missing DispatchReceipt, %s", encounter.getUuid()));
+                    return;
+                }
+                throw hce; //throw all exceptions, other than NOT_FOUND
+            }
+        }
+    }
+
     private DispatchReceivedStatusRequestDTO convertGeneralEncounterToDispatchReceivedStatusRequest(GeneralEncounter encounter) {
         DispatchReceivedStatusRequestDTO requestDTO = new DispatchReceivedStatusRequestDTO();
         DispatchReceivedstatus drsDTO = new DispatchReceivedstatus();
