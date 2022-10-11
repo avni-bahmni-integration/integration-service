@@ -63,7 +63,6 @@ public abstract class GoonjEventWorker {
         integratingEntityStatusRepository.save(intEnt);
     }
 
-
     protected void handleError(Map<String, Object> event, Exception exception, String entityId, GoonjErrorType goonjErrorType) throws Exception {
         logger.error(String.format("Goonj %s %s could not be synced to Goonj Salesforce. ", entityType, event.get(entityId)), exception);
         ErrorType classifiedErrorType = errorClassifier.classify(integrationSystem, exception);
@@ -71,7 +70,7 @@ public abstract class GoonjEventWorker {
             throw exception;
         }
         createOrUpdateErrorRecordAndSyncStatus(event, true, (String) event.get(entityId),
-                goonjErrorType, classifiedErrorType.getName());
+                goonjErrorType, exception.getLocalizedMessage());
     }
 
     public abstract void processDeletion(String deletedEntity);

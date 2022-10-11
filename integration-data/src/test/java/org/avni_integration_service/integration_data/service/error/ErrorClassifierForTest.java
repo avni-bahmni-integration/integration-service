@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest(classes = {ErrorClassifier.class, IntegrationSystemRepository.class})
 public class ErrorClassifierForTest extends AbstractSpringTest implements ErrorClassifierForGoonjTestConstants {
-        public static final String INT_SYSTEM_GOONJ = "Goonj";
         private final ErrorClassifier errorClassifier;
         private final IntegrationSystem integrationSystem;
 
@@ -25,13 +24,31 @@ public class ErrorClassifierForTest extends AbstractSpringTest implements ErrorC
 
         @Test
         public void classifyMissingDemandError() {
-                ErrorType classifiedErrorType = errorClassifier.classify(integrationSystem, ERROR_MSG_DISPATCH_MISSING_DEMAND);
-                assertNotNull(classifiedErrorType);
+                assertNotNull(errorClassifier.classify(integrationSystem, ERROR_MSG_DISPATCH_MISSING_DEMAND));
         }
 
         @Test
         public void escapeMissingDemandError() {
-                ErrorType classifiedErrorType = errorClassifier.classify(integrationSystem, ERROR_MSG_STANDARD_SKIP);
-                assertNull(classifiedErrorType);
+                assertNull(errorClassifier.classify(integrationSystem, ERROR_MSG_STANDARD_SKIP));
+        }
+
+        @Test
+        public void classifyInvalidValueForPicklistError() {
+                assertNotNull(invokeClassifyForContains(ERROR_MSG_INVALID_VALUE_FOR_RESTRICTED_PICKLIST));
+        }
+
+        @Test
+        public void classifyDispatchReceiptDuplicateError() {
+                assertNotNull(invokeClassifyForContains(ERROR_MSG_DISPATCH_RECEIPT_DUPLICATE));
+        }
+
+        @Test
+        public void classifyFieldCustomValidationError() {
+                assertNotNull(invokeClassifyForContains(ERROR_MSG_FIELD_CUSTOM_VALIDATION_EXCEPTION));
+        }
+
+        private ErrorType invokeClassifyForContains(String errorMessage) {
+                String buffetedMsg = String.format(STRING_FORMAT_BUFFETED_ERROR_MSG, errorMessage);
+                return errorClassifier.classify(integrationSystem, buffetedMsg);
         }
 }
