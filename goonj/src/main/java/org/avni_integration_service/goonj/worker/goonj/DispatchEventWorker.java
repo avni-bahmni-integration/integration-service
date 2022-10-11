@@ -10,8 +10,11 @@ import org.avni_integration_service.goonj.domain.Dispatch;
 import org.avni_integration_service.goonj.dto.DeletedDispatchStatusLineItem;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DispatchService;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
+import org.avni_integration_service.integration_data.service.error.ErrorClassifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -22,27 +25,26 @@ import java.util.Map;
 @Component
 public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(DispatchEventWorker.class);
-
     private final DispatchService dispatchService;
     private final AvniGoonjErrorService avniGoonjErrorService;
     private final AvniEncounterRepository avniEncounterRepository;
 
     @Autowired
     public DispatchEventWorker(DispatchService dispatchService, AvniGoonjErrorService avniGoonjErrorService,
-                               AvniEncounterRepository avniEncounterRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository) {
-        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Dispatch);
+                               AvniEncounterRepository avniEncounterRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                               ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
+        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Dispatch, errorClassifier, integrationSystem);
         this.dispatchService = dispatchService;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.avniEncounterRepository = avniEncounterRepository;
     }
 
-    public void process(Map<String, Object> event) {
+    public void process(Map<String, Object> event) throws Exception {
         try {
             processDispatch(event);
             updateErrorRecordAndSyncStatus(event, true, (String) event.get("DispatchStatusId"));
-        } catch (Exception e) {
-            logger.error(String.format("Goonj Dispatch %s could not be synced to Goonj Salesforce. ", event.get("DispatchStatusId")), e);
-            createOrUpdateErrorRecordAndSyncStatus(event, true, (String) event.get("DispatchStatusId"), GoonjErrorType.DispatchAttributesMismatch, e.getLocalizedMessage());
+        } catch (Exception exception) {
+            handleError(event, exception, "DispatchStatusId", GoonjErrorType.DispatchAttributesMismatch);
         }
     }
 
@@ -54,7 +56,7 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
         avniEncounterRepository.create(encounter);
     }
 
-    public void processError(String dispatchUuid) {
+    public void processError(String dispatchUuid) throws Exception {
         HashMap<String, Object> dispatch = dispatchService.getDispatch(dispatchUuid);
         if (dispatch == null) {
             logger.warn(String.format("Dispatch has been deleted now: %s", dispatchUuid));
@@ -98,13 +100,11 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
         try {
             logger.debug(String.format("Processing dispatch deletion: externalId %s", deletedEntity));
             avniEncounterRepository.delete(deletedEntity);
-            updateErrorRecordAndSyncStatus(null, false, deletedEntity);
         } catch (HttpClientErrorException.NotFound e) {
             logger.error(String.format("Failed to delete non-existent dispatch: externalId %s", deletedEntity));
         } catch (Exception e) {
             logger.error(String.format("Failed to delete dispatch: externalId %s", deletedEntity));
-            createOrUpdateErrorRecordAndSyncStatus(null, false, deletedEntity,
-                    GoonjErrorType.DispatchDeletionFailure, e.getLocalizedMessage());
+            throw e;
         }
     }
 }

@@ -16,6 +16,10 @@ public class DispatchWorkerTest extends BaseGoonjSpringTest {
 
     @Test
     public void process() {
-        dispatchWorker.process();
+        try {
+            dispatchWorker.process();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

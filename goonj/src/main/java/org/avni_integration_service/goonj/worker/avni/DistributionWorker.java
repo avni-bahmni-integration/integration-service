@@ -11,8 +11,11 @@ import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
 import org.avni_integration_service.goonj.repository.DistributionRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
+import org.avni_integration_service.integration_data.service.error.ErrorClassifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,14 +28,16 @@ public class DistributionWorker extends GeneralEncounterWorker {
                               AvniGoonjErrorService avniGoonjErrorService,
                               IntegratingEntityStatusRepository integrationEntityStatusRepository,
                               GoonjMappingGroup goonjMappingGroup,
-                              DistributionRepository distributionRepository) {
+                              DistributionRepository distributionRepository,
+                              ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, goonjMappingGroup, integrationEntityStatusRepository,
-                GoonjErrorType.DistributionAttributesMismatch, GoonjEntityType.Distribution, Logger.getLogger(DistributionWorker.class));
+                GoonjErrorType.DistributionAttributesMismatch, GoonjEntityType.Distribution, Logger.getLogger(DistributionWorker.class),
+                errorClassifier, integrationSystem);
         this.distributionRepository = distributionRepository;
 
     }
-    public void process() {
+    public void process() throws Exception {
         processEncounters();
     }
     @Override

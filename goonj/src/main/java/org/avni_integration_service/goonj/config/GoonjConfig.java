@@ -1,6 +1,8 @@
 package org.avni_integration_service.goonj.config;
 
 import org.avni_integration_service.goonj.service.TokenService;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
+import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -39,6 +41,9 @@ public class GoonjConfig {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private IntegrationSystemRepository integrationSystemRepository;
 
     public String getSalesForceAuthUrl() {
         return salesForceAuthUrl;
@@ -80,5 +85,10 @@ public class GoonjConfig {
                 .build();
         restTemplate.setMessageConverters(Arrays.asList(new MappingJackson2HttpMessageConverter()));
         return restTemplate;
+    }
+
+    @Bean("GoonjIntegrationSystem")
+    public IntegrationSystem getGoonjIntegrationSystem() {
+        return integrationSystemRepository.findByName(GoonjMappingDbConstants.IntSystemName);
     }
 }

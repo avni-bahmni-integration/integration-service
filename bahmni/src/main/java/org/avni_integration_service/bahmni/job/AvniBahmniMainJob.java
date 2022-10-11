@@ -132,7 +132,7 @@ public class AvniBahmniMainJob {
         bahmniEntityDateWorker.fixVisitDates();
     }
 
-    private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) {
+    private void processErrorRecords(Constants allConstants, SyncDirection syncDirection) throws Exception {
         avniBahmniErrorRecordsWorker.cacheRunImmutables(allConstants);
         avniBahmniErrorRecordsWorker.process(syncDirection, false);
     }

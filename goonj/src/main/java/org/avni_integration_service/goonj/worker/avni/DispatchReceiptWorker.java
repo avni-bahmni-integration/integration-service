@@ -11,8 +11,11 @@ import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
 import org.avni_integration_service.goonj.repository.DispatchReceiptRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
+import org.avni_integration_service.integration_data.service.error.ErrorClassifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,13 +28,15 @@ public class DispatchReceiptWorker extends GeneralEncounterWorker {
                                  AvniGoonjErrorService avniGoonjErrorService,
                                  IntegratingEntityStatusRepository integrationEntityStatusRepository,
                                  GoonjMappingGroup goonjMappingGroup,
-                                 DispatchReceiptRepository dispatchReceiptRepository) {
+                                 DispatchReceiptRepository dispatchReceiptRepository,
+                                 ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, goonjMappingGroup, integrationEntityStatusRepository,
-                GoonjErrorType.DispatchReceiptAttributesMismatch, GoonjEntityType.DispatchReceipt, Logger.getLogger(DispatchReceiptWorker.class));
+                GoonjErrorType.DispatchReceiptAttributesMismatch, GoonjEntityType.DispatchReceipt, Logger.getLogger(DispatchReceiptWorker.class),
+                errorClassifier, integrationSystem);
         this.dispatchReceiptRepository = dispatchReceiptRepository;
     }
-    public void process() {
+    public void process() throws Exception {
         processEncounters();
     }
     @Override

@@ -159,7 +159,7 @@ public class AvniGoonjMainJob {
         }
     }
 
-    private void processErrorRecords(SyncDirection syncDirection) {
+    private void processErrorRecords(SyncDirection syncDirection) throws Exception {
         errorRecordsWorker.process(syncDirection, false);
     }
 

@@ -9,8 +9,11 @@ import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.domain.Demand;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DemandService;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
+import org.avni_integration_service.integration_data.service.error.ErrorClassifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -26,20 +29,20 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
 
     @Autowired
     public DemandEventWorker(DemandService demandService, AvniGoonjErrorService avniGoonjErrorService,
-                             AvniSubjectRepository avniSubjectRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository) {
-        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Demand);
+                             AvniSubjectRepository avniSubjectRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                             ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
+        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Demand, errorClassifier, integrationSystem);
         this.demandService = demandService;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.avniSubjectRepository = avniSubjectRepository;
     }
 
-    public void process(Map<String, Object> event) {
+    public void process(Map<String, Object> event) throws Exception {
         try {
             processDemand(event);
             updateErrorRecordAndSyncStatus(event, true, (String) event.get("DemandId"));
         } catch (Exception e) {
-            logger.error(String.format("Goonj Demand %s could not be synced to Goonj Salesforce. ", event.get("DemandId")), e);
-            createOrUpdateErrorRecordAndSyncStatus(event, true, (String) event.get("DemandId"), GoonjErrorType.DemandAttributesMismatch, e.getLocalizedMessage());
+            handleError(event, e, "DemandId", GoonjErrorType.DemandAttributesMismatch);
         }
     }
 
@@ -51,7 +54,7 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
         avniSubjectRepository.create(subject);
     }
 
-    public void processError(String demandUuid) {
+    public void processError(String demandUuid) throws Exception {
         HashMap<String, Object> demand = demandService.getDemand(demandUuid);
         if (demand == null) {
             logger.warn(String.format("Demand has been deleted now: %s", demandUuid));
@@ -70,13 +73,10 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
         try {
             logger.debug(String.format("Processing demand deletion: externalId %s", deletedEntity));
             avniSubjectRepository.delete(deletedEntity);
-            updateErrorRecordAndSyncStatus(null, false, deletedEntity);
         } catch (HttpClientErrorException.NotFound e) {
             logger.error(String.format("Failed to delete non-existent demand: externalId %s", deletedEntity));
         } catch (Exception e) {
             logger.error(String.format("Failed to delete demand: externalId %s", deletedEntity));
-            createOrUpdateErrorRecordAndSyncStatus(null, false, deletedEntity,
-                    GoonjErrorType.DemandDeletionFailure, e.getLocalizedMessage());
         }
     }
 }

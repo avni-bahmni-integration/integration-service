@@ -43,7 +43,7 @@ public class AvniGoonjErrorRecordsWorker {
 
     private static final int pageSize = 20;
 
-    public void process(SyncDirection syncDirection, boolean allErrors) {
+    public void process(SyncDirection syncDirection, boolean allErrors) throws Exception {
         Page<ErrorRecord> errorRecordPage;
         int pageNumber = 0;
         do {

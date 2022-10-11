@@ -15,6 +15,10 @@ public class DemandWorkerTest extends BaseGoonjSpringTest {
 
     @Test
     public void process() {
-        demandWorker.process();
+        try {
+            demandWorker.process();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
