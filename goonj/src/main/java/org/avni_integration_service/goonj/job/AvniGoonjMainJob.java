@@ -70,7 +70,20 @@ public class AvniGoonjMainJob {
             avniHttpClient.setAvniSession(goonjAvniSession);
 
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
+            processDemandAndDispatch(tasks);
+            processActivity(tasks);
+            processDispatchReceiptAndDistribution(tasks);
+            processErrors(tasks);
+        } catch (Throwable e) {
+            logger.error("Failed AvniGoonjMainJob", e);
+            bugsnag.notify(e);
+        } finally {
+            healthCheckService.verify(mainJobId);
+        }
+    }
 
+    private void processDemandAndDispatch(List<IntegrationTask> tasks) {
+        try {
             if (hasTask(tasks, IntegrationTask.GoonjDemand)) {
                 logger.info("Processing GoonjDemand");
                 demandWorker.process();
@@ -94,18 +107,43 @@ public class AvniGoonjMainJob {
                 dispatchWorker.processDeletions();
                 dispatchWorker.processDispatchLineItemDeletions();
             }
-            if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
-                logger.info("Processing AvniDispatchReceipt");
-                dispatchReceiptWorker.process();
-            }
+        } catch (Throwable e) {
+            logger.error("Failed processDemandAndDispatch", e);
+            bugsnag.notify(e);
+        }
+    }
+
+    private void processActivity(List<IntegrationTask> tasks) {
+        try {
             if (hasTask(tasks, IntegrationTask.AvniActivity)) {
                 logger.info("Processing AvniActivity");
                 activityWorker.process();
+            }
+        } catch (Throwable e) {
+            logger.error("Failed processActivity", e);
+            bugsnag.notify(e);
+        }
+    }
+
+    private void processDispatchReceiptAndDistribution(List<IntegrationTask> tasks) {
+        try {
+
+            if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
+                logger.info("Processing AvniDispatchReceipt");
+                dispatchReceiptWorker.process();
             }
             if (hasTask(tasks, IntegrationTask.AvniDistribution)) {
                 logger.info("Processing AvniDistribution");
                 distributionWorker.process();
             }
+        } catch (Throwable e) {
+            logger.error("Failed processDispatchReceiptAndDistribution", e);
+            bugsnag.notify(e);
+        }
+    }
+
+    private void processErrors(List<IntegrationTask> tasks) {
+        try {
             /**
              * All our Error Records for Goonj, i.e. Demand, Dispatch, Distro, DispatchReceipt and Activity
              * are stored using integrating_entity_type column, hence only SyncDirection.GoonjToAvni matters
@@ -116,10 +154,8 @@ public class AvniGoonjMainJob {
                 processErrorRecords(SyncDirection.GoonjToAvni);
             }
         } catch (Throwable e) {
-            logger.error("Failed", e);
+            logger.error("Failed processErrors", e);
             bugsnag.notify(e);
-        } finally {
-            healthCheckService.verify(mainJobId);
         }
     }
 

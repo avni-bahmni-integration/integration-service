@@ -20,6 +20,9 @@ public class ErrorRecordLog extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date loggedAt;
 
+    @Column(name = "error_msg")
+    private String errorMsg;
+
     public ErrorType getErrorType() {
         return errorType;
     }
@@ -42,6 +45,14 @@ public class ErrorRecordLog extends BaseEntity {
 
     public Date getLoggedAt() {
         return loggedAt;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 
     @Override

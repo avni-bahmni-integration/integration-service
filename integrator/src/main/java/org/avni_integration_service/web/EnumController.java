@@ -5,6 +5,7 @@ import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.domain.framework.NamedIntegrationSpecificEntity;
 import org.avni_integration_service.integration_data.repository.*;
+import org.avni_integration_service.web.contract.ErrorTypeContract;
 import org.avni_integration_service.web.contract.NamedEntityContract;
 import org.avni_integration_service.web.contract.NamedIntegrationSystemSpecificContract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +34,6 @@ public class EnumController extends BaseController {
         this.mappingTypeRepository = mappingTypeRepository;
         this.mappingGroupRepository = mappingGroupRepository;
         this.errorTypeRepository = errorTypeRepository;
-    }
-
-    private NamedIntegrationSystemSpecificContract getNamedEntityContract(BaseRepository baseRepository, int id) {
-        NamedIntegrationSpecificEntity entity = (NamedIntegrationSpecificEntity) baseRepository.findEntity(id);
-        return new NamedIntegrationSystemSpecificContract(entity);
-    }
-
-    private List<NamedIntegrationSystemSpecificContract> getEnumResponses(NamedIntegrationSpecificEntity[] values) {
-        return Arrays.stream(values).map((NamedIntegrationSystemSpecificContract::new)).sorted(Comparator.comparing(NamedEntityContract::getName)).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/int/mappingGroup", method = {RequestMethod.GET})
@@ -93,32 +85,57 @@ public class EnumController extends BaseController {
     }
 
     @RequestMapping(value = "/int/errorType", method = {RequestMethod.GET})
-    public List<NamedIntegrationSystemSpecificContract> getErrorTypes(@RequestParam(value = "ids", required = false) String ids,
+    public List<ErrorTypeContract> getErrorTypes(@RequestParam(value = "ids", required = false) String ids,
                                                                       Pageable pageable, Principal principal) {
         if (ids == null) {
             List<ErrorType> all = errorTypeRepository.findAllByIntegrationSystem(getCurrentIntegrationSystem(principal));
-            return mapStream(all.stream().map(ent -> ent));
+            return mapErrorTypeStream(all.stream().map(ent -> ent));
         } else {
             Integer[] eTypes = Arrays.stream(ids.split(",")).map(Integer::parseInt).toArray(Integer[]::new);
-            return mapStream(errorTypeRepository.findByIdIn(eTypes).stream().map(ent -> ent));
+            return mapErrorTypeStream(errorTypeRepository.findByIdIn(eTypes).stream().map(ent -> ent));
         }
     }
 
     @RequestMapping(value = "/int/errorType/{id}", method = {RequestMethod.GET})
-    public NamedIntegrationSystemSpecificContract getErrorType(@PathVariable("id") int id) {
-        return getNamedEntityContract(errorTypeRepository, id);
+    public ErrorTypeContract getErrorType(@PathVariable("id") int id) {
+        return getErrorTypeContract(errorTypeRepository, id);
     }
 
     @RequestMapping(value = "/int/errorType", method = {RequestMethod.POST})
     @Transactional
-    public NamedIntegrationSystemSpecificContract postErrorType(@RequestBody NamedEntityContract namedEntityContract, Principal principal) {
-        ErrorType errorType = new ErrorType(namedEntityContract.getName(), getCurrentIntegrationSystem(principal));
-        return new NamedIntegrationSystemSpecificContract(errorTypeRepository.save(errorType));
+    public ErrorTypeContract postErrorType(@RequestBody ErrorTypeContract errorTypeContract, Principal principal) {
+        ErrorType errorType = new ErrorType(errorTypeContract.getName(), getCurrentIntegrationSystem(principal),
+                errorTypeContract.getComparisonOperator(), errorTypeContract.getComparisonValue());
+        return new ErrorTypeContract(errorTypeRepository.save(errorType));
+    }
+
+    private NamedIntegrationSystemSpecificContract getNamedEntityContract(BaseRepository baseRepository, int id) {
+        NamedIntegrationSpecificEntity entity = (NamedIntegrationSpecificEntity) baseRepository.findEntity(id);
+        return new NamedIntegrationSystemSpecificContract(entity);
+    }
+
+    private List<NamedIntegrationSystemSpecificContract> getEnumResponses(NamedIntegrationSpecificEntity[] values) {
+        return Arrays.stream(values).map((NamedIntegrationSystemSpecificContract::new)).sorted(Comparator.comparing(NamedEntityContract::getName)).collect(Collectors.toList());
     }
 
     private List<NamedIntegrationSystemSpecificContract> mapStream(Stream<NamedIntegrationSpecificEntity> all) {
         return all.map((NamedIntegrationSystemSpecificContract::new))
                 .sorted(Comparator.comparing(NamedIntegrationSystemSpecificContract::getName))
+                .collect(Collectors.toList());
+    }
+
+    private ErrorTypeContract getErrorTypeContract(BaseRepository baseRepository, int id) {
+        ErrorType entity = (ErrorType) baseRepository.findEntity(id);
+        return new ErrorTypeContract(entity);
+    }
+
+    private List<ErrorTypeContract> getErrorTypeEnumResponses(ErrorType[] values) {
+        return Arrays.stream(values).map((ErrorTypeContract::new)).sorted(Comparator.comparing(ErrorTypeContract::getName)).collect(Collectors.toList());
+    }
+
+    private List<ErrorTypeContract> mapErrorTypeStream(Stream<ErrorType> all) {
+        return all.map((ErrorTypeContract::new))
+                .sorted(Comparator.comparing(ErrorTypeContract::getName))
                 .collect(Collectors.toList());
     }
 }

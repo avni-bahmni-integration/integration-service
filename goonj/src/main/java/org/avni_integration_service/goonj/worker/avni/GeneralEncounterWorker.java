@@ -86,8 +86,9 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     public void processError(String entityUuid) {
         GeneralEncounter generalEncounter = avniEncounterRepository.getGeneralEncounter(entityUuid);
         if (generalEncounter == null) {
-            logger.warn(String.format("GeneralEncounter has been deleted now: %s", entityUuid));
-            avniGoonjErrorService.errorOccurred(entityUuid, GoonjErrorType.EntityIsDeleted, AvniEntityType.GeneralEncounter);
+            String message = String.format("GeneralEncounter has been deleted now: %s", entityUuid);
+            logger.warn(message);
+            avniGoonjErrorService.errorOccurred(entityUuid, GoonjErrorType.EntityIsDeleted, AvniEntityType.GeneralEncounter, message);
             return;
         }
 
@@ -124,7 +125,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
             return;
         } catch (Exception e) {
             logger.error(String.format("Avni encounter %s could not be synced to Goonj Salesforce. ", generalEncounter.getUuid()), e);
-            createOrUpdateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid(), goonjErrorType);
+            createOrUpdateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid(), goonjErrorType, e.getLocalizedMessage());
         }
     }
 
@@ -150,8 +151,8 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
         updateSyncStatus(generalEncounter, updateSyncStatus);
     }
 
-    private void createOrUpdateErrorRecordAndSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus, String sid, GoonjErrorType goonjErrorType) {
-        avniGoonjErrorService.errorOccurred(sid, goonjErrorType, entityType);
+    private void createOrUpdateErrorRecordAndSyncStatus(GeneralEncounter generalEncounter, boolean updateSyncStatus, String sid, GoonjErrorType goonjErrorType, String errorMsg) {
+        avniGoonjErrorService.errorOccurred(sid, goonjErrorType, entityType, errorMsg);
         updateSyncStatus(generalEncounter, updateSyncStatus);
     }
 

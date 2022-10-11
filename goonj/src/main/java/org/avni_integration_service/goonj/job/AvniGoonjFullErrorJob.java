@@ -28,7 +28,7 @@ public class AvniGoonjFullErrorJob {
              */
             avniGoonjErrorRecordsWorker.process(SyncDirection.GoonjToAvni, true);
         } catch (Exception e) {
-            logger.error("Failed", e);
+            logger.error("Failed AvniGoonjFullErrorJob", e);
             bugsnag.notify(e);
         }
     }

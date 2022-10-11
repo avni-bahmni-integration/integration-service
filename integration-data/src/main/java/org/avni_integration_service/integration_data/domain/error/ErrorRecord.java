@@ -9,6 +9,7 @@ import java.util.*;
 
 @Entity
 public class ErrorRecord extends BaseIntegrationSpecificEntity {
+    private static final String EMPTY_STRING = "";
     @Column
     @Enumerated(EnumType.STRING)
     private AvniEntityType avniEntityType;
@@ -55,8 +56,13 @@ public class ErrorRecord extends BaseIntegrationSpecificEntity {
     }
 
     public void addErrorType(ErrorType errorType) {
+        addErrorType(errorType, EMPTY_STRING);
+    }
+
+    public void addErrorType(ErrorType errorType, String errorMsg) {
         ErrorRecordLog errorRecordLog = new ErrorRecordLog();
         errorRecordLog.setErrorType(errorType);
+        errorRecordLog.setErrorMsg(errorMsg);
         errorRecordLog.setLoggedAt(new Date());
         errorRecordLogs.add(errorRecordLog);
         errorRecordLog.setErrorRecord(this);

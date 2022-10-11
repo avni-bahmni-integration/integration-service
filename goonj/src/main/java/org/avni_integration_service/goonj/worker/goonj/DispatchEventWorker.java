@@ -42,7 +42,7 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
             updateErrorRecordAndSyncStatus(event, true, (String) event.get("DispatchStatusId"));
         } catch (Exception e) {
             logger.error(String.format("Goonj Dispatch %s could not be synced to Goonj Salesforce. ", event.get("DispatchStatusId")), e);
-            createOrUpdateErrorRecordAndSyncStatus(event, true, (String) event.get("DispatchStatusId"), GoonjErrorType.DispatchAttributesMismatch);
+            createOrUpdateErrorRecordAndSyncStatus(event, true, (String) event.get("DispatchStatusId"), GoonjErrorType.DispatchAttributesMismatch, e.getLocalizedMessage());
         }
     }
 
@@ -77,7 +77,7 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
         } catch (Exception e) {
             logger.error(String.format("Failed to delete dispatch line items: externalId %s", deletedEntity.getDispatchStatusLineItemId()));
             createOrUpdateErrorRecordAndSyncStatus(null, false, deletedEntity.getDispatchStatusLineItemId(),
-                    GoonjErrorType.DispatchLineItemsDeletionFailure);
+                    GoonjErrorType.DispatchLineItemsDeletionFailure, e.getLocalizedMessage());
         }
     }
 
@@ -104,7 +104,7 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
         } catch (Exception e) {
             logger.error(String.format("Failed to delete dispatch: externalId %s", deletedEntity));
             createOrUpdateErrorRecordAndSyncStatus(null, false, deletedEntity,
-                    GoonjErrorType.DispatchDeletionFailure);
+                    GoonjErrorType.DispatchDeletionFailure, e.getLocalizedMessage());
         }
     }
 }

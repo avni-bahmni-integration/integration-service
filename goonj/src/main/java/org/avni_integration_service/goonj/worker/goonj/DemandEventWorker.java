@@ -39,7 +39,7 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
             updateErrorRecordAndSyncStatus(event, true, (String) event.get("DemandId"));
         } catch (Exception e) {
             logger.error(String.format("Goonj Demand %s could not be synced to Goonj Salesforce. ", event.get("DemandId")), e);
-            createOrUpdateErrorRecordAndSyncStatus(event, true, (String) event.get("DemandId"), GoonjErrorType.DemandAttributesMismatch);
+            createOrUpdateErrorRecordAndSyncStatus(event, true, (String) event.get("DemandId"), GoonjErrorType.DemandAttributesMismatch, e.getLocalizedMessage());
         }
     }
 
@@ -76,7 +76,7 @@ public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWo
         } catch (Exception e) {
             logger.error(String.format("Failed to delete demand: externalId %s", deletedEntity));
             createOrUpdateErrorRecordAndSyncStatus(null, false, deletedEntity,
-                    GoonjErrorType.DemandDeletionFailure);
+                    GoonjErrorType.DemandDeletionFailure, e.getLocalizedMessage());
         }
     }
 }

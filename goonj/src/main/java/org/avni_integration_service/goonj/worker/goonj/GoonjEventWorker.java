@@ -31,8 +31,8 @@ public abstract class GoonjEventWorker {
     }
 
     void createOrUpdateErrorRecordAndSyncStatus(Map<String, Object> callResponse, boolean updateSyncStatus, String sid,
-                                                GoonjErrorType goonjErrorType) {
-        avniGoonjErrorService.errorOccurred(sid, goonjErrorType, entityType);
+                                                GoonjErrorType goonjErrorType, String errorMsg) {
+        avniGoonjErrorService.errorOccurred(sid, goonjErrorType, entityType, errorMsg);
         updateSyncStatus(callResponse, updateSyncStatus);
     }
 
