@@ -27,7 +27,8 @@ public class MappingMetadataController extends BaseController {
     private final MappingGroupRepository mappingGroupRepository;
 
     @Autowired
-    public MappingMetadataController(MappingMetaDataRepository mappingMetaDataRepository, UserRepository userRepository, MappingTypeRepository mappingTypeRepository, MappingGroupRepository mappingGroupRepository) {
+    public MappingMetadataController(MappingMetaDataRepository mappingMetaDataRepository, UserRepository userRepository,
+                                     MappingTypeRepository mappingTypeRepository, MappingGroupRepository mappingGroupRepository) {
         super(userRepository);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.mappingTypeRepository = mappingTypeRepository;

@@ -1,5 +1,6 @@
 package org.avni_integration_service.integration_data.repository;
 
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecordLog;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.springframework.data.domain.Page;
@@ -11,11 +12,18 @@ import java.util.Date;
 
 @Repository
 public interface ErrorRecordLogRepository extends PagingAndSortingRepository<ErrorRecordLog, Integer> {
-    Page<ErrorRecordLog> findAllByErrorRecordEntityIdContains(String entityId, Pageable pageable);
-    Page<ErrorRecordLog> findAllByErrorType(ErrorType errorType, Pageable pageable);
-    Page<ErrorRecordLog> findAllByErrorTypeAndErrorRecordEntityIdContains(ErrorType errorType, String entityId, Pageable pageable);
-
-    Page<ErrorRecordLog> findAllByLoggedAtAfterAndLoggedAtBefore(Date start, Date endDate, Pageable pageable);
-    Page<ErrorRecordLog> findAllByLoggedAtBefore(Date endDate, Pageable pageable);
-    Page<ErrorRecordLog> findAllByLoggedAtAfter(Date start, Pageable pageable);
+    Page<ErrorRecordLog> findAllByErrorRecordEntityIdContainsAndErrorRecordIntegrationSystem(String entityId, IntegrationSystem integrationSystem,
+                                                                                             Pageable pageable);
+    Page<ErrorRecordLog> findAllByErrorTypeAndErrorRecordIntegrationSystem(ErrorType errorType, IntegrationSystem integrationSystem,
+                                                                           Pageable pageable);
+    Page<ErrorRecordLog> findAllByErrorTypeAndErrorRecordEntityIdContainsAndErrorRecordIntegrationSystem(ErrorType errorType, String entityId,
+                                                                                                         IntegrationSystem integrationSystem,
+                                                                                                         Pageable pageable);
+    Page<ErrorRecordLog> findAllByLoggedAtAfterAndLoggedAtBeforeAndErrorRecordIntegrationSystem(Date start, Date endDate,
+                                                                                                IntegrationSystem integrationSystem,
+                                                                                                Pageable pageable);
+    Page<ErrorRecordLog> findAllByLoggedAtBeforeAndErrorRecordIntegrationSystem(Date endDate, IntegrationSystem integrationSystem,
+                                                                                Pageable pageable);
+    Page<ErrorRecordLog> findAllByLoggedAtAfterAndErrorRecordIntegrationSystem(Date start, IntegrationSystem integrationSystem, Pageable pageable);
+    Page<ErrorRecordLog> findAllByErrorRecordIntegrationSystem(IntegrationSystem currentIntegrationSystem, Pageable pageable);
 }

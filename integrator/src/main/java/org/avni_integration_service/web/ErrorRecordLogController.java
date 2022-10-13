@@ -1,11 +1,13 @@
 package org.avni_integration_service.web;
 
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecordLog;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordLogRepository;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.integration_data.repository.ErrorTypeRepository;
+import org.avni_integration_service.integration_data.repository.UserRepository;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.avni_integration_service.web.contract.ErrorWebContract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +17,28 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 
 @RestController
 @PreAuthorize("hasRole('USER')")
-public class ErrorRecordLogController {
+public class ErrorRecordLogController extends BaseController{
     private final ErrorRecordLogRepository errorRecordLogRepository;
     private final ErrorRecordRepository errorRecordRepository;
     private final ErrorTypeRepository errorTypeRepository;
 
     @Autowired
-    public ErrorRecordLogController(ErrorRecordLogRepository errorRecordLogRepository, ErrorRecordRepository errorRecordRepository, ErrorTypeRepository errorTypeRepository) {
+    public ErrorRecordLogController(UserRepository userRepository, ErrorRecordLogRepository errorRecordLogRepository,
+                                    ErrorRecordRepository errorRecordRepository, ErrorTypeRepository errorTypeRepository) {
+        super(userRepository);
         this.errorRecordLogRepository = errorRecordLogRepository;
         this.errorRecordRepository = errorRecordRepository;
         this.errorTypeRepository = errorTypeRepository;
     }
 
     @RequestMapping(value = "/int/errorRecordLog", method = {RequestMethod.GET})
-    public Page<ErrorWebContract> getPage(Pageable pageable) {
-        return toContractPage(errorRecordLogRepository.findAll(pageable));
+    public Page<ErrorWebContract> getPage(Pageable pageable, Principal principal) {
+        IntegrationSystem currentIntegrationSystem = getCurrentIntegrationSystem(principal);
+        return toContractPage(errorRecordLogRepository.findAllByErrorRecordIntegrationSystem(currentIntegrationSystem, pageable));
     }
 
     @RequestMapping(value = "/int/errorRecordLog/{id}", method = {RequestMethod.GET})
@@ -59,6 +65,7 @@ public class ErrorRecordLogController {
         errorWebContract.setId(errorRecordLog.getId());
         errorWebContract.setErrorType(errorRecordLog.getErrorType().getValue());
         errorWebContract.setLoggedAt(errorRecordLog.getLoggedAt());
+        errorWebContract.setErrorMsg(errorRecordLog.getErrorMsg());
         errorWebContract.setProcessingDisabled(errorRecordLog.getErrorRecord().isProcessingDisabled());
         errorWebContract.setIntegrationSystem(errorRecordLog.getErrorRecord().getIntegrationSystem().getName());
         AvniEntityType avniEntityType = errorRecordLog.getErrorRecord().getAvniEntityType();
@@ -74,24 +81,31 @@ public class ErrorRecordLogController {
     }
 
     @RequestMapping(value = "/int/errorRecordLog/search/findByEntity", method = {RequestMethod.GET})
-    public Page<ErrorWebContract> findByEntityId(@RequestParam("entityId") String entityId, Pageable pageable) {
-        return toContractPage(errorRecordLogRepository.findAllByErrorRecordEntityIdContains(entityId, pageable));
+    public Page<ErrorWebContract> findByEntityId(@RequestParam("entityId") String entityId, Pageable pageable, Principal principal) {
+        IntegrationSystem currentIntegrationSystem = getCurrentIntegrationSystem(principal);
+        return toContractPage(errorRecordLogRepository.findAllByErrorRecordEntityIdContainsAndErrorRecordIntegrationSystem
+                (entityId, currentIntegrationSystem, pageable));
     }
 
     @RequestMapping(value = "/int/errorRecordLog/search/findByErrorType", method = {RequestMethod.GET})
-    public Page<ErrorWebContract> findByErrorType(@RequestParam("errorType") int errorType, Pageable pageable) {
+    public Page<ErrorWebContract> findByErrorType(@RequestParam("errorType") int errorType, Pageable pageable, Principal principal) {
+        IntegrationSystem currentIntegrationSystem = getCurrentIntegrationSystem(principal);
         ErrorType et = errorTypeRepository.findEntity(errorType);
-        return toContractPage(errorRecordLogRepository.findAllByErrorType(et, pageable));
+        return toContractPage(errorRecordLogRepository.findAllByErrorTypeAndErrorRecordIntegrationSystem(et, currentIntegrationSystem, pageable));
     }
 
     @RequestMapping(value = "/int/errorRecordLog/search/findByStartDate", method = {RequestMethod.GET})
-    public Page<ErrorWebContract> findByStartDate(@RequestParam("startDate") String startDate, Pageable pageable) {
-        return toContractPage(errorRecordLogRepository.findAllByLoggedAtAfter(FormatAndParseUtil.fromAvniDate(startDate), pageable));
+    public Page<ErrorWebContract> findByStartDate(@RequestParam("startDate") String startDate, Pageable pageable, Principal principal) {
+        IntegrationSystem currentIntegrationSystem = getCurrentIntegrationSystem(principal);
+        return toContractPage(errorRecordLogRepository.findAllByLoggedAtAfterAndErrorRecordIntegrationSystem
+                (FormatAndParseUtil.fromAvniDate(startDate), currentIntegrationSystem, pageable));
     }
 
     @RequestMapping(value = "/int/errorRecordLog/search/findByEndDate", method = {RequestMethod.GET})
-    public Page<ErrorWebContract> findByEndDate(@RequestParam("endDate") String endDate, Pageable pageable) {
-        return toContractPage(errorRecordLogRepository.findAllByLoggedAtBefore(FormatAndParseUtil.fromAvniDate(endDate), pageable));
+    public Page<ErrorWebContract> findByEndDate(@RequestParam("endDate") String endDate, Pageable pageable, Principal principal) {
+        IntegrationSystem currentIntegrationSystem = getCurrentIntegrationSystem(principal);
+        return toContractPage(errorRecordLogRepository.findAllByLoggedAtBeforeAndErrorRecordIntegrationSystem
+                (FormatAndParseUtil.fromAvniDate(endDate), currentIntegrationSystem, pageable));
     }
 
     @RequestMapping(value = "/int/errorRecordLog/search/find", method = {RequestMethod.GET})
@@ -99,12 +113,15 @@ public class ErrorRecordLogController {
                                                     @RequestParam(value = "endDate", required = false) String endDate,
                                                     @RequestParam(value = "errorType", required = false) Integer errorType,
                                                     @RequestParam(value = "entityId", required = false) String entityId,
-                                                    Pageable pageable) {
+                                                    Pageable pageable, Principal principal) {
+        IntegrationSystem currentIntegrationSystem = getCurrentIntegrationSystem(principal);
         if (startDate != null && endDate != null)
-            return toContractPage(errorRecordLogRepository.findAllByLoggedAtAfterAndLoggedAtBefore(FormatAndParseUtil.fromAvniDate(startDate), FormatAndParseUtil.fromAvniDate(endDate), pageable));
+            return toContractPage(errorRecordLogRepository.findAllByLoggedAtAfterAndLoggedAtBeforeAndErrorRecordIntegrationSystem
+                    (FormatAndParseUtil.fromAvniDate(startDate), FormatAndParseUtil.fromAvniDate(endDate), currentIntegrationSystem, pageable));
         else if (errorType != null && entityId != null) {
             ErrorType et = errorTypeRepository.findEntity(errorType);
-            return toContractPage(errorRecordLogRepository.findAllByErrorTypeAndErrorRecordEntityIdContains(et, entityId.trim(), pageable));
+            return toContractPage(errorRecordLogRepository.findAllByErrorTypeAndErrorRecordEntityIdContainsAndErrorRecordIntegrationSystem
+                    (et, entityId.trim(), currentIntegrationSystem, pageable));
         }
         throw new RuntimeException("Invalid usage of find");
     }

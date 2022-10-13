@@ -9,6 +9,7 @@ public class ErrorWebContract {
     private String integratingEntityType;
     private String avniEntityType;
     private String entityId;
+    private String errorMsg;
     private boolean processingDisabled;
     private String integrationSystem;
 
@@ -74,5 +75,13 @@ public class ErrorWebContract {
 
     public void setIntegrationSystem(String integrationSystem) {
         this.integrationSystem = integrationSystem;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }
