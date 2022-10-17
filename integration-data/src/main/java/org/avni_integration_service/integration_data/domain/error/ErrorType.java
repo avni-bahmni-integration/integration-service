@@ -3,6 +3,7 @@ package org.avni_integration_service.integration_data.domain.error;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.framework.NamedIntegrationSpecificEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
