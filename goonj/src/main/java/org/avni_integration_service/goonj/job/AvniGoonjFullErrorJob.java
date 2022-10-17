@@ -4,8 +4,6 @@ import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
-import org.avni_integration_service.integration_data.domain.Constants;
-import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

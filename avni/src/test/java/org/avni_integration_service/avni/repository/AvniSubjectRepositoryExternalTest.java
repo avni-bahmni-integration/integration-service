@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +21,7 @@ class AvniSubjectRepositoryExternalTest {
 
     @Test
     public void getSubjects() {
-        GregorianCalendar calendar = new GregorianCalendar(1900, 0, 1);
+        GregorianCalendar calendar = new GregorianCalendar(1900, Calendar.JANUARY, 1);
         SubjectsResponse response = avniSubjectRepository.getSubjects(calendar.getTime(), "Individual");
         Subject[] subjects = response.getContent();
         assertNotEquals(0, subjects.length);

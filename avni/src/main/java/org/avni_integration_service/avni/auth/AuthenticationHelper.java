@@ -329,7 +329,7 @@ public class AuthenticationHelper {
          * @param ikm REQUIRED: The input key material.
          */
         public void init(byte[] ikm) {
-            this.init(ikm, (byte[]) null);
+            this.init(ikm, null);
         }
 
         /**
@@ -337,7 +337,7 @@ public class AuthenticationHelper {
          * @param salt REQUIRED: Random bytes for salt.
          */
         private void init(byte[] ikm, byte[] salt) {
-            byte[] realSalt = salt == null ? EMPTY_ARRAY : (byte[]) salt.clone();
+            byte[] realSalt = salt == null ? EMPTY_ARRAY : salt.clone();
             byte[] rawKeyMaterial = EMPTY_ARRAY;
 
             try {

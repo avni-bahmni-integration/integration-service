@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
@@ -76,7 +75,7 @@ public class GoonjConfig {
     @Bean("GoonjRestTemplate")
     RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplateBuilder()
-                .interceptors((ClientHttpRequestInterceptor) (httpRequest, bytes, execution) -> {
+                .interceptors((httpRequest, bytes, execution) -> {
                     httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION,
                             "Bearer " + tokenService.getRefreshedToken().getTokenValue());
                     httpRequest.getHeaders().remove(HttpHeaders.ACCEPT);

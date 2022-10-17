@@ -130,7 +130,6 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
         try {
             createOrUpdateGeneralEncounter(generalEncounter, subject);
             updateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid());
-            return;
         } catch (Exception e) {
             handleError(generalEncounter, e, updateSyncStatus, goonjErrorType);
         }

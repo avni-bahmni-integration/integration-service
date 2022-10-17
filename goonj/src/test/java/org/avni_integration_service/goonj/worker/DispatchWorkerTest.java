@@ -1,7 +1,6 @@
 package org.avni_integration_service.goonj.worker;
 
 import org.avni_integration_service.goonj.BaseGoonjSpringTest;
-import org.avni_integration_service.goonj.worker.goonj.DemandWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchWorker;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

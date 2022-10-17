@@ -28,7 +28,7 @@ public class AllTrustedSSLSocketFactory {
 
 		} };
 
-		SSLSocketFactory socketFactory = null;
+		SSLSocketFactory socketFactory;
 
 		try{
 			SSLContext sc = SSLContext.getInstance("TLS");

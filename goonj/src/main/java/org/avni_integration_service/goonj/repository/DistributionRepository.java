@@ -62,10 +62,10 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         }
         distributionDTO.setDispatchStatus(dispatchStatusId);
         HashMap<String, String> location = (HashMap<String, String>) encounter.getObservations().get(LOCATION);
-        distributionDTO.setLocalityVillageName((String) location.get(VILLAGE));
-        distributionDTO.setBlock((String) location.get(BLOCK));
-        distributionDTO.setDistrict((String) location.get(DISTRICT));
-        distributionDTO.setState((String) location.get(STATE));
+        distributionDTO.setLocalityVillageName(location.get(VILLAGE));
+        distributionDTO.setBlock(location.get(BLOCK));
+        distributionDTO.setDistrict(location.get(DISTRICT));
+        distributionDTO.setState(location.get(STATE));
         distributionDTO.setSourceId(encounter.getUuid());
         distributionDTO.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
         Date distributionDate = DateTimeUtil.convertToDate((String) encounter.getObservation(DISTRIBUTION_DATE));
