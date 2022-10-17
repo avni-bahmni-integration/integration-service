@@ -27,11 +27,10 @@ public class DispatchReceiptWorker extends GeneralEncounterWorker {
                                  AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
                                  AvniGoonjErrorService avniGoonjErrorService,
                                  IntegratingEntityStatusRepository integrationEntityStatusRepository,
-                                 GoonjMappingGroup goonjMappingGroup,
                                  DispatchReceiptRepository dispatchReceiptRepository,
                                  ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
-                avniGoonjErrorService, goonjMappingGroup, integrationEntityStatusRepository,
+                avniGoonjErrorService, integrationEntityStatusRepository,
                 GoonjErrorType.DispatchReceiptAttributesMismatch, GoonjEntityType.DispatchReceipt, Logger.getLogger(DispatchReceiptWorker.class),
                 errorClassifier, integrationSystem);
         this.dispatchReceiptRepository = dispatchReceiptRepository;

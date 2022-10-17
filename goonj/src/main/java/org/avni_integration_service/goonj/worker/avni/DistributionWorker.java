@@ -27,11 +27,10 @@ public class DistributionWorker extends GeneralEncounterWorker {
                               AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
                               AvniGoonjErrorService avniGoonjErrorService,
                               IntegratingEntityStatusRepository integrationEntityStatusRepository,
-                              GoonjMappingGroup goonjMappingGroup,
                               DistributionRepository distributionRepository,
                               ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
-                avniGoonjErrorService, goonjMappingGroup, integrationEntityStatusRepository,
+                avniGoonjErrorService, integrationEntityStatusRepository,
                 GoonjErrorType.DistributionAttributesMismatch, GoonjEntityType.Distribution, Logger.getLogger(DistributionWorker.class),
                 errorClassifier, integrationSystem);
         this.distributionRepository = distributionRepository;

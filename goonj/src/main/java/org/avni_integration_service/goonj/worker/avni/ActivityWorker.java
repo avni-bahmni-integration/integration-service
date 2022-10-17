@@ -27,11 +27,10 @@ public class ActivityWorker extends GeneralEncounterWorker {
                           AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
                           AvniGoonjErrorService avniGoonjErrorService,
                           IntegratingEntityStatusRepository integrationEntityStatusRepository,
-                          GoonjMappingGroup goonjMappingGroup,
                           ActivityRepository activityRepository,
                           ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
-                avniGoonjErrorService, goonjMappingGroup, integrationEntityStatusRepository,
+                avniGoonjErrorService, integrationEntityStatusRepository,
                 GoonjErrorType.ActivityAttributesMismatch, GoonjEntityType.Activity, Logger.getLogger(ActivityWorker.class),
                 errorClassifier, integrationSystem);
         this.activityRepository = activityRepository;

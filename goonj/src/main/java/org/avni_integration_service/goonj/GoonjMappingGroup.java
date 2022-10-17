@@ -7,8 +7,6 @@ import org.avni_integration_service.integration_data.repository.MappingGroupRepo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-
 @Service
 public class GoonjMappingGroup {
     private static final Logger logger = Logger.getLogger(GoonjMappingGroup.class);
@@ -18,7 +16,6 @@ public class GoonjMappingGroup {
     public final MappingGroup dispatchReceipt;
     public final MappingGroup distribution;
     public final MappingGroup activity;
-    private final MappingGroup[] goonjEncounterMappingGroups;
 
     @Autowired
     public GoonjMappingGroup(MappingGroupRepository mappingGroupRepository) {
@@ -28,9 +25,5 @@ public class GoonjMappingGroup {
         this.dispatchReceipt = mappingGroupRepository.findByName(GoonjMappingDbConstants.MappingGroup_DispatchReceipt);
         this.distribution = mappingGroupRepository.findByName(GoonjMappingDbConstants.MappingGroup_Distribution);
         this.activity = mappingGroupRepository.findByName(GoonjMappingDbConstants.MappingGroup_Activity);
-        this.goonjEncounterMappingGroups = new MappingGroup[]{dispatch};
-    }
-    public boolean isGoonjEncounterInAvni(String encounterType) {
-        return Arrays.asList(goonjEncounterMappingGroups).contains(encounterType);
     }
 }

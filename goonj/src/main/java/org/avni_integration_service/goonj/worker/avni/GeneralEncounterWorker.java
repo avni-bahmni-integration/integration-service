@@ -10,7 +10,6 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
-import org.avni_integration_service.goonj.GoonjMappingGroup;
 import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
@@ -31,7 +30,6 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     private final AvniSubjectRepository avniSubjectRepository;
     private final AvniIgnoredConceptsRepository avniIgnoredConceptsRepository;
     private final AvniGoonjErrorService avniGoonjErrorService;
-    private final GoonjMappingGroup goonjMappingGroup;
     private final IntegratingEntityStatusRepository integrationEntityStatusRepository;
 
     private final GoonjErrorType goonjErrorType;
@@ -44,14 +42,13 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     public GeneralEncounterWorker(AvniEncounterRepository avniEncounterRepository, AvniSubjectRepository avniSubjectRepository,
                                   AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
                                   AvniGoonjErrorService avniGoonjErrorService,
-                                  GoonjMappingGroup goonjMappingGroup, IntegratingEntityStatusRepository integrationEntityStatusRepository,
+                                  IntegratingEntityStatusRepository integrationEntityStatusRepository,
                                   GoonjErrorType goonjErrorType, GoonjEntityType entityType, Logger logger,
                                   ErrorClassifier errorClassifier, IntegrationSystem integrationSystem) {
         this.avniEncounterRepository = avniEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
         this.avniGoonjErrorService = avniGoonjErrorService;
-        this.goonjMappingGroup = goonjMappingGroup;
         this.integrationEntityStatusRepository = integrationEntityStatusRepository;
         this.goonjErrorType = goonjErrorType;
         this.entityType = entityType;
@@ -104,12 +101,6 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     }
 
     public void processGeneralEncounter(GeneralEncounter generalEncounter, boolean updateSyncStatus, GoonjErrorType goonjErrorType) throws Exception {
-        if (goonjMappingGroup.isGoonjEncounterInAvni(generalEncounter.getEncounterType())) {
-            logger.debug(String.format("Skipping Avni general encounter %s because it was created from Goonj. ", generalEncounter.getEncounterType()));
-            updateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid());
-            return;
-        }
-
         removeIgnoredObservations(generalEncounter);
         logger.debug(String.format("Processing avni general encounter %s", generalEncounter.getUuid()));
 
