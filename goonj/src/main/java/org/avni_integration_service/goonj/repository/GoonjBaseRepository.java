@@ -81,35 +81,27 @@ public abstract class GoonjBaseRepository {
     }
 
     protected HashMap<String, Object>[] createSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
+        logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
         URI uri = URI.create(String.format("%s/%s", goonjConfig.getAppUrl(), resource));
         ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
-        try {
-            ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
-            if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                return responseEntity.getBody();
-            }
-            logger.error(String.format("Failed to create resource %s,  response status code is %s", resource, responseEntity.getStatusCode()));
-            throw handleError(responseEntity, responseEntity.getStatusCode());
-        } catch(Exception e) {
-            logger.error("Error request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()), e);
-            throw e;
+        ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            return responseEntity.getBody();
         }
+        logger.error(String.format("Failed to create resource %s,  response status code is %s", resource, responseEntity.getStatusCode()));
+        throw handleError(responseEntity, responseEntity.getStatusCode());
     }
 
     protected Object deleteSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
+        logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
         URI uri = URI.create(String.format("%s/%s", goonjConfig.getAppUrl(), resource));
         ParameterizedTypeReference<Object> responseType = new ParameterizedTypeReference<>() {};
-        try {
-            ResponseEntity<Object> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
-            if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                return responseEntity.getBody();
-            }
-            logger.error(String.format("Failed to delete resource %s, response error message is %s", resource, responseEntity.getBody()));
-            throw getRestClientResponseException(responseEntity.getHeaders(), responseEntity.getStatusCode(), (String) responseEntity.getBody());
-        } catch(Exception e) {
-            logger.error("Error request body:" + requestEntity.getBody(), e);
-            throw e;
+        ResponseEntity<Object> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            return responseEntity.getBody();
         }
+        logger.error(String.format("Failed to delete resource %s, response error message is %s", resource, responseEntity.getBody()));
+        throw getRestClientResponseException(responseEntity.getHeaders(), responseEntity.getStatusCode(), (String) responseEntity.getBody());
     }
 
     protected RestClientException handleError(ResponseEntity<HashMap<String, Object>[]> responseEntity, HttpStatus statusCode) {
