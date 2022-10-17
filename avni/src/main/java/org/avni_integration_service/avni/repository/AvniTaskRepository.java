@@ -1,8 +1,6 @@
 package org.avni_integration_service.avni.repository;
 
 import org.avni_integration_service.avni.client.AvniHttpClient;
-import org.avni_integration_service.avni.domain.Subject;
-import org.avni_integration_service.avni.domain.SubjectsResponse;
 import org.avni_integration_service.avni.domain.Task;
 import org.avni_integration_service.avni.domain.TasksResponse;
 import org.avni_integration_service.util.ObjectJsonMapper;

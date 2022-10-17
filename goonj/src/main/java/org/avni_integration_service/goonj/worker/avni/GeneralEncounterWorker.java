@@ -121,7 +121,6 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
         try {
             createOrUpdateGeneralEncounter(generalEncounter, subject);
             updateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid());
-            return;
         } catch (Exception e) {
             logger.error(String.format("Avni encounter %s could not be synced to Goonj Salesforce. ", generalEncounter.getUuid()), e);
             createOrUpdateErrorRecordAndSyncStatus(generalEncounter, updateSyncStatus, generalEncounter.getUuid(), goonjErrorType);

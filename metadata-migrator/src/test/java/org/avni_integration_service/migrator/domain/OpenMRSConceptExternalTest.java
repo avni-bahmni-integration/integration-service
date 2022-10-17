@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 @SpringBootTest
 @Disabled
 public class OpenMRSConceptExternalTest {
@@ -21,7 +19,7 @@ public class OpenMRSConceptExternalTest {
     @Test
     public void biggerList() throws SQLException {
         List<OpenMRSConcept> concepts = openMRSRepository.getConcepts();
-        List<OpenMRSConcept> conceptList1 = concepts.stream().filter(openMRSConcept -> openMRSConcept.getName().equals("Chest Pain")).collect(Collectors.toList());
+        List<OpenMRSConcept> conceptList1 = concepts.stream().filter(openMRSConcept -> openMRSConcept.getName().equals("Chest Pain")).toList();
 
     }
 }

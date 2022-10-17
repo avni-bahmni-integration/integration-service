@@ -80,18 +80,18 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             activityDTO.setDemand(encounter.getSubjectExternalID());
         }
         /* Activity Date fields */
-        Date activityEndDate = DateTimeUtil.convertToDate((String) (String) encounter.getObservation(ACTIVITY_END_DATE));
+        Date activityEndDate = DateTimeUtil.convertToDate((String) encounter.getObservation(ACTIVITY_END_DATE));
         activityEndDate = DateTimeUtil.offsetTimeZone(activityEndDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         activityDTO.setActivityEndDate(DateTimeUtil.formatDate(activityEndDate));
-        Date activityStartDate = DateTimeUtil.convertToDate((String) (String) encounter.getObservation(ACTIVITY_START_DATE));
+        Date activityStartDate = DateTimeUtil.convertToDate((String) encounter.getObservation(ACTIVITY_START_DATE));
         activityStartDate = DateTimeUtil.offsetTimeZone(activityStartDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         activityDTO.setActivityStartDate(DateTimeUtil.formatDate(activityStartDate));
         /* Activity location fields */
         HashMap<String, String> location = (HashMap<String, String>) encounter.getObservations().get(LOCATION);
-        activityDTO.setLocalityVillageName((String) location.get(VILLAGE));
-        activityDTO.setBlock((String) location.get(BLOCK));
-        activityDTO.setDistrict((String) location.get(DISTRICT));
-        activityDTO.setState((String) location.get(STATE));
+        activityDTO.setLocalityVillageName(location.get(VILLAGE));
+        activityDTO.setBlock(location.get(BLOCK));
+        activityDTO.setDistrict(location.get(DISTRICT));
+        activityDTO.setState(location.get(STATE));
         /* Activity description fields */
         activityDTO.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
         mapActivityType(activityDTO, encounter);

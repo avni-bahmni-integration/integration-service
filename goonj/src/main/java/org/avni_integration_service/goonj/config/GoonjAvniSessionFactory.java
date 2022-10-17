@@ -4,7 +4,6 @@ import org.avni_integration_service.avni.client.AvniSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 @Configuration
 public class GoonjAvniSessionFactory {

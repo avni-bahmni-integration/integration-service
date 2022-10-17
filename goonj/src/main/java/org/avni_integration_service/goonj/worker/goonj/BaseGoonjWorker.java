@@ -2,7 +2,6 @@ package org.avni_integration_service.goonj.worker.goonj;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
-import org.avni_integration_service.integration_data.domain.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;

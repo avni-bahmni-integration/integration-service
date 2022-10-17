@@ -1,9 +1,7 @@
 package org.avni_integration_service.web;
 
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
-import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
-import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.MappingGroupRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.integration_data.repository.MappingTypeRepository;

@@ -3,6 +3,7 @@ package org.avni_integration_service.integration_data.util;
 import org.avni_integration_service.util.FormatAndParseUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FormatUtilTest {
     @Test
     public void toISODateString() {
-        GregorianCalendar gregorianCalendar = new GregorianCalendar(2020, 2, 3);
+        GregorianCalendar gregorianCalendar = new GregorianCalendar(2020, Calendar.MARCH, 3);
         assertEquals("2020-03-03T00:00:00.000Z", FormatAndParseUtil.toISODateTimeString(gregorianCalendar.getTime()));
     }
 
