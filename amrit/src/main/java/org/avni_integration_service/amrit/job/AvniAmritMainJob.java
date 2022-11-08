@@ -35,7 +35,7 @@ public class AvniAmritMainJob {
 
     public void execute() {
         try {
-            logger.info("Starting the Exotel call sync into Avni");
+            logger.info("Starting the Amrit entities pull from Avni");
             avniHttpClient.setAvniSession(amritAvniSessionFactory.createSession());
             beneficiaryWorker.syncBeneficiariesFromAvniToAmrit();
         } catch (Throwable e) {
