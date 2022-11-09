@@ -15,16 +15,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class TokenService {
+public class AmritTokenService {
 
-    private static final Logger logger = Logger.getLogger(TokenService.class);
+    private static final Logger logger = Logger.getLogger(AmritTokenService.class);
     private final Duration clockSkew = Duration.ofSeconds(60);
     private final Clock clock = Clock.systemUTC();
     private final AmritApplicationConfig amritConfig;
     private final RestTemplate restTemplate;
     private String tokenCache;
 
-    public TokenService(AmritApplicationConfig amritConfig, RestTemplate restTemplate) {
+    public AmritTokenService(AmritApplicationConfig amritConfig, RestTemplate restTemplate) {
         this.amritConfig = amritConfig;
         this.restTemplate = restTemplate;
     }

@@ -1,5 +1,7 @@
 package org.avni_integration_service.scheduler;
 
+import org.avni_integration_service.amrit.job.AvniAmritFullErrorJob;
+import org.avni_integration_service.amrit.job.AvniAmritMainJob;
 import org.avni_integration_service.bahmni.job.AvniBahmniFullErrorJob;
 import org.avni_integration_service.bahmni.job.AvniBahmniMainJob;
 import org.avni_integration_service.goonj.job.AvniGoonjFullErrorJob;
@@ -22,17 +24,22 @@ public class IntegrationJobScheduler {
     private final AvniGoonjFullErrorJob avniGoonjFullErrorJob;
     private final AvniPowerMainJob avniPowerMainJob;
     private final AvniPowerFullErrorJob avniPowerFullErrorJob;
+    private final AvniAmritMainJob avniAmritMainJob;
+    private final AvniAmritFullErrorJob avniAmritFullErrorJob;
+
 
     @Autowired
     public IntegrationJobScheduler(AvniBahmniMainJob avniBahmniMainJob, AvniBahmniFullErrorJob avniBahmniFullErrorJob,
                                    AvniGoonjMainJob avniGoonjMainJob, AvniGoonjFullErrorJob avniGoonjFullErrorJob,
-                                   AvniPowerMainJob avniPowerMainJob, AvniPowerFullErrorJob avniPowerFullErrorJob) {
+                                   AvniPowerMainJob avniPowerMainJob, AvniPowerFullErrorJob avniPowerFullErrorJob, AvniAmritMainJob avniAmritMainJob, AvniAmritFullErrorJob avniAmritFullErrorJob) {
         this.avniBahmniMainJob = avniBahmniMainJob;
         this.avniBahmniFullErrorJob = avniBahmniFullErrorJob;
         this.avniGoonjMainJob = avniGoonjMainJob;
         this.avniGoonjFullErrorJob = avniGoonjFullErrorJob;
         this.avniPowerMainJob = avniPowerMainJob;
         this.avniPowerFullErrorJob = avniPowerFullErrorJob;
+        this.avniAmritMainJob = avniAmritMainJob;
+        this.avniAmritFullErrorJob = avniAmritFullErrorJob;
     }
 
     @Scheduled(cron = "${goonj.app.cron.main}")
@@ -53,5 +60,11 @@ public class IntegrationJobScheduler {
     @Scheduled(cron = "${goonj.app.cron.full.error}")
     public void fullErrorGoonjJob() {
         avniGoonjFullErrorJob.execute();
+    }
+
+
+    @Scheduled(cron = "${amrit.app.cron.main}")
+    public void mainAmritJob() {
+        avniAmritMainJob.execute();
     }
 }
