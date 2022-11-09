@@ -1,14 +1,14 @@
-package org.avni_integration_service.amrit.contract;
+package org.avni_integration_service.amrit.dto;
 
-public class LoginContract {
+public class LoginRequest {
     private boolean doLogout;
     private String userName;
     private String password;
 
-    public LoginContract() {
+    public LoginRequest() {
     }
 
-    public LoginContract(String userName, String password) {
+    public LoginRequest(String userName, String password) {
         this.doLogout = true;
         this.userName = userName;
         this.password = password;

@@ -2,7 +2,7 @@ package org.avni_integration_service.amrit.service;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritApplicationConfig;
-import org.avni_integration_service.amrit.contract.LoginContract;
+import org.avni_integration_service.amrit.dto.LoginRequest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class AmritTokenService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         ParameterizedTypeReference<HashMap<String, Object>> responseType = new ParameterizedTypeReference<>() {
         };
-        LoginContract loginContract = new LoginContract(amritConfig.getAmritApiUser(), amritConfig.getAmritApiPassword());
+        LoginRequest loginContract = new LoginRequest(amritConfig.getAmritApiUser(), amritConfig.getAmritApiPassword());
         ResponseEntity<HashMap<String, Object>> responseEntity = restTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(loginContract, headers), responseType);
         HashMap<String, Object> body = responseEntity.getBody();
         if (responseEntity.getStatusCode() == HttpStatus.OK) {

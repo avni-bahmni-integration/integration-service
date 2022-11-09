@@ -2,8 +2,9 @@ package org.avni_integration_service.amrit.repository;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritApplicationConfig;
+import org.avni_integration_service.amrit.dto.AmritBaseResponse;
+import org.avni_integration_service.amrit.dto.AmritUpsertBeneficiaryResponse;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
-import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
@@ -21,28 +22,16 @@ public abstract class AmritBaseRepository {
     private static final String DELETION_SOURCE_ID = "sourceId";
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final RestTemplate amritRestTemplate;
-    private final AmritApplicationConfig amritApplicationConfig;
+    protected final AmritApplicationConfig amritApplicationConfig;
     private final String entityType;
-    protected final AvniHttpClient avniHttpClient;
 
-    public AmritBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository, RestTemplate restTemplate, AmritApplicationConfig goonjConfig, String entityType, AvniHttpClient avniHttpClient) {
+    public AmritBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository, RestTemplate restTemplate, AmritApplicationConfig amritApplicationConfig, String entityType) {
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.amritRestTemplate = restTemplate;
-        this.amritApplicationConfig = goonjConfig;
+        this.amritApplicationConfig = amritApplicationConfig;
         this.entityType = entityType;
-        this.avniHttpClient = avniHttpClient;
     }
 
-
-    protected <T> T getResponseEntity(String resource, HashMap<String, String> queryParams, Class<T> returnType) {
-        ResponseEntity<T> responseEntity = avniHttpClient.get(resource, queryParams, returnType);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        }
-        logger.error(String.format("Failed to fetch resource %s, response status code is %s", resource, responseEntity.getStatusCode()));
-        throw new HttpServerErrorException(responseEntity.getStatusCode());
-
-    }
 
     protected <T> T getResponse(Date dateTime, String resource, Class<T> returnType) {
         URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", amritApplicationConfig.getAmritServerUrl(), resource, DateTimeUtil.formatDateTime(dateTime)));
@@ -55,7 +44,7 @@ public abstract class AmritBaseRepository {
     }
 
     /**
-     * All our Sync time-stamps for Goonj, i.e. Demand, Dispatch, Distro, DispatchReceipt and Activity
+     * All our Sync time-stamps for Amrit, i.e. Beneficiary, CBAC Form, etc..
      * are stored using integrating_entity_status DB and none in avniEntityStatus table.
      *
      * @return cutOffDate
@@ -68,9 +57,9 @@ public abstract class AmritBaseRepository {
         return getCutOffDate();
     }
 
-    protected <T> T getSingleEntityResponse(String resource, String filter, String uuid, Class<T> returnType) {
-        URI uri = URI.create(String.format("%s/%s?%s=%s", amritApplicationConfig.getAmritServerUrl(), resource, filter, uuid));
-        ResponseEntity<T> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.GET, null, returnType);
+    protected <T> T getSingleEntityResponse(String resource, HttpEntity<?> requestEntity, Class<T> returnType) {
+        URI uri = URI.create(String.format("%s/%s", amritApplicationConfig.getAmritServerUrl(), resource));
+        ResponseEntity<T> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, returnType);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return responseEntity.getBody();
         }
@@ -78,12 +67,10 @@ public abstract class AmritBaseRepository {
         throw getRestClientResponseException(responseEntity.getHeaders(), responseEntity.getStatusCode(), null);
     }
 
-    protected HashMap<String, Object>[] createSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
+    protected <T extends AmritBaseResponse> T createSingleEntity(String resource, HttpEntity<?> requestEntity,Class<T> returnType) throws RestClientResponseException {
         logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
         URI uri = URI.create(String.format("%s/%s", amritApplicationConfig.getAmritServerUrl(), resource));
-        ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {
-        };
-        ResponseEntity<HashMap<String, Object>[]> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
+        ResponseEntity<T> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, returnType);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return responseEntity.getBody();
         }
@@ -105,10 +92,9 @@ public abstract class AmritBaseRepository {
     }
 
     //todo modify error extraction logic based on Amrit api response
-    protected RestClientException handleError(ResponseEntity<HashMap<String, Object>[]> responseEntity, HttpStatus statusCode) {
-        HashMap<String, Object>[] responseBody = responseEntity.getBody();
-        String message = (String) responseBody[0].get("message");
-        return getRestClientResponseException(responseEntity.getHeaders(), statusCode, message);
+    protected RestClientException handleError(ResponseEntity<? extends AmritBaseResponse> responseEntity, HttpStatus statusCode) {
+        AmritBaseResponse responseBody = responseEntity.getBody();
+        return getRestClientResponseException(responseEntity.getHeaders(), statusCode, responseBody.getErrorMessage());
     }
 
     private RestClientResponseException getRestClientResponseException(HttpHeaders headers, HttpStatus statusCode, String message) {
@@ -127,7 +113,7 @@ public abstract class AmritBaseRepository {
 
     public abstract HashMap<String, Object>[] fetchEvents();
 
-    public abstract HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter);
+    public abstract <T extends AmritBaseResponse> T createEvent(Subject subject, GeneralEncounter encounter, Class<T> returnType);
 
     public boolean wasEventCreatedSuccessfully(HashMap<String, Object>[] response) {
         return (response != null && response[0].get("errorCode") == null);

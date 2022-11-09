@@ -21,15 +21,16 @@ public class BeneficiaryWorker implements BeneficiaryConstant {
     private static final Logger logger = Logger.getLogger(BeneficiaryWorker.class);
     private final BeneficiaryService beneficiaryService;
     private final AvniSubjectRepository avniSubjectRepository;
-    private final AvniAmritErrorService avniAmritErrorService;
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final IntegratingEntityStatusService integratingEntityStatusService;
 
-    public BeneficiaryWorker(BeneficiaryService beneficiaryService, IntegratingEntityStatusRepository integratingEntityStatusRepository, AvniSubjectRepository avniSubjectRepository, AvniAmritErrorService avniAmritErrorService, IntegratingEntityStatusService integratingEntityStatusService) {
+    public BeneficiaryWorker(BeneficiaryService beneficiaryService,
+                             IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                             AvniSubjectRepository avniSubjectRepository,
+                             IntegratingEntityStatusService integratingEntityStatusService) {
         this.beneficiaryService = beneficiaryService;
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.avniSubjectRepository = avniSubjectRepository;
-        this.avniAmritErrorService = avniAmritErrorService;
         this.integratingEntityStatusService = integratingEntityStatusService;
     }
 
@@ -57,18 +58,15 @@ public class BeneficiaryWorker implements BeneficiaryConstant {
     }
 
     private void updateSyncStatus(Subject subject, boolean updateSyncStatus) {
-        if (updateSyncStatus) //TODO check if getLastModifiedDate stored has valid time component
+        if (updateSyncStatus) {//TODO check if getLastModifiedDate stored has valid time component
             integratingEntityStatusService.saveEntityStatus(AmritEntityType.BENEFICIARY.name(), subject.getLastModifiedDate());
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void processSubject(Subject subject, boolean updateSyncStatus) {
         logger.debug("Processing subject %s".formatted(subject.getUuid()));
-        try {
-            beneficiaryService.createOrUpdateBeneficiary(subject);
-        } catch (Exception e) {
-            avniAmritErrorService.errorOccurred(subject.getUuid(), AmritErrorType.BeneficiaryCreationError, AmritEntityType.BENEFICIARY, e.getLocalizedMessage());
-        }
+        beneficiaryService.createOrUpdateBeneficiary(subject);
         updateSyncStatus(subject, updateSyncStatus);
     }
 }
