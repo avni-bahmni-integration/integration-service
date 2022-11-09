@@ -3,6 +3,7 @@ package org.avni_integration_service.amrit.service;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritApplicationConfig;
 import org.avni_integration_service.amrit.repository.BeneficiaryRepository;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +19,9 @@ public class BeneficiaryService {
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.amritApplicationConfig = amritApplicationConfig;
         this.beneficiaryRepository = beneficiaryRepository;
+    }
+
+    public void createOrUpdateBeneficiary(Subject subject) {
+        beneficiaryRepository.createEvent(subject, null);
     }
 }

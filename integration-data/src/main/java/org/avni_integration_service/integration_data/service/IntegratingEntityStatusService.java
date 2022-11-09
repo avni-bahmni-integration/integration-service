@@ -12,7 +12,7 @@ public class IntegratingEntityStatusService {
     @Autowired
     private IntegratingEntityStatusRepository integratingEntityStatusRepository;
 
-    private void saveEntityStatus(String entityType, Date lastModifiedDate) {
+    public void saveEntityStatus(String entityType, Date lastModifiedDate) {
         IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(entityType);
         status.setReadUptoDateTime(lastModifiedDate);
         integratingEntityStatusRepository.save(status);

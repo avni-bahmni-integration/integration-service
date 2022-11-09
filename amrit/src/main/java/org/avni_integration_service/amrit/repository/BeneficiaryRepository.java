@@ -45,11 +45,6 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
     }
 
     @Override
-    public List<String> fetchDeletionEvents() {
-        return null;
-    }
-
-    @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
         return new HashMap[0];
     }

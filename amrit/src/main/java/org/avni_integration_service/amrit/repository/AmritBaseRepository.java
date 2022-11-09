@@ -127,8 +127,6 @@ public abstract class AmritBaseRepository {
 
     public abstract HashMap<String, Object>[] fetchEvents();
 
-    public abstract List<String> fetchDeletionEvents();
-
     public abstract HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter);
 
     public boolean wasEventCreatedSuccessfully(HashMap<String, Object>[] response) {
