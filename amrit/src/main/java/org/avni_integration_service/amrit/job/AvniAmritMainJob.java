@@ -38,6 +38,7 @@ public class AvniAmritMainJob {
             logger.info("Starting the Amrit entities pull from Avni");
             avniHttpClient.setAvniSession(amritAvniSessionFactory.createSession());
             beneficiaryWorker.syncBeneficiariesFromAvniToAmrit();
+            beneficiaryWorker.scanSyncStatusOfBeneficiariesFromAvniToAmrit();
         } catch (Throwable e) {
             logger.error("Failed", e);
             bugsnag.notify(e);

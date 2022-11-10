@@ -4,7 +4,7 @@ import java.util.List;
 
 public class AmritFetchIdentityResponse extends AmritBaseResponse {
 
-    public List<Long> getIds() {
-        return (List<Long>) getData();
+    public List<String> getIds() {
+        return (List<String>) getData();
     }
 }

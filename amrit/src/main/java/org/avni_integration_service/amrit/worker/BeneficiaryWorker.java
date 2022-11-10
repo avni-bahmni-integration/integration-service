@@ -2,9 +2,7 @@ package org.avni_integration_service.amrit.worker;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritEntityType;
-import org.avni_integration_service.amrit.config.AmritErrorType;
 import org.avni_integration_service.amrit.config.BeneficiaryConstant;
-import org.avni_integration_service.amrit.service.AvniAmritErrorService;
 import org.avni_integration_service.amrit.service.BeneficiaryService;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.domain.SubjectsResponse;
@@ -34,21 +32,37 @@ public class BeneficiaryWorker implements BeneficiaryConstant {
         this.integratingEntityStatusService = integratingEntityStatusService;
     }
 
-    //TODO
     public void syncBeneficiariesFromAvniToAmrit() {
-        processSubjects();
+        processSubjects(AmritEntityType.Beneficiary);
     }
 
-    public void processSubjects() {
+    public void scanSyncStatusOfBeneficiariesFromAvniToAmrit() {
+        processSubjects(AmritEntityType.BeneficiaryScan);
+    }
+
+    public void processSubjects(AmritEntityType entityType) {
         while (true) {
-            IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(AmritEntityType.BENEFICIARY.name()); //TODO add entry in int-ent-status table for beneficiary for amrit system
+            IntegratingEntityStatus beneficiarySyncStatus = integratingEntityStatusRepository.findByEntityType(AmritEntityType.Beneficiary.name());
+            IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(entityType.name());
             SubjectsResponse response = avniSubjectRepository.getSubjects(status.getReadUptoDateTime(), SUBJECT_TYPE);
             Subject[] subjects = response.getContent();
             int totalPages = response.getTotalPages();
             logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUptoDateTime()));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {
-                processSubject(subject, true);
+                if(entityType.equals(AmritEntityType.Beneficiary)) {
+                    processSubject(entityType, subject, true);
+                } else if(entityType.equals(AmritEntityType.BeneficiaryScan)) {
+                    if (beneficiarySyncAttempted(subject, beneficiarySyncStatus)) {
+                        checkIfSubjectWasSavedSuccessfully(entityType, subject, true);
+                    } else {
+                        logger.warn("Stopped processing as sync has not yet been attempted " +
+                                "for entities with lastModifiedDate "+ subject.getLastModifiedDate());
+                        break;
+                    }
+                } else {
+                    throw new UnsupportedOperationException("AmritEntityType " + entityType+ " is not supported");
+                }
             }
             if (totalPages == 1) {
                 logger.info("Finished processing all pages");
@@ -57,16 +71,26 @@ public class BeneficiaryWorker implements BeneficiaryConstant {
         }
     }
 
-    private void updateSyncStatus(Subject subject, boolean updateSyncStatus) {
-        if (updateSyncStatus) {//TODO check if getLastModifiedDate stored has valid time component
-            integratingEntityStatusService.saveEntityStatus(AmritEntityType.BENEFICIARY.name(), subject.getLastModifiedDate());
-        }
-    }
-
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected void processSubject(Subject subject, boolean updateSyncStatus) {
+    protected void processSubject(AmritEntityType entityType, Subject subject, boolean updateSyncStatus) {
         logger.debug("Processing subject %s".formatted(subject.getUuid()));
         beneficiaryService.createOrUpdateBeneficiary(subject);
-        updateSyncStatus(subject, updateSyncStatus);
+        updateSyncStatus(entityType, subject, updateSyncStatus);
+    }
+
+    protected void checkIfSubjectWasSavedSuccessfully(AmritEntityType entityType, Subject subject, boolean updateSyncStatus) {
+        logger.debug("Processing subject %s".formatted(subject.getUuid()));
+        beneficiaryService.wasFetchOfAmritIdSuccessful(subject, true);
+        updateSyncStatus(entityType, subject, updateSyncStatus);
+    }
+
+    private boolean beneficiarySyncAttempted(Subject subject, IntegratingEntityStatus beneficiarySyncStatus) {
+        return subject.getLastModifiedDate().before(beneficiarySyncStatus.getReadUptoDateTime());
+    }
+
+    private void updateSyncStatus(AmritEntityType entityType, Subject subject, boolean updateSyncStatus) {
+        if (updateSyncStatus) {//TODO check if getLastModifiedDate stored has valid time component and can be used in next sync
+            integratingEntityStatusService.saveEntityStatus(entityType.name(), subject.getLastModifiedDate());
+        }
     }
 }

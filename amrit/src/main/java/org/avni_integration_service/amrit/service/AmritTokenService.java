@@ -24,9 +24,9 @@ public class AmritTokenService {
     private final RestTemplate restTemplate;
     private String tokenCache;
 
-    public AmritTokenService(AmritApplicationConfig amritConfig, RestTemplate restTemplate) {
+    public AmritTokenService(AmritApplicationConfig amritConfig) {
         this.amritConfig = amritConfig;
-        this.restTemplate = restTemplate;
+        this.restTemplate = new RestTemplate();
     }
 
     public String getRefreshedToken() {
@@ -51,6 +51,7 @@ public class AmritTokenService {
         ResponseEntity<HashMap<String, Object>> responseEntity = restTemplate.exchange(uri, HttpMethod.POST, new HttpEntity<>(loginContract, headers), responseType);
         HashMap<String, Object> body = responseEntity.getBody();
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            //TODO handle invalid credentials error
             Map map = (Map) body.get("data");
             return (String) map.get("key");
         }

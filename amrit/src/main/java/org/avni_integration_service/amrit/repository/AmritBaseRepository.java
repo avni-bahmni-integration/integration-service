@@ -2,13 +2,21 @@ package org.avni_integration_service.amrit.repository;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritApplicationConfig;
+import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.amrit.dto.AmritUpsertBeneficiaryResponse;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
+import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.ObservationHolder;
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
+import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
+import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
+import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.ObjectJsonMapper;
+import org.avni_integration_service.util.ObsDataType;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.*;
@@ -16,20 +24,29 @@ import org.springframework.web.client.*;
 import java.net.URI;
 import java.util.*;
 
+import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.MappingType_BeneficiaryObservations;
+
 public abstract class AmritBaseRepository {
     private static final Logger logger = Logger.getLogger(AmritBaseRepository.class);
     private static final String DELETION_RECORD_ID = "recordId";
     private static final String DELETION_SOURCE_ID = "sourceId";
-    private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
-    private final RestTemplate amritRestTemplate;
     protected final AmritApplicationConfig amritApplicationConfig;
+    private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
+    private final IntegrationSystem integrationSystem;
+    private final MappingMetaDataRepository mappingMetaDataRepository;
+    private final RestTemplate amritRestTemplate;
     private final String entityType;
 
-    public AmritBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository, RestTemplate restTemplate, AmritApplicationConfig amritApplicationConfig, String entityType) {
+    public AmritBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                               RestTemplate restTemplate, AmritApplicationConfig amritApplicationConfig,
+                               MappingMetaDataRepository mappingMetaDataRepository,
+                               IntegrationSystemRepository integrationSystemRepository, String entityType) {
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.amritRestTemplate = restTemplate;
         this.amritApplicationConfig = amritApplicationConfig;
         this.entityType = entityType;
+        this.mappingMetaDataRepository = mappingMetaDataRepository;
+        this.integrationSystem = integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName);
     }
 
 
@@ -97,6 +114,28 @@ public abstract class AmritBaseRepository {
         return getRestClientResponseException(responseEntity.getHeaders(), statusCode, responseBody.getErrorMessage());
     }
 
+    protected void populateObservations(Map<String, Object> observationHolder, AvniBaseContract avniEntity,
+                                        String mappingGroup, String mappingType, String codedAnswersMappingType) {
+        Set<String> observationFields = avniEntity.getObservations().keySet();
+
+        for (String obsField : observationFields) {
+            MappingMetaData mapping = mappingMetaDataRepository
+                    .getIntSystemMappingIfPresent(mappingGroup, mappingType, obsField, integrationSystem);
+            if(mapping == null) {
+                logger.warn("Mapping entry not found for observation field: " + obsField);
+                continue;
+            }
+            ObsDataType dataTypeHint = mapping.getDataTypeHint();
+            if (dataTypeHint == null)
+                observationHolder.put(mapping.getIntSystemValue(), avniEntity.get(obsField));
+            else if (dataTypeHint == ObsDataType.Coded && avniEntity.get(obsField) != null) {
+                MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(mappingGroup,
+                        codedAnswersMappingType , avniEntity.get(obsField).toString(), integrationSystem);
+                observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
+            }
+        }
+    }
+
     private RestClientResponseException getRestClientResponseException(HttpHeaders headers, HttpStatus statusCode, String message) {
         return switch (statusCode.series()) {
             case CLIENT_ERROR -> HttpClientErrorException.create(message, statusCode, null, headers, null, null);
@@ -110,6 +149,7 @@ public abstract class AmritBaseRepository {
         HttpEntity<Map<String, List>> requestEntity = new HttpEntity<>(deleteRequest);
         return requestEntity;
     }
+
 
     public abstract HashMap<String, Object>[] fetchEvents();
 

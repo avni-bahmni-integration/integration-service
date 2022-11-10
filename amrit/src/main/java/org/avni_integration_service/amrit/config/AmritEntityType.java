@@ -1,10 +1,11 @@
 package org.avni_integration_service.amrit.config;
 
 public enum AmritEntityType {
-    BENEFICIARY("beneficiary"),
-    BORN_BIRTH("born birth"),
-    HOUSEHOLD("household"),
-    CBAC_FORM("cbac form");
+    Beneficiary("beneficiary"),
+    BeneficiaryScan("beneficiary scan"),
+    BornBirth("born birth"),
+    Household("household"),
+    CBACForm("cbac form");
 
 
     final String dbName;

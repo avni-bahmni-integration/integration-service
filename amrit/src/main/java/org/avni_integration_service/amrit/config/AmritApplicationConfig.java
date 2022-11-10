@@ -57,17 +57,5 @@ public class AmritApplicationConfig {
     }
 
 
-    @Bean("AmritRestTemplate")
-    RestTemplate restTemplate() {
-        return new RestTemplateBuilder()
-                .interceptors((httpRequest, bytes, execution) -> {
-//                    String authorizationEncoding = Base64.getEncoder().encodeToString(
-//                            (String.format("%s:%s", this.amritAPIKey, this.amritAPIToken)).getBytes()
-//                    );
-//                    httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION, "Basic " + authorizationEncoding);
-                    httpRequest.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
-                    return execution.execute(httpRequest, bytes);
-                })
-                .build();
-    }
+
 }

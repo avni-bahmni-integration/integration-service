@@ -1,0 +1,35 @@
+Beneficiary data mapping plan:
+==============================
+mappingGroups:
+Beneficiary
+
+mappingTypes:
+BeneficiaryRoot
+BeneficiaryDemographics
+BeneficiaryPhoneMaps
+BeneficiaryIdentity
+BeneficiaryObservations
+
+resp = Beneficiary.BeneficiaryRoot
+resp.i_bendemographics = Beneficiary.BeneficiaryDemographics
+resp.benPhoneMaps = Beneficiary.BeneficiaryPhoneMaps
+resp.beneficiaryIdentities[0] = Beneficiary.BeneficiaryIdentity
+
+
+— convert Avni response to Amrit req for beneficiaries
+		- Create metadata mappings for beneficiary
+		- Implement code to transform Avni individual standard fields to beneficiary fields
+		- Implement code to transform Avni individual observations to beneficiary fields
+		- Add fields and nested structure within beneficiary DTO
+		-
+
+properties mapping:
+
+
+
+
+
+INSERT INTO public.mapping_metadata (int_system_value, avni_value, about, data_type_hint, integration_system_id,
+                                     mapping_group_id, mapping_type_id)
+VALUES ('avniBeneficiaryID'::varchar(250), 'uuid'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+        (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryRoot'));
