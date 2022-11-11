@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 @Service
 public class BeneficiaryService extends BaseAmritService {
     private static final Logger logger = Logger.getLogger(BeneficiaryService.class);
+    public static final String BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT = "Beneficiary registration not completed in AMRIT";
+    public static final String BENEFICIARY_NOT_FOUND_IN_AMRIT = "Beneficiary not found in AMRIT";
+    public static final String REGEX = ":";
     private final AvniAmritErrorService avniAmritErrorService;
     private final BeneficiaryRepository beneficiaryRepository;
 
@@ -43,16 +46,19 @@ public class BeneficiaryService extends BaseAmritService {
             AmritFetchIdentityResponse response = beneficiaryRepository.getAmritId(beneficiary.getUuid());
             if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
                 Map<String, String> idToUUIDMap = response.getIds().stream().map(e-> {
-                    String[] entry = e.split(":");
-                    return Map.entry(entry[1], entry[0]);
+                    String[] entry = e.split(REGEX);
+                    return Map.entry(entry[1].trim(), entry[0].trim());
                 }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
-                if(!idToUUIDMap.get(beneficiary.getUuid()).equals("Beneficiary registration not completed in AMRIT") //TODO what to do in this case.? should we return true or false
-                        && !idToUUIDMap.get(beneficiary.getUuid()).equals("Beneficiary not found in AMRIT")) {
+                if(!idToUUIDMap.get(beneficiary.getUuid()).equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT) //TODO what to do in this case.? should we return true or false
+                        && !idToUUIDMap.get(beneficiary.getUuid()).equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)) {
                     return true;
-                } else if ( !idToUUIDMap.get(beneficiary.getUuid()).equals("Beneficiary not found in AMRIT")
-                        && throwExceptionIfNotFound) {
-                    //TODO check if there api returns 404 for not found beneficiary id
-                    throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Beneficiary not found " + beneficiary.getUuid());
+                } else if ( idToUUIDMap.get(beneficiary.getUuid()).equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)) {
+                    if(throwExceptionIfNotFound) {
+                        //TODO check if there api returns 404 for not found beneficiary id
+                        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Beneficiary not found " + beneficiary.getUuid());
+                    } else {
+                        return true;
+                    }
                 }
             } else {
                 avniAmritErrorService.errorOccurred(beneficiary.getUuid(),

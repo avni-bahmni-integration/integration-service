@@ -127,13 +127,22 @@ public abstract class AmritBaseRepository {
             }
             ObsDataType dataTypeHint = mapping.getDataTypeHint();
             if (dataTypeHint == null)
-                observationHolder.put(mapping.getIntSystemValue(), avniEntity.get(obsField));
-            else if (dataTypeHint == ObsDataType.Coded && avniEntity.get(obsField) != null) {
+                observationHolder.put(mapping.getIntSystemValue(), getValue(avniEntity, obsField));
+            else if (dataTypeHint == ObsDataType.Coded && getValue(avniEntity, obsField) != null) {
                 MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(mappingGroup,
-                        codedAnswersMappingType , avniEntity.get(obsField).toString(), integrationSystem);
+                        codedAnswersMappingType , getValue(avniEntity, obsField).toString(), integrationSystem);
                 observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
             }
         }
+    }
+
+    private Object getValue(AvniBaseContract avniEntity, String obsField) {
+        Object returnedValue = null;
+        returnedValue = avniEntity.get(obsField);
+        if (returnedValue == null) {
+            returnedValue = avniEntity.getObservation(obsField);
+        }
+        return returnedValue;
     }
 
     private RestClientResponseException getRestClientResponseException(HttpHeaders headers, HttpStatus statusCode, String message) {

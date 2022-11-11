@@ -1,5 +1,5 @@
-insert into integrating_entity_status values ( 'Beneficiary', 0, '2022-10-01 05:55:59.553', 3);
-insert into integrating_entity_status values ( 'BeneficiaryScan', 0, '2022-10-01 05:55:59.553', 3);
+insert into integrating_entity_status values ( DEFAULT, 'Beneficiary', 0, '2022-10-01 05:55:59.553', 3);
+insert into integrating_entity_status values ( DEFAULT, 'BeneficiaryScan', 0, '2022-10-01 05:55:59.553', 3);
 
 
 INSERT INTO public.mapping_group (name, integration_system_id) VALUES ('Beneficiary'::varchar(250), 3::integer);
@@ -14,7 +14,7 @@ INSERT INTO public.mapping_type (name, integration_system_id) VALUES ('Beneficia
 
  INSERT INTO public.mapping_metadata (int_system_value, avni_value, about, data_type_hint, integration_system_id,
                                       mapping_group_id, mapping_type_id)
- VALUES ('avniBeneficiaryID'::varchar(250), 'uuid'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+ VALUES ('avniBeneficiaryID'::varchar(250), 'ID'::varchar(250), null::varchar(1000), null::varchar(100), 3,
          (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryRoot')),
   ('firstName'::varchar(250), 'First name'::varchar(250), null::varchar(1000), null::varchar(100), 3,
          (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryRoot')),

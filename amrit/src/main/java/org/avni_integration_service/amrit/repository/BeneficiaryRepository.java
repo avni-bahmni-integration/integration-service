@@ -41,7 +41,7 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
 
     @Override
     public <T extends AmritBaseResponse> T createEvent(Subject subject, GeneralEncounter encounter, Class<T> returnType) {
-        return createSingleEntity(UPSERT_AMRIT_BENEFICIARY_RESOURCE_PATH, new HttpEntity<HashMap<String, Object>[]>(convertToBeneficiaryUpsertRequest(subject)), returnType);
+        return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_BENEFICIARY_RESOURCE_PATH, new HttpEntity<HashMap<String, Object>[]>(convertToBeneficiaryUpsertRequest(subject)), returnType);
     }
 
     private HashMap<String, Object>[] convertToBeneficiaryUpsertRequest(Subject subject) {
@@ -69,7 +69,7 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
 
 
     public AmritFetchIdentityResponse getAmritId(String avniBeneficiaryUUID) {
-        return getSingleEntityResponse(amritApplicationConfig.getIdentityApiPrefix() + FETCH_AMRIT_ID_RESOURCE_PATH, new HttpEntity<>(List.of(avniBeneficiaryUUID)), AmritFetchIdentityResponse.class);
+        return getSingleEntityResponse(amritApplicationConfig.getIdentityApiPrefix() + FETCH_AMRIT_ID_RESOURCE_PATH, new HttpEntity<>(new String[] {avniBeneficiaryUUID}), AmritFetchIdentityResponse.class);
     }
 
 }
