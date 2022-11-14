@@ -139,12 +139,20 @@ public abstract class AmritBaseRepository {
             } else if (dataTypeHint == ObsDataType.Coded && getValue(avniEntity, obsField) != null) {
                 MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(mappingGroup,
                         MappingType_BeneficiaryObservations, getValue(avniEntity, obsField).toString(), integrationSystem);
-                observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
+                if(answerMapping != null) {
+                    observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
+                } else {
+                    logger.error(String.format("Unable to find coded mapping for attribute %s", mapping.getIntSystemValue()));
+                }
             } else if (dataTypeHint == ObsDataType.Numeric && getValue(avniEntity, obsField) != null) {
                 //Fetch corresponding ID from group MAPPING_GROUP_MASTER_IDS for the same mappingType
                 MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(MAPPING_GROUP_MASTER_IDS,
                         mapping.getIntSystemValue(), getValue(avniEntity, obsField).toString(), integrationSystem);
-                observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
+                if(answerMapping != null) {
+                    observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
+                } else {
+                    logger.error(String.format("Unable to find numeric mapping for attribute %s", mapping.getIntSystemValue()));
+                }
             } else if (dataTypeHint == ObsDataType.Location && getValue(avniEntity, obsField) != null) {
                 //TODO implement mappings for location
             }

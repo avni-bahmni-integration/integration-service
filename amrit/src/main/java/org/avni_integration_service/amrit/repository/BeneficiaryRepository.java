@@ -49,7 +49,7 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
 
         HashMap<String, Object> phoneMaps = new HashMap<String, Object>();
         populateObservations(phoneMaps, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryPhoneMaps);
-        beneficiary.put(Beneficiary_PhoneMaps_KeyName, phoneMaps);
+        beneficiary.put(Beneficiary_PhoneMaps_KeyName, new HashMap[]{phoneMaps});
 
         HashMap<String, Object> beneficiariesIdentity = new HashMap<String, Object>();
         beneficiariesIdentity.put(IDENTITY_TYPE, NATIONAL_ID);
