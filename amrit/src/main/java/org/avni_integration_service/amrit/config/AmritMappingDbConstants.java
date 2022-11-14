@@ -11,4 +11,5 @@ public class AmritMappingDbConstants {
     public static final String Beneficiary_Demographics_KeyName = "i_bendemographics";
     public static final String Beneficiary_PhoneMaps_KeyName = "benPhoneMaps";
     public static final String Beneficiary_Identities_KeyName = "beneficiaryIdentities";
+    public static final String MAPPING_GROUP_MASTER_IDS = "MasterId";
 }

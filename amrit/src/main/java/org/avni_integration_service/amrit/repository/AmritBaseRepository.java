@@ -4,17 +4,15 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritApplicationConfig;
 import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
-import org.avni_integration_service.amrit.dto.AmritUpsertBeneficiaryResponse;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
-import org.avni_integration_service.avni.domain.ObservationHolder;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
+import org.avni_integration_service.integration_data.domain.MappingGroup;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
-import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
-import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
-import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
+import org.avni_integration_service.integration_data.domain.MappingType;
+import org.avni_integration_service.integration_data.repository.*;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.avni_integration_service.util.ObsDataType;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,6 +22,7 @@ import org.springframework.web.client.*;
 import java.net.URI;
 import java.util.*;
 
+import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.MAPPING_GROUP_MASTER_IDS;
 import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.MappingType_BeneficiaryObservations;
 
 public abstract class AmritBaseRepository {
@@ -33,17 +32,22 @@ public abstract class AmritBaseRepository {
     protected final AmritApplicationConfig amritApplicationConfig;
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final IntegrationSystem integrationSystem;
+    private final MappingGroupRepository mappingGroupRepository;
+    private final MappingTypeRepository mappingTypeRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final RestTemplate amritRestTemplate;
     private final String entityType;
 
     public AmritBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                               RestTemplate restTemplate, AmritApplicationConfig amritApplicationConfig,
-                               MappingMetaDataRepository mappingMetaDataRepository,
-                               IntegrationSystemRepository integrationSystemRepository, String entityType) {
+                               MappingGroupRepository mappingGroupRepository, RestTemplate restTemplate,
+                               AmritApplicationConfig amritApplicationConfig, MappingMetaDataRepository mappingMetaDataRepository,
+                               IntegrationSystemRepository integrationSystemRepository, MappingTypeRepository mappingTypeRepository,
+                               String entityType) {
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
+        this.mappingGroupRepository = mappingGroupRepository;
         this.amritRestTemplate = restTemplate;
         this.amritApplicationConfig = amritApplicationConfig;
+        this.mappingTypeRepository = mappingTypeRepository;
         this.entityType = entityType;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
         this.integrationSystem = integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName);
@@ -115,23 +119,34 @@ public abstract class AmritBaseRepository {
     }
 
     protected void populateObservations(Map<String, Object> observationHolder, AvniBaseContract avniEntity,
-                                        String mappingGroup, String mappingType, String codedAnswersMappingType) {
-        Set<String> observationFields = avniEntity.getObservations().keySet();
+                                        String mappingGroup, String mappingType) {
+        MappingGroup mappingGroupEntity = mappingGroupRepository.findByName(mappingGroup);
+        MappingType mappingTypeEntity = mappingTypeRepository.findByName(mappingType);
+        List<MappingMetaData> amritFields = mappingMetaDataRepository.findAllByMappingGroupAndMappingType(mappingGroupEntity, mappingTypeEntity);
 
-        for (String obsField : observationFields) {
+
+        for (MappingMetaData amritField : amritFields) {
             MappingMetaData mapping = mappingMetaDataRepository
-                    .getIntSystemMappingIfPresent(mappingGroup, mappingType, obsField, integrationSystem);
+                    .getAvniMappingIfPresent(mappingGroup, mappingType, amritField.getIntSystemValue(), integrationSystem);
             if(mapping == null) {
-                logger.warn("Mapping entry not found for observation field: " + obsField);
+                logger.warn("Mapping entry not found for amrit field: " + amritField.getIntSystemValue());
                 continue;
             }
+            String obsField = mapping.getAvniValue();
             ObsDataType dataTypeHint = mapping.getDataTypeHint();
-            if (dataTypeHint == null)
+            if (dataTypeHint == null) {
                 observationHolder.put(mapping.getIntSystemValue(), getValue(avniEntity, obsField));
-            else if (dataTypeHint == ObsDataType.Coded && getValue(avniEntity, obsField) != null) {
+            } else if (dataTypeHint == ObsDataType.Coded && getValue(avniEntity, obsField) != null) {
                 MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(mappingGroup,
-                        codedAnswersMappingType , getValue(avniEntity, obsField).toString(), integrationSystem);
+                        MappingType_BeneficiaryObservations, getValue(avniEntity, obsField).toString(), integrationSystem);
                 observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
+            } else if (dataTypeHint == ObsDataType.Numeric && getValue(avniEntity, obsField) != null) {
+                //Fetch corresponding ID from group MAPPING_GROUP_MASTER_IDS for the same mappingType
+                MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(MAPPING_GROUP_MASTER_IDS,
+                        mapping.getIntSystemValue(), getValue(avniEntity, obsField).toString(), integrationSystem);
+                observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
+            } else if (dataTypeHint == ObsDataType.Location && getValue(avniEntity, obsField) != null) {
+                //TODO implement mappings for location
             }
         }
     }
