@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class AvniAmritMainJob {
 
@@ -33,18 +35,41 @@ public class AvniAmritMainJob {
     @Autowired
     private AvniHttpClient avniHttpClient;
 
+    @Value("${amrit.app.tasks}")
+    private String tasks;
+
     public void execute() {
         try {
             logger.info("Starting the Amrit entities pull from Avni");
             avniHttpClient.setAvniSession(amritAvniSessionFactory.createSession());
-            beneficiaryWorker.syncBeneficiariesFromAvniToAmrit();
-            beneficiaryWorker.scanSyncStatusOfBeneficiariesFromAvniToAmrit();
+            List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
+            processBeneficiaryAndBeneficiaryScan(tasks);
         } catch (Throwable e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
         } finally {
             healthCheckService.verify(mainJobId);
         }
+    }
+
+    private void processBeneficiaryAndBeneficiaryScan(List<IntegrationTask> tasks) {
+        try {
+            if (hasTask(tasks, IntegrationTask.Beneficiary)) {
+                logger.info("Processing Beneficiary");
+                beneficiaryWorker.syncBeneficiariesFromAvniToAmrit();
+            }
+            if (hasTask(tasks, IntegrationTask.BeneficiaryScan)) {
+                logger.info("Processing Beneficiary Scan");
+                beneficiaryWorker.scanSyncStatusOfBeneficiariesFromAvniToAmrit();
+            }
+        } catch (Throwable e) {
+            logger.error("Failed processBeneficiaryAndBeneficiaryScan", e);
+            bugsnag.notify(e);
+        }
+    }
+
+    private boolean hasTask(List<IntegrationTask> tasks, IntegrationTask task) {
+        return tasks.stream().filter(integrationTask -> integrationTask.equals(task)).findAny().orElse(null) != null;
     }
 
 }
