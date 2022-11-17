@@ -10,10 +10,11 @@ public class AmritResponseCastTest {
 
     @Test
     void convertResponseJsonToAmritFetchIdentityResponse() {
-        String jsonResponse = "{\"data\":[276052406423],\"statusCode\":200,\"errorMessage\":\"Success\",\"status\":\"Success\"}";
+        String jsonResponse = "{\"data\":[\"276052406423 : uuid-123-456-789-012\"],\"statusCode\":200,\"errorMessage\":\"Success\",\"status\":\"Success\"}";
         AmritFetchIdentityResponse response = ObjectJsonMapper.readValue(jsonResponse, AmritFetchIdentityResponse.class);
         Assertions.assertThat(response.getIds()).isNotNull().isNotEmpty().hasSize(1);
-        Assertions.assertThat(response.getIds().get(0)).isEqualTo(276052406423l);
+        String actual = response.getIds().get(0);
+        Assertions.assertThat(actual).isEqualTo("276052406423 : uuid-123-456-789-012");
     }
 
     //{"data":{"response":"4 records synced"},"statusCode":200,"errorMessage":"Success","status":"Success"}

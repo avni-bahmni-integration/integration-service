@@ -2,9 +2,9 @@ package org.avni_integration_service.amrit.job;
 
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
-import org.avni_integration_service.amrit.SyncDirection;
 import org.avni_integration_service.amrit.config.AmritAvniSessionFactory;
 import org.avni_integration_service.amrit.worker.AmritErrorRecordWorker;
+import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

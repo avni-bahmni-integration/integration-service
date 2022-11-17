@@ -3,7 +3,9 @@ package org.avni_integration_service.amrit.job;
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritAvniSessionFactory;
+import org.avni_integration_service.amrit.worker.AmritErrorRecordWorker;
 import org.avni_integration_service.amrit.worker.BeneficiaryWorker;
+import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.util.HealthCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +40,18 @@ public class AvniAmritMainJob {
     @Value("${amrit.app.tasks}")
     private String tasks;
 
+    @Autowired
+    private AmritErrorRecordWorker errorRecordsWorker;
+
     public void execute() {
         try {
             logger.info("Starting the Amrit entities pull from Avni");
             avniHttpClient.setAvniSession(amritAvniSessionFactory.createSession());
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
             processBeneficiaryAndBeneficiaryScan(tasks);
+            processErrors(tasks);
         } catch (Throwable e) {
-            logger.error("Failed", e);
+            logger.error("Failed AvniAmritMainJob", e);
             bugsnag.notify(e);
         } finally {
             healthCheckService.verify(mainJobId);
@@ -66,6 +72,26 @@ public class AvniAmritMainJob {
             logger.error("Failed processBeneficiaryAndBeneficiaryScan", e);
             bugsnag.notify(e);
         }
+    }
+
+    private void processErrors(List<IntegrationTask> tasks) {
+        try {
+            /**
+             * All our Error Records for Amrit, are stored using integrating_entity_type column,
+             * hence only SyncDirection.AvniToAmrit matters.
+             */
+            if (hasTask(tasks, IntegrationTask.AmritErrorRecords)) {
+                logger.info("Processing AmritErrorRecords");
+                processErrorRecords(SyncDirection.AvniToAmrit);
+            }
+        } catch (Throwable e) {
+            logger.error("Failed processErrors", e);
+            bugsnag.notify(e);
+        }
+    }
+
+    private void processErrorRecords(SyncDirection syncDirection) throws Exception {
+        errorRecordsWorker.processErrors(syncDirection, false);
     }
 
     private boolean hasTask(List<IntegrationTask> tasks, IntegrationTask task) {

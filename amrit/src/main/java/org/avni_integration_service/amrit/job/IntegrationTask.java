@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public enum IntegrationTask {
-    None, Beneficiary, BeneficiaryScan, AvniDistribution,
-    AvniEncounters,
-    AvniErrorRecords, AmritErrorRecords;
+    None, Beneficiary, BeneficiaryScan, AmritErrorRecords;
 
     public static List<IntegrationTask> getTasks(String taskNames) {
         if (taskNames.equals("all"))

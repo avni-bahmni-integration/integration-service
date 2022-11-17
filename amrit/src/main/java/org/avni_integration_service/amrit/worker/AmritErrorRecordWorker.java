@@ -1,13 +1,12 @@
 package org.avni_integration_service.amrit.worker;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.amrit.SyncDirection;
 import org.avni_integration_service.amrit.config.AmritEntityType;
 import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.service.AvniAmritErrorService;
 import org.avni_integration_service.amrit.service.BeneficiaryService;
+import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
-import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;

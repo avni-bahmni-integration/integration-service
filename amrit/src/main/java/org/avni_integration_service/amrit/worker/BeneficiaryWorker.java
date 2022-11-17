@@ -30,13 +30,14 @@ public class BeneficiaryWorker implements BeneficiaryConstant, ErrorRecordWorker
     public BeneficiaryWorker(BeneficiaryService beneficiaryService,
                              IntegratingEntityStatusRepository integratingEntityStatusRepository,
                              AvniSubjectRepository avniSubjectRepository,
-                             IntegratingEntityStatusService integratingEntityStatusService, AvniAmritErrorService avniAmritErrorService, AmritEntityType amritEntityType) {
+                             IntegratingEntityStatusService integratingEntityStatusService,
+                             AvniAmritErrorService avniAmritErrorService) {
         this.beneficiaryService = beneficiaryService;
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.integratingEntityStatusService = integratingEntityStatusService;
         this.avniAmritErrorService = avniAmritErrorService;
-        this.amritEntityType = amritEntityType;
+        this.amritEntityType = AmritEntityType.Beneficiary;
     }
 
     public void syncBeneficiariesFromAvniToAmrit() {

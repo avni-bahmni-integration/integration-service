@@ -15,7 +15,7 @@ public class DateTimeUtil {
     public static String UTC = "UTC";
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    private static final SimpleDateFormat amritDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static final SimpleDateFormat amritDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat amritRequestDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static final Jsr310JpaConverters.LocalDateTimeConverter ldtc = new Jsr310JpaConverters.LocalDateTimeConverter();
 
