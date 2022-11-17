@@ -1,6 +1,8 @@
 package org.avni_integration_service.amrit.config;
 
-public enum AmritEntityType {
+import org.avni_integration_service.integration_data.domain.framework.IntegrationEntityType;
+
+public enum AmritEntityType implements IntegrationEntityType {
     Beneficiary("beneficiary"),
     BeneficiaryScan("beneficiary scan"),
     BornBirth("born birth"),

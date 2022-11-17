@@ -1,6 +1,8 @@
 package org.avni_integration_service.amrit.worker;
 
 import org.apache.log4j.Logger;
+import org.avni_integration_service.amrit.SyncDirection;
+import org.avni_integration_service.amrit.config.AmritEntityType;
 import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.service.AvniAmritErrorService;
 import org.avni_integration_service.amrit.service.BeneficiaryService;
@@ -30,27 +32,39 @@ public class AmritErrorRecordWorker {
     @Autowired
     private IntegrationSystemRepository integrationSystemRepository;
 
-    public void processErrors() {
+    public void processErrors(SyncDirection syncDirection, boolean allErrors) throws Exception {
         Page<ErrorRecord> errorRecordPage;
         int pageNumber = 0;
         do {
             logger.info(String.format("Starting page number: %d", pageNumber));
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-            errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
-                    avniAmritErrorService.getUnprocessableErrorTypes(),
-                    integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName),
-                    pageRequest);
+            if (syncDirection.equals(SyncDirection.AvniToAmrit))
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
+                        avniAmritErrorService.getUnprocessableErrorTypes(),
+                        integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName), pageRequest);
+            else if (syncDirection.equals(SyncDirection.AvniToAmrit) && !allErrors)
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
+                        avniAmritErrorService.getUnprocessableErrorTypes(), integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName), pageRequest);
+            else
+                throw new RuntimeException("Invalid arguments");
+
             List<ErrorRecord> errorRecords = errorRecordPage.getContent();
             for (ErrorRecord errorRecord : errorRecords) {
-                processError(errorRecord.getEntityId());
+                ErrorRecordWorker errorRecordWorker = getErrorRecordWorker(errorRecord);
+                errorRecordWorker.processError(errorRecord.getEntityId());
             }
             logger.info(String.format("Completed page number: %d with number of errors: %d", pageNumber, errorRecords.size()));
             pageNumber++;
         } while (errorRecordPage.getNumberOfElements() == pageSize);
     }
 
-    public void processError(String sid) {
-        //Todo implement functionality
+    private ErrorRecordWorker getErrorRecordWorker(ErrorRecord errorRecord) {
+        if(errorRecord.getIntegratingEntityType() != null){
+            if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.Beneficiary.name())) return beneficiaryWorker;
+        }
+        throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s / AmritEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getIntegratingEntityType()));
+
     }
+
 
 }
