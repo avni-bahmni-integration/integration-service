@@ -74,6 +74,18 @@ public class AvniAmritMainJob {
         }
     }
 
+    private void processHousehold(List<IntegrationTask> tasks) {
+        try {
+            if (hasTask(tasks, IntegrationTask.Household)) {
+                logger.info("Processing Household");
+                beneficiaryWorker.syncBeneficiariesFromAvniToAmrit();
+            }
+        } catch (Throwable e) {
+            logger.error("Failed processBeneficiaryAndBeneficiaryScan", e);
+            bugsnag.notify(e);
+        }
+    }
+
     private void processErrors(List<IntegrationTask> tasks) {
         try {
             /**

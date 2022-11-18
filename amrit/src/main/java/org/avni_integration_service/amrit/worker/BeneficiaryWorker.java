@@ -3,7 +3,7 @@ package org.avni_integration_service.amrit.worker;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritEntityType;
 import org.avni_integration_service.amrit.config.AmritErrorType;
-import org.avni_integration_service.amrit.config.BeneficiaryConstant;
+import org.avni_integration_service.amrit.config.BeneficiaryConstants;
 import org.avni_integration_service.amrit.service.AvniAmritErrorService;
 import org.avni_integration_service.amrit.service.BeneficiaryService;
 import org.avni_integration_service.avni.domain.Subject;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class BeneficiaryWorker implements BeneficiaryConstant, ErrorRecordWorker {
+public class BeneficiaryWorker implements BeneficiaryConstants, ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(BeneficiaryWorker.class);
     private final BeneficiaryService beneficiaryService;
     private final AvniSubjectRepository avniSubjectRepository;

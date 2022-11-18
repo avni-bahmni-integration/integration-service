@@ -3,10 +3,11 @@ package org.avni_integration_service.amrit.repository;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritApplicationConfig;
 import org.avni_integration_service.amrit.config.AmritEntityType;
-import org.avni_integration_service.amrit.config.BeneficiaryConstant;
+import org.avni_integration_service.amrit.config.BeneficiaryConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.amrit.dto.AmritFetchIdentityResponse;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
+import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.*;
@@ -22,11 +23,18 @@ import java.util.HashMap;
 import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.*;
 
 @Component("BeneficiaryRepository")
-public class BeneficiaryRepository extends AmritBaseRepository implements BeneficiaryConstant {
+public class BeneficiaryRepository extends AmritBaseRepository implements BeneficiaryConstants {
     private static final Logger logger = Logger.getLogger(BeneficiaryRepository.class);
     @Autowired
-    public BeneficiaryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository, @Qualifier("AmritRestTemplate") RestTemplate restTemplate, AmritApplicationConfig amritApplicationConfig, MappingMetaDataRepository mappingMetaDataRepository, IntegrationSystemRepository integrationSystemRepository, MappingGroupRepository mappingGroupRepository, MappingTypeRepository mappingTypeRepository) {
-        super(integratingEntityStatusRepository, mappingGroupRepository, restTemplate, amritApplicationConfig, mappingMetaDataRepository, integrationSystemRepository, mappingTypeRepository, AmritEntityType.Beneficiary.name());
+    public BeneficiaryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                                 @Qualifier("AmritRestTemplate") RestTemplate restTemplate,
+                                 AmritApplicationConfig amritApplicationConfig,
+                                 MappingMetaDataRepository mappingMetaDataRepository,
+                                 IntegrationSystemRepository integrationSystemRepository,
+                                 MappingGroupRepository mappingGroupRepository,
+                                 MappingTypeRepository mappingTypeRepository) {
+        super(integratingEntityStatusRepository, mappingGroupRepository, restTemplate, amritApplicationConfig,
+                mappingMetaDataRepository, integrationSystemRepository, mappingTypeRepository, AmritEntityType.Beneficiary.name());
     }
 
     @Override
@@ -35,14 +43,15 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
     }
 
     @Override
-    public <T extends AmritBaseResponse> T createEvent(Subject subject, GeneralEncounter encounter, Class<T> returnType) {
+    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, GeneralEncounter encounter, Class<T> returnType) {
         return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_BENEFICIARY_RESOURCE_PATH,
-                new HttpEntity<HashMap<String, Object>[]>(convertToBeneficiaryUpsertRequest(subject)), returnType);
+                new HttpEntity<HashMap<String, Object>[]>(convertToBeneficiaryUpsertRequest((Subject) subject)), returnType);
     }
 
     private HashMap<String, Object>[] convertToBeneficiaryUpsertRequest(Subject subject) {
         HashMap<String, Object> beneficiary = new HashMap<String, Object>();
-        populateObservations(beneficiary, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryRoot);
+        populateObservations(beneficiary, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryRoot,
+                MappingType_BeneficiaryObservations);
         initDemographicsFields(subject, beneficiary);
         initPhoneMapFields(subject, beneficiary);
         initIdentityFields(subject, beneficiary);
@@ -53,7 +62,8 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
 
     private void initDemographicsFields(Subject subject, HashMap<String, Object> beneficiary) {
         HashMap<String, Object> demographics = new HashMap<String, Object>();
-        populateObservations(demographics, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryDemographics);
+        populateObservations(demographics, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryDemographics,
+                MappingType_BeneficiaryObservations);
         initLocationFields(subject, demographics);
         if(demographics.get(EDUCATION_NAME) != null && StringUtils.hasText((String) demographics.get(EDUCATION_NAME))) {
             beneficiary.put(LITERACY_STATUS, demographics.get(EDUCATION_NAME));
@@ -63,7 +73,8 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
 
     private void initPhoneMapFields(Subject subject, HashMap<String, Object> beneficiary) {
         HashMap<String, Object> phoneMaps = new HashMap<String, Object>();
-        populateObservations(phoneMaps, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryPhoneMaps);
+        populateObservations(phoneMaps, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryPhoneMaps,
+                MappingType_BeneficiaryObservations);
         HashMap[] phoneMapsArray = (phoneMaps.size() > 0) ? new HashMap[]{phoneMaps} : new HashMap[0];
         beneficiary.put(Beneficiary_PhoneMaps_KeyName, phoneMapsArray);
     }
@@ -71,7 +82,8 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
     private void initIdentityFields(Subject subject, HashMap<String, Object> beneficiary) {
         HashMap<String, Object> beneficiariesIdentity = new HashMap<String, Object>();
         beneficiariesIdentity.put(IDENTITY_TYPE, NATIONAL_ID);
-        populateObservations(beneficiariesIdentity, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryIdentity);
+        populateObservations(beneficiariesIdentity, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryIdentity,
+                MappingType_BeneficiaryObservations);
         beneficiary.put(Beneficiary_Identities_KeyName, new HashMap[]{beneficiariesIdentity});
     }
 
@@ -92,11 +104,6 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
         demographics.put(BLOCK_ID, location.get(BLOCK_EXTERNAL_ID));
 //        demographics.put(PANCHAYAT_ID, location.get(PANCHAYAT_EXTERNAL_ID));
         demographics.put(DISTRICT_BRANCH_ID, location.get(VILLAGE_EXTERNAL_ID));
-    }
-
-
-    public AmritFetchIdentityResponse getAmritId(String avniBeneficiaryUUID) {
-        return getSingleEntityResponse(amritApplicationConfig.getIdentityApiPrefix() + FETCH_AMRIT_ID_RESOURCE_PATH, new HttpEntity<>(new String[] {avniBeneficiaryUUID}), AmritFetchIdentityResponse.class);
     }
 
 }

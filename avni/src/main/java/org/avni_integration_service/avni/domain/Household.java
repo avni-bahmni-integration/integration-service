@@ -10,12 +10,31 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AvniBaseContract implements ObservationHolder {
-    private static final String ObservationsFieldName = "observations";
-    protected Map<String, Object> map = new HashMap<>();
+public class Household {
+    private static final String MembershipStartDate = "Membership start date";
+    private static final String MembershipEndDate = "Membership end date";
+    private static final String Role = "Role";
 
-    public AvniBaseContract() {
-        setObservations(new HashMap<>());
+    protected Map<String, Object> map = new HashMap<>();
+    protected Subject groupSubject = new Subject();
+    protected Subject memberSubject = new Subject();
+
+    @JsonIgnore
+    public Subject getGroupSubject() {
+        return groupSubject;
+    }
+
+    public void setGroupSubject(Subject groupSubject) {
+        this.groupSubject = groupSubject;
+    }
+
+    @JsonIgnore
+    public Subject getMemberSubject() {
+        return memberSubject;
+    }
+
+    public void setMemberSubject(Subject memberSubject) {
+        this.memberSubject = memberSubject;
     }
 
     public Object get(String name) {
@@ -30,16 +49,6 @@ public class AvniBaseContract implements ObservationHolder {
     @JsonAnyGetter
     public Map<String, Object> getProperties(){
         return map;
-    }
-
-    @JsonIgnore
-    public String getUuid() {
-        return (String) get("ID");
-    }
-
-    @JsonIgnore
-    public void setUuid(String uuid) {
-        set("ID", uuid);
     }
 
     @JsonIgnore
@@ -78,21 +87,9 @@ public class AvniBaseContract implements ObservationHolder {
         return FormatAndParseUtil.toLocalDateTime(getLastModifiedDate());
     }
 
-    @JsonIgnore
-    public Object getObservation(String conceptName) {
-        Map<String, Object> observations = getObservations();
-        return observations.get(conceptName);
-    }
-
     @Override
     public String toString() {
         return map.toString();
-    }
-
-    @Override
-    public void addObservation(String conceptName, Object value) {
-        Map<String, Object> map = getObservations();
-        map.put(conceptName, value);
     }
 
     public void setVoided(boolean voided) {
@@ -104,14 +101,31 @@ public class AvniBaseContract implements ObservationHolder {
         return (Boolean) get("Voided");
     }
 
-    public void setObservations(Map<String, Object> observations) {
-        set(ObservationsFieldName, observations);
+    public void setMembershipStartDate(String membershipStartDate) {
+        set(MembershipStartDate, membershipStartDate);
     }
 
     @JsonIgnore
-    public Map<String, Object> getObservations() {
-        Object observations = get(ObservationsFieldName);
-        if (observations == null) return new HashMap<>();
-        return (Map<String, Object>) observations;
+    public String getMembershipStartDate() {
+        return (String) get(MembershipStartDate);
     }
+
+    @JsonIgnore
+    public String getMembershipEndDate() {
+        return (String) get(MembershipEndDate);
+    }
+
+    public void setMembershipEndDate(String membershipEndDate) {
+        set(MembershipEndDate, membershipEndDate);
+    }
+
+    @JsonIgnore
+    public String getRole() {
+        return (String) get(Role);
+    }
+
+    public void setRole(String role) {
+        set(Role, role);
+    }
+
 }

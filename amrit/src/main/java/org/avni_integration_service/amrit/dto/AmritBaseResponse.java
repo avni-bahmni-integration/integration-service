@@ -13,7 +13,6 @@ import javax.annotation.Generated;
         "errorMessage",
         "status"
 })
-@Generated("jsonschema2pojo")
 public class AmritBaseResponse {
 
     @JsonProperty("data")

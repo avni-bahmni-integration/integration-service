@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritApplicationConfig;
 import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
+import org.avni_integration_service.amrit.dto.AmritFetchIdentityResponse;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
@@ -23,12 +24,12 @@ import java.net.URI;
 import java.util.*;
 
 import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.MAPPING_GROUP_MASTER_IDS;
-import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.MappingType_BeneficiaryObservations;
 
 public abstract class AmritBaseRepository {
     private static final Logger logger = Logger.getLogger(AmritBaseRepository.class);
     private static final String DELETION_RECORD_ID = "recordId";
     private static final String DELETION_SOURCE_ID = "sourceId";
+    private static final String FETCH_AMRIT_ID_RESOURCE_PATH = "/rmnch/getAmritIdForAvniId";
     protected final AmritApplicationConfig amritApplicationConfig;
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final IntegrationSystem integrationSystem;
@@ -119,7 +120,7 @@ public abstract class AmritBaseRepository {
     }
 
     protected void populateObservations(Map<String, Object> observationHolder, AvniBaseContract avniEntity,
-                                        String mappingGroup, String mappingType) {
+                                        String mappingGroup, String mappingType, String mappingTypeCodedObservations) {
         MappingGroup mappingGroupEntity = mappingGroupRepository.findByName(mappingGroup);
         MappingType mappingTypeEntity = mappingTypeRepository.findByName(mappingType);
         List<MappingMetaData> amritFields = mappingMetaDataRepository.findAllByMappingGroupAndMappingType(mappingGroupEntity, mappingTypeEntity);
@@ -138,7 +139,7 @@ public abstract class AmritBaseRepository {
                 observationHolder.put(mapping.getIntSystemValue(), getValue(avniEntity, obsField));
             } else if (dataTypeHint == ObsDataType.Coded && getValue(avniEntity, obsField) != null) {
                 MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(mappingGroup,
-                        MappingType_BeneficiaryObservations, getValue(avniEntity, obsField).toString(), integrationSystem);
+                        mappingTypeCodedObservations, getValue(avniEntity, obsField).toString(), integrationSystem);
                 if(answerMapping != null) {
                     observationHolder.put(mapping.getIntSystemValue(), answerMapping.getIntSystemValue());
                 } else {
@@ -185,7 +186,7 @@ public abstract class AmritBaseRepository {
 
     public abstract HashMap<String, Object>[] fetchEvents();
 
-    public abstract <T extends AmritBaseResponse> T createEvent(Subject subject, GeneralEncounter encounter, Class<T> returnType);
+    public abstract <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, GeneralEncounter encounter, Class<T> returnType);
 
     public boolean wasEventCreatedSuccessfully(HashMap<String, Object>[] response) {
         return (response != null && response[0].get("errorCode") == null);
@@ -194,6 +195,11 @@ public abstract class AmritBaseRepository {
     public Object deleteEvent(String resourceType, GeneralEncounter encounter) {
         HttpEntity<Map<String, List>> requestEntity = getDeleteEncounterHttpRequestEntity(encounter);
         return deleteSingleEntity(resourceType, requestEntity);
+    }
+
+    public AmritFetchIdentityResponse getAmritId(String individualUUID) {
+        return getSingleEntityResponse(amritApplicationConfig.getIdentityApiPrefix() + FETCH_AMRIT_ID_RESOURCE_PATH,
+                new HttpEntity<>(new String[] {individualUUID}), AmritFetchIdentityResponse.class);
     }
 
 }
