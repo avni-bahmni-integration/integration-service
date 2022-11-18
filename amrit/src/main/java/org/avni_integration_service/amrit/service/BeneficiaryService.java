@@ -24,6 +24,7 @@ public class BeneficiaryService extends BaseAmritService {
     public static final String BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT = "Beneficiary registration not completed in AMRIT";
     public static final String BENEFICIARY_NOT_FOUND_IN_AMRIT = "Beneficiary not found in AMRIT";
     public static final String REGEX = ":";
+    public static final String NUMBERS_ONLY_REGEX = "\\d+";
     private final AvniAmritErrorService avniAmritErrorService;
     private final BeneficiaryRepository beneficiaryRepository;
 
@@ -43,32 +44,40 @@ public class BeneficiaryService extends BaseAmritService {
 
     public boolean wasFetchOfAmritIdSuccessful(Subject beneficiary, boolean throwExceptionIfNotFound) {
         AmritFetchIdentityResponse response = beneficiaryRepository.getAmritId(beneficiary.getUuid());
-        if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
-            Map<String, String> idToUUIDMap = response.getIds().stream().map(e-> {
-                String[] entry = e.split(REGEX);
-                if(entry.length != 2) {
-                    throw new RuntimeException("Issue converting response to idToUUIDMap " + e);
-                }
-                return Map.entry(entry[1].trim(), entry[0].trim());
-            }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
-            if(!idToUUIDMap.get(beneficiary.getUuid()).equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)
-                    && !idToUUIDMap.get(beneficiary.getUuid()).equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)) {
-                beneficiary.setExternalId(idToUUIDMap.get(beneficiary.getUuid()));
-                return true;
-            } else if ( idToUUIDMap.get(beneficiary.getUuid()).equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)) {
-                if(throwExceptionIfNotFound) {
-                    throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Beneficiary not found " + beneficiary.getUuid());
-                } else {
+        try {
+            if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+                Map<String, String> idToUUIDMap = response.getIds().stream().map(e -> {
+                    String[] entry = e.split(REGEX);
+                    if (entry.length != 2) {
+                        throw new RuntimeException("Issue converting response to idToUUIDMap " + e);
+                    }
+                    return Map.entry(entry[1].trim(), entry[0].trim());
+                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
+                String externalId = idToUUIDMap.get(beneficiary.getUuid());
+                if (!externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)
+                        && !externalId.equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)
+                            && externalId.matches(NUMBERS_ONLY_REGEX)) {
+                    beneficiary.setExternalId(externalId);
                     return true;
+                } else if (externalId.equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)) {
+                    if (throwExceptionIfNotFound) {
+                        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Beneficiary not found " + beneficiary.getUuid());
+                    } else {
+                        return true;
+                    }
+                } else if (externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)) {
+                    throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED, "Beneficiary registration not completed " + beneficiary.getUuid());
+                } else {
+                    throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED, "Invalid response for getAmritId request " + response.getData());
                 }
-            } else if ( idToUUIDMap.get(beneficiary.getUuid()).equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)) {
-                //TODO Uncomment this post Amrit fixing the error
-//                throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED, "Beneficiary registration not completed " + beneficiary.getUuid());
+            } else {
+                throw new HttpServerErrorException(HttpStatus.resolve((int) response.getStatusCode()),
+                        "Failed to obtain successful response from Amrit " + response.getErrorMessage());
             }
-        } else {
+        } catch(Exception e) {
             avniAmritErrorService.errorOccurred(beneficiary.getUuid(),
                     AmritErrorType.BeneficiaryAmritIDFetchError,
-                    AmritEntityType.Beneficiary, response.getErrorMessage());
+                    AmritEntityType.Beneficiary, e.getLocalizedMessage());
         }
         return false;
     }
