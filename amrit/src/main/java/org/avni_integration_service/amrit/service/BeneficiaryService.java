@@ -46,6 +46,9 @@ public class BeneficiaryService extends BaseAmritService {
         if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
             Map<String, String> idToUUIDMap = response.getIds().stream().map(e-> {
                 String[] entry = e.split(REGEX);
+                if(entry.length != 2) {
+                    throw new RuntimeException("Issue converting response to idToUUIDMap " + e);
+                }
                 return Map.entry(entry[1].trim(), entry[0].trim());
             }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
             if(!idToUUIDMap.get(beneficiary.getUuid()).equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)
