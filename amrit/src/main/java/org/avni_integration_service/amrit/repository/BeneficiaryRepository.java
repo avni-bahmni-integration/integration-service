@@ -6,7 +6,7 @@ import org.avni_integration_service.amrit.config.AmritEntityType;
 import org.avni_integration_service.amrit.config.BeneficiaryConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
-import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.*;
 import org.avni_integration_service.util.FormatAndParseUtil;
@@ -44,7 +44,7 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
     }
 
     @Override
-    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, GeneralEncounter encounter, Class<T> returnType) {
+    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, Enrolment enrolment, Class<T> returnType) {
         return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_BENEFICIARY_RESOURCE_PATH,
                 new HttpEntity<HashMap<String, Object>[]>(convertToBeneficiaryUpsertRequest((Subject) subject)), returnType);
     }

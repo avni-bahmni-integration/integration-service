@@ -5,9 +5,9 @@ import org.avni_integration_service.integration_data.domain.framework.Integratio
 public enum AmritEntityType implements IntegrationEntityType {
     Beneficiary("beneficiary"),
     BeneficiaryScan("beneficiary scan"),
-    BornBirth("born birth"),
+    BornBirth("Child"),
     Household("household"),
-    CBAC("cbac");
+    CBAC("CBAC");
 
 
     final String dbName;

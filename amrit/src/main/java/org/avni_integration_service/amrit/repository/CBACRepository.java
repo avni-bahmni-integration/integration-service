@@ -8,7 +8,7 @@ import org.avni_integration_service.amrit.config.CBACConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
-import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +45,12 @@ public class CBACRepository extends AmritBaseRepository implements CBACConstants
     }
 
     @Override
-    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, GeneralEncounter encounter, Class<T> returnType) {
+    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, Enrolment encounter, Class<T> returnType) {
         return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_CBAC_RESOURCE_PATH,
                 new HttpEntity<HashMap<String, Object>[]>(convertToCBACUpsertRequest((Subject) subject, encounter)), returnType);
     }
 
-    private HashMap<String, Object>[] convertToCBACUpsertRequest(Subject subject, GeneralEncounter encounter) {
+    private HashMap<String, Object>[] convertToCBACUpsertRequest(Subject subject, Enrolment encounter) {
         HashMap<String, Object> cBACObs = new HashMap<String, Object>();
         populateObservations(cBACObs, encounter, MappingGroup_CBAC, MappingType_CBACRoot,
                 MappingType_CBACObservations);
@@ -59,20 +59,20 @@ public class CBACRepository extends AmritBaseRepository implements CBACConstants
         return new HashMap[]{cBACObs};
     }
 
-    private void initMiscFields(Subject subject, GeneralEncounter encounter, HashMap<String, Object> cBACObs) {
+    private void initMiscFields(Subject subject, Enrolment enrolment, HashMap<String, Object> cBACObs) {
         if(StringUtils.hasText(subject.getExternalId())) {
             cBACObs.put(BENEFICIARY_REG_ID, subject.getExternalId());
         }
         cBACObs.put(AVNI_BENEFICIARY_ID, subject.getUuid());
-        cBACObs.put(AVNI_CBAC_ID, encounter.getUuid());
+        cBACObs.put(AVNI_CBAC_ID, enrolment.getUuid());
         cBACObs.put(VAN_ID, VAN_ID_VALUE);
-        cBACObs.put(LAST_MODIFIED_BY, encounter.getLastModifiedBy());
-        cBACObs.put(LAST_MODIFIED_DATE, DateTimeUtil.formatDateTime(encounter.getLastModifiedDate()));
-        cBACObs.put(SYNCED_BY, encounter.getCreatedBy());
+        cBACObs.put(LAST_MODIFIED_BY, enrolment.getLastModifiedBy());
+        cBACObs.put(LAST_MODIFIED_DATE, DateTimeUtil.formatDateTime(enrolment.getLastModifiedDate()));
+        cBACObs.put(SYNCED_BY, enrolment.getCreatedBy());
         cBACObs.put(SYNCED_DATE, DateTimeUtil.formatDateTime(new Date()));
-        cBACObs.put(CREATED_BY, encounter.getCreatedBy());
-        cBACObs.put(CREATED_DATE, DateTimeUtil.formatDateTime(encounter.getCreateDate()));
-        cBACObs.put(DELETED, encounter.getVoided());
+        cBACObs.put(CREATED_BY, enrolment.getCreatedBy());
+        cBACObs.put(CREATED_DATE, DateTimeUtil.formatDateTime(enrolment.getCreateDate()));
+        cBACObs.put(DELETED, enrolment.getVoided());
     }
 
 }

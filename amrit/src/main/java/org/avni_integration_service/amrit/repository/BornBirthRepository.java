@@ -8,7 +8,7 @@ import org.avni_integration_service.amrit.config.BornBirthConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
-import org.avni_integration_service.avni.domain.GeneralEncounter;
+import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,21 +45,21 @@ public class BornBirthRepository extends AmritBaseRepository implements BornBirt
     }
 
     @Override
-    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, GeneralEncounter encounter, Class<T> returnType) {
+    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, Enrolment enrolment, Class<T> returnType) {
         return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_BORN_BIRTH_RESOURCE_PATH,
-                new HttpEntity<HashMap<String, Object>[]>(convertToBornBirthUpsertRequest((Subject) subject, encounter)), returnType);
+                new HttpEntity<HashMap<String, Object>[]>(convertToBornBirthUpsertRequest((Subject) subject, enrolment)), returnType);
     }
 
-    private HashMap<String, Object>[] convertToBornBirthUpsertRequest(Subject subject, GeneralEncounter encounter) {
+    private HashMap<String, Object>[] convertToBornBirthUpsertRequest(Subject subject, Enrolment enrolment) {
         HashMap<String, Object> bornBirthObs = new HashMap<String, Object>();
-        populateObservations(bornBirthObs, encounter, MappingGroup_BornBirth, MappingType_BornBirthRoot,
+        populateObservations(bornBirthObs, enrolment, MappingGroup_BornBirth, MappingType_BornBirthRoot,
                 MappingType_BornBirthObservations);
-        initMiscFields(subject, encounter, bornBirthObs);
-        logger.debug(String.format("Converting encounter to bornBirthObs [%s] and [%s]", encounter, bornBirthObs));
+        initMiscFields(subject, enrolment, bornBirthObs);
+        logger.debug(String.format("Converting enrolment to bornBirthObs [%s] and [%s]", enrolment, bornBirthObs));
         return new HashMap[]{bornBirthObs};
     }
 
-    private void initMiscFields(Subject subject, GeneralEncounter encounter, HashMap<String, Object> bornBirthObs) {
+    private void initMiscFields(Subject subject, Enrolment encounter, HashMap<String, Object> bornBirthObs) {
         if(StringUtils.hasText(subject.getExternalId())) {
             bornBirthObs.put(BENEFICIARY_REG_ID, subject.getExternalId());
         }

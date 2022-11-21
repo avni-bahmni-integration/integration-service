@@ -29,7 +29,7 @@ public class AmritErrorRecordWorker {
     @Autowired
     private HouseholdWorker householdWorker;
     @Autowired
-    private AmritEncounterWorker amritEncounterWorker;
+    private AmritEnrolmentWorker amritEnrolmentWorker;
     @Autowired
     private IntegrationSystemRepository integrationSystemRepository;
 
@@ -63,8 +63,8 @@ public class AmritErrorRecordWorker {
         if(errorRecord.getIntegratingEntityType() != null){
             if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.Beneficiary.name())) return beneficiaryWorker;
             if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.Household.name())) return householdWorker;
-            if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.BornBirth.name())) return amritEncounterWorker;
-            if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.CBAC.name())) return amritEncounterWorker;
+            if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.BornBirth.name())) return amritEnrolmentWorker;
+            if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.CBAC.name())) return amritEnrolmentWorker;
         }
         throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s / AmritEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getIntegratingEntityType()));
     }
