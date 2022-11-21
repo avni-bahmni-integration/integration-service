@@ -13,7 +13,7 @@ import org.avni_integration_service.integration_data.repository.IntegrationSyste
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,7 +32,7 @@ public class AvniAmritErrorService {
     }
 
     public List<ErrorType> getUnprocessableErrorTypes() {
-        return Arrays.asList( getErrorType(AmritErrorType.DummyErrorType));
+        return new ArrayList<>();
     }
 
     private void saveAvniError(String uuid, AmritErrorType amritErrorType, AvniEntityType avniEntityType, String errorMsg) {

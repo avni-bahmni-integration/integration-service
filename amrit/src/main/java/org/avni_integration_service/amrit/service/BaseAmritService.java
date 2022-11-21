@@ -44,14 +44,11 @@ public class BaseAmritService extends AmritMappingDbConstants {
         AmritFetchIdentityResponse response = beneficiaryRepository.getAmritId(beneficiary.getUuid());
         try {
             if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
-                Map<String, String> idToUUIDMap = response.getIds().stream().map(e -> {
-                    String[] entry = e.split(REGEX);
-                    if (entry.length != 2) {
-                        throw new RuntimeException("Issue converting response to idToUUIDMap " + e);
-                    }
-                    return Map.entry(entry[1].trim(), entry[0].trim());
-                }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
-                String externalId = idToUUIDMap.get(beneficiary.getUuid());
+                String externalId =  response.getIds().get(0);
+                String[] entry = externalId.split(REGEX);
+                if (entry.length == 2) {
+                    externalId = entry[0].trim();
+                }
                 if (!externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)
                         && !externalId.equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)
                         && externalId.matches(NUMBERS_ONLY_REGEX)) {
@@ -64,8 +61,7 @@ public class BaseAmritService extends AmritMappingDbConstants {
                         return true;
                     }
                 } else if (externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)) {
-                    throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,
-                            "Beneficiary registration not completed " + beneficiary.getUuid());
+                    return false;
                 } else {
                     throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,
                             "Invalid response for getAmritId request " + response.getData());

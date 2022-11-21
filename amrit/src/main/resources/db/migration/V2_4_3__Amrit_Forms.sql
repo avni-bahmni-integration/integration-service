@@ -21,3 +21,9 @@ VALUES
      (select id from public.mapping_group where name = 'BornBirth'), (select id from public.mapping_type where name = 'BornBirthRoot'))
 ;
 
+INSERT INTO error_type (id, name, integration_system_id, comparison_operator, comparison_value)
+VALUES (DEFAULT, 'BeneficiaryAmritIDFetchError', 3, '', ''),
+       (DEFAULT, 'BeneficiaryCreationError', 3, '', ''),
+       (DEFAULT, 'AmritEntityNotCreated', 3, '', ''),
+       (DEFAULT, 'EntityIsDeleted', 3, '', '');
+
