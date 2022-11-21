@@ -7,7 +7,7 @@ public enum AmritEntityType implements IntegrationEntityType {
     BeneficiaryScan("beneficiary scan"),
     BornBirth("born birth"),
     Household("household"),
-    CBACForm("cbac form");
+    CBAC("cbac");
 
 
     final String dbName;

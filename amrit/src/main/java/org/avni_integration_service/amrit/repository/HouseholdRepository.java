@@ -3,8 +3,10 @@ package org.avni_integration_service.amrit.repository;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritApplicationConfig;
 import org.avni_integration_service.amrit.config.AmritEntityType;
+import org.avni_integration_service.amrit.config.BeneficiaryConstants;
 import org.avni_integration_service.amrit.config.HouseholdConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
+import org.avni_integration_service.amrit.util.DateTimeUtil;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Household;
@@ -17,12 +19,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.*;
 
 @Component("HouseholdRepository")
-public class HouseholdRepository extends AmritBaseRepository implements HouseholdConstants {
+public class HouseholdRepository extends AmritBaseRepository implements HouseholdConstants, BeneficiaryConstants {
     private static final Logger logger = Logger.getLogger(HouseholdRepository.class);
 
     @Autowired
@@ -47,7 +50,7 @@ public class HouseholdRepository extends AmritBaseRepository implements Househol
         throw new RuntimeException("Invoke createEvent(Household, GeneralEncounter, Class<T>) instead.");
     }
 
-    public <T extends AmritBaseResponse> T createEvent(Household household, GeneralEncounter encounter, Class<T> returnType) {
+    public <T extends AmritBaseResponse> T createEvent(Household household, Class<T> returnType) {
         return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_BENEFICIARY_RESOURCE_PATH,
                 new HttpEntity<HashMap<String, Object>[]>(convertToHouseholdUpsertRequest(household)), returnType);
     }
@@ -57,7 +60,7 @@ public class HouseholdRepository extends AmritBaseRepository implements Househol
         populateObservations(householdObs, household.getGroupSubject(), MappingGroup_Household, MappingType_HouseholdRoot,
                 MappingType_HouseholdObservations);
         initMiscFields(household, householdObs);
-        logger.debug(String.format("Converting householdObs to household [%s] and [%s]", householdObs, household));
+        logger.debug(String.format("Converting to householdObs from household [%s] and [%s]", householdObs, household));
         return new HashMap[]{householdObs};
     }
 
@@ -69,8 +72,12 @@ public class HouseholdRepository extends AmritBaseRepository implements Househol
         householdObs.put(AVNI_BENEFICIARY_ID, household.getMemberSubject().getUuid());
         householdObs.put(AVNI_HOUSEHOLD_ID, household.getGroupSubject().getUuid());
         householdObs.put(VAN_ID, VAN_ID_VALUE);
+        householdObs.put(LAST_MODIFIED_BY, household.getLastModifiedBy());
+        householdObs.put(LAST_MODIFIED_DATE, DateTimeUtil.formatDateTime(household.getLastModifiedDate()));
+        householdObs.put(SYNCED_BY, household.getCreatedBy());
+        householdObs.put(SYNCED_DATE, DateTimeUtil.formatDateTime(new Date()));
         householdObs.put(CREATED_BY, household.getCreatedBy());
-        householdObs.put(CREATED_DATE, household.getCreateDate());
+        householdObs.put(CREATED_DATE, DateTimeUtil.formatDateTime(household.getCreateDate()));
         householdObs.put(DELETED, household.getVoided());
     }
 

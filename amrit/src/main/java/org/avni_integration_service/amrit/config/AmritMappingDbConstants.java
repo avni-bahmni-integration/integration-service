@@ -13,6 +13,12 @@ public class AmritMappingDbConstants {
     public static final String MappingType_HouseholdRoot = "HouseholdRoot";
     public static final String MappingType_HouseholdObservations = "HouseholdObservations";
     public static final String MappingGroup_Household = "Household";
+    public static final String MappingGroup_BornBirth = "BornBirth";
+    public static final String MappingType_BornBirthRoot = "BornBirthRoot";
+    public static final String MappingType_BornBirthObservations = "BornBirthObservations";
+    public static final String MappingGroup_CBAC = "CBAC";
+    public static final String MappingType_CBACRoot = "CBACRoot";
+    public static final String MappingType_CBACObservations = "CBACObservations";
     public static final String MAPPING_GROUP_MASTER_IDS = "MasterId";
     public static final String IntSystemName = "Amrit";
 }

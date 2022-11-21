@@ -3,8 +3,11 @@ package org.avni_integration_service.amrit.job;
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritAvniSessionFactory;
+import org.avni_integration_service.amrit.config.AmritEntityType;
+import org.avni_integration_service.amrit.worker.AmritEncounterWorker;
 import org.avni_integration_service.amrit.worker.AmritErrorRecordWorker;
 import org.avni_integration_service.amrit.worker.BeneficiaryWorker;
+import org.avni_integration_service.amrit.worker.HouseholdWorker;
 import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.util.HealthCheckService;
@@ -32,6 +35,12 @@ public class AvniAmritMainJob {
     private BeneficiaryWorker beneficiaryWorker;
 
     @Autowired
+    private HouseholdWorker householdWorker;
+
+    @Autowired
+    private AmritEncounterWorker amritEncounterWorker;
+
+    @Autowired
     AmritAvniSessionFactory amritAvniSessionFactory;
 
     @Autowired
@@ -49,6 +58,8 @@ public class AvniAmritMainJob {
             avniHttpClient.setAvniSession(amritAvniSessionFactory.createSession());
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
             processBeneficiaryAndBeneficiaryScan(tasks);
+            processHousehold(tasks);
+            processBornBirthAndCBAC(tasks);
             processErrors(tasks);
         } catch (Throwable e) {
             logger.error("Failed AvniAmritMainJob", e);
@@ -78,10 +89,26 @@ public class AvniAmritMainJob {
         try {
             if (hasTask(tasks, IntegrationTask.Household)) {
                 logger.info("Processing Household");
-                beneficiaryWorker.syncBeneficiariesFromAvniToAmrit();
+                householdWorker.syncHouseholdsFromAvniToAmrit();
             }
         } catch (Throwable e) {
-            logger.error("Failed processBeneficiaryAndBeneficiaryScan", e);
+            logger.error("Failed processHousehold", e);
+            bugsnag.notify(e);
+        }
+    }
+
+    private void processBornBirthAndCBAC(List<IntegrationTask> tasks) {
+        try {
+            if (hasTask(tasks, IntegrationTask.BornBirth)) {
+                logger.info("Processing BornBirth");
+                amritEncounterWorker.syncEncountersFromAvniToAmrit(AmritEntityType.BornBirth);
+            }
+            if (hasTask(tasks, IntegrationTask.CBAC)) {
+                logger.info("Processing CBAC");
+                amritEncounterWorker.syncEncountersFromAvniToAmrit(AmritEntityType.CBAC);
+            }
+        } catch (Throwable e) {
+            logger.error("Failed processBornBirthAndCBAC", e);
             bugsnag.notify(e);
         }
     }

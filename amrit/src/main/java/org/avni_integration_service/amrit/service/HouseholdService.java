@@ -1,7 +1,7 @@
 package org.avni_integration_service.amrit.service;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.amrit.dto.AmritUpsertBeneficiaryResponse;
+import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.amrit.repository.BeneficiaryRepository;
 import org.avni_integration_service.amrit.repository.HouseholdRepository;
 import org.avni_integration_service.avni.domain.Household;
@@ -23,7 +23,7 @@ public class HouseholdService extends BaseAmritService {
 
     public void createOrUpdateHousehold(Household household) {
         if (wasFetchOfAmritIdSuccessful(household.getMemberSubject(), false)) {
-            householdRepository.createEvent(household, null, AmritUpsertBeneficiaryResponse.class);
+            householdRepository.createEvent(household, AmritBaseResponse.class);
         }
     }
 }

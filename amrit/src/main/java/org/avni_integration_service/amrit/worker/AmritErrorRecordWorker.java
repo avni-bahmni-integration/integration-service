@@ -25,9 +25,11 @@ public class AmritErrorRecordWorker {
     @Autowired
     private AvniAmritErrorService avniAmritErrorService;
     @Autowired
-    private BeneficiaryService beneficiaryService;
-    @Autowired
     private BeneficiaryWorker beneficiaryWorker;
+    @Autowired
+    private HouseholdWorker householdWorker;
+    @Autowired
+    private AmritEncounterWorker amritEncounterWorker;
     @Autowired
     private IntegrationSystemRepository integrationSystemRepository;
 
@@ -50,7 +52,7 @@ public class AmritErrorRecordWorker {
             List<ErrorRecord> errorRecords = errorRecordPage.getContent();
             for (ErrorRecord errorRecord : errorRecords) {
                 ErrorRecordWorker errorRecordWorker = getErrorRecordWorker(errorRecord);
-                errorRecordWorker.processError(errorRecord.getEntityId());
+                errorRecordWorker.processError(errorRecord);
             }
             logger.info(String.format("Completed page number: %d with number of errors: %d", pageNumber, errorRecords.size()));
             pageNumber++;
@@ -60,10 +62,10 @@ public class AmritErrorRecordWorker {
     private ErrorRecordWorker getErrorRecordWorker(ErrorRecord errorRecord) {
         if(errorRecord.getIntegratingEntityType() != null){
             if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.Beneficiary.name())) return beneficiaryWorker;
+            if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.Household.name())) return householdWorker;
+            if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.BornBirth.name())) return amritEncounterWorker;
+            if(errorRecord.getIntegratingEntityType().equals(AmritEntityType.CBAC.name())) return amritEncounterWorker;
         }
         throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s / AmritEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getIntegratingEntityType()));
-
     }
-
-
 }

@@ -6,7 +6,10 @@ public interface BeneficiaryConstants {
     String UPSERT_AMRIT_BENEFICIARY_RESOURCE_PATH = "/rmnch/syncDataToAmrit/new";
     String IDENTITY_TYPE = "identityType";
     String NATIONAL_ID = "National ID";
+    String LAST_MODIFIED_BY = "modifiedBy";
+    String LAST_MODIFIED_DATE = "lastModDate";
     String CREATED_BY = "createdBy";
+    String CREATED_DATE = "createdDate";
     String VAN_ID = "vanID";
     String LITERACY_STATUS = "literacyStatus";
     String EDUCATION_NAME = "educationName";
@@ -22,5 +25,10 @@ public interface BeneficiaryConstants {
     String DISTRICT_EXTERNAL_ID = "District External ID";
     String STATE_EXTERNAL_ID = "State External ID";
     String BENEFICIARY_REG_ID = "beneficiaryRegID";
+    String SYNCED_BY = "syncedBy";
+    String SYNCED_DATE = "syncedDate";
+    String DELETED = "deleted";
+    String AVNI_BENEFICIARY_ID = "avniBeneficiaryID";
+
     int VAN_ID_VALUE = 61;
 }

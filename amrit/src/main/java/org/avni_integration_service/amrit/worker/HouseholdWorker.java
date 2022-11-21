@@ -11,6 +11,7 @@ import org.avni_integration_service.avni.domain.HouseholdResponse;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
+import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.avni_integration_service.integration_data.service.IntegratingEntityStatusService;
 import org.springframework.stereotype.Component;
@@ -77,7 +78,8 @@ public class HouseholdWorker implements HouseholdConstants, ErrorRecordWorker {
     }
 
     @Override
-    public void processError(String entityUuid) throws Exception {
+    public void processError(ErrorRecord errorRecord) {
+        String entityUuid = errorRecord.getEntityId();
         Household household = avniSubjectRepository.getHousehold(entityUuid);
         if (household == null) {
             String message = String.format("Household has been deleted now: %s", entityUuid);

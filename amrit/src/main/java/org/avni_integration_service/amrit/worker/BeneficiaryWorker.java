@@ -11,6 +11,7 @@ import org.avni_integration_service.avni.domain.SubjectsResponse;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.IntegratingEntityStatus;
+import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.avni_integration_service.integration_data.service.IntegratingEntityStatusService;
 import org.springframework.stereotype.Component;
@@ -103,7 +104,8 @@ public class BeneficiaryWorker implements BeneficiaryConstants, ErrorRecordWorke
     }
 
     @Override
-    public void processError(String entityUuid) throws Exception {
+    public void processError(ErrorRecord errorRecord) {
+        String entityUuid = errorRecord.getEntityId();
         Subject beneficiary = avniSubjectRepository.getSubject(entityUuid);
         if (beneficiary == null) {
             String message = String.format("Subject has been deleted now: %s", entityUuid);
