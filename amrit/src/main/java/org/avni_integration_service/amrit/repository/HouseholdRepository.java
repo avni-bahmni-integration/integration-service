@@ -43,7 +43,7 @@ public class HouseholdRepository extends AmritBaseRepository implements Househol
     }
 
     @Override
-    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, Enrolment enrolment, Class<T> returnType) {
+    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, AvniBaseContract enrolment, Class<T> returnType) {
         throw new RuntimeException("Invoke createEvent(Household, GeneralEncounter, Class<T>) instead.");
     }
 

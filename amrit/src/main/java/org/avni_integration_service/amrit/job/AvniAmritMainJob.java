@@ -4,10 +4,7 @@ import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritAvniSessionFactory;
 import org.avni_integration_service.amrit.config.AmritEntityType;
-import org.avni_integration_service.amrit.worker.AmritEnrolmentWorker;
-import org.avni_integration_service.amrit.worker.AmritErrorRecordWorker;
-import org.avni_integration_service.amrit.worker.BeneficiaryWorker;
-import org.avni_integration_service.amrit.worker.HouseholdWorker;
+import org.avni_integration_service.amrit.worker.*;
 import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.util.HealthCheckService;
@@ -36,6 +33,9 @@ public class AvniAmritMainJob {
 
     @Autowired
     private HouseholdWorker householdWorker;
+
+    @Autowired
+    private AmritEncounterWorker amritEncounterWorker;
 
     @Autowired
     private AmritEnrolmentWorker amritEnrolmentWorker;
@@ -105,7 +105,7 @@ public class AvniAmritMainJob {
             }
             if (hasTask(tasks, IntegrationTask.CBAC)) {
                 logger.info("Processing CBAC");
-                amritEnrolmentWorker.syncEnrolmentsFromAvniToAmrit(AmritEntityType.CBAC);
+                amritEncounterWorker.syncEncountersFromAvniToAmrit(AmritEntityType.CBAC);
             }
         } catch (Throwable e) {
             logger.error("Failed processBornBirthAndCBAC", e);

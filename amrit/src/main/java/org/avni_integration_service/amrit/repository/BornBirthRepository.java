@@ -45,9 +45,9 @@ public class BornBirthRepository extends AmritBaseRepository implements BornBirt
     }
 
     @Override
-    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, Enrolment enrolment, Class<T> returnType) {
+    public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, AvniBaseContract enrolment, Class<T> returnType) {
         return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_BORN_BIRTH_RESOURCE_PATH,
-                new HttpEntity<HashMap<String, Object>[]>(convertToBornBirthUpsertRequest((Subject) subject, enrolment)), returnType);
+                new HttpEntity<HashMap<String, Object>[]>(convertToBornBirthUpsertRequest((Subject) subject, (Enrolment) enrolment)), returnType);
     }
 
     private HashMap<String, Object>[] convertToBornBirthUpsertRequest(Subject subject, Enrolment enrolment) {

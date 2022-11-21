@@ -7,7 +7,6 @@ import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.amrit.dto.AmritFetchIdentityResponse;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
-import org.avni_integration_service.avni.domain.Enrolment;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.MappingGroup;
@@ -186,7 +185,7 @@ public abstract class AmritBaseRepository {
 
     public abstract HashMap<String, Object>[] fetchEvents();
 
-    public abstract <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, Enrolment enrolment, Class<T> returnType);
+    public abstract <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, AvniBaseContract avniEntity, Class<T> returnType);
 
     public boolean wasEventCreatedSuccessfully(HashMap<String, Object>[] response) {
         return (response != null && response[0].get("errorCode") == null);

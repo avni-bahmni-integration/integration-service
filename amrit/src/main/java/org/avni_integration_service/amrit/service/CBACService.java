@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.amrit.repository.BeneficiaryRepository;
 import org.avni_integration_service.amrit.repository.CBACRepository;
-import org.avni_integration_service.avni.domain.Enrolment;
+import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
@@ -22,9 +22,9 @@ public class CBACService extends BaseAmritService {
         this.cBACRepository = cBACRepository;
     }
 
-    public void createOrUpdateCBAC(Subject subject, Enrolment enrolment) {
+    public void createOrUpdateCBAC(Subject subject, GeneralEncounter encounter) {
         if (wasFetchOfAmritIdSuccessful(subject, false)) {
-            cBACRepository.createEvent(subject, enrolment, AmritBaseResponse.class);
+            cBACRepository.createEvent(subject, encounter, AmritBaseResponse.class);
         }
     }
 }
