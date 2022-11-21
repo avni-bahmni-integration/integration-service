@@ -17,7 +17,7 @@ VALUES
      (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
     ('bleedingAfterIntercourse'::varchar(250), 'Bleeding after intercourse'::varchar(250), null::varchar(1000), null::varchar(100), 3,
      (select id from public.mapping_group where name = 'CBAC'), (select id from public.mapping_type where name = 'CBACRoot')),
-    ('birthWeight'::varchar(250), 'Weight of first child'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+    ('birthWeight'::varchar(250), 'Birth weight of the baby in kgs'::varchar(250), null::varchar(1000), null::varchar(100), 3,
      (select id from public.mapping_group where name = 'BornBirth'), (select id from public.mapping_type where name = 'BornBirthRoot'))
 ;
 
