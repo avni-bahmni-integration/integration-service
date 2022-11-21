@@ -5,12 +5,11 @@ import org.avni_integration_service.amrit.config.AmritApplicationConfig;
 import org.avni_integration_service.amrit.config.AmritEntityType;
 import org.avni_integration_service.amrit.config.BeneficiaryConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
-import org.avni_integration_service.amrit.dto.AmritFetchIdentityResponse;
-import org.avni_integration_service.amrit.util.DateTimeUtil;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.*;
+import org.avni_integration_service.util.FormatAndParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -25,6 +24,8 @@ import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.
 @Component("BeneficiaryRepository")
 public class BeneficiaryRepository extends AmritBaseRepository implements BeneficiaryConstants {
     private static final Logger logger = Logger.getLogger(BeneficiaryRepository.class);
+    public static final String DOB = "dOB";
+
     @Autowired
     public BeneficiaryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                  @Qualifier("AmritRestTemplate") RestTemplate restTemplate,
@@ -92,18 +93,26 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
             beneficiary.put(BENEFICIARY_REG_ID, subject.getExternalId());
         }
 
-        beneficiary.put("dOB", DateTimeUtil.formatDateTime((String) beneficiary.get("dOB")));
+        beneficiary.put(DOB, FormatAndParseUtil.fromAvniToOpenMRSDate((String) beneficiary.get(DOB)));
         beneficiary.put(VAN_ID, VAN_ID_VALUE);
         beneficiary.put(CREATED_BY, subject.getCreatedBy());
     }
 
     private void initLocationFields(Subject subject, HashMap<String, Object> demographics) {
         HashMap<String, String> location = (HashMap<String, String>) subject.get(LOCATION);
-        demographics.put(STATE_ID, location.get(STATE_EXTERNAL_ID));
-        demographics.put(DISTRICT_ID, location.get(DISTRICT_EXTERNAL_ID));
-        demographics.put(BLOCK_ID, location.get(BLOCK_EXTERNAL_ID));
-//        demographics.put(PANCHAYAT_ID, location.get(PANCHAYAT_EXTERNAL_ID));
-        demographics.put(DISTRICT_BRANCH_ID, location.get(VILLAGE_EXTERNAL_ID));
+        demographics.put(STATE_ID, getValue(location, STATE_EXTERNAL_ID));
+        demographics.put(DISTRICT_ID, getValue(location, DISTRICT_EXTERNAL_ID));
+        demographics.put(BLOCK_ID, getValue(location, BLOCK_EXTERNAL_ID));
+//        demographics.put(PANCHAYAT_ID, Integer.parseInt(location.get(PANCHAYAT_EXTERNAL_ID)));
+        demographics.put(DISTRICT_BRANCH_ID, getValue(location, VILLAGE_EXTERNAL_ID));
+    }
+
+    private int getValue(HashMap<String, String> location, String externalId) {
+        if(!StringUtils.hasText(externalId) || !StringUtils.hasText(location.get(externalId))) {
+            throw new AssertionError(String.format("Unable to convert location field of type %s to its id mapping %s",
+                    externalId, location.get(externalId)));
+        }
+        return Integer.parseInt(location.get(externalId));
     }
 
 }
