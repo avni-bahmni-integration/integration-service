@@ -21,8 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.avni_integration_service.amrit.config.BeneficiaryConstants.SUBJECT_TYPE;
-
 @Component
 public class AmritEncounterWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(AmritEncounterWorker.class);

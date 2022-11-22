@@ -24,6 +24,9 @@ VALUES
 INSERT INTO error_type (id, name, integration_system_id, comparison_operator, comparison_value)
 VALUES (DEFAULT, 'BeneficiaryAmritIDFetchError', 3, '', ''),
        (DEFAULT, 'BeneficiaryCreationError', 3, '', ''),
+       (DEFAULT, 'HouseholdCreationError', 3, '', ''),
+       (DEFAULT, 'BornBirthCreationError', 3, '', ''),
+       (DEFAULT, 'CBACCreationError', 3, '', ''),
        (DEFAULT, 'AmritEntityNotCreated', 3, '', ''),
        (DEFAULT, 'EntityIsDeleted', 3, '', '');
 

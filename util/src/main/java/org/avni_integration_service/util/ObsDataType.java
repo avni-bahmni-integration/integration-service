@@ -3,7 +3,7 @@ package org.avni_integration_service.util;
 import java.util.Map;
 
 public enum ObsDataType {
-    Coded, Date, Numeric, Location, Text, Boolean, NA, DateTime;
+    Coded, Date, Numeric, Text, Boolean, NA, DateTime;
     private static final Map<String, ObsDataType> bahmniToAvniExceptionsMap = Map.of(
             "N/A", NA,
             "Datetime", DateTime,

@@ -48,7 +48,7 @@ public class HouseholdRepository extends AmritBaseRepository implements Househol
     }
 
     public <T extends AmritBaseResponse> T createEvent(Household household, Class<T> returnType) {
-        return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_BENEFICIARY_RESOURCE_PATH,
+        return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_HOUSEHOLD_RESOURCE_PATH,
                 new HttpEntity<HashMap<String, Object>[]>(convertToHouseholdUpsertRequest(household)), returnType);
     }
 

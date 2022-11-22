@@ -67,4 +67,10 @@ public class IntegrationJobScheduler {
     public void mainAmritJob() {
         avniAmritMainJob.execute();
     }
+
+
+    @Scheduled(cron = "${amrit.app.cron.full.error}")
+    public void fullErrorAmritJob() {
+        avniAmritFullErrorJob.execute();
+    }
 }

@@ -23,7 +23,6 @@ import static org.avni_integration_service.amrit.config.AmritMappingDbConstants.
 @Component("BeneficiaryRepository")
 public class BeneficiaryRepository extends AmritBaseRepository implements BeneficiaryConstants {
     private static final Logger logger = Logger.getLogger(BeneficiaryRepository.class);
-    public static final String DOB = "dOB";
 
     @Autowired
     public BeneficiaryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
@@ -91,7 +90,6 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
         if(StringUtils.hasText(subject.getExternalId())) {
             beneficiary.put(BENEFICIARY_REG_ID, subject.getExternalId());
         }
-
         beneficiary.put(DOB, FormatAndParseUtil.fromAvniToOpenMRSDate((String) beneficiary.get(DOB)));
         beneficiary.put(VAN_ID, VAN_ID_VALUE);
         beneficiary.put(CREATED_BY, subject.getCreatedBy());

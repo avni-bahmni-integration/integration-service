@@ -153,8 +153,6 @@ public abstract class AmritBaseRepository {
                 } else {
                     logger.error(String.format("Unable to find numeric mapping for attribute %s", mapping.getIntSystemValue()));
                 }
-            } else if (dataTypeHint == ObsDataType.Location && getValue(avniEntity, obsField) != null) {
-                //TODO implement mappings for location
             }
         }
     }

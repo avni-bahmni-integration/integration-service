@@ -84,4 +84,11 @@ public class DateTimeUtil {
 
         return calendar.getTime();
     }
+
+    public static Date addTimeToJavaUtilDate(Date date, int units, int field) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(field, units);
+        return calendar.getTime();
+    }
 }

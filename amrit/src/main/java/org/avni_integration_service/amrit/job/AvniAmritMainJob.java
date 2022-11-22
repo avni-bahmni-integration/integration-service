@@ -59,7 +59,8 @@ public class AvniAmritMainJob {
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
             processBeneficiaryAndBeneficiaryScan(tasks);
             processHousehold(tasks);
-            processBornBirthAndCBAC(tasks);
+            processBornBirth(tasks);
+            processCBAC(tasks);
             processErrors(tasks);
         } catch (Throwable e) {
             logger.error("Failed AvniAmritMainJob", e);
@@ -97,18 +98,26 @@ public class AvniAmritMainJob {
         }
     }
 
-    private void processBornBirthAndCBAC(List<IntegrationTask> tasks) {
+    private void processBornBirth(List<IntegrationTask> tasks) {
         try {
             if (hasTask(tasks, IntegrationTask.BornBirth)) {
                 logger.info("Processing BornBirth");
                 amritEnrolmentWorker.syncEnrolmentsFromAvniToAmrit(AmritEntityType.BornBirth);
             }
+        } catch (Throwable e) {
+            logger.error("Failed processBornBirth", e);
+            bugsnag.notify(e);
+        }
+    }
+
+    private void processCBAC(List<IntegrationTask> tasks) {
+        try {
             if (hasTask(tasks, IntegrationTask.CBAC)) {
                 logger.info("Processing CBAC");
                 amritEncounterWorker.syncEncountersFromAvniToAmrit(AmritEntityType.CBAC);
             }
         } catch (Throwable e) {
-            logger.error("Failed processBornBirthAndCBAC", e);
+            logger.error("Failed processCBAC", e);
             bugsnag.notify(e);
         }
     }
