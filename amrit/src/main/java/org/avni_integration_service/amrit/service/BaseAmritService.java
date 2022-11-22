@@ -71,6 +71,7 @@ public class BaseAmritService extends AmritMappingDbConstants {
                         "Failed to obtain successful response from Amrit " + response.getErrorMessage());
             }
         } catch(Exception e) {
+            logger.error("Failed fetchOfAmritId", e);
             avniAmritErrorService.errorOccurred(beneficiary.getUuid(),
                     AmritErrorType.BeneficiaryAmritIDFetchError,
                     AmritEntityType.Beneficiary, e.getLocalizedMessage());

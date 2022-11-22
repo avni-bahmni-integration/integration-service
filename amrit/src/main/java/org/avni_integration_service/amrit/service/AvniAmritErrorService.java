@@ -58,7 +58,7 @@ public class AvniAmritErrorService {
     }
 
     private ErrorType getErrorType(AmritErrorType amritErrorType) {
-        return errorTypeRepository.findByNameAndIntegrationSystem(amritErrorType.name(), integrationSystemRepository.findByName("Amrit"));
+        return errorTypeRepository.findByNameAndIntegrationSystem(amritErrorType.name(), integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName));
     }
 
     private ErrorRecord saveAmritError(String uuid, AmritErrorType amritErrorType, AmritEntityType AmritEntityType, String errorMsg) {
