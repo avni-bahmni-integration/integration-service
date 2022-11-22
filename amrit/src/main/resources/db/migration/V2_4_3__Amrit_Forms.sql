@@ -22,11 +22,11 @@ VALUES
 ;
 
 INSERT INTO error_type (id, name, integration_system_id, comparison_operator, comparison_value)
-VALUES (DEFAULT, 'BeneficiaryAmritIDFetchError', 3, '', ''),
-       (DEFAULT, 'BeneficiaryCreationError', 3, '', ''),
-       (DEFAULT, 'HouseholdCreationError', 3, '', ''),
-       (DEFAULT, 'BornBirthCreationError', 3, '', ''),
-       (DEFAULT, 'CBACCreationError', 3, '', ''),
-       (DEFAULT, 'AmritEntityNotCreated', 3, '', ''),
-       (DEFAULT, 'EntityIsDeleted', 3, '', '');
+VALUES (DEFAULT, 'BeneficiaryAmritIDFetchError', 3, null, null),
+       (DEFAULT, 'BeneficiaryCreationError', 3, null, null),
+       (DEFAULT, 'HouseholdCreationError', 3, null, null),
+       (DEFAULT, 'BornBirthCreationError', 3, null, null),
+       (DEFAULT, 'CBACCreationError', 3, null, null),
+       (DEFAULT, 'AmritEntityNotCreated', 3, null, null),
+       (DEFAULT, 'EntityIsDeleted', 3, null, null);
 
