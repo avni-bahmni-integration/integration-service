@@ -3,6 +3,7 @@ package org.avni_integration_service.avni.domain;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.avni_integration_service.util.FormatAndParseUtil;
 
 import java.time.LocalDateTime;
@@ -19,20 +20,22 @@ public class Household {
     protected Subject groupSubject = new Subject();
     protected Subject memberSubject = new Subject();
 
-    @JsonIgnore
+    @JsonProperty("Group subject")
     public Subject getGroupSubject() {
         return groupSubject;
     }
 
+    @JsonProperty("Group subject")
     public void setGroupSubject(Subject groupSubject) {
         this.groupSubject = groupSubject;
     }
 
-    @JsonIgnore
+    @JsonProperty("Member subject")
     public Subject getMemberSubject() {
         return memberSubject;
     }
 
+    @JsonProperty("Member subject")
     public void setMemberSubject(Subject memberSubject) {
         this.memberSubject = memberSubject;
     }
@@ -91,41 +94,42 @@ public class Household {
     public String toString() {
         return map.toString();
     }
-
+    @JsonProperty("Voided")
     public void setVoided(boolean voided) {
         set("Voided", voided);
     }
 
-    @JsonIgnore
+    @JsonProperty("Voided")
     public Boolean getVoided() {
         return (Boolean) get("Voided");
     }
 
+    @JsonProperty("Membership start date")
     public void setMembershipStartDate(String membershipStartDate) {
         set(MembershipStartDate, membershipStartDate);
     }
-
-    @JsonIgnore
+    @JsonProperty("Membership start date")
     public String getMembershipStartDate() {
         return (String) get(MembershipStartDate);
     }
 
-    @JsonIgnore
+    @JsonProperty("Membership end date")
     public String getMembershipEndDate() {
         return (String) get(MembershipEndDate);
     }
 
+    @JsonProperty("Membership end date")
     public void setMembershipEndDate(String membershipEndDate) {
         set(MembershipEndDate, membershipEndDate);
     }
 
-    @JsonIgnore
+    @JsonProperty("Role")
     public String getRole() {
         return (String) get(Role);
     }
 
+    @JsonProperty("Role")
     public void setRole(String role) {
         set(Role, role);
     }
-
 }
