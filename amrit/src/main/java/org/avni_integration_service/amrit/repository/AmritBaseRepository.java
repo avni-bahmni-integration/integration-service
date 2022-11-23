@@ -56,10 +56,10 @@ public abstract class AmritBaseRepository {
     private <T extends AmritBaseResponse> boolean extractResponse(ResponseEntity<T> responseEntity) {
         if (responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null) {
             HttpStatus actualStatus = HttpStatus.resolve((int) responseEntity.getBody().getStatusCode());
-            if (actualStatus.is2xxSuccessful()) {
+            if (actualStatus != null && actualStatus.is2xxSuccessful()) {
                 return true;
             } else {
-                throw handleError(responseEntity, actualStatus);
+                throw handleError(responseEntity, HttpStatus.BAD_REQUEST);
             }
         }
         return false;
