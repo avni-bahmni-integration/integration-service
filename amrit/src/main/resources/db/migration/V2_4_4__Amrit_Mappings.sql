@@ -95,7 +95,7 @@ VALUES
 
     ('tracingFamilyMembers', 'Tracing of all family members to be done by ANM/MPW', null, null, 3, (select id from public.mapping_group where name = 'CBAC'), (select id from public.mapping_type where name = 'CBACRoot')),
 
-    ('typeOfFuelUsedForCooking', 'Type of fuel used for cooking', null, null, 3, (select id from public.mapping_group where name = 'CBAC'), (select id from public.mapping_type where name = 'CBACRoot')),
+    ('typeOfFuelUsedForCooking', 'Type of fuel used for cooking', null, 'Text', 3, (select id from public.mapping_group where name = 'CBAC'), (select id from public.mapping_type where name = 'CBACRoot')),
 
     ('udertakeAnyPhysicalActivities', 'Do you undertake any physical activities for minimum of 150 minutes in a week?', null, null, 3, (select id from public.mapping_group where name = 'CBAC'), (select id from public.mapping_type where name = 'CBACRoot')),
 
