@@ -101,7 +101,7 @@ public class AmritEnrolmentWorker implements ErrorRecordWorker {
     }
 
     private boolean shouldFilterEnrolment(Enrolment generalEnrolment) {
-        return !generalEnrolment.isExited() || generalEnrolment.getVoided();
+        return generalEnrolment.isExited() || generalEnrolment.getVoided();
     }
 
     private void updateSyncStatus(Enrolment enrolment, boolean updateSyncStatus, AmritEntityType entityType) {
