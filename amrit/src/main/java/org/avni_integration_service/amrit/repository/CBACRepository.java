@@ -47,16 +47,16 @@ public class CBACRepository extends AmritBaseRepository implements CBACConstants
     @Override
     public <T extends AmritBaseResponse> T createEvent(AvniBaseContract subject, AvniBaseContract encounter, Class<T> returnType) {
         return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_CBAC_RESOURCE_PATH,
-                new HttpEntity<HashMap<String, Object>[]>(convertToCBACUpsertRequest((Subject) subject, (GeneralEncounter) encounter)), returnType);
+                new HttpEntity<HashMap<String, Object>>(convertToCBACUpsertRequest((Subject) subject, (GeneralEncounter) encounter)), returnType);
     }
 
-    private HashMap<String, Object>[] convertToCBACUpsertRequest(Subject subject, GeneralEncounter encounter) {
+    private HashMap<String, Object> convertToCBACUpsertRequest(Subject subject, GeneralEncounter encounter) {
         HashMap<String, Object> cBACObs = new HashMap<String, Object>();
         populateObservations(cBACObs, encounter, MappingGroup_CBAC, MappingType_CBACRoot,
                 MappingType_CBACObservations);
         initMiscFields(subject, encounter, cBACObs);
         logger.debug(String.format("Converting encounter to cBACObs [%s] and [%s]", encounter, cBACObs));
-        return new HashMap[]{cBACObs};
+        return cBACObs;
     }
 
     private void initMiscFields(Subject subject, GeneralEncounter encounter, HashMap<String, Object> cBACObs) {
