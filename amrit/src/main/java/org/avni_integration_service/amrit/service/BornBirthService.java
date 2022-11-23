@@ -23,7 +23,7 @@ public class BornBirthService extends BaseAmritService {
     }
 
     public void createOrUpdateBornBirth(Subject subject, Enrolment enrolment) {
-        if (wasFetchOfAmritIdSuccessful(subject, false)) {
+        if (wasFetchOfAmritIdSuccessful(subject, false, true)) {
             bornBirthRepository.createEvent(subject, enrolment, AmritBaseResponse.class);
         }
     }

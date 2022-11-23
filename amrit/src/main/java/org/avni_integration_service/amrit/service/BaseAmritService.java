@@ -5,7 +5,6 @@ import org.avni_integration_service.amrit.config.AmritErrorType;
 import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.dto.AmritFetchIdentityResponse;
 import org.avni_integration_service.amrit.repository.BeneficiaryRepository;
-import org.avni_integration_service.amrit.repository.HouseholdRepository;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
@@ -14,10 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class BaseAmritService extends AmritMappingDbConstants {
     private static final Logger logger = LoggerFactory.getLogger(BaseAmritService.class);
@@ -40,7 +35,8 @@ public class BaseAmritService extends AmritMappingDbConstants {
     }
 
 
-    public boolean wasFetchOfAmritIdSuccessful(Subject beneficiary, boolean throwExceptionIfNotFound) {
+    public boolean wasFetchOfAmritIdSuccessful(Subject beneficiary, boolean throwExceptionIfNotFound,
+                                               boolean throwExceptionIfRegistrationNotCompleted) {
         AmritFetchIdentityResponse response = beneficiaryRepository.getAmritId(beneficiary.getUuid());
         try {
             if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
@@ -61,7 +57,11 @@ public class BaseAmritService extends AmritMappingDbConstants {
                         return true;
                     }
                 } else if (externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)) {
-                    return false;
+                    if (throwExceptionIfRegistrationNotCompleted) {
+                        throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "Beneficiary registration not completed " + beneficiary.getUuid());
+                    } else {
+                        return false;
+                    }
                 } else {
                     throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,
                             "Invalid response for getAmritId request " + response.getData());

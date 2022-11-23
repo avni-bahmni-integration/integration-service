@@ -89,7 +89,7 @@ public class BeneficiaryWorker implements BeneficiaryConstants, ErrorRecordWorke
 
     protected void checkIfSubjectWasSavedSuccessfully(AmritEntityType entityType, Subject subject, boolean updateSyncStatus) {
         logger.debug("Processing subject %s".formatted(subject.getUuid()));
-        beneficiaryService.wasFetchOfAmritIdSuccessful(subject, true);
+        beneficiaryService.wasFetchOfAmritIdSuccessful(subject, true, false);
         updateSyncStatus(entityType, subject, updateSyncStatus);
     }
 

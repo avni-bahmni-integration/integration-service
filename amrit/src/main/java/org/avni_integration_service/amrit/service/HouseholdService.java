@@ -22,7 +22,7 @@ public class HouseholdService extends BaseAmritService {
     }
 
     public void createOrUpdateHousehold(Household household) {
-        if (wasFetchOfAmritIdSuccessful(household.getMemberSubject(), false)) {
+        if (wasFetchOfAmritIdSuccessful(household.getMemberSubject(), false, true)) {
             householdRepository.createEvent(household, AmritBaseResponse.class);
         }
     }

@@ -19,7 +19,7 @@ public class BeneficiaryService extends BaseAmritService {
     }
 
     public void createOrUpdateBeneficiary(Subject beneficiary) {
-        if (wasFetchOfAmritIdSuccessful(beneficiary, false)) {
+        if (wasFetchOfAmritIdSuccessful(beneficiary, false, true)) {
             beneficiaryRepository.createEvent(beneficiary, null, AmritUpsertBeneficiaryResponse.class);
         }
     }
