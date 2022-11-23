@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Component
 public class AmritEncounterWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(AmritEncounterWorker.class);
@@ -60,10 +62,11 @@ public class AmritEncounterWorker implements ErrorRecordWorker {
         while (true) {
             IntegratingEntityStatus beneficiarySyncStatus = integratingEntityStatusRepository.findByEntityType(entityType.name());
             IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(entityType.name());
-            GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(status.getReadUptoDateTime(), entityType.getDbName());
+            Date readUptoDateTime = getEffectiveCutoffDateTime(status);
+            GeneralEncountersResponse response = avniEncounterRepository.getGeneralEncounters(readUptoDateTime, entityType.getDbName());
             GeneralEncounter[] generalEncounters = response.getContent();
             int totalPages = response.getTotalPages();
-            logger.info(String.format("Found %d generalEncounters that are newer than %s", generalEncounters.length, status.getReadUptoDateTime()));
+            logger.info(String.format("Found %d generalEncounters that are newer than %s", generalEncounters.length, readUptoDateTime));
             if (generalEncounters.length == 0) break;
             for (GeneralEncounter encounter : generalEncounters) {
                 processEncounter(encounter, true, entityType);

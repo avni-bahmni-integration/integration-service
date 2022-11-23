@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Component
 public class BeneficiaryWorker implements BeneficiaryConstants, ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(BeneficiaryWorker.class);
@@ -53,10 +55,11 @@ public class BeneficiaryWorker implements BeneficiaryConstants, ErrorRecordWorke
         while (true) {
             IntegratingEntityStatus beneficiarySyncStatus = integratingEntityStatusRepository.findByEntityType(AmritEntityType.Beneficiary.name());
             IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(entityType.name());
-            SubjectsResponse response = avniSubjectRepository.getSubjects(status.getReadUptoDateTime(), SUBJECT_TYPE);
+            Date readUptoDateTime = getEffectiveCutoffDateTime(status);
+            SubjectsResponse response = avniSubjectRepository.getSubjects(readUptoDateTime, SUBJECT_TYPE);
             Subject[] subjects = response.getContent();
             int totalPages = response.getTotalPages();
-            logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, status.getReadUptoDateTime()));
+            logger.info(String.format("Found %d subjects that are newer than %s", subjects.length, readUptoDateTime));
             if (subjects.length == 0) break;
             for (Subject subject : subjects) {
                 if (entityType.equals(AmritEntityType.Beneficiary)) {

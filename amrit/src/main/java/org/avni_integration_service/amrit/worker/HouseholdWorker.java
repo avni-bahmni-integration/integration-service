@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Component
 public class HouseholdWorker implements HouseholdConstants, ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(HouseholdWorker.class);
@@ -49,10 +51,11 @@ public class HouseholdWorker implements HouseholdConstants, ErrorRecordWorker {
         while (true) {
             IntegratingEntityStatus beneficiarySyncStatus = integratingEntityStatusRepository.findByEntityType(AmritEntityType.Household.name());
             IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(AmritEntityType.Household.name());
-            HouseholdResponse response = avniSubjectRepository.getGroupSubjects(status.getReadUptoDateTime(), SUBJECT_TYPE);
+            Date readUptoDateTime = getEffectiveCutoffDateTime(status);
+            HouseholdResponse response = avniSubjectRepository.getGroupSubjects(readUptoDateTime, SUBJECT_TYPE);
             Household[] households = response.getContent();
             int totalPages = response.getTotalPages();
-            logger.info(String.format("Found %d households that are newer than %s", households.length, status.getReadUptoDateTime()));
+            logger.info(String.format("Found %d households that are newer than %s", households.length, readUptoDateTime));
             if (households.length == 0) break;
             for (Household household : households) {
                 processHousehold(household, true);

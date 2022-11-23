@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Component
 public class AmritEnrolmentWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(AmritEnrolmentWorker.class);
@@ -59,10 +61,11 @@ public class AmritEnrolmentWorker implements ErrorRecordWorker {
     public void processEnrolments(AmritEntityType entityType) {
         while (true) {
             IntegratingEntityStatus status = integratingEntityStatusRepository.findByEntityType(entityType.name());
-            EnrolmentsResponse response = avniEnrolmentRepository.getEnrolments(status.getReadUptoDateTime(), entityType.getDbName());
+            Date readUptoDateTime = getEffectiveCutoffDateTime(status);
+            EnrolmentsResponse response = avniEnrolmentRepository.getEnrolments(readUptoDateTime, entityType.getDbName());
             Enrolment[] generalEnrolments = response.getContent();
             int totalPages = response.getTotalPages();
-            logger.info(String.format("Found %d generalEnrolments that are newer than %s", generalEnrolments.length, status.getReadUptoDateTime()));
+            logger.info(String.format("Found %d generalEnrolments that are newer than %s", generalEnrolments.length, readUptoDateTime));
             if (generalEnrolments.length == 0) break;
             for (Enrolment enrolment : generalEnrolments) {
                 processEnrolment(enrolment, true, entityType);
