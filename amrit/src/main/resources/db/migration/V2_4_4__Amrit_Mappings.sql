@@ -115,11 +115,11 @@ VALUES
 
     ('addressTwo', 'Address 2', null, null, 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
 
-    ('availabilityOfElectricity', 'Availability of electricity', null, null, 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
+    ('availabilityOfElectricity', 'Availability of electricity', null, 'Text', 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
 
     ('availabilityOfToilet', 'Availability of toilet', null, null, 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
 
-    ('fuelType', 'Type of fuel used for cooking', null, null, 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
+    ('fuelType', 'Type of fuel used for cooking', null, 'Text', 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
 
     ('houseOwnership', 'House ownership', null, null, 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
 
@@ -135,7 +135,7 @@ VALUES
 
     ('otherTypeOfFuelUsed', 'Other type of fuel used for cooking', null, null, 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
 
-    ('primarySourceOfWater', 'Primary source of water', null, null, 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
+    ('primarySourceOfWater', 'Primary source of water', null, 'Text', 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot')),
 
     ('separateKitchen', 'Separate kitchen', null, null, 3, (select id from public.mapping_group where name = 'Household'), (select id from public.mapping_type where name = 'HouseholdRoot'))
 

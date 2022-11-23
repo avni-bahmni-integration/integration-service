@@ -153,6 +153,14 @@ public abstract class AmritBaseRepository {
                 } else {
                     logger.error(String.format("Unable to find numeric mapping for attribute %s", mapping.getIntSystemValue()));
                 }
+            } else if (dataTypeHint == ObsDataType.Text && getValue(avniEntity, obsField) != null) {
+                Object answer = getValue(avniEntity, obsField);
+                if(answer instanceof List<?>) {
+                    //Convert string array to single string
+                    List<String> answers = (List<String>) answer;
+                    answer = String.join(",", answers);
+                }
+                observationHolder.put(mapping.getIntSystemValue(), answer);
             }
         }
     }
