@@ -53,13 +53,22 @@ public abstract class AmritBaseRepository {
         this.integrationSystem = integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName);
     }
 
+    private <T extends AmritBaseResponse> boolean extractResponse(ResponseEntity<T> responseEntity) {
+        if (responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null) {
+            HttpStatus actualStatus = HttpStatus.resolve((int) responseEntity.getBody().getStatusCode());
+            if (actualStatus.is2xxSuccessful()) {
+                return true;
+            } else {
+                throw handleError(responseEntity, actualStatus);
+            }
+        }
+        return false;
+    }
 
-    protected <T> T getResponse(Date dateTime, String resource, Class<T> returnType) {
+    protected <T extends AmritBaseResponse> T getResponse(Date dateTime, String resource, Class<T> returnType) {
         URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", amritApplicationConfig.getAmritServerUrl(), resource, DateTimeUtil.formatDateTime(dateTime)));
         ResponseEntity<T> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.GET, null, returnType);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        }
+        if (extractResponse(responseEntity)) return responseEntity.getBody();
         logger.error(String.format("Failed to fetch data for resource %s, response status code is %s", resource, responseEntity.getStatusCode()));
         throw new HttpServerErrorException(responseEntity.getStatusCode());
     }
@@ -78,12 +87,10 @@ public abstract class AmritBaseRepository {
         return getCutOffDate();
     }
 
-    protected <T> T getSingleEntityResponse(String resource, HttpEntity<?> requestEntity, Class<T> returnType) {
+    protected <T extends AmritBaseResponse> T getSingleEntityResponse(String resource, HttpEntity<?> requestEntity, Class<T> returnType) {
         URI uri = URI.create(String.format("%s/%s", amritApplicationConfig.getAmritServerUrl(), resource));
         ResponseEntity<T> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, returnType);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        }
+        if (extractResponse(responseEntity)) return responseEntity.getBody();
         logger.error(String.format("Failed to fetch data for resource %s, response status code is %s", resource, responseEntity.getStatusCode()));
         throw getRestClientResponseException(responseEntity.getHeaders(), responseEntity.getStatusCode(), null);
     }
@@ -92,27 +99,20 @@ public abstract class AmritBaseRepository {
         logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
         URI uri = URI.create(String.format("%s/%s", amritApplicationConfig.getAmritServerUrl(), resource));
         ResponseEntity<T> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, returnType);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        }
+        if (extractResponse(responseEntity)) return responseEntity.getBody();
         logger.error(String.format("Failed to create resource %s,  response status code is %s", resource, responseEntity.getStatusCode()));
         throw handleError(responseEntity, responseEntity.getStatusCode());
     }
 
-    protected Object deleteSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
+    protected AmritBaseResponse deleteSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
         logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
         URI uri = URI.create(String.format("%s/%s", amritApplicationConfig.getAmritServerUrl(), resource));
-        ParameterizedTypeReference<Object> responseType = new ParameterizedTypeReference<>() {
-        };
-        ResponseEntity<Object> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity.getBody();
-        }
+        ResponseEntity<AmritBaseResponse> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.DELETE, requestEntity, AmritBaseResponse.class);
+        if (extractResponse(responseEntity)) return responseEntity.getBody();
         logger.error(String.format("Failed to delete resource %s, response error message is %s", resource, responseEntity.getBody()));
-        throw getRestClientResponseException(responseEntity.getHeaders(), responseEntity.getStatusCode(), (String) responseEntity.getBody());
+        throw handleError(responseEntity, responseEntity.getStatusCode());
     }
 
-    //todo modify error extraction logic based on Amrit api response
     protected RestClientException handleError(ResponseEntity<? extends AmritBaseResponse> responseEntity, HttpStatus statusCode) {
         AmritBaseResponse responseBody = responseEntity.getBody();
         return getRestClientResponseException(responseEntity.getHeaders(), statusCode, responseBody.getErrorMessage());
