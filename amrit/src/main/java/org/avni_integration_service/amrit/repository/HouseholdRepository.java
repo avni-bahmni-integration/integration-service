@@ -49,16 +49,16 @@ public class HouseholdRepository extends AmritBaseRepository implements Househol
 
     public <T extends AmritBaseResponse> T createEvent(Household household, Class<T> returnType) {
         return createSingleEntity(amritApplicationConfig.getIdentityApiPrefix() +UPSERT_AMRIT_HOUSEHOLD_RESOURCE_PATH,
-                new HttpEntity<HashMap<String, Object>[]>(convertToHouseholdUpsertRequest(household)), returnType);
+                new HttpEntity<HashMap<String, Object>>(convertToHouseholdUpsertRequest(household)), returnType);
     }
 
-    private HashMap<String, Object>[] convertToHouseholdUpsertRequest(Household household) {
+    private HashMap<String, Object> convertToHouseholdUpsertRequest(Household household) {
         HashMap<String, Object> householdObs = new HashMap<String, Object>();
         populateObservations(householdObs, household.getGroupSubject(), MappingGroup_Household, MappingType_HouseholdRoot,
                 MappingType_HouseholdObservations);
         initMiscFields(household, householdObs);
         logger.debug(String.format("Converting to householdObs from household [%s] and [%s]", householdObs, household));
-        return new HashMap[]{householdObs};
+        return householdObs;
     }
 
     private void initMiscFields(Household household, HashMap<String, Object> householdObs) {
