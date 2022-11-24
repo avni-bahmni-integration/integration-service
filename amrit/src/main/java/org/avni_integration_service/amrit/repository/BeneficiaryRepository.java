@@ -65,11 +65,10 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
         populateObservations(demographics, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryDemographics,
                 MappingType_BeneficiaryObservations);
         initLocationFields(subject, demographics);
+        beneficiary.put(LITERACY_STATUS, ILLITERATE);
         if(demographics.get(EDUCATION_NAME) != null && StringUtils.hasText((String) demographics.get(EDUCATION_NAME))
-                && ILLITERATE.equals((String) demographics.get(EDUCATION_NAME))) {
-            beneficiary.put(LITERACY_STATUS, ILLITERATE);
-        } else {
-            beneficiary.put(LITERACY_STATUS, LITERATE);
+                && !ILLITERATE.equals((String) demographics.get(EDUCATION_NAME))) {
+                beneficiary.put(LITERACY_STATUS, LITERATE);
         }
         beneficiary.put(Beneficiary_Demographics_KeyName, demographics);
     }

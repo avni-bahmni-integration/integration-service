@@ -38,44 +38,36 @@ public class BaseAmritService extends AmritMappingDbConstants {
     public boolean wasFetchOfAmritIdSuccessful(Subject beneficiary, boolean throwExceptionIfNotFound,
                                                boolean throwExceptionIfRegistrationNotCompleted) {
         AmritFetchIdentityResponse response = beneficiaryRepository.getAmritId(beneficiary.getUuid());
-        try {
-            if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
-                String externalId =  response.getIds().get(0);
-                String[] entry = externalId.split(REGEX);
-                if (entry.length == 2) {
-                    externalId = entry[0].trim();
-                }
-                if (!externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)
-                        && !externalId.equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)
-                        && externalId.matches(NUMBERS_ONLY_REGEX)) {
-                    beneficiary.setExternalId(externalId);
-                    return true;
-                } else if (externalId.equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)) {
-                    if (throwExceptionIfNotFound) {
-                        throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Beneficiary not found " + beneficiary.getUuid());
-                    } else {
-                        return true;
-                    }
-                } else if (externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)) {
-                    if (throwExceptionIfRegistrationNotCompleted) {
-                        throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "Beneficiary registration not completed " + beneficiary.getUuid());
-                    } else {
-                        return false;
-                    }
+        if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+            String externalId =  response.getIds().get(0);
+            String[] entry = externalId.split(REGEX);
+            if (entry.length == 2) {
+                externalId = entry[0].trim();
+            }
+            if (!externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)
+                    && !externalId.equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)
+                    && externalId.matches(NUMBERS_ONLY_REGEX)) {
+                beneficiary.setExternalId(externalId);
+                return true;
+            } else if (externalId.equals(BENEFICIARY_NOT_FOUND_IN_AMRIT)) {
+                if (throwExceptionIfNotFound) {
+                    throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Beneficiary not found " + beneficiary.getUuid());
                 } else {
-                    throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,
-                            "Invalid response for getAmritId request " + response.getData());
+                    return true;
+                }
+            } else if (externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)) {
+                if (throwExceptionIfRegistrationNotCompleted) {
+                    throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "Beneficiary registration not completed " + beneficiary.getUuid());
+                } else {
+                    return false;
                 }
             } else {
-                throw new HttpServerErrorException(HttpStatus.resolve((int) response.getStatusCode()),
-                        "Failed to obtain successful response from Amrit " + response.getErrorMessage());
+                throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,
+                        "Invalid response for getAmritId request " + response.getData());
             }
-        } catch(Exception e) {
-            logger.error("Failed fetchOfAmritId", e);
-            avniAmritErrorService.errorOccurred(beneficiary.getUuid(),
-                    AmritErrorType.BeneficiaryAmritIDFetchError,
-                    AmritEntityType.Beneficiary, e.getLocalizedMessage());
+        } else {
+            throw new HttpServerErrorException(HttpStatus.resolve((int) response.getStatusCode()),
+                    "Failed to obtain successful response from Amrit " + response.getErrorMessage());
         }
-        return false;
     }
 }
