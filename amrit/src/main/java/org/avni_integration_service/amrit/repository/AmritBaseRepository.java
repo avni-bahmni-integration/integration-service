@@ -5,6 +5,7 @@ import org.avni_integration_service.amrit.config.AmritApplicationConfig;
 import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
 import org.avni_integration_service.amrit.dto.AmritFetchIdentityResponse;
+import org.avni_integration_service.amrit.service.AmritTokenService;
 import org.avni_integration_service.amrit.util.DateTimeUtil;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
@@ -15,7 +16,6 @@ import org.avni_integration_service.integration_data.domain.MappingType;
 import org.avni_integration_service.integration_data.repository.*;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.avni_integration_service.util.ObsDataType;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.*;
 
@@ -29,7 +29,10 @@ public abstract class AmritBaseRepository {
     private static final String DELETION_RECORD_ID = "recordId";
     private static final String DELETION_SOURCE_ID = "sourceId";
     private static final String FETCH_AMRIT_ID_RESOURCE_PATH = "/rmnch/getAmritIdForAvniId";
+    public static final String INVALID_LOGIN_KEY_OR_SESSION_IS_EXPIRED = "Invalid login key or session is expired";
     protected final AmritApplicationConfig amritApplicationConfig;
+
+    private final AmritTokenService amritTokenService;
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final IntegrationSystem integrationSystem;
     private final MappingGroupRepository mappingGroupRepository;
@@ -38,11 +41,12 @@ public abstract class AmritBaseRepository {
     private final RestTemplate amritRestTemplate;
     private final String entityType;
 
-    public AmritBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
+    public AmritBaseRepository(AmritTokenService amritTokenService, IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                MappingGroupRepository mappingGroupRepository, RestTemplate restTemplate,
                                AmritApplicationConfig amritApplicationConfig, MappingMetaDataRepository mappingMetaDataRepository,
                                IntegrationSystemRepository integrationSystemRepository, MappingTypeRepository mappingTypeRepository,
                                String entityType) {
+        this.amritTokenService = amritTokenService;
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.mappingGroupRepository = mappingGroupRepository;
         this.amritRestTemplate = restTemplate;
@@ -99,22 +103,29 @@ public abstract class AmritBaseRepository {
         logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
         URI uri = URI.create(String.format("%s/%s", amritApplicationConfig.getAmritServerUrl(), resource));
         ResponseEntity<T> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, returnType);
-        if (extractResponse(responseEntity)) return responseEntity.getBody();
-        logger.error(String.format("Failed to create resource %s,  response status code is %s", resource, responseEntity.getStatusCode()));
-        throw handleError(responseEntity, responseEntity.getStatusCode());
+        return processResponse(resource, responseEntity, "create");
     }
 
     protected AmritBaseResponse deleteSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
         logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
         URI uri = URI.create(String.format("%s/%s", amritApplicationConfig.getAmritServerUrl(), resource));
         ResponseEntity<AmritBaseResponse> responseEntity = amritRestTemplate.exchange(uri, HttpMethod.DELETE, requestEntity, AmritBaseResponse.class);
+        return processResponse(resource, responseEntity, "delete");
+    }
+
+    private <T extends AmritBaseResponse> T processResponse(String resource, ResponseEntity<T> responseEntity, String create) {
         if (extractResponse(responseEntity)) return responseEntity.getBody();
-        logger.error(String.format("Failed to delete resource %s, response error message is %s", resource, responseEntity.getBody()));
+        logger.error(String.format("Failed to %s resource %s,  response status code is %s, response error message is %s",
+                create, resource, responseEntity.getStatusCode(), responseEntity.getBody()));
         throw handleError(responseEntity, responseEntity.getStatusCode());
     }
 
     protected RestClientException handleError(ResponseEntity<? extends AmritBaseResponse> responseEntity, HttpStatus statusCode) {
         AmritBaseResponse responseBody = responseEntity.getBody();
+        if(statusCode.equals(HttpStatus.BAD_REQUEST) && responseBody.getErrorMessage()
+                .equalsIgnoreCase(INVALID_LOGIN_KEY_OR_SESSION_IS_EXPIRED)) {
+            amritTokenService.loginAndGenerateToken();
+        }
         return getRestClientResponseException(responseEntity.getHeaders(), statusCode, responseBody.getErrorMessage());
     }
 

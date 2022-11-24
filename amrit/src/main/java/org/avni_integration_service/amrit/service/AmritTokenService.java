@@ -32,14 +32,18 @@ public class AmritTokenService {
 
     public String getRefreshedToken() {
         if (tokenCache == null || hasTokenExpired()) {
-            logger.info("Token expired, fetching new token");
-            tokenCache = loginWithCredentials();
-            tokenGenerationTime = new Date();
+            loginAndGenerateToken();
         } else {
             System.out.println("Token still valid");
             logger.info("Token still valid");
         }
         return tokenCache;
+    }
+
+    public void loginAndGenerateToken() {
+        logger.info("Token expired, fetching new token");
+        tokenCache = loginWithCredentials();
+        tokenGenerationTime = new Date();
     }
 
     private boolean hasTokenExpired() {

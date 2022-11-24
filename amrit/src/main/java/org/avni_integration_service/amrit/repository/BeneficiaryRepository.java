@@ -5,6 +5,7 @@ import org.avni_integration_service.amrit.config.AmritApplicationConfig;
 import org.avni_integration_service.amrit.config.AmritEntityType;
 import org.avni_integration_service.amrit.config.BeneficiaryConstants;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
+import org.avni_integration_service.amrit.service.AmritTokenService;
 import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.*;
@@ -25,14 +26,14 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
     private static final Logger logger = Logger.getLogger(BeneficiaryRepository.class);
 
     @Autowired
-    public BeneficiaryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
+    public BeneficiaryRepository(AmritTokenService amritTokenService, IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                  @Qualifier("AmritRestTemplate") RestTemplate restTemplate,
                                  AmritApplicationConfig amritApplicationConfig,
                                  MappingMetaDataRepository mappingMetaDataRepository,
                                  IntegrationSystemRepository integrationSystemRepository,
                                  MappingGroupRepository mappingGroupRepository,
                                  MappingTypeRepository mappingTypeRepository) {
-        super(integratingEntityStatusRepository, mappingGroupRepository, restTemplate, amritApplicationConfig,
+        super(amritTokenService, integratingEntityStatusRepository, mappingGroupRepository, restTemplate, amritApplicationConfig,
                 mappingMetaDataRepository, integrationSystemRepository, mappingTypeRepository, AmritEntityType.Beneficiary.name());
     }
 
