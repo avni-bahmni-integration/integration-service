@@ -56,7 +56,9 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.assertj:assertj-core:3.11.1"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.bugsnag:bugsnag-spring:3.6.3'
 }
 
 test {

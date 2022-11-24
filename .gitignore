@@ -7,7 +7,8 @@ integration-service.iml
 logs
 dump.sql
 goonj/src/test/resources/goonj-secret.properties
-goonj/src/test/resources/avni-secret.properties
 amrit/src/test/resources/amrit-secret.properties
+**/avni-secret.properties
+
 
 *.iml

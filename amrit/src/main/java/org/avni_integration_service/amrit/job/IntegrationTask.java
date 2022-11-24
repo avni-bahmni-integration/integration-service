@@ -1,4 +1,4 @@
-package org.avni_integration_service.goonj.job;
+package org.avni_integration_service.amrit.job;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,10 +6,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public enum IntegrationTask {
-    None, AvniDispatchReceipt, AvniActivity, AvniDistribution,
-    AvniEncounters,
-    GoonjDemand, GoonjDispatch,
-    AvniErrorRecords, GoonjErrorRecords;
+    None, Beneficiary, BeneficiaryScan, Household, BornBirth, CBAC, AmritErrorRecords;
 
     public static List<IntegrationTask> getTasks(String taskNames) {
         if (taskNames.equals("all"))
