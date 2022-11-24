@@ -23,7 +23,7 @@ public class CBACService extends BaseAmritService {
     }
 
     public void createOrUpdateCBAC(Subject subject, GeneralEncounter encounter) {
-        if (wasFetchOfAmritIdSuccessful(subject, false, true)) {
+        if (wasFetchOfAmritIdSuccessful(subject, true, true)) {
             cBACRepository.createEvent(subject, encounter, AmritBaseResponse.class);
         }
     }
