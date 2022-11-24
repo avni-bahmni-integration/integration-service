@@ -64,8 +64,11 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
         populateObservations(demographics, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryDemographics,
                 MappingType_BeneficiaryObservations);
         initLocationFields(subject, demographics);
-        if(demographics.get(EDUCATION_NAME) != null && StringUtils.hasText((String) demographics.get(EDUCATION_NAME))) {
-            beneficiary.put(LITERACY_STATUS, demographics.get(EDUCATION_NAME));
+        if(demographics.get(EDUCATION_NAME) != null && StringUtils.hasText((String) demographics.get(EDUCATION_NAME))
+                && ILLITERATE.equals((String) demographics.get(EDUCATION_NAME))) {
+            beneficiary.put(LITERACY_STATUS, ILLITERATE);
+        } else {
+            beneficiary.put(LITERACY_STATUS, LITERATE);
         }
         beneficiary.put(Beneficiary_Demographics_KeyName, demographics);
     }
@@ -74,8 +77,16 @@ public class BeneficiaryRepository extends AmritBaseRepository implements Benefi
         HashMap<String, Object> phoneMaps = new HashMap<String, Object>();
         populateObservations(phoneMaps, subject, MappingGroup_Beneficiary, MappingType_BeneficiaryPhoneMaps,
                 MappingType_BeneficiaryObservations);
-        HashMap[] phoneMapsArray = (phoneMaps.size() > 0) ? new HashMap[]{phoneMaps} : new HashMap[0];
-        beneficiary.put(Beneficiary_PhoneMaps_KeyName, phoneMapsArray);
+        if(phoneMaps.size() > 0) {
+            phoneMaps.put(BEN_RELATIONSHIP_ID, INTEGER_CONSTANT_ONE);
+            phoneMaps.put(PHONE_TYPE_ID, INTEGER_CONSTANT_ONE);
+            phoneMaps.put(VAN_ID, VAN_ID_VALUE);
+            phoneMaps.put(PARKING_PLACE_ID, PARKING_PLACE_ID_VALUE);
+            phoneMaps.put(CREATED_BY, subject.getCreatedBy());
+            beneficiary.put(Beneficiary_PhoneMaps_KeyName, new HashMap[]{phoneMaps});
+        } else {
+            beneficiary.put(Beneficiary_PhoneMaps_KeyName, new HashMap[0]);
+        }
     }
 
     private void initIdentityFields(Subject subject, HashMap<String, Object> beneficiary) {

@@ -210,3 +210,21 @@ VALUES
  (select id from public.mapping_group where name = 'MasterId'), (select id from public.mapping_type where name = 'genderID'))
 
 ;
+
+INSERT INTO public.mapping_metadata (int_system_value, avni_value, about, data_type_hint, integration_system_id,
+                                     mapping_group_id, mapping_type_id)
+VALUES
+    ('fatherName'::varchar(250), 'Father''s name'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+     (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryRoot')),
+    ('bankName'::varchar(250), 'Bank name'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+     (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryRoot')),
+    ('ifscCode'::varchar(250), 'IFSC Code'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+     (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryRoot')),
+    ('accountNo'::varchar(250), 'Bank Account No.'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+     (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryRoot')),
+    ('ageAtMarriage'::varchar(250), 'Age at marriage'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+     (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryRoot')),
+    ('phoneNo'::varchar(250), 'Phone number'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+        (select id from public.mapping_group where name = 'Beneficiary'), (select id from public.mapping_type where name = 'BeneficiaryPhoneMaps')),
+    ('6'::varchar(250), 'EBC'::varchar(250), null::varchar(1000), null::varchar(100), 3,
+        (select id from public.mapping_group where name = 'MasterId'), (select id from public.mapping_type where name = 'communityID'));

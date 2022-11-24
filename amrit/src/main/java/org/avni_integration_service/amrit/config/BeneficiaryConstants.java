@@ -29,6 +29,12 @@ public interface BeneficiaryConstants {
     String SYNCED_DATE = "syncedDate";
     String DELETED = "deleted";
     String AVNI_BENEFICIARY_ID = "avniBeneficiaryID";
-
+    String PHONE_TYPE_ID = "phoneTypeID";
+    String PARKING_PLACE_ID = "parkingPlaceID";
+    String BEN_RELATIONSHIP_ID = "benRelationshipID";
+    String ILLITERATE = "Illiterate";
+    String LITERATE = "Literate";
+    int PARKING_PLACE_ID_VALUE = 10;
+    int INTEGER_CONSTANT_ONE = 1;
     int VAN_ID_VALUE = 61;
 }
