@@ -2,6 +2,7 @@ package org.avni_integration_service.amrit.service;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.dto.AmritBaseResponse;
+import org.avni_integration_service.amrit.dto.AmritUpsertBeneficiaryResponse;
 import org.avni_integration_service.amrit.repository.BeneficiaryRepository;
 import org.avni_integration_service.amrit.repository.BornBirthRepository;
 import org.avni_integration_service.avni.domain.Enrolment;
@@ -9,6 +10,7 @@ import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class BornBirthService extends BaseAmritService {
@@ -23,8 +25,13 @@ public class BornBirthService extends BaseAmritService {
     }
 
     public void createOrUpdateBornBirth(Subject subject, Enrolment enrolment) {
-        if (wasFetchOfAmritIdSuccessful(subject, true, true)) {
-            bornBirthRepository.createEvent(subject, enrolment, AmritBaseResponse.class);
+        try {
+            if (wasFetchOfAmritIdSuccessful(subject, true, true)) {
+                bornBirthRepository.createEvent(subject, enrolment, AmritBaseResponse.class);
+            }
+        } catch (HttpClientErrorException.NotFound e) {
+            beneficiaryRepository.createEvent(subject, null, AmritUpsertBeneficiaryResponse.class);
+            throw e;
         }
     }
 }

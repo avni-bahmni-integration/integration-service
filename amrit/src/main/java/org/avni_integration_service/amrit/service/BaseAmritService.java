@@ -57,7 +57,7 @@ public class BaseAmritService extends AmritMappingDbConstants {
                 }
             } else if (externalId.equals(BENEFICIARY_REGISTRATION_NOT_COMPLETED_IN_AMRIT)) {
                 if (throwExceptionIfRegistrationNotCompleted) {
-                    throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "Beneficiary registration not completed " + beneficiary.getUuid());
+                    throw new HttpServerErrorException(HttpStatus.PROCESSING, "Beneficiary registration not completed " + beneficiary.getUuid());
                 } else {
                     return false;
                 }
