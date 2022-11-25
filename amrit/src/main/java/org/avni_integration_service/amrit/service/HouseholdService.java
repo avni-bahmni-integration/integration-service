@@ -8,6 +8,7 @@ import org.avni_integration_service.amrit.repository.HouseholdRepository;
 import org.avni_integration_service.avni.domain.Household;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -28,8 +29,10 @@ public class HouseholdService extends BaseAmritService {
             if (wasFetchOfAmritIdSuccessful(household.getMemberSubject(), true, true)) {
                 householdRepository.createEvent(household, AmritBaseResponse.class);
             }
-        } catch (HttpClientErrorException.NotFound e) {
-            beneficiaryRepository.createEvent(household.getMemberSubject(), null, AmritUpsertBeneficiaryResponse.class);
+        } catch (HttpClientErrorException e) {
+            if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                beneficiaryRepository.createEvent(household.getMemberSubject(), null, AmritUpsertBeneficiaryResponse.class);
+            }
             throw e;
         }
     }

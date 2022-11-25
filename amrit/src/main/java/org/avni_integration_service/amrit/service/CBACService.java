@@ -9,6 +9,7 @@ import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -29,8 +30,10 @@ public class CBACService extends BaseAmritService {
             if (wasFetchOfAmritIdSuccessful(subject, true, true)) {
                 cBACRepository.createEvent(subject, encounter, AmritBaseResponse.class);
             }
-        } catch (HttpClientErrorException.NotFound e) {
-            beneficiaryRepository.createEvent(subject, null, AmritUpsertBeneficiaryResponse.class);
+        } catch (HttpClientErrorException e) {
+            if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                beneficiaryRepository.createEvent(subject, null, AmritUpsertBeneficiaryResponse.class);
+            }
             throw e;
         }
     }

@@ -1,7 +1,5 @@
 package org.avni_integration_service.amrit.service;
 
-import org.avni_integration_service.amrit.config.AmritEntityType;
-import org.avni_integration_service.amrit.config.AmritErrorType;
 import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.dto.AmritFetchIdentityResponse;
 import org.avni_integration_service.amrit.repository.BeneficiaryRepository;
