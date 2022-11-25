@@ -47,10 +47,6 @@ public class BeneficiaryWorker implements BeneficiaryConstants, ErrorRecordWorke
         processSubjects(AmritEntityType.Beneficiary);
     }
 
-    public void scanSyncStatusOfBeneficiariesFromAvniToAmrit() {
-        processSubjects(AmritEntityType.BeneficiaryScan);
-    }
-
     public void processSubjects(AmritEntityType entityType) {
         while (true) {
             IntegratingEntityStatus beneficiarySyncStatus = integratingEntityStatusRepository.findByEntityType(AmritEntityType.Beneficiary.name());
@@ -64,14 +60,6 @@ public class BeneficiaryWorker implements BeneficiaryConstants, ErrorRecordWorke
             for (Subject subject : subjects) {
                 if (entityType.equals(AmritEntityType.Beneficiary)) {
                     processSubject(entityType, subject, true);
-                } else if (entityType.equals(AmritEntityType.BeneficiaryScan)) {
-                    if (beneficiarySyncAttempted(subject, beneficiarySyncStatus)) {
-                        checkIfSubjectWasSavedSuccessfully(entityType, subject, true);
-                    } else {
-                        logger.warn("Stopped processing as sync has not yet been attempted " +
-                                "for entities with lastModifiedDate " + subject.getLastModifiedDate());
-                        break;
-                    }
                 } else {
                     throw new UnsupportedOperationException("AmritEntityType " + entityType + " is not supported");
                 }
@@ -88,16 +76,6 @@ public class BeneficiaryWorker implements BeneficiaryConstants, ErrorRecordWorke
         logger.debug("Processing subject %s".formatted(subject.getUuid()));
         beneficiaryService.createOrUpdateBeneficiary(subject);
         updateSyncStatus(entityType, subject, updateSyncStatus);
-    }
-
-    protected void checkIfSubjectWasSavedSuccessfully(AmritEntityType entityType, Subject subject, boolean updateSyncStatus) {
-        logger.debug("Processing subject %s".formatted(subject.getUuid()));
-        beneficiaryService.wasFetchOfAmritIdSuccessful(subject, true, true);
-        updateSyncStatus(entityType, subject, updateSyncStatus);
-    }
-
-    private boolean beneficiarySyncAttempted(Subject subject, IntegratingEntityStatus beneficiarySyncStatus) {
-        return subject.getLastModifiedDate().before(beneficiarySyncStatus.getReadUptoDateTime());
     }
 
     private void updateSyncStatus(AmritEntityType entityType, Subject subject, boolean updateSyncStatus) {

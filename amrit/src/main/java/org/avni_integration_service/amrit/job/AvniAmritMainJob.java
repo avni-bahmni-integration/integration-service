@@ -57,7 +57,7 @@ public class AvniAmritMainJob {
             logger.info("Starting the Amrit entities pull from Avni");
             avniHttpClient.setAvniSession(amritAvniSessionFactory.createSession());
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
-            processBeneficiaryAndBeneficiaryScan(tasks);
+            processBeneficiary(tasks);
             processHousehold(tasks);
             processBornBirth(tasks);
             processCBAC(tasks);
@@ -70,15 +70,11 @@ public class AvniAmritMainJob {
         }
     }
 
-    private void processBeneficiaryAndBeneficiaryScan(List<IntegrationTask> tasks) {
+    private void processBeneficiary(List<IntegrationTask> tasks) {
         try {
             if (hasTask(tasks, IntegrationTask.Beneficiary)) {
                 logger.info("Processing Beneficiary");
                 beneficiaryWorker.syncBeneficiariesFromAvniToAmrit();
-            }
-            if (hasTask(tasks, IntegrationTask.BeneficiaryScan)) {
-                logger.info("Processing Beneficiary Scan");
-                beneficiaryWorker.scanSyncStatusOfBeneficiariesFromAvniToAmrit();
             }
         } catch (Throwable e) {
             logger.error("Failed processBeneficiaryAndBeneficiaryScan", e);
