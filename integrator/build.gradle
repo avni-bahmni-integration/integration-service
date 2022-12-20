@@ -1,17 +1,18 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.1'
+    id 'org.springframework.boot' version '2.5.6'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
 }
 
-group = 'org.bahmni_avni_integration'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '15'
+group = 'org.avni_integration_service'
+version = '0.0.2-SNAPSHOT'
+sourceCompatibility = "17"
 
 repositories {
     mavenCentral()
     maven {
         url "http://repo.mybahmni.org.s3.amazonaws.com/artifactory/snapshot"
+        allowInsecureProtocol = true
     }
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots"
@@ -34,12 +35,14 @@ task migrateTestDb() {
     dependsOn ":integration-data:migrateTestDb"
 }
 
-task migrateDb() {
-    dependsOn ":integration-data:migrateDb"
-}
-
 dependencies {
+    implementation project(':util')
+    implementation project(':avni')
     implementation project(':integration-data')
+    implementation project(':bahmni')
+    implementation project(':goonj')
+    implementation project(':power')
+    implementation project(':amrit')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
@@ -48,24 +51,23 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    compile group: 'org.ict4h', name: 'atomfeed-client', version: '1.9.4'
-    compile group: 'org.ict4h', name: 'atomfeed-spring-server', version: '1.9.4'
+    implementation group: 'org.ict4h', name: 'atomfeed-client', version: '1.9.4'
+    implementation group: 'org.ict4h', name: 'atomfeed-spring-server', version: '1.9.4'
     implementation platform('software.amazon.awssdk:bom:2.15.0')
     implementation 'software.amazon.awssdk:cognitoidentity'
-    implementation 'com.bugsnag:bugsnag-spring:3.+'
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.939')
+    implementation 'com.amazonaws:aws-java-sdk-cognitoidp'
 
     runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.939')
-    implementation 'com.amazonaws:aws-java-sdk-cognitoidp'
-    compile group: 'org.json', name: 'json', version: '20201115'
-    compile "log4j:log4j:1.2.16"
-    compile "commons-io:commons-io:2.4"
-    compile "commons-lang:commons-lang:2.6"
+    implementation group: 'org.json', name: 'json', version: '20201115'
+    implementation "log4j:log4j:1.2.17"
+    implementation "commons-io:commons-io:2.11.0"
+    implementation "commons-lang:commons-lang:2.6"
 
-    compile "org.javatuples:javatuples:1.2"
+    implementation "org.javatuples:javatuples:1.2"
 
-    implementation 'com.bugsnag:bugsnag-spring:3.+'
+    implementation 'com.bugsnag:bugsnag-spring:3.6.3'
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
@@ -75,6 +77,10 @@ sourceSets {
     main {
         resources {
             srcDir '../integration-data/src/main/resources'
+            srcDir '../bahmni/src/main/resources'
+            srcDir '../goonj/src/main/resources'
+            srcDir '../amrit/src/main/resources'
+            srcDir '../power/src/main/resources'
         }
     }
     test {
@@ -84,14 +90,8 @@ sourceSets {
     }
 }
 
-task unitTest( type: Test ) {
-    useJUnitPlatform()
-    exclude ("**/**ExternalTest.class")
-    exclude ("**/**FullRunTest.class")
-}
-
 test {
     useJUnitPlatform()
-    include ("**/**ExternalTest.class")
-    exclude ("**/**FullRunTest.class")
 }
+targetCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17

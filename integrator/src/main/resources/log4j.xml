@@ -2,7 +2,7 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
     <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
-        <param name="File" value="/var/log/abi/integration-service.log"/>
+        <param name="File" value="/var/log/avni-int/integration-service.log"/>
         <param name="MaxFileSize" value="5000KB"/>
         <param name="MaxBackupIndex" value="10"/>
         <layout class="org.apache.log4j.PatternLayout">

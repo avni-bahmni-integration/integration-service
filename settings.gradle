@@ -1,4 +1,11 @@
-rootProject.name = 'bahmni_avni_integration'
+rootProject.name = 'avni_integration_service'
+include 'avni'
+include 'goonj'
 include 'metadata-migrator'
 include 'integrator'
 include 'integration-data'
+include 'bahmni'
+include 'util'
+include 'amrit'
+include 'power'
+

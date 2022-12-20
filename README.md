@@ -1,5 +1,5 @@
-# integration-service
-
-Following env variables have to be set before starting this service
-
-AVNI_API_URL AVNI_IMPL_USER AVNI_IMPL_PASSWORD
+Module order
+1. Bahmni
+2. Goonj
+3. Amrit
+4. Power

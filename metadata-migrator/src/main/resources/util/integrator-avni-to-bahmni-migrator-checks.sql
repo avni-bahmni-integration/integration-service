@@ -11,10 +11,12 @@ group by data_type;
 
 -- 1.1 Integration DB
 select data_type_hint, count(*)
-from mapping_metadata
+from mapping_metadata mm
+         join mapping_group mg on mm.mapping_group_id = mg.id
+         join mapping_type mt on mm.mapping_type_id = mt.id
 where 1 = 1
-  and mapping_group_name = 'Observation'
-  and mapping_name = 'Concept'
+  and mg.name = 'Observation'
+  and mt.name = 'Concept'
   and avni_value not like '%[H]'
   and avni_value not like '%[HP]'
   and avni_value not like '%[Bahmni]'
