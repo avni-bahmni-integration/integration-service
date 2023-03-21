@@ -1,7 +1,7 @@
 package org.avni_integration_service.goonj.service;
 
-import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.QuestionGroupObservations;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.domain.Dispatch;
 import org.avni_integration_service.goonj.domain.DispatchLineItem;
 import org.avni_integration_service.goonj.repository.DispatchRepository;
@@ -34,8 +34,8 @@ public class DispatchService extends BaseGoonjService {
         return dispatchRepository.getDispatch(uuid);
     }
 
-    public void populateObservations(GeneralEncounter encounter, Dispatch dispatch) {
-        populateObservations(encounter, dispatch, MappingGroup_Dispatch);
+    public void populateObservations(Subject subject , Dispatch dispatch) {
+        populateObservations(subject, dispatch, MappingGroup_Dispatch);
         List<DispatchLineItem> lineItems = dispatch.getLineItems();
         List<Map<String, Object>> avniLineItems = new ArrayList<>();
         for (DispatchLineItem lineItem : lineItems) {
@@ -43,7 +43,6 @@ public class DispatchService extends BaseGoonjService {
             populateObservations(questionGroupObservations, lineItem, MappingGroup_Dispatch_LineItem);
             avniLineItems.add(questionGroupObservations.getObservations());
         }
-
-        encounter.addObservation("Materials Dispatched", avniLineItems);
+        subject.addObservation("Materials Dispatched", avniLineItems);
     }
 }

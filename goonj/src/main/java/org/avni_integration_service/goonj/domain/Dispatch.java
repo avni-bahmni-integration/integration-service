@@ -1,17 +1,23 @@
 package org.avni_integration_service.goonj.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.avni_integration_service.avni.domain.GeneralEncounter;
-import org.avni_integration_service.goonj.GoonjEntityType;
+import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.util.MapUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Dispatch implements GoonjEntity {
 
+    private static final String DispatchNameField = "DispatchStatusName";
+    private static final String DispatchStateField = "DispatchState";
+    private static final String DispatchDistrictField = "DispatchDistrict";
+    private static final String DispatchIsVoidedField = "IsVoided";
     private static final String DispatchDateField = "DispatchDate";
     private static final String DemandIdField = "DemandId";
     private static final String DispatchLineItemsField = "DispatchLineItems";
@@ -39,18 +45,17 @@ public class Dispatch implements GoonjEntity {
         return dispatch;
     }
 
-    public GeneralEncounter mapToAvniEncounter() {
-        GeneralEncounter encounterRequest = new GeneralEncounter();
-        encounterRequest.setSubjectExternalID(MapUtil.getString(DemandIdField, response));
-        encounterRequest.setExternalID(MapUtil.getString(DispatchStatusIdField, response));
-        encounterRequest.setEncounterType(GoonjEntityType.Dispatch.getDbName());
+    public Subject subjectWithoutObservations() {
+        Subject subject = new Subject();
+        subject.setSubjectType("Dispatch");
         Date dispatchDate = DateTimeUtil.convertToDateFromGoonjDateString(MapUtil.getString(DispatchDateField, response));
         dispatchDate = DateTimeUtil.offsetTimeZone(dispatchDate, DateTimeUtil.IST, DateTimeUtil.UTC);
-        encounterRequest.setEncounterDateTime(dispatchDate);
-        encounterRequest.setObservations(new LinkedHashMap<>());
-        encounterRequest.setVoided(false);
-        encounterRequest.set("cancelObservations", new HashMap<>());
-        return encounterRequest;
+        subject.setRegistrationDate(dispatchDate);
+        subject.setAddress(MapUtil.getString(DispatchStateField, response) +", "+MapUtil.getString(DispatchDistrictField, response));
+        subject.setExternalId(MapUtil.getString(DispatchStatusIdField, response));
+        subject.setFirstName(MapUtil.getString(DispatchNameField, response));
+        subject.setVoided(MapUtil.getBoolean(DispatchIsVoidedField, response));
+        return subject;
     }
 
     @Override

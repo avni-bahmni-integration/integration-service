@@ -10,5 +10,5 @@ goonj/src/test/resources/goonj-secret.properties
 amrit/src/test/resources/amrit-secret.properties
 **/avni-secret.properties
 
-
+**/bin/**
 *.iml

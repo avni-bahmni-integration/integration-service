@@ -1,8 +1,8 @@
 package org.avni_integration_service.goonj.worker.goonj;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.avni.domain.GeneralEncounter;
-import org.avni_integration_service.avni.repository.AvniEncounterRepository;
+import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
@@ -26,17 +26,15 @@ import java.util.Map;
 public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(DispatchEventWorker.class);
     private final DispatchService dispatchService;
-    private final AvniGoonjErrorService avniGoonjErrorService;
-    private final AvniEncounterRepository avniEncounterRepository;
+    private final AvniSubjectRepository avniSubjectRepository;
 
     @Autowired
     public DispatchEventWorker(DispatchService dispatchService, AvniGoonjErrorService avniGoonjErrorService,
-                               AvniEncounterRepository avniEncounterRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                               AvniSubjectRepository avniSubjectRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
         super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Dispatch, errorClassifier, integrationSystem);
         this.dispatchService = dispatchService;
-        this.avniGoonjErrorService = avniGoonjErrorService;
-        this.avniEncounterRepository = avniEncounterRepository;
+        this.avniSubjectRepository = avniSubjectRepository;
     }
 
     public void process(Map<String, Object> event) throws Exception {
@@ -51,9 +49,9 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
     private void processDispatch(Map<String, Object> dispatchResponse) {
         logger.debug(String.format("Processing dispatch: name %s || uuid %s", dispatchResponse.get("DispatchStatusName"), dispatchResponse.get("DispatchStatusId")));
         Dispatch dispatch = Dispatch.from(dispatchResponse);
-        GeneralEncounter encounter = dispatch.mapToAvniEncounter();
-        dispatchService.populateObservations(encounter, dispatch);
-        avniEncounterRepository.create(encounter);
+        Subject subject = dispatch.subjectWithoutObservations();
+        dispatchService.populateObservations(subject, dispatch);
+        avniSubjectRepository.create(subject);
     }
 
     public void processError(String dispatchUuid) throws Exception {
@@ -87,19 +85,19 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
         if(deletedEntity.getDispatchStatusId() == null || deletedEntity.getDispatchStatusLineItemId() == null) {
             return;
         }
-        GeneralEncounter dispatchStatus = avniEncounterRepository.getGeneralEncounter((String) deletedEntity.getDispatchStatusId());
+        Subject dispatchStatus = avniSubjectRepository.getSubject((String) deletedEntity.getDispatchStatusId());
         List<HashMap<String, Object>> materialsDispatched = (List<HashMap<String, Object>>) dispatchStatus
                 .getObservation("Materials Dispatched");
         if(materialsDispatched != null && materialsDispatched.size() > 0) {
             materialsDispatched.removeIf(md -> md.get("Dispatch Line Item Id").equals(deletedEntity.getDispatchStatusLineItemId()));
         }
-        avniEncounterRepository.update(dispatchStatus.getUuid(), dispatchStatus);
+        avniSubjectRepository.update(dispatchStatus);
     }
 
     private void processDispatchDeletion(String deletedEntity) {
         try {
             logger.debug(String.format("Processing dispatch deletion: externalId %s", deletedEntity));
-            avniEncounterRepository.delete(deletedEntity);
+            avniSubjectRepository.delete(deletedEntity);
         } catch (HttpClientErrorException.NotFound e) {
             logger.error(String.format("Failed to delete non-existent dispatch: externalId %s", deletedEntity));
         } catch (Exception e) {
