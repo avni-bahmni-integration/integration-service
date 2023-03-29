@@ -163,7 +163,7 @@ workflows:
   version: 2
   test_and_build_and_deploy:
     jobs:
-      - test
+      - test:
           filters:
             branches:
               only: test
