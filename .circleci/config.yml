@@ -32,15 +32,15 @@ commands:
           mv avni-infra-master avni-infra
           rm -rf infra.zip
 
-          - run: echo $ANSIBLE_VAULT_PASS > ~/.vault-pass.txt
+      - run: echo $ANSIBLE_VAULT_PASS > ~/.vault-pass.txt
 
-          - run: |
-              pwd
-              cd ~/avni-infra/configure
-              mv ~/artifacts/avni-int.jar ~/artifacts/integrator-0.0.2-SNAPSHOT.jar
-              VAULT_PASSWORD_FILE=~/.vault-pass.txt app_zip_path=~/artifacts/ make deploy-int-<< parameters.env >>
+      - run: |
+          pwd
+          cd ~/avni-infra/configure
+          mv ~/artifacts/avni-int.jar ~/artifacts/integrator-0.0.2-SNAPSHOT.jar
+          VAULT_PASSWORD_FILE=~/.vault-pass.txt app_zip_path=~/artifacts/ make deploy-int-<< parameters.env >>
 
-          - run: rm ~/.vault-pass.txt
+      - run: rm ~/.vault-pass.txt
 
 jobs:
   test:
@@ -61,52 +61,52 @@ jobs:
     steps:
       - checkout
 
-#      - run: sudo apt-get update
-#
-#      - run: sudo apt-get install make postgresql-client
-#
-#      - run: wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/8.5.9/flyway-commandline-8.5.9-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-8.5.9/flyway /usr/local/bin
-#
-#      - run: |
-#          cd ~/avni-int
-##          make rebuild-db-schema
-##          make test-server
-#
-#      - store_artifacts:
-#          path: ~/avni-int/amrit/build/reports/tests/test
-#          destination: testReports/amrit
-#
-#      - store_artifacts:
-#          path: ~/avni-int/avni/build/reports/tests/test
-#          destination: testReports/avni
-#
-#      - store_artifacts:
-#          path: ~/avni-int/bahmni/build/reports/tests/test
-#          destination: testReports/bahmni
-#
-#      - store_artifacts:
-#          path: ~/avni-int/goonj/build/reports/tests/test
-#          destination: testReports/goonj
-#
-#      - store_artifacts:
-#          path: ~/avni-int/integration-data/build/reports/tests/test
-#          destination: testReports/integration-data
-#
-#      - store_artifacts:
-#          path: ~/avni-int/integrator/build/reports/tests/test
-#          destination: testReports/integrator
-#
-#      - store_artifacts:
-#          path: ~/avni-int/metadata-migrator/build/reports/tests/test
-#          destination: testReports/metadata-migrator
-#
-#      - store_artifacts:
-#          path: ~/avni-int/power/build/reports/tests/test
-#          destination: testReports/power
-#
-#      - store_artifacts:
-#          path: ~/avni-int/util/build/reports/tests/test
-#          destination: testReports/util
+      - run: sudo apt-get update
+
+      - run: sudo apt-get install make postgresql-client
+
+      - run: wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/8.5.9/flyway-commandline-8.5.9-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-8.5.9/flyway /usr/local/bin
+
+      - run: |
+          cd ~/avni-int
+          make rebuild-db-schema
+          make test-server
+
+      - store_artifacts:
+          path: ~/avni-int/amrit/build/reports/tests/test
+          destination: testReports/amrit
+
+      - store_artifacts:
+          path: ~/avni-int/avni/build/reports/tests/test
+          destination: testReports/avni
+
+      - store_artifacts:
+          path: ~/avni-int/bahmni/build/reports/tests/test
+          destination: testReports/bahmni
+
+      - store_artifacts:
+          path: ~/avni-int/goonj/build/reports/tests/test
+          destination: testReports/goonj
+
+      - store_artifacts:
+          path: ~/avni-int/integration-data/build/reports/tests/test
+          destination: testReports/integration-data
+
+      - store_artifacts:
+          path: ~/avni-int/integrator/build/reports/tests/test
+          destination: testReports/integrator
+
+      - store_artifacts:
+          path: ~/avni-int/metadata-migrator/build/reports/tests/test
+          destination: testReports/metadata-migrator
+
+      - store_artifacts:
+          path: ~/avni-int/power/build/reports/tests/test
+          destination: testReports/power
+
+      - store_artifacts:
+          path: ~/avni-int/util/build/reports/tests/test
+          destination: testReports/util
 
   build:
     docker:
@@ -161,15 +161,9 @@ jobs:
 
 workflows:
   version: 2
-  test_and_build_and_deploy:
+  build_and_deploy:
     jobs:
-      - test:
-          filters:
-            branches:
-              only: test
-      - build:
-          requires:
-            - test
+      - build
       - STAGING_approve:
           type: approval
           requires:
