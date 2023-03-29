@@ -49,7 +49,7 @@ jobs:
 
       - image: cimg/postgres:12.7
         environment:
-          - POSTGRES_USER: avni_int
+          - POSTGRES_USER: circleci
           - POSTGRES_DB: avni_int_test
           - POSTGRES_PASSWORD: password
 
