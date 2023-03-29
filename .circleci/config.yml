@@ -164,6 +164,9 @@ workflows:
   test_and_build_and_deploy:
     jobs:
       - test
+          filters:
+            branches:
+              only: test
       - build:
           requires:
             - test
