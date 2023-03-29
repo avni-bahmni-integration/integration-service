@@ -38,7 +38,7 @@ commands:
           pwd
           cd ~/avni-infra/configure
           mv ~/artifacts/avni-int.jar ~/artifacts/integrator-0.0.2-SNAPSHOT.jar
-          VAULT_PASSWORD_FILE=~/.vault-pass.txt app_zip_path=~/artifacts/ make deploy-int-<< parameters.env >>
+          VAULT_PASSWORD_FILE=~/.vault-pass.txt app_zip_path=~/artifacts/ make deploy-int-server-<< parameters.env >>
 
       - run: rm ~/.vault-pass.txt
 
