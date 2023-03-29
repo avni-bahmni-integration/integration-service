@@ -24,8 +24,8 @@ define _build_db
 endef
 
 define _drop_db
-    -psql postgres -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$1' AND pid <> pg_backend_pid()"
-    -psql postgres -c 'drop database $1';
+    -psql -h localhost -p $(dbPort) -U $(SU) -d postgres -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$1' AND pid <> pg_backend_pid()"
+    -psql -h localhost -p $(dbPort) -U $(SU) -d postgres -c 'drop database $1';
 endef
 
 define _run_server
