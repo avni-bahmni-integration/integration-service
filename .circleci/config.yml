@@ -69,6 +69,7 @@ jobs:
 
       - run: |
           cd ~/avni-int
+          make rebuild-db-schema
           make test-server
 
       - store_artifacts:
