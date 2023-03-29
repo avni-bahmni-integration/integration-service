@@ -49,8 +49,8 @@ jobs:
 
       - image: cimg/postgres:12.7
         environment:
-          - POSTGRES_USER: openchs
-          - POSTGRES_DB: openchs_test
+          - POSTGRES_USER: avni_int
+          - POSTGRES_DB: avni_int_test
           - POSTGRES_PASSWORD: password
 
     working_directory: ~/avni-int

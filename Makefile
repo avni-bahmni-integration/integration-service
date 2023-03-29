@@ -23,6 +23,11 @@ define _build_db
 	-psql -h localhost -p $(dbPort) -U $(SU) -d postgres -c 'create database $1 with owner $(ADMIN_USER)';
 endef
 
+define _build_test_db
+	-psql -h localhost -p $(dbPort) -U $(ADMIN_USER) -d postgres -c "create user $(ADMIN_USER) with password 'password' createrole";
+	-psql -h localhost -p $(dbPort) -U $(ADMIN_USER) -d postgres -c 'create database $1 with owner $(ADMIN_USER)';
+endef
+
 define _drop_db
     -psql postgres -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$1' AND pid <> pg_backend_pid()"
     -psql postgres -c 'drop database $1';
