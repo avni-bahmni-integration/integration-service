@@ -129,7 +129,7 @@ jobs:
 
       - run: mkdir -p ~/artifacts;
 
-      - run: cp ~/avni-int/build/libs/integrator-0.0.2-SNAPSHOT.jar ~/artifacts/avni-int.jar;
+      - run: cp ~/avni-int/integrator/build/libs/integrator-0.0.2-SNAPSHOT.jar ~/artifacts/avni-int.jar;
 
       - persist_to_workspace:
           root: ~/artifacts
