@@ -25,7 +25,7 @@ task migrateDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
 
 task migrateTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     url = 'jdbc:postgresql://localhost:5432/avni_int_test'
-    user = 'avni_int'
+    user = 'avni_int_test'
     password = 'password'
     validateOnMigrate = false
 }
