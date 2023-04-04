@@ -46,6 +46,8 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
 
     List<MappingMetaData> findAllByMappingGroupAndMappingTypeIn(MappingGroup mappingGroup, List<MappingType> mappingTypes);
 
+    List<MappingMetaData> findAllByMappingGroupNameAndIntegrationSystem(String mappingGroup, IntegrationSystem integrationSystem);
+
     List<MappingMetaData> findAllByMappingType(MappingType mappingType);
 
     Page<MappingMetaData> findAllByAvniValueContainsAndIntegrationSystem(String avniValue, IntegrationSystem integrationSystem, Pageable pageable);

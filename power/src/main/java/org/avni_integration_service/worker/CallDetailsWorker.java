@@ -15,12 +15,10 @@ import org.avni_integration_service.service.AvniPowerErrorService;
 import org.avni_integration_service.service.CallDetailsService;
 import org.avni_integration_service.service.PowerMappingMetadataService;
 import org.avni_integration_service.util.DateTimeUtil;
+import org.avni_integration_service.util.MapUtil;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class CallDetailsWorker {
@@ -43,31 +41,37 @@ public class CallDetailsWorker {
     }
 
     public void fetchCallDetails() {
-        TaskCreationStatusHolder taskCreationStatusHolder = new TaskCreationStatusHolder();
-        CallDetailsDTO callDetailsDTO = callDetailsService.fetchBulkCallDetails();
-        List<HashMap<String, Object>> newCalls = callDetailsDTO.getCalls();
-        logger.info(String.format("Found %d newer calls", newCalls.size()));
-        taskCreationStatusHolder.addStatuses(processCalls(newCalls));
-        while (newCalls.size() > 0) {
-            String nextPageUri = (String) callDetailsDTO.getMetadata().get("NextPageUri");
-            callDetailsDTO = callDetailsService.fetchUsingNextPageURI(nextPageUri);
-            newCalls = callDetailsDTO.getCalls();
-            logger.info(String.format("Found %d newer calls", newCalls.size()));
-            taskCreationStatusHolder.addStatuses(processCalls(newCalls));
+        Set<String> allCallPhoneNumbers = powerMappingMetadataService.findAllCallPhoneNumbers();
+        for (String phoneNumber : allCallPhoneNumbers) {
+            String state = powerMappingMetadataService.getStateValueForMobileNumber(phoneNumber);
+            String program = powerMappingMetadataService.getProgramValueForMobileNumber(phoneNumber);
+            TaskCreationStatusHolder taskCreationStatusHolder = new TaskCreationStatusHolder(phoneNumber);
+            CallDetailsDTO callDetailsDTO = callDetailsService.fetchBulkCallDetails(phoneNumber);
+            List<HashMap<String, Object>> newCalls = callDetailsDTO.getCalls();
+            logger.info(String.format("Found %d newer calls for %s phoneNumber", newCalls.size(), phoneNumber));
+            taskCreationStatusHolder.addStatuses(processCalls(newCalls, state, program));
+            while (newCalls.size() > 0) {
+                String nextPageUri = (String) callDetailsDTO.getMetadata().get("NextPageUri");
+                callDetailsDTO = callDetailsService.fetchUsingNextPageURI(nextPageUri);
+                newCalls = callDetailsDTO.getCalls();
+                logger.info(String.format("Found %d newer calls for %s phoneNumber", newCalls.size(), phoneNumber));
+                taskCreationStatusHolder.addStatuses(processCalls(newCalls, state, program));
+            }
+            logger.info(taskCreationStatusHolder.getTaskCreationStatus());
         }
-        logger.info(taskCreationStatusHolder.getTaskCreationStatus());
     }
 
-    private List<TaskCreationStatus> processCalls(List<HashMap<String, Object>> newCalls) {
+    private List<TaskCreationStatus> processCalls(List<HashMap<String, Object>> newCalls, String state, String program) {
         List<TaskCreationStatus> statuses = new ArrayList<>();
         for (Map<String, Object> call : newCalls) {
-            TaskCreationStatus status = processCall(call, true);
+            TaskCreationStatus status = processCall(call, true, state, program);
             statuses.add(status);
         }
         return statuses;
     }
 
-    public TaskCreationStatus processCall(Map<String, Object> callResponse, boolean updateSyncStatus) {
+    public TaskCreationStatus processCall(Map<String, Object> callResponse, boolean updateSyncStatus,
+                                          String state, String program) {
         String sid = (String) callResponse.get("Sid");
         try {
             logger.debug(String.format("Processing call details Sid %s", sid));
@@ -76,7 +80,7 @@ public class CallDetailsWorker {
                 updateErrorRecordAndSyncStatus(callResponse, updateSyncStatus, sid);
                 return TaskCreationStatus.Skipped;
             } else {
-                createTaskForCall(callResponse);
+                createTaskForCall(callResponse, state, program);
                 updateErrorRecordAndSyncStatus(callResponse, updateSyncStatus, sid);
                 return TaskCreationStatus.Success;
             }
@@ -99,10 +103,10 @@ public class CallDetailsWorker {
         }
     }
 
-    private void createTaskForCall(Map<String, Object> callResponse) {
+    private void createTaskForCall(Map<String, Object> callResponse, String state, String program) {
         CallDetails callDetails = CallDetails.from(callResponse);
         Task task = callDetails.createCallTask();
-        powerMappingMetadataService.addStateAndProgramToTaskMetadata(task, callResponse);
+        powerMappingMetadataService.addStateAndProgramToTaskMetadata(task, state, program);
         avniTaskRepository.create(task);
     }
 
@@ -113,7 +117,8 @@ public class CallDetailsWorker {
     }
 
     <T> void updateReadUptoDateTime(Map<String, Object> callResponse) {
-        IntegratingEntityStatus intEnt = integratingEntityStatusRepository.findByEntityType(PowerEntityType.CALL_DETAILS.getDbName());
+        String phoneNumber = MapUtil.getString("To", callResponse);
+        IntegratingEntityStatus intEnt = callDetailsService.getIntegratingEntityStatus(phoneNumber);
         intEnt.setReadUptoDateTime(DateTimeUtil.convertToDate((String) callResponse.get("DateCreated")));
         integratingEntityStatusRepository.save(intEnt);
     }
