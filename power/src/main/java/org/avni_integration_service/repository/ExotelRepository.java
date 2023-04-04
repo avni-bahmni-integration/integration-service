@@ -35,14 +35,9 @@ public class ExotelRepository {
     }
 
     public CallDTO getSingleCallDetails(URI uri, HttpEntity<?> requestEntity) {
-        ResponseEntity<String> responseEntity = powerRestTemplate.exchange(uri, HttpMethod.GET, requestEntity, String.class);
+        ResponseEntity<CallDTO> responseEntity = powerRestTemplate.exchange(uri, HttpMethod.GET, requestEntity, CallDTO.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            XmlMapper xmlMapper = new XmlMapper();
-            try {
-                return xmlMapper.readValue(responseEntity.getBody(), CallDTO.class);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException("Error while parsing the call Request : ", e);
-            }
+            return responseEntity.getBody();
         }
         logger.error(String.format("Failed to fetch data for the call, response status code is %s", responseEntity.getStatusCode()));
         throw new HttpServerErrorException(responseEntity.getStatusCode());

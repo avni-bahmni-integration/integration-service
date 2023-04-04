@@ -117,7 +117,7 @@ public class CallDetailsWorker {
     }
 
     <T> void updateReadUptoDateTime(Map<String, Object> callResponse) {
-        String phoneNumber = MapUtil.getString("PhoneNumber", callResponse);
+        String phoneNumber = MapUtil.getString("To", callResponse);
         IntegratingEntityStatus intEnt = callDetailsService.getIntegratingEntityStatus(phoneNumber);
         intEnt.setReadUptoDateTime(DateTimeUtil.convertToDate((String) callResponse.get("DateCreated")));
         integratingEntityStatusRepository.save(intEnt);

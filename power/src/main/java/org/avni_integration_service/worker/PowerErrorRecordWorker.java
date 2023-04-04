@@ -62,7 +62,7 @@ public class PowerErrorRecordWorker {
             avniPowerErrorService.errorOccurred(sid, PowerErrorType.CallSidDeleted, PowerEntityType.CALL_DETAILS);
             return;
         }
-        String phoneNumber = MapUtil.getString("PhoneNumber", callDTO.getCall());
+        String phoneNumber = MapUtil.getString("To", callDTO.getCall());
         String state = powerMappingMetadataService.getStateValueForMobileNumber(phoneNumber);
         String program = powerMappingMetadataService.getProgramValueForMobileNumber(phoneNumber);
         callDetailsWorker.processCall(callDTO.getCall(), false, state, program);

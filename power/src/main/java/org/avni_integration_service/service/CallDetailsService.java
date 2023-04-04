@@ -18,11 +18,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class CallDetailsService {
+    public static final int DAYS_INTERVAL = 30;
     private static final Logger logger = Logger.getLogger(CallDetailsService.class);
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final PowerConfig powerConfig;
@@ -63,11 +65,17 @@ public class CallDetailsService {
 
     private URI getCallDetailsURI(String phoneNumber) {
         IntegratingEntityStatus integratingEntityStatus = getIntegratingEntityStatus(phoneNumber);
-        Date readUptoDateTime = integratingEntityStatus.getReadUptoDateTime();
-        String fromDateQuery = URLEncoder.encode(String.format("gte:%s;", DateTimeUtil.formatDateTime(readUptoDateTime)), StandardCharsets.UTF_8);
-        String toDateQuery = URLEncoder.encode(String.format("lte:%s", DateTimeUtil.getCurrentDateStringInIST()), StandardCharsets.UTF_8);
+        Date startDateTime = integratingEntityStatus.getReadUptoDateTime();
+        Date endDateTime = DateTimeUtil.addTimeToJavaUtilDate(startDateTime, DAYS_INTERVAL, Calendar.DAY_OF_MONTH);
+        //Important: DateCreated time range should not be more than 31 days or after currentDateTime
+        Date currentDateTime = new Date();
+        if(endDateTime.after(currentDateTime)) {
+            endDateTime = currentDateTime;
+        }
+        String fromDateQuery = URLEncoder.encode(String.format("gte:%s;", DateTimeUtil.formatDateTime(startDateTime)), StandardCharsets.UTF_8);
+        String toDateQuery = URLEncoder.encode(String.format("lte:%s", DateTimeUtil.formatDateTime(endDateTime)), StandardCharsets.UTF_8);
         try {
-            return new URI(String.format("%s?DateCreated=%s&SortBy=%s&PageSize=100&PhoneNumber=%s.json",
+            return new URI(String.format("%s?DateCreated=%s&SortBy=%s&PageSize=100&To=%s.json",
                     powerConfig.getCallDetailsAPI(null),
                     String.format("%s%s", fromDateQuery, toDateQuery),
                     URLEncoder.encode("DateCreated:asc", StandardCharsets.UTF_8),
