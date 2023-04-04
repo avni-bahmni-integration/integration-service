@@ -41,7 +41,8 @@ public class PowerConfig {
 
     public String getCallDetailsAPI(String sid) {
         String baseURI = String.format("https://%s/v1/Accounts/%s/Calls", this.exotelSubdomain, this.exotelAccountSID);
-        return sid == null ? baseURI : baseURI + String.format("/%s", sid);
+        String uri = (sid == null ? baseURI : baseURI + String.format("/%s", sid));
+        return uri + ".json";
     }
 
     @Bean("PowerRestTemplate")

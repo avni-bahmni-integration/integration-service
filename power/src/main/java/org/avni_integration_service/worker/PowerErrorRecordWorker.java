@@ -9,10 +9,13 @@ import org.avni_integration_service.integration_data.repository.ErrorRecordRepos
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.service.AvniPowerErrorService;
 import org.avni_integration_service.service.CallDetailsService;
+import org.avni_integration_service.service.PowerMappingMetadataService;
+import org.avni_integration_service.util.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -30,6 +33,8 @@ public class PowerErrorRecordWorker {
     private CallDetailsWorker callDetailsWorker;
     @Autowired
     private IntegrationSystemRepository integrationSystemRepository;
+    @Autowired
+    private PowerMappingMetadataService powerMappingMetadataService;
 
     public void processErrors() {
         Page<ErrorRecord> errorRecordPage;
@@ -57,7 +62,10 @@ public class PowerErrorRecordWorker {
             avniPowerErrorService.errorOccurred(sid, PowerErrorType.CallSidDeleted, PowerEntityType.CALL_DETAILS);
             return;
         }
-        callDetailsWorker.processCall(callDTO.getCall(), false);
+        String phoneNumber = MapUtil.getString("PhoneNumber", callDTO.getCall());
+        String state = powerMappingMetadataService.getStateValueForMobileNumber(phoneNumber);
+        String program = powerMappingMetadataService.getProgramValueForMobileNumber(phoneNumber);
+        callDetailsWorker.processCall(callDTO.getCall(), false, state, program);
     }
 
 }

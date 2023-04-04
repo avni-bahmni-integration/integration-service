@@ -4,10 +4,12 @@ import org.avni_integration_service.avni.domain.Task;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
-import org.avni_integration_service.util.MapUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PowerMappingMetadataService {
@@ -37,19 +39,29 @@ public class PowerMappingMetadataService {
                 intSystemValue,
                 integrationSystemRepository.findByName("power")
         );
-        return mappingMetaData == null ? null : mappingMetaData.getAvniValue();
+        if(mappingMetaData == null) {
+            throw new RuntimeException(String.format("Unable to find %s mapping for %s phoneNumber",
+                    mappingType, intSystemValue));
+        }
+        return mappingMetaData.getAvniValue();
     }
 
-    public void addStateAndProgramToTaskMetadata(Task task, Map<String, Object> callResponse) {
-        String toNumber = MapUtil.getString("To", callResponse);
-        String state = getStateValueForMobileNumber(toNumber);
-        String program = getProgramValueForMobileNumber(toNumber);
+    public void addStateAndProgramToTaskMetadata(Task task, String state, String program) {
         if (state != null) {
             task.addMetadata("State", state);
         }
         if (program != null) {
             task.addMetadata("Program", program);
         }
+    }
+
+    public Set<String> findAllCallPhoneNumbers() {
+        List<MappingMetaData> mappingMetaDataList = mappingMetaDataRepository.findAllByMappingGroupNameAndIntegrationSystem(
+                "PhoneNumber",
+                integrationSystemRepository.findByName("power")
+        );
+        return mappingMetaDataList == null ? Collections.emptySet() : mappingMetaDataList.stream()
+                .map(MappingMetaData::getIntSystemValue).collect(Collectors.toSet());
     }
 
 }
