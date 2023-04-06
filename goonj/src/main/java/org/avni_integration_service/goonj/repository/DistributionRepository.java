@@ -49,6 +49,12 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         HttpEntity<DistributionRequestDTO> request = new HttpEntity<>(requestDTO);
         return super.createSingleEntity(RESOURCE_DISTRIBUTION, request);
     }
+
+    @Override
+    public HashMap<String, Object>[] createEvent(Subject subject) {
+        throw new UnsupportedOperationException();
+    }
+
     private DistributionRequestDTO convertGeneralEncounterToDistributionRequest(Subject subject, GeneralEncounter encounter) {
         DistributionRequestDTO requestDTO = new DistributionRequestDTO();
         requestDTO.setDistributions(Arrays.asList(createDistributionRequest(subject, encounter)));
