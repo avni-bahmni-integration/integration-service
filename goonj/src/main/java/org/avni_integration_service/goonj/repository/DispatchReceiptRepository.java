@@ -61,6 +61,9 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
     public List<String> fetchDeletionEvents() {
         throw new UnsupportedOperationException();
     }
+    public HashMap<String, Object>[] createEvent(Subject subject) {
+        throw new UnsupportedOperationException();
+    }
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
         deleteAndRecreateDispatchReceipt(encounter);

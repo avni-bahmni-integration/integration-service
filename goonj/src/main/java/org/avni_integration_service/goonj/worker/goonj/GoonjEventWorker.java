@@ -19,7 +19,7 @@ public abstract class GoonjEventWorker {
     private static final Logger logger = Logger.getLogger(GoonjEventWorker.class);
     private final AvniGoonjErrorService avniGoonjErrorService;
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
-    private final GoonjEntityType entityType;
+    protected final GoonjEntityType entityType;
     private final ErrorClassifier errorClassifier;
     private final IntegrationSystem integrationSystem;
 

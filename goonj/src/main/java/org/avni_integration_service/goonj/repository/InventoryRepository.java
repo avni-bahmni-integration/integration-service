@@ -6,6 +6,7 @@ import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.dto.DemandsResponseDTO;
+import org.avni_integration_service.goonj.dto.InventoryResponseDTO;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,24 +17,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-@Component("DemandRepository")
-public class DemandRepository extends GoonjBaseRepository {
+@Component("InventoryRepository")
+public class InventoryRepository extends GoonjBaseRepository {
     @Autowired
-    public DemandRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                            @Qualifier("GoonjRestTemplate")RestTemplate restTemplate,
-                            GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
+    public InventoryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
+                               @Qualifier("GoonjRestTemplate")RestTemplate restTemplate,
+                               GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
         super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Demand.name(), avniHttpClient);
+                goonjConfig, GoonjEntityType.Inventory.name(), avniHttpClient);
     }
 
     @Override
     public HashMap<String, Object>[] fetchEvents() {
-        return getDemands(getCutOffDateTime()).getDemands();
+        return getInventoryItemsDTOS(getCutOffDateTime()).getInventoryItemsDTOS();
     }
 
     @Override
     public List<String> fetchDeletionEvents() {
-        return getDemands(getCutOffDateTime()).getDeletedDemands();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -46,12 +47,12 @@ public class DemandRepository extends GoonjBaseRepository {
         throw new UnsupportedOperationException();
     }
 
-    public DemandsResponseDTO getDemands(Date dateTime) {
-        return super.getResponse( dateTime, "DemandService/getDemands", DemandsResponseDTO.class);
+    public InventoryResponseDTO getInventoryItemsDTOS(Date dateTime) {
+        return super.getResponse( dateTime, "ImplementationInventoryService/getImplementationInventories", InventoryResponseDTO.class);
     }
 
-    public HashMap<String, Object> getDemand(String uuid) {
-        DemandsResponseDTO response = super.getSingleEntityResponse("DemandService/getDemand", "demandId", uuid, DemandsResponseDTO.class);
-        return response.getDemands()[0];
+    public HashMap<String, Object> getInventoryItemsDTO(String uuid) {
+        InventoryResponseDTO response = super.getSingleEntityResponse("ImplementationInventoryService/getImplementationInventories", "inventoryId", uuid, InventoryResponseDTO.class);
+        return response.getInventoryItemsDTOS()[0];
     }
 }

@@ -16,6 +16,7 @@ public class GoonjMappingGroup {
     public final MappingGroup dispatchReceipt;
     public final MappingGroup distribution;
     public final MappingGroup activity;
+    public final MappingGroup inventory;
 
     @Autowired
     public GoonjMappingGroup(MappingGroupRepository mappingGroupRepository) {
@@ -25,5 +26,6 @@ public class GoonjMappingGroup {
         this.dispatchReceipt = mappingGroupRepository.findByName(GoonjMappingDbConstants.MappingGroup_DispatchReceipt);
         this.distribution = mappingGroupRepository.findByName(GoonjMappingDbConstants.MappingGroup_Distribution);
         this.activity = mappingGroupRepository.findByName(GoonjMappingDbConstants.MappingGroup_Activity);
+        this.inventory = mappingGroupRepository.findByName(GoonjMappingDbConstants.MappingGroup_Inventory);
     }
 }

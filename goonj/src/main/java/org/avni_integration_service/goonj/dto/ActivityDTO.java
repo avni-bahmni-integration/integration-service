@@ -4,55 +4,65 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
-    "SourceId",
-    "ActivityCategory",
-    "ActivityConductedWithStudents",
-    "ActivityEndDate",
-    "ActivityStartDate",
-    "ActivitySubType",
-    "ActivityType",
-    "Block",
-    "Breadth",
-    "DepthHeight",
-    "Diameter",
-    "Demand",
-    "DistributionSourceId",
-    "District",
-    "Length",
-    "LocalityVillageName",
-    "MeasurementType",
-    "NoofdaysofParticipationNJPC",
-    "NoofdaysofParticipationS2S",
-    "NoofparticipantsFemaleDFW",
-    "NoofparticipantsFemaleNJPC",
-    "NoofparticipantsFemaleS2S",
-    "NoofparticipantsMaleDFW",
-    "NoofparticipantsMaleNJPC",
-    "NoofparticipantsMaleS2S",
-    "NoofparticipantsNJPC",
-    "NoofparticipantsS2S",
-    "NoofWorkingDays",
-    "Nos",
-    "ObjectiveofDFWwork",
-        "OtherObjective",
-        "OtherSubType",
-    "SchoolAanganwadiLearningCenterName",
-    "State",
-    "TargetCommunity",
-    "TypeofInitiative",
+        "SourceId",
+        "State",
+        "District",
+        "Block",
+        "LocalityVillageName",
         "CreatedBy",
-        "ModifiedBy"
+        "ModifiedBy",
+        "AccountCode",
+        "TypeofInitiative",
+        "ActivityStartDate",
+        "ActivityEndDate",
+        "ActivityType",
+        "ActivitySubType",
+        "OtherSubType",
+        "ActivityCategory",
+        "NoofWorkingDays",
+        "NoofparticipantsMaleCFW",
+        "NoofparticipantsFemaleCFW",
+        "NoofparticipantsMaleNJPC",
+        "NoofparticipantsFemaleNJPC",
+        "NoofparticipantsS2S",
+        "NoofdaysofParticipationS2S",
+        "NoofdaysofParticipationNJPC",
+        "ActivityConductedWithStudents",
+        "TypeOfSchool",
+        "S2SPhotograph",
+        "NJPCPhotograph",
+        "ObjectiveofCFWwork",
+        "OtherObjective",
+        "SchoolAanganwadiLearningCenterName",
+        "MeasurementType",
+        "DepthHeight",
+        "Diameter",
+        "Length",
+        "Breadth",
+        "Nos",
+        "BeforeImplementationPhotograph",
+        "DuringImplementationPhotograph",
+        "AfterImplementationPhotograph"
 })
 public class ActivityDTO {
 
     @JsonProperty("SourceId")
     private String sourceId;
+    @JsonProperty("AccountCode")
+    private String AccountCode;
     @JsonProperty("ActivityCategory")
     private String activityCategory;
     @JsonProperty("ActivityConductedWithStudents")
     private String activityConductedWithStudents;
+    @JsonProperty("TypeOfSchool")
+    private String typeOfSchool;
+    @JsonProperty("S2SPhotograph")
+    private String s2sPhotograph;
+    @JsonProperty("NJPCPhotograph")
+    private String njpcPhotograph;
     @JsonProperty("ActivityEndDate")
     private String activityEndDate;
     @JsonProperty("ActivityStartDate")
@@ -69,10 +79,6 @@ public class ActivityDTO {
     private Long depthHeight;
     @JsonProperty("Diameter")
     private Long diameter;
-    @JsonProperty("Demand")
-    private String demand;
-    @JsonProperty("DistributionSourceId")
-    private String distribution;
     @JsonProperty("District")
     private String district;
     @JsonProperty("Length")
@@ -85,28 +91,22 @@ public class ActivityDTO {
     private Long noofdaysofParticipationNJPC;
     @JsonProperty("NoofdaysofParticipationS2S")
     private Long noofdaysofParticipationS2S;
-    @JsonProperty("NoofparticipantsFemaleDFW")
-    private Long noofparticipantsFemaleDFW;
+    @JsonProperty("NoofparticipantsFemaleCFW")
+    private Long noofparticipantsFemaleCFW;
     @JsonProperty("NoofparticipantsFemaleNJPC")
     private Long noofparticipantsFemaleNJPC;
-    @JsonProperty("NoofparticipantsFemaleS2S")
-    private Long noofparticipantsFemaleS2S;
-    @JsonProperty("NoofparticipantsMaleDFW")
-    private Long noofparticipantsMaleDFW;
+    @JsonProperty("NoofparticipantsMaleCFW")
+    private Long noofparticipantsMaleCFW;
     @JsonProperty("NoofparticipantsMaleNJPC")
     private Long noofparticipantsMaleNJPC;
-    @JsonProperty("NoofparticipantsMaleS2S")
-    private Long noofparticipantsMaleS2S;
-    @JsonProperty("NoofparticipantsNJPC")
-    private Long noofparticipantsNJPC;
     @JsonProperty("NoofparticipantsS2S")
     private Long noofparticipantsS2S;
     @JsonProperty("NoofWorkingDays")
     private Long noofWorkingDays;
     @JsonProperty("Nos")
     private Long nos;
-    @JsonProperty("ObjectiveofDFWwork")
-    private String objectiveofDFWwork;
+    @JsonProperty("ObjectiveofCFWwork")
+    private String objectiveofCFWwork;
     @JsonProperty("OtherObjective")
     private String otherObjective;
     @JsonProperty("OtherSubType")
@@ -115,32 +115,32 @@ public class ActivityDTO {
     private String schoolAanganwadiLearningCenterName;
     @JsonProperty("State")
     private String state;
-    @JsonProperty("TargetCommunity")
-    private String targetCommunity;
     @JsonProperty("TypeofInitiative")
     private String typeofInitiative;
     @JsonProperty("CreatedBy")
     private String createdBy;
     @JsonProperty("ModifiedBy")
     private String modifiedBy;
+    @JsonProperty("BeforeImplementationPhotograph")
+    private String beforeImplementationPhotograph;
+    @JsonProperty("DuringImplementationPhotograph")
+    private String duringImplementationPhotograph;
+    @JsonProperty("AfterImplementationPhotograph")
+    private String afterImplementationPhotograph;
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public ActivityDTO() {
     }
 
     /**
-     * 
      * @param sourceId
+     * @param AccountCode
      * @param breadth
-     * @param noofparticipantsMaleS2S
      * @param noofparticipantsFemaleNJPC
-     * @param distribution
      * @param schoolAanganwadiLearningCenterName
      * @param localityVillageName
-     * @param noofparticipantsFemaleS2S
      * @param noofdaysofParticipationNJPC
      * @param noofWorkingDays
      * @param noofparticipantsS2S
@@ -149,20 +149,20 @@ public class ActivityDTO {
      * @param diameter
      * @param activityEndDate
      * @param measurementType
-     * @param targetCommunity
      * @param block
      * @param state
-     * @param noofparticipantsNJPC
      * @param activityStartDate
      * @param activityCategory
      * @param depthHeight
      * @param length
-     * @param demand
-     * @param noofparticipantsFemaleDFW
-     * @param objectiveofDFWwork
+     * @param noofparticipantsFemaleCFW
+     * @param objectiveofCFWwork
      * @param district
-     * @param noofparticipantsMaleDFW
+     * @param noofparticipantsMaleCFW
      * @param activityConductedWithStudents
+     * @param typeOfSchool
+     * @param s2sPhotograph
+     * @param njpcPhotograph
      * @param noofparticipantsMaleNJPC
      * @param activitySubType
      * @param activityType
@@ -171,13 +171,29 @@ public class ActivityDTO {
      * @param otherSubType
      * @param createdBy
      * @param modifiedBy
+     * @param beforeImplementationPhotograph
+     * @param duringImplementationPhotograph
+     * @param afterImplementationPhotograph
      */
-    public ActivityDTO(String sourceId, String activityCategory, String activityConductedWithStudents, String activityEndDate, String activityStartDate, String activitySubType, String activityType, String block, Long breadth, Long depthHeight, Long diameter, String demand, String distribution, String district, Long length, String localityVillageName, String measurementType, Long noofdaysofParticipationNJPC, Long noofdaysofParticipationS2S, Long noofparticipantsFemaleDFW, Long noofparticipantsFemaleNJPC, Long noofparticipantsFemaleS2S, Long noofparticipantsMaleDFW, Long noofparticipantsMaleNJPC, Long noofparticipantsMaleS2S, Long noofparticipantsNJPC, Long noofparticipantsS2S, Long noofWorkingDays, Long nos, String objectiveofDFWwork, String schoolAanganwadiLearningCenterName, String state, String targetCommunity, String typeofInitiative,
-                       String otherObjective, String otherSubType, String createdBy, String modifiedBy) {
+    public ActivityDTO(String sourceId, String AccountCode, String activityCategory, String activityConductedWithStudents,
+                       String typeOfSchool, String s2sPhotograph, String njpcPhotograph, String activityEndDate,
+                       String activityStartDate, String activitySubType, String activityType, String block,
+                       Long breadth, Long depthHeight, Long diameter, String district, Long length,
+                       String localityVillageName, String measurementType, Long noofdaysofParticipationNJPC,
+                       Long noofdaysofParticipationS2S, Long noofparticipantsFemaleCFW, Long noofparticipantsFemaleNJPC,
+                       Long noofparticipantsMaleCFW, Long noofparticipantsMaleNJPC, Long noofparticipantsS2S,
+                       Long noofWorkingDays, Long nos, String objectiveofCFWwork, String schoolAanganwadiLearningCenterName,
+                       String state, String typeofInitiative, String otherObjective, String otherSubType,
+                       String createdBy, String modifiedBy, String beforeImplementationPhotograph, String duringImplementationPhotograph,
+                       String afterImplementationPhotograph) {
         super();
         this.sourceId = sourceId;
+        this.AccountCode = AccountCode;
         this.activityCategory = activityCategory;
         this.activityConductedWithStudents = activityConductedWithStudents;
+        this.typeOfSchool = typeOfSchool;
+        this.s2sPhotograph = s2sPhotograph;
+        this.njpcPhotograph = njpcPhotograph;
         this.activityEndDate = activityEndDate;
         this.activityStartDate = activityStartDate;
         this.activitySubType = activitySubType;
@@ -186,33 +202,30 @@ public class ActivityDTO {
         this.breadth = breadth;
         this.depthHeight = depthHeight;
         this.diameter = diameter;
-        this.demand = demand;
-        this.distribution = distribution;
         this.district = district;
         this.length = length;
         this.localityVillageName = localityVillageName;
         this.measurementType = measurementType;
         this.noofdaysofParticipationNJPC = noofdaysofParticipationNJPC;
         this.noofdaysofParticipationS2S = noofdaysofParticipationS2S;
-        this.noofparticipantsFemaleDFW = noofparticipantsFemaleDFW;
+        this.noofparticipantsFemaleCFW = noofparticipantsFemaleCFW;
         this.noofparticipantsFemaleNJPC = noofparticipantsFemaleNJPC;
-        this.noofparticipantsFemaleS2S = noofparticipantsFemaleS2S;
-        this.noofparticipantsMaleDFW = noofparticipantsMaleDFW;
+        this.noofparticipantsMaleCFW = noofparticipantsMaleCFW;
         this.noofparticipantsMaleNJPC = noofparticipantsMaleNJPC;
-        this.noofparticipantsMaleS2S = noofparticipantsMaleS2S;
-        this.noofparticipantsNJPC = noofparticipantsNJPC;
         this.noofparticipantsS2S = noofparticipantsS2S;
         this.noofWorkingDays = noofWorkingDays;
         this.nos = nos;
-        this.objectiveofDFWwork = objectiveofDFWwork;
+        this.objectiveofCFWwork = objectiveofCFWwork;
         this.otherObjective = otherObjective;
         this.otherSubType = otherSubType;
         this.schoolAanganwadiLearningCenterName = schoolAanganwadiLearningCenterName;
         this.state = state;
-        this.targetCommunity = targetCommunity;
         this.typeofInitiative = typeofInitiative;
         this.createdBy = createdBy;
         this.modifiedBy = modifiedBy;
+        this.beforeImplementationPhotograph = beforeImplementationPhotograph;
+        this.duringImplementationPhotograph = duringImplementationPhotograph;
+        this.afterImplementationPhotograph = afterImplementationPhotograph;
     }
 
     @JsonProperty("SourceId")
@@ -223,6 +236,16 @@ public class ActivityDTO {
     @JsonProperty("SourceId")
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
+    }
+
+    @JsonProperty("AccountCode")
+    public String getAccountCode() {
+        return AccountCode;
+    }
+
+    @JsonProperty("AccountCode")
+    public void setAccountCode(String accountCode) {
+        AccountCode = accountCode;
     }
 
     @JsonProperty("ActivityCategory")
@@ -243,6 +266,36 @@ public class ActivityDTO {
     @JsonProperty("ActivityConductedWithStudents")
     public void setActivityConductedWithStudents(String activityConductedWithStudents) {
         this.activityConductedWithStudents = activityConductedWithStudents;
+    }
+
+    @JsonProperty("TypeOfSchool")
+    public String getTypeOfSchool() {
+        return typeOfSchool;
+    }
+
+    @JsonProperty("TypeOfSchool")
+    public void setTypeOfSchool(String typeOfSchool) {
+        this.typeOfSchool = typeOfSchool;
+    }
+
+    @JsonProperty("S2SPhotograph")
+    public String getS2sPhotograph() {
+        return s2sPhotograph;
+    }
+
+    @JsonProperty("S2SPhotograph")
+    public void setS2sPhotograph(String s2sPhotograph) {
+        this.s2sPhotograph = s2sPhotograph;
+    }
+
+    @JsonProperty("NJPCPhotograph")
+    public String getNjpcPhotograph() {
+        return njpcPhotograph;
+    }
+
+    @JsonProperty("NJPCPhotograph")
+    public void setNjpcPhotograph(String njpcPhotograph) {
+        this.njpcPhotograph = njpcPhotograph;
     }
 
     @JsonProperty("ActivityEndDate")
@@ -325,26 +378,6 @@ public class ActivityDTO {
         this.diameter = diameter;
     }
 
-    @JsonProperty("Demand")
-    public String getDemand() {
-        return demand;
-    }
-
-    @JsonProperty("Demand")
-    public void setDemand(String demand) {
-        this.demand = demand;
-    }
-
-    @JsonProperty("DistributionSourceId")
-    public String getDistributionSourceId() {
-        return distribution;
-    }
-
-    @JsonProperty("DistributionSourceId")
-    public void setDistributionSourceId(String distribution) {
-        this.distribution = distribution;
-    }
-
     @JsonProperty("District")
     public String getDistrict() {
         return district;
@@ -405,14 +438,14 @@ public class ActivityDTO {
         this.noofdaysofParticipationS2S = noofdaysofParticipationS2S;
     }
 
-    @JsonProperty("NoofparticipantsFemaleDFW")
-    public Long getNoofparticipantsFemaleDFW() {
-        return noofparticipantsFemaleDFW;
+    @JsonProperty("NoofparticipantsFemaleCFW")
+    public Long getNoofparticipantsFemaleCFW() {
+        return noofparticipantsFemaleCFW;
     }
 
-    @JsonProperty("NoofparticipantsFemaleDFW")
-    public void setNoofparticipantsFemaleDFW(Long noofparticipantsFemaleDFW) {
-        this.noofparticipantsFemaleDFW = noofparticipantsFemaleDFW;
+    @JsonProperty("NoofparticipantsFemaleCFW")
+    public void setNoofparticipantsFemaleCFW(Long noofparticipantsFemaleCFW) {
+        this.noofparticipantsFemaleCFW = noofparticipantsFemaleCFW;
     }
 
     @JsonProperty("NoofparticipantsFemaleNJPC")
@@ -425,24 +458,14 @@ public class ActivityDTO {
         this.noofparticipantsFemaleNJPC = noofparticipantsFemaleNJPC;
     }
 
-    @JsonProperty("NoofparticipantsFemaleS2S")
-    public Long getNoofparticipantsFemaleS2S() {
-        return noofparticipantsFemaleS2S;
+    @JsonProperty("NoofparticipantsMaleCFW")
+    public Long getNoofparticipantsMaleCFW() {
+        return noofparticipantsMaleCFW;
     }
 
-    @JsonProperty("NoofparticipantsFemaleS2S")
-    public void setNoofparticipantsFemaleS2S(Long noofparticipantsFemaleS2S) {
-        this.noofparticipantsFemaleS2S = noofparticipantsFemaleS2S;
-    }
-
-    @JsonProperty("NoofparticipantsMaleDFW")
-    public Long getNoofparticipantsMaleDFW() {
-        return noofparticipantsMaleDFW;
-    }
-
-    @JsonProperty("NoofparticipantsMaleDFW")
-    public void setNoofparticipantsMaleDFW(Long noofparticipantsMaleDFW) {
-        this.noofparticipantsMaleDFW = noofparticipantsMaleDFW;
+    @JsonProperty("NoofparticipantsMaleCFW")
+    public void setNoofparticipantsMaleCFW(Long noofparticipantsMaleCFW) {
+        this.noofparticipantsMaleCFW = noofparticipantsMaleCFW;
     }
 
     @JsonProperty("NoofparticipantsMaleNJPC")
@@ -453,26 +476,6 @@ public class ActivityDTO {
     @JsonProperty("NoofparticipantsMaleNJPC")
     public void setNoofparticipantsMaleNJPC(Long noofparticipantsMaleNJPC) {
         this.noofparticipantsMaleNJPC = noofparticipantsMaleNJPC;
-    }
-
-    @JsonProperty("NoofparticipantsMaleS2S")
-    public Long getNoofparticipantsMaleS2S() {
-        return noofparticipantsMaleS2S;
-    }
-
-    @JsonProperty("NoofparticipantsMaleS2S")
-    public void setNoofparticipantsMaleS2S(Long noofparticipantsMaleS2S) {
-        this.noofparticipantsMaleS2S = noofparticipantsMaleS2S;
-    }
-
-    @JsonProperty("NoofparticipantsNJPC")
-    public Long getNoofparticipantsNJPC() {
-        return noofparticipantsNJPC;
-    }
-
-    @JsonProperty("NoofparticipantsNJPC")
-    public void setNoofparticipantsNJPC(Long noofparticipantsNJPC) {
-        this.noofparticipantsNJPC = noofparticipantsNJPC;
     }
 
     @JsonProperty("NoofparticipantsS2S")
@@ -505,14 +508,14 @@ public class ActivityDTO {
         this.nos = nos;
     }
 
-    @JsonProperty("ObjectiveofDFWwork")
-    public String getObjectiveofDFWwork() {
-        return objectiveofDFWwork;
+    @JsonProperty("ObjectiveofCFWwork")
+    public String getObjectiveofCFWwork() {
+        return objectiveofCFWwork;
     }
 
-    @JsonProperty("ObjectiveofDFWwork")
-    public void setObjectiveofDFWwork(String objectiveofDFWwork) {
-        this.objectiveofDFWwork = objectiveofDFWwork;
+    @JsonProperty("ObjectiveofCFWwork")
+    public void setObjectiveofCFWwork(String objectiveofCFWwork) {
+        this.objectiveofCFWwork = objectiveofCFWwork;
     }
 
     @JsonProperty("OtherObjective")
@@ -555,16 +558,6 @@ public class ActivityDTO {
         this.state = state;
     }
 
-    @JsonProperty("TargetCommunity")
-    public String getTargetCommunity() {
-        return targetCommunity;
-    }
-
-    @JsonProperty("TargetCommunity")
-    public void setTargetCommunity(String targetCommunity) {
-        this.targetCommunity = targetCommunity;
-    }
-
     @JsonProperty("TypeofInitiative")
     public String getTypeofInitiative() {
         return typeofInitiative;
@@ -583,12 +576,38 @@ public class ActivityDTO {
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
+
     @JsonProperty("ModifiedBy")
     public String getModifiedBy() {
         return modifiedBy;
     }
+
     @JsonProperty("ModifiedBy")
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+    @JsonProperty("BeforeImplementationPhotograph")
+    public String getBeforeImplementationPhotograph() {
+        return beforeImplementationPhotograph;
+    }
+    @JsonProperty("BeforeImplementationPhotograph")
+    public void setBeforeImplementationPhotograph(String beforeImplementationPhotograph) {
+        this.beforeImplementationPhotograph = beforeImplementationPhotograph;
+    }
+    @JsonProperty("DuringImplementationPhotograph")
+    public String getDuringImplementationPhotograph() {
+        return duringImplementationPhotograph;
+    }
+    @JsonProperty("DuringImplementationPhotograph")
+    public void setDuringImplementationPhotograph(String duringImplementationPhotograph) {
+        this.duringImplementationPhotograph = duringImplementationPhotograph;
+    }
+    @JsonProperty("AfterImplementationPhotograph")
+    public String getAfterImplementationPhotograph() {
+        return afterImplementationPhotograph;
+    }
+    @JsonProperty("AfterImplementationPhotograph")
+    public void setAfterImplementationPhotograph(String afterImplementationPhotograph) {
+        this.afterImplementationPhotograph = afterImplementationPhotograph;
     }
 }

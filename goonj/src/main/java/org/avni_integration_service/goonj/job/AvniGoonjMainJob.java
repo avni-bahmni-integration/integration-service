@@ -11,6 +11,7 @@ import org.avni_integration_service.goonj.worker.avni.DispatchReceiptWorker;
 import org.avni_integration_service.goonj.worker.avni.DistributionWorker;
 import org.avni_integration_service.goonj.worker.goonj.DemandWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchWorker;
+import org.avni_integration_service.goonj.worker.goonj.InventoryWorker;
 import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.util.HealthCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class AvniGoonjMainJob {
     private ActivityWorker activityWorker;
 
     @Autowired
+    private InventoryWorker inventoryWorker;
+
+    @Autowired
     private ConstantsRepository constantsRepository;
 
     @Value("${goonj.app.tasks}")
@@ -73,6 +77,7 @@ public class AvniGoonjMainJob {
             processDemandAndDispatch(tasks);
             processActivity(tasks);
             processDispatchReceiptAndDistribution(tasks);
+            processInventory(tasks);
             processErrors(tasks);
         } catch (Throwable e) {
             logger.error("Failed AvniGoonjMainJob", e);
@@ -105,7 +110,8 @@ public class AvniGoonjMainJob {
                   Therefore, we invoke the Delete API for DispatchStatus using DispatchStatusId as externalId to mark a DispatchStatus as Voided.
                  */
                 dispatchWorker.processDeletions();
-                dispatchWorker.processDispatchLineItemDeletions();
+                // Todo: Dispatch line items to  be deleted!
+//                dispatchWorker.processDispatchLineItemDeletions();
             }
         } catch (Throwable e) {
             logger.error("Failed processDemandAndDispatch", e);
@@ -127,7 +133,6 @@ public class AvniGoonjMainJob {
 
     private void processDispatchReceiptAndDistribution(List<IntegrationTask> tasks) {
         try {
-
             if (hasTask(tasks, IntegrationTask.AvniDispatchReceipt)) {
                 logger.info("Processing AvniDispatchReceipt");
                 dispatchReceiptWorker.process();
@@ -138,6 +143,18 @@ public class AvniGoonjMainJob {
             }
         } catch (Throwable e) {
             logger.error("Failed processDispatchReceiptAndDistribution", e);
+            bugsnag.notify(e);
+        }
+    }
+
+    private void processInventory(List<IntegrationTask> tasks) {
+        try {
+            if (hasTask(tasks, IntegrationTask.GoonjInventory)) {
+                logger.info("Processing GoonjInventory");
+                inventoryWorker.process();
+            }
+        } catch (Throwable e) {
+            logger.error("Failed processInventory", e);
             bugsnag.notify(e);
         }
     }

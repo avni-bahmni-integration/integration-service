@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 public enum IntegrationTask {
     None, AvniDispatchReceipt, AvniActivity, AvniDistribution,
     AvniEncounters,
-    GoonjDemand, GoonjDispatch,
+    GoonjDemand, GoonjDispatch, GoonjInventory,
     AvniErrorRecords, GoonjErrorRecords;
 
     public static List<IntegrationTask> getTasks(String taskNames) {

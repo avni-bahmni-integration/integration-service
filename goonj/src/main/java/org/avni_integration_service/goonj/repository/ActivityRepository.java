@@ -57,79 +57,101 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
     }
 
     @Override
-    public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
-        ActivityRequestDTO requestDTO = convertGeneralEncounterToActivityRequest(subject, encounter);
+    public HashMap<String, Object>[] createEvent(Subject subject) {
+        ActivityRequestDTO requestDTO = convertSubjectToActivityRequest(subject);
         HttpEntity<ActivityRequestDTO> request = new HttpEntity<>(requestDTO);
         return super.createSingleEntity(RESOURCE_ACTIVITY, request);
     }
 
-    private ActivityRequestDTO convertGeneralEncounterToActivityRequest(Subject subject, GeneralEncounter encounter) {
+    @Override
+    public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
+        throw new UnsupportedOperationException();
+    }
+
+    private ActivityRequestDTO convertSubjectToActivityRequest(Subject subject) {
         ActivityRequestDTO requestDTO = new ActivityRequestDTO();
-        requestDTO.setActivities(Arrays.asList(createActivityRequest(subject, encounter)));
+        requestDTO.setActivities(Arrays.asList(createActivityRequest(subject)));
         return requestDTO;
     }
 
-    private ActivityDTO createActivityRequest(Subject subject, GeneralEncounter encounter) {
+    private ActivityDTO createActivityRequest(Subject subject) {
         ActivityDTO activityDTO = new ActivityDTO();
         /* Activity ID and relationship fields */
-        activityDTO.setSourceId(encounter.getUuid());
-        Object activityDistribution = encounter.getObservation(ACTIVITY_S_DISTRIBUTION);
-        if (activityDistribution != null) {
-            activityDTO.setDistributionSourceId((String) activityDistribution);
-        } else {
-            activityDTO.setDemand(encounter.getSubjectExternalID());
-        }
+        // Todo: Distribution should be mapped!
+        activityDTO.setSourceId(subject.getUuid());
+        /* Activity location fields */
+        HashMap<String, String> location = (HashMap<String, String>) subject.get(LOCATION);
+        activityDTO.setState(location.get(STATE));
+        activityDTO.setDistrict(location.get(DISTRICT));
+        activityDTO.setBlock(location.get(BLOCK));
+        activityDTO.setLocalityVillageName(location.get(VILLAGE));
+        /* Activity Account fields */
+        activityDTO.setAccountCode((String) subject.getObservation(ACCOUNT_CODE));
+        /* Activity description fields */
+        activityDTO.setTypeofInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
         /* Activity Date fields */
-        Date activityEndDate = DateTimeUtil.convertToDate((String) encounter.getObservation(ACTIVITY_END_DATE));
+        Date activityEndDate = DateTimeUtil.convertToDate((String) subject.getObservation(ACTIVITY_END_DATE));
         activityEndDate = DateTimeUtil.offsetTimeZone(activityEndDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         activityDTO.setActivityEndDate(DateTimeUtil.formatDate(activityEndDate));
-        Date activityStartDate = DateTimeUtil.convertToDate((String) encounter.getObservation(ACTIVITY_START_DATE));
+        Date activityStartDate = DateTimeUtil.convertToDate((String) subject.getObservation(ACTIVITY_START_DATE));
         activityStartDate = DateTimeUtil.offsetTimeZone(activityStartDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         activityDTO.setActivityStartDate(DateTimeUtil.formatDate(activityStartDate));
-        /* Activity location fields */
-        HashMap<String, String> location = (HashMap<String, String>) encounter.getObservations().get(LOCATION);
-        activityDTO.setLocalityVillageName(location.get(VILLAGE));
-        activityDTO.setBlock(location.get(BLOCK));
-        activityDTO.setDistrict(location.get(DISTRICT));
-        activityDTO.setState(location.get(STATE));
-        /* Activity description fields */
-        activityDTO.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
-        mapActivityType(activityDTO, encounter);
-        activityDTO.setActivitySubType((String) encounter.getObservation(ACTIVITY_SUB_TYPE));
-        activityDTO.setOtherSubType((String) encounter.getObservation(SPECIFY_OTHER_SUB_TYPE));
-        activityDTO.setActivityCategory((String) encounter.getObservation(ACTIVITY_CATEGORY));
-        activityDTO.setObjectiveofDFWwork((String) encounter.getObservation(OBJECTIVE_OF_WORK));
-        activityDTO.setOtherObjective((String) encounter.getObservation(SPECIFY_OTHER_FOR_OBJECTIVE_OF_WORK));
-        activityDTO.setActivityConductedWithStudents((String) encounter.getObservation(S_2_S_RELATED_ACTIVITY));
-        activityDTO.setSchoolAanganwadiLearningCenterName((String) encounter.getObservation(NAME_OF_ORGANIZATION_SCHOOL));
-        /* Participation fields */
-        Long nos = ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE))
-                + ((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-        activityDTO.setNoofparticipantsNJPC(nos);
-        activityDTO.setNoofparticipantsS2S((encounter.getObservation(NUMBER_OF_PARTICIPANTS) == null) ? nos : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS));
-        activityDTO.setNoofdaysofParticipationNJPC((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
-        activityDTO.setNoofdaysofParticipationS2S((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
-        activityDTO.setNoofWorkingDays((encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
-        activityDTO.setNoofparticipantsFemaleDFW((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
-        activityDTO.setNoofparticipantsFemaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
-        activityDTO.setNoofparticipantsMaleDFW((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-        activityDTO.setNoofparticipantsMaleNJPC((encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0l : (Integer) encounter.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-        /* Measurement fields */
-        activityDTO.setNos((encounter.getObservation(NOS) == null) ? 0l : (Integer) encounter.getObservation(NOS));
-        activityDTO.setBreadth((encounter.getObservation(BREADTH) == null) ? 0l : (Integer) encounter.getObservation(BREADTH));
-        activityDTO.setDiameter((encounter.getObservation(DIAMETER) == null) ? 0l : (Integer) encounter.getObservation(DIAMETER));
-        activityDTO.setLength((encounter.getObservation(LENGTH) == null) ? 0l : (Integer) encounter.getObservation(LENGTH));
-        activityDTO.setDepthHeight((encounter.getObservation(HEIGHT_DEPTH) == null) ? 0l : (Integer) encounter.getObservation(HEIGHT_DEPTH));
-        activityDTO.setMeasurementType((String) encounter.getObservation(MEASUREMENTS_TYPE));
-        activityDTO.setCreatedBy(encounter.getCreatedBy());
-        activityDTO.setModifiedBy(encounter.getLastModifiedBy());
+
+        activityDTO.setActivityConductedWithStudents((String) subject.getObservation(ACTIVITY_CONDUCTED_WITH_STUDENTS));
+        activityDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_AANGANWADI_LEARNINGCENTER_NAME));
+
+        if (subject.getObservation(TYPE_OF_INITIATIVE).equals("CFW")) {
+            /* Participation fields */
+            activityDTO.setNoofWorkingDays((subject.getObservation(NUMBER_OF_WORKING_DAYS) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_WORKING_DAYS));
+            activityDTO.setNoofparticipantsMaleCFW((subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
+            activityDTO.setNoofparticipantsFemaleCFW((subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
+            /* Activity description fields */
+            activityDTO.setActivityCategory((String) subject.getObservation(ACTIVITY_CATEGORY));
+            mapActivityType(activityDTO, subject);
+            activityDTO.setActivitySubType((String) subject.getObservation(ACTIVITY_SUB_TYPE));
+            activityDTO.setOtherSubType((String) subject.getObservation(SPECIFY_OTHER_SUB_TYPE));
+            activityDTO.setObjectiveofCFWwork((String) subject.getObservation(OBJECTIVE_OF_WORK));
+            activityDTO.setOtherObjective((String) subject.getObservation(SPECIFY_OTHER_FOR_OBJECTIVE_OF_WORK));
+            /* Measurement fields */
+            activityDTO.setMeasurementType((String) subject.getObservation(MEASUREMENTS_TYPE));
+            activityDTO.setNos((subject.getObservation(NOS) == null) ? 0L : (Integer) subject.getObservation(NOS));
+            activityDTO.setBreadth((subject.getObservation(BREADTH) == null) ? 0L : (Integer) subject.getObservation(BREADTH));
+            activityDTO.setDiameter((subject.getObservation(DIAMETER) == null) ? 0L : (Integer) subject.getObservation(DIAMETER));
+            activityDTO.setLength((subject.getObservation(LENGTH) == null) ? 0L : (Integer) subject.getObservation(LENGTH));
+            activityDTO.setDepthHeight((subject.getObservation(HEIGHT_DEPTH) == null) ? 0L : (Integer) subject.getObservation(HEIGHT_DEPTH));
+            /* Photograph fields */
+            activityDTO.setBeforeImplementationPhotograph((String) subject.getObservation(BEFORE_IMPLEMENTATION_PHOTOGRAPH));
+            activityDTO.setDuringImplementationPhotograph((String) subject.getObservation(DURING_IMPLEMENTATION_PHOTOGRAPH));
+            activityDTO.setAfterImplementationPhotograph((String) subject.getObservation(AFTER_IMPLEMENTATION_PHOTOGRAPH));
+        }
+        if (subject.getObservation(TYPE_OF_INITIATIVE).equals("S2S")) {
+            /* Participation fields */
+            activityDTO.setNoofparticipantsS2S((subject.getObservation(NUMBER_OF_PARTICIPANTS) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS));
+            activityDTO.setNoofdaysofParticipationS2S((subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
+            activityDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_AANGANWADI_LEARNINGCENTER_NAME));
+            /* Photograph fields */
+            activityDTO.setS2sPhotograph((String) subject.getObservation(PHOTOGRAPH));
+            /* Activity description fields */
+            activityDTO.setTypeOfSchool((String) subject.getObservation(TYPE_OF_SCHOOL));
+        }
+        if (subject.getObservation(TYPE_OF_INITIATIVE).equals("NJPC")) {
+            /* Participation fields */
+            activityDTO.setNoofdaysofParticipationNJPC((subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
+            activityDTO.setNoofparticipantsMaleNJPC((subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
+            activityDTO.setNoofparticipantsFemaleNJPC((subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
+            /* Photograph fields */
+            activityDTO.setNjpcPhotograph((String) subject.getObservation(PHOTOGRAPH));
+        }
+         /* Other fields */
+        activityDTO.setCreatedBy(subject.getCreatedBy());
+        activityDTO.setModifiedBy(subject.getLastModifiedBy());
         return activityDTO;
     }
 
-    protected void mapActivityType(ActivityDTO activityDTO, AvniBaseContract encounter) {
-        if (encounter.getObservation(ACTIVITY_TYPE) != null) {
+    protected void mapActivityType(ActivityDTO activityDTO, AvniBaseContract subject) {
+        if (subject.getObservation(ACTIVITY_TYPE) != null) {
             MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(MappingGroup_Activity, MappingType_Obs,
-                    (String) encounter.getObservation(ACTIVITY_TYPE), integrationSystem);
+                    (String) subject.getObservation(ACTIVITY_TYPE), integrationSystem);
             if (answerMapping != null) {
                 activityDTO.setActivityType(answerMapping.getIntSystemValue());
             }

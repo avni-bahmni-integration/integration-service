@@ -4,7 +4,8 @@ import org.avni_integration_service.integration_data.domain.framework.Integratio
 
 public enum GoonjEntityType implements IntegrationEntityType {
     Demand("Demand"), Dispatch("Dispatch"), DispatchLineItem("Dispatch line item"),
-    Activity("Activity"), DispatchReceipt("Dispatch receipt"), Distribution( "Distribution");
+    Activity("Activity"), DispatchReceipt("Dispatch receipt"), Distribution( "Distribution"),
+    Inventory("Inventory Item");
 
     String dbName;
 

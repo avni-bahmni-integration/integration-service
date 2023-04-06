@@ -1,9 +1,10 @@
 package org.avni_integration_service.goonj;
 
 public enum GoonjErrorType {
-    NoDemandWithId, NoDispatchWithId, DemandIdChanged, DispatchIdChanged, EntityIsDeleted,
-    NoSubjectWithId, SubjectIdChanged, MultipleSubjectsWithId, SubjectIdNull, ErroredAvniEncounter,
+    NoDemandWithId, NoDispatchWithId, NoImplementationInventoryWithId, DemandIdChanged, DispatchIdChanged,
+    ImplementationInventoryIdChanged, EntityIsDeleted, NoSubjectWithId, SubjectIdChanged,
+    MultipleSubjectsWithId, SubjectIdNull, ErroredAvniEncounter,
     DemandAttributesMismatch, DispatchAttributesMismatch, DispatchReceiptAttributesMismatch,
-    DistributionAttributesMismatch, ActivityAttributesMismatch,
+    DistributionAttributesMismatch, ActivityAttributesMismatch, ImplementationInventoryAttributesMismatch,
     DemandDeletionFailure, DispatchDeletionFailure, DispatchLineItemsDeletionFailure;
 }

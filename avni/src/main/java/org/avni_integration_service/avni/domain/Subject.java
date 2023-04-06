@@ -46,6 +46,11 @@ public class Subject extends AvniBaseContract {
         return registrationDate == null ? null : FormatAndParseUtil.fromAvniDate(registrationDate);
     }
 
+    @JsonIgnore
+    public boolean isCompleted() {
+        return getRegistrationDate() != null;
+    }
+
     public void setSubjectType(String subjectTYpe) {
         this.set(Subject.SubjectTypeFieldName, subjectTYpe);
     }

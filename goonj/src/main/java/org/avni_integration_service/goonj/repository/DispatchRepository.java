@@ -41,6 +41,9 @@ public class DispatchRepository extends GoonjBaseRepository {
         return getDispatches(getCutOffDateTime()).getDeletedObjects().getDeletedDispatchStatusLineItems();
     }
 
+    public HashMap<String, Object>[] createEvent(Subject subject) {
+        throw new UnsupportedOperationException();
+    }
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
         throw new UnsupportedOperationException();
