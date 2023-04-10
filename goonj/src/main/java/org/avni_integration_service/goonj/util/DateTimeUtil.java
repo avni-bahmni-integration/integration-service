@@ -19,8 +19,7 @@ public class DateTimeUtil {
     private static final SimpleDateFormat goonjRequestDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     // Todo: Enforce single format for all DateTime entries from goonj response!
     private static final String goonjRequestDateFormatRegex = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
-    private static final String goonjDateFormatRegex = "^\\d{4}\\/(0[1-9]|1[012])\\/(0[1-9]|[12][0-9]|3[01])$";
-//    private static final String simpleDateFormatRegex = "^(19|20)\\d\\d[-](0[1-9]|1[012])[-](0[1-9]|[1]2[0-9]|3[01])[T](0[0-9]|1[0-9]|2[0123])[:](0[0-9]|[12345][0-9])[:](0[0-9]|[12345][0-9])$";
+    private static final String goonjDateFormatRegex = "^(0[1-9]|[12][0-9]|3[01])\\/(0[1-9]|1[012])\\/\\d{4}$";
     private static final String simpleDateFormatRegex = "^(19|20)\\d\\d[-](0[1-9]|1[0-2])[-](0[1-9]|1[0-9]|2[0-9]|3[01])[T](0[0-9]|1[0-9]|2[0123])[:](0[0-9]|[12345][0-9])[:](0[0-9]|[12345][0-9])[.]?([0-9][0-9][0-9])?[Z]?$";
 
 
@@ -46,6 +45,13 @@ public class DateTimeUtil {
         if (localDateTime.matches(goonjRequestDateFormatRegex)) {
             try {
                 return goonjRequestDateFormat.parse(localDateTime);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (localDateTime.matches(goonjDateFormatRegex)) {
+            try {
+                return goonjDateFormat.parse(localDateTime);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
