@@ -18,7 +18,7 @@ public class Inventory implements GoonjEntity {
     private static final String InventoryLastModifiedBy = "LastModifiedBy";
     private static final String InventoryNameField = "ImplementationInventoryName";
     private static final String InventoryIdField = "ImplementationInventoryId";
-    private static final String InventoryDateField = "DateOfReceiving";
+    private static final String InventoryDateField = "LastModifiedDate";
     private static final String InventoryCreatedBy = "CreatedBy";
     private static final String InventoryIsVoidedField = "IsVoided";
     private static final List<String> Core_Fields = Arrays.asList(InventoryStateField,

@@ -15,13 +15,14 @@ public class DateTimeUtil {
     public static String UTC = "UTC";
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private static final SimpleDateFormat simpleDateFormatInventory = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private static final SimpleDateFormat goonjDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private static final SimpleDateFormat goonjRequestDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     // Todo: Enforce single format for all DateTime entries from goonj response!
     private static final String goonjRequestDateFormatRegex = "^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$";
     private static final String goonjDateFormatRegex = "^(0[1-9]|[12][0-9]|3[01])\\/(0[1-9]|1[012])\\/\\d{4}$";
-    private static final String simpleDateFormatRegex = "^(19|20)\\d\\d[-](0[1-9]|1[0-2])[-](0[1-9]|1[0-9]|2[0-9]|3[01])[T](0[0-9]|1[0-9]|2[0123])[:](0[0-9]|[12345][0-9])[:](0[0-9]|[12345][0-9])[.]?([0-9][0-9][0-9])?[Z]?$";
-
+    private static final String simpleDateFormatRegex = "^(19|20)\\d\\d[-](0[1-9]|1[0-2])[-](0[1-9]|1[0-9]|2[0-9]|3[01])[T](0[0-9]|1[0-9]|2[0123])[:](0[0-9]|[12345][0-9])[:](0[0-9]|[12345][0-9])$";
+    private static final String simpleDateFormatInventoryRegex = "^(19|20)\\d\\d[-](0[1-9]|1[0-2])[-](0[1-9]|1[0-9]|2[0-9]|3[01])[T](0[0-9]|1[0-9]|2[0123])[:](0[0-9]|[12345][0-9])[:](0[0-9]|[12345][0-9])[.]([0-9][0-9][0-9])[Z]$";
 
     private static final Jsr310JpaConverters.LocalDateTimeConverter ldtc = new Jsr310JpaConverters.LocalDateTimeConverter();
 
@@ -31,13 +32,20 @@ public class DateTimeUtil {
     }
 
     public static Date convertToDate(String localDateTime) {
-        return getDate(localDateTime, simpleDateFormatRegex, simpleDateFormat);
+        return getDate(localDateTime);
     }
 
-    private static Date getDate(String localDateTime, String simpleDateFormatRegex, SimpleDateFormat simpleDateFormat) {
+    private static Date getDate(String localDateTime) {
         if (localDateTime.matches(simpleDateFormatRegex)) {
             try {
                 return simpleDateFormat.parse(localDateTime);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (localDateTime.matches(simpleDateFormatInventoryRegex)) {
+            try {
+                return simpleDateFormatInventory.parse(localDateTime);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
@@ -60,7 +68,7 @@ public class DateTimeUtil {
     }
 
     public static Date convertToDateFromGoonjDateString(String goonjDateString) {
-        return getDate(goonjDateString, goonjDateFormatRegex, goonjDateFormat);
+        return getDate(goonjDateString);
     }
 
     public static String formatDateTime(String goonjDateString) {
