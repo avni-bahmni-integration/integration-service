@@ -15,6 +15,8 @@ public class DateTimeUtil {
     public static String UTC = "UTC";
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private static final SimpleDateFormat avniSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
     private static final SimpleDateFormat simpleDateFormatInventory = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private static final SimpleDateFormat goonjDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private static final SimpleDateFormat goonjRequestDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -23,7 +25,7 @@ public class DateTimeUtil {
     private static final String goonjDateFormatRegex = "^(0[1-9]|[12][0-9]|3[01])\\/(0[1-9]|1[012])\\/\\d{4}$";
     private static final String simpleDateFormatRegex = "^(19|20)\\d\\d[-](0[1-9]|1[0-2])[-](0[1-9]|1[0-9]|2[0-9]|3[01])[T](0[0-9]|1[0-9]|2[0123])[:](0[0-9]|[12345][0-9])[:](0[0-9]|[12345][0-9])$";
     private static final String simpleDateFormatInventoryRegex = "^(19|20)\\d\\d[-](0[1-9]|1[0-2])[-](0[1-9]|1[0-9]|2[0-9]|3[01])[T](0[0-9]|1[0-9]|2[0123])[:](0[0-9]|[12345][0-9])[:](0[0-9]|[12345][0-9])[.]([0-9][0-9][0-9])[Z]$";
-
+    private static final String avniSimpleDateFormatRegex = "^(19|20)\\d\\d[-](0[1-9]|1[0-2])[-](0[1-9]|1[0-9]|2[0-9]|3[01])[T](0[0-9]|1[0-9]|2[0123])[:](0[0-9]|[12345][0-9])[:](0[0-9]|[12345][0-9])[.]([0-9][0-9][0-9])$";
     private static final Jsr310JpaConverters.LocalDateTimeConverter ldtc = new Jsr310JpaConverters.LocalDateTimeConverter();
 
 
@@ -60,6 +62,13 @@ public class DateTimeUtil {
         if (localDateTime.matches(goonjDateFormatRegex)) {
             try {
                 return goonjDateFormat.parse(localDateTime);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (localDateTime.matches(avniSimpleDateFormatRegex)) {
+            try {
+                return avniSimpleDateFormat.parse(localDateTime);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
