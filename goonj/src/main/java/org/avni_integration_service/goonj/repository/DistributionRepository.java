@@ -6,6 +6,7 @@ import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.domain.DistributionConstants;
+import org.avni_integration_service.goonj.dto.DistributionActivities;
 import org.avni_integration_service.goonj.dto.DistributionDTO;
 import org.avni_integration_service.goonj.dto.DistributionLine;
 import org.avni_integration_service.goonj.dto.DistributionRequestDTO;
@@ -45,88 +46,108 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     }
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
-        DistributionRequestDTO requestDTO = convertGeneralEncounterToDistributionRequest(subject, encounter);
-        HttpEntity<DistributionRequestDTO> request = new HttpEntity<>(requestDTO);
-        return super.createSingleEntity(RESOURCE_DISTRIBUTION, request);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject) {
-        throw new UnsupportedOperationException();
+        DistributionRequestDTO requestDTO = convertSubjectToDistributionRequest(subject);
+        HttpEntity<DistributionRequestDTO> request = new HttpEntity<>(requestDTO);
+        return super.createSingleEntity(RESOURCE_DISTRIBUTION, request);
     }
 
-    private DistributionRequestDTO convertGeneralEncounterToDistributionRequest(Subject subject, GeneralEncounter encounter) {
+    private DistributionRequestDTO convertSubjectToDistributionRequest(Subject subject) {
         DistributionRequestDTO requestDTO = new DistributionRequestDTO();
-        requestDTO.setDistributions(Arrays.asList(createDistributionRequest(subject, encounter)));
+        requestDTO.setDistributions(Arrays.asList(createDistributionRequest(subject)));
         return requestDTO;
     }
-    private DistributionDTO createDistributionRequest(Subject subject, GeneralEncounter encounter) {
+    private DistributionDTO createDistributionRequest(Subject subject) {
         DistributionDTO distributionDTO = new DistributionDTO();
-        String dispatchStatusId = (String) encounter.getObservation(DISPATCH_STATUS_ID_NEW);
-        if(!StringUtils.hasText(dispatchStatusId)) {
-            dispatchStatusId = (String) encounter.getObservation(DISPATCH_STATUS_ID_OLD);
-        }
-        distributionDTO.setDispatchStatus(dispatchStatusId);
-        HashMap<String, String> location = (HashMap<String, String>) encounter.getObservations().get(LOCATION);
-        distributionDTO.setLocalityVillageName(location.get(VILLAGE));
-        distributionDTO.setBlock(location.get(BLOCK));
-        distributionDTO.setDistrict(location.get(DISTRICT));
+//        String dispatchStatusId = (String) encounter.getObservation(DISPATCH_STATUS_ID_NEW);
+//        if(!StringUtils.hasText(dispatchStatusId)) {
+//            dispatchStatusId = (String) encounter.getObservation(DISPATCH_STATUS_ID_OLD);
+//        }
+//        distributionDTO.setDispatchStatus(dispatchStatusId);
+        distributionDTO.setSource_id(subject.getUuid());
+        /* Distribution location fields */
+        HashMap<String, String> location = (HashMap<String, String>) subject.get(LOCATION);
         distributionDTO.setState(location.get(STATE));
-        distributionDTO.setSourceId(encounter.getUuid());
-        distributionDTO.setTypeofInitiative((String) encounter.getObservation(TYPE_OF_INITIATIVE));
-        Date distributionDate = DateTimeUtil.convertToDate((String) encounter.getObservation(DISTRIBUTION_DATE));
-        distributionDate = DateTimeUtil.offsetTimeZone(distributionDate, DateTimeUtil.UTC, DateTimeUtil.IST);
+        distributionDTO.setDistrict(location.get(DISTRICT));
+        distributionDTO.setBlock(location.get(BLOCK));
+        distributionDTO.setLocalityVillageName(location.get(VILLAGE));
+        distributionDTO.setTolaMohalla(location.get(TOLA_MOHALLA));
+        /* Distribution Account fields */
+        distributionDTO.setNameOfAccount((String) subject.getObservation(ACCOUNT_NAME));
+        /* Distribution Related fields*/
+        Date distributionDate = DateTimeUtil.convertToDate((String) subject.getObservation(DISTRIBUTION_DATE));
         distributionDTO.setDateOfDistribution(DateTimeUtil.formatDate(distributionDate));
-        distributionDTO.setDisasterType((String) encounter.getObservation(TYPE_OF_DISASTER));
-        distributionDTO.setNameofAccount((String) subject.getObservation(ACCOUNT_ID));
-        distributionDTO.setRemarks((String) encounter.getObservation(REMARKS));
-        String photoInfo = (String) encounter.getObservation(IMAGES);
-        distributionDTO.setPictureStatus(StringUtils.hasText(photoInfo) ? RECEIVED : NOT_RECEIVED);
-        distributionDTO.setPhotographInformation(StringUtils.hasText(photoInfo) ? getPicSignedUrl(photoInfo):null);
-        distributionDTO.setPOCId((String) encounter.getObservation(POC_ID));
-        distributionDTO.setTypeofCommunity((String) encounter.getObservation(TARGET_COMMUNITY));
-        distributionDTO.setDistributionLines(fetchDistributionLines(subject, encounter));
-        ArrayList<String> relatedActivities = (ArrayList<String>) encounter.getObservation(ACTIVITIES_DONE);
-        if(relatedActivities == null) {
-            relatedActivities = new ArrayList<>();
+        distributionDTO.setTypeOfCommunity((String) subject.getObservation(TARGET_COMMUNITY));
+        distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
+        distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
+        List<String> images = (ArrayList<String>) subject.getObservation(IMAGES);
+        distributionDTO.setPhotographInformation(images.stream().map(Object::toString).collect(Collectors.joining(";")));
+        List<DistributionLine> d =  new ArrayList<>();
+        d.add(createDistributionLine(subject));
+        distributionDTO.setDistributionLines(d);
+        List<DistributionActivities> activities =  new ArrayList<>();
+        activities.add(createDistributionActivities(subject));
+        distributionDTO.setActivities(activities);
+        /* vaapsi fields */
+        if (subject.getObservation(TYPE_OF_INITIATIVE).equals("Vaapsi")) {
+            distributionDTO.setSurveyedBy((String) subject.getObservation(SURVEYED_BY));
+            distributionDTO.setMonitoredByOrDistributor((String) subject.getObservation(MONITORED_BY_DISTRIBUTOR));
+            distributionDTO.setApprovedOrVerifiedBy((String) subject.getObservation(APPROVED_OR_VERIFIED_BY));
+            distributionDTO.setTeamOrExternal((String) subject.getObservation(TEAM_OR_EXTERNAL));
+            distributionDTO.setNameOfPOC((String) subject.getObservation(POC_NAME));
+            distributionDTO.setPocContactNo((String) subject.getObservation(POC_CONTACT_NO));
+            distributionDTO.setReachedTo((String) subject.getObservation(REACHED_TO));
+            distributionDTO.setAnyOtherDocumentSubmitted((String) subject.getObservation(ANY_OTHER_DOCUMENT_SUBMITTED));
+            if (subject.getObservation(REACHED_TO).equals("Individual")) {
+                distributionDTO.setName((String) subject.getObservation(NAME));
+                distributionDTO.setGender((String) subject.getObservation(GENDER));
+                distributionDTO.setFatherMotherName((String) subject.getObservation(FATHER_MOTHER_NAME));
+                distributionDTO.setAge((String) subject.getObservation(AGE));
+                distributionDTO.setPhoneNumber((String) subject.getObservation(PHONE_NUMBER));
+                distributionDTO.setPresentOccupation((String) subject.getObservation(PRESENT_OCCUPATION));
+                distributionDTO.setNoOfFamilyMember((String) subject.getObservation(NUMBER_OF_FAMILY_MEMBERS));
+                distributionDTO.setMonthlyIncome((String) subject.getObservation(MONTHLY_INCOME));
+            }
+            if (subject.getObservation(REACHED_TO).equals("Group")) {
+                distributionDTO.setGroupName((String) subject.getObservation(GROUP_NAME));
+                distributionDTO.setTotalNumberOfReceivers((String) subject.getObservation(NUMBER_OF_RECEIVERS));
+            }
         }
-        distributionDTO.setActivityIds(relatedActivities);
-        distributionDTO.setCreatedBy(encounter.getCreatedBy());
-        distributionDTO.setModifiedBy(encounter.getLastModifiedBy());
+        if (subject.getObservation(TYPE_OF_INITIATIVE).equals("Specific Initiative")) {
+            distributionDTO.setCentreName((String) subject.getObservation(CENTERS_NAME));
+            distributionDTO.setShareABriefProvidedMaterial((String) subject.getObservation(PROVIDED_MATERIAL));
+            distributionDTO.setHowtheMaterialMakesaDifference((String) subject.getObservation(MATERIAL_MAKES_DIFFERENCE));
+            distributionDTO.setMaterialGivenFor((String) subject.getObservation(MATERIAL_GIVEN_FOR));
+            distributionDTO.setNoOfFamiliesReached((String) subject.getObservation(NUMBER_OF_FAMILIES_REACHED));
+            distributionDTO.setNoOfIndividualReached((String) subject.getObservation(NUMBER_OF_INDIVIDUALS_REACHED));
+
+        }
+        distributionDTO.setReportsCrosschecked((String) subject.getObservation(REPORTS_CROSS_CHECKED));
+        distributionDTO.setRemarks((String) subject.getObservation(REMARKS));
         return distributionDTO;
     }
 
-    private String getPicSignedUrl(String photoInfo) {
-        HashMap<String, String> queryParams = new HashMap<>(1);
-        queryParams.put("url", photoInfo);
-        return avniHttpClient.getUri(WEB_MEDIA, queryParams);
+    private DistributionLine createDistributionLine(Subject subject) {
+        String sourceId = getSourceId(subject.getUuid(), (String) subject.get(DISPATCH_STATUS_LINE_ITEM_ID));
+        String distributedTo = (String) subject.getObservation(DISTRIBUTED_TO);
+        String implemenationInventoryId = (String) subject.getObservation(INVENTORY_ID);
+        String unit = (String) subject.getObservation(UNIT);
+        int noOfDistributions = (int) subject.getObservation(NUMBER_OF_DISTRIBUTIONS);
+        int quantity = (int) subject.getObservation(QUANTITY);
+        return new DistributionLine(sourceId, distributedTo, implemenationInventoryId, noOfDistributions, quantity, unit);
+    }
+    private DistributionActivities createDistributionActivities(Subject subject) {
+        String activityId = (String) subject.getObservation(ACTIVITIES_DONE);
+        int numberOfPersons = (int) subject.getObservation(NUMBER_OF_PERSONS);
+        return new DistributionActivities(activityId, numberOfPersons);
     }
 
-
-    private List<DistributionLine> fetchDistributionLines(Subject subject, GeneralEncounter encounter) {
-        ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) encounter.getObservations().get(MATERIALS);
-        return md.stream().filter(entry -> entry.get(QUANTITY) != null  && ((Integer) entry.get(QUANTITY)) > 0)
-                .map(entry -> createDistributionLine(subject, encounter, entry)).collect( Collectors.toList());
-    }
-
-    private DistributionLine createDistributionLine(Subject subject, GeneralEncounter encounter, HashMap<String, Object> entry) {
-        String typeOfMaterial = (String) entry.get(TYPE_OF_MATERIAL);
-        String recordType = typeOfMaterial.equals(KIT)? KIT_DISPATCH : NON_KIT_MATERIAL_DISPATCH;
-        String sourceId = getSourceId(encounter.getUuid(), (String) entry.get(DISPATCH_STATUS_LINE_ITEM_ID));
-        String kit = typeOfMaterial.equals(KIT) && StringUtils.hasText((String) entry.get(KIT_ID))? (String) entry.get(KIT_ID) : EMPTY_STRING;
-        String materialInventory = !typeOfMaterial.equals(KIT)? (String) entry.get(MATERIAL_ID) : EMPTY_STRING;
-        String contributedItem = !typeOfMaterial.equals(KIT)?(String) entry.get(CONTRIBUTED_ITEM_NAME):EMPTY_STRING;
-        String distributedTo = !typeOfMaterial.equals(KIT)?(String) entry.get(DISTRIBUTION_DONE_TO):EMPTY_STRING;
-        String unit = !typeOfMaterial.equals(KIT) && StringUtils.hasText((String) entry.get(UNIT))?(String) entry.get(UNIT):EMPTY_STRING;
-        Long noOfDistributions = !typeOfMaterial.equals(KIT) && entry.get(NUMBER_OF_DISTRIBUTIONS) != null ? ((Integer) entry.get(NUMBER_OF_DISTRIBUTIONS)):0l;
-        Long kitQuantity = typeOfMaterial.equals(KIT) && entry.get(QUANTITY) != null ? ((Integer) entry.get(QUANTITY)):0l;
-        Long quantity = !typeOfMaterial.equals(KIT) && entry.get(QUANTITY) != null ? ((Integer) entry.get(QUANTITY)):0l;
-        return new DistributionLine(sourceId, recordType, contributedItem, distributedTo, null,
-                kit, EMPTY_STRING, kitQuantity, materialInventory, EMPTY_STRING, noOfDistributions, quantity, unit);
-    }
-
-    public String getSourceId(String encounterUUID, String dispatchLineItemId) {
-        String sourceId = encounterUUID+ DISTRIBUTION_LI_NAME_CONNECTOR +dispatchLineItemId ;
+    public String getSourceId(String subjectUUID, String dispatchLineItemId) {
+        String sourceId = subjectUUID+ DISTRIBUTION_LI_NAME_CONNECTOR + dispatchLineItemId ;
         return sourceId;
     }
 }

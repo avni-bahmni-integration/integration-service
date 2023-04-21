@@ -76,9 +76,9 @@ public class InventoryEventWorker extends GoonjEventWorker implements ErrorRecor
     @Override
     <T> void updateReadUptoDateTime(Map<String, Object> event) {
         IntegratingEntityStatus intEnt = integratingEntityStatusRepository.findByEntityType(entityType.name());
-        String dateOfReceiving = (String) event.get("DateOfReceiving");
-        if (StringUtils.hasText(dateOfReceiving)) {
-            intEnt.setReadUptoDateTime(DateTimeUtil.convertToDate(dateOfReceiving));
+        String lastModifiedDate = (String) event.get("LastModifiedDate");
+        if (StringUtils.hasText(lastModifiedDate)) {
+            intEnt.setReadUptoDateTime(DateTimeUtil.convertToDate(lastModifiedDate));
             integratingEntityStatusRepository.save(intEnt);
         }
     }

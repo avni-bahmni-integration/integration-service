@@ -87,7 +87,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setBlock(location.get(BLOCK));
         activityDTO.setLocalityVillageName(location.get(VILLAGE));
         /* Activity Account fields */
-        activityDTO.setAccountCode((String) subject.getObservation(ACCOUNT_CODE));
+        activityDTO.setAccountName((String) subject.getObservation(ACCOUNT_NAME));
         /* Activity description fields */
         activityDTO.setTypeofInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
         /* Activity Date fields */
@@ -105,8 +105,8 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             /* Participation fields */
             activityDTO.setNoofWorkingDays((subject.getObservation(NUMBER_OF_WORKING_DAYS) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_WORKING_DAYS));
             HashMap<String, Integer> noOfParticipants = (HashMap<String, Integer>) subject.getObservation("Number of participants");
-            activityDTO.setNoofparticipantsMaleCFW(noOfParticipants.get("2966afcc-2c07-44cf-8711-3fc23f52a6b5"));
-            activityDTO.setNoofparticipantsFemaleCFW(noOfParticipants.get("526b0d5d-51cc-4004-8c12-7a6c71c6c516"));
+            activityDTO.setNoofparticipantsMaleCFW(noOfParticipants.get("526b0d5d-51cc-4004-8c12-7a6c71c6c516"));
+            activityDTO.setNoofparticipantsFemaleCFW(noOfParticipants.get("2966afcc-2c07-44cf-8711-3fc23f52a6b5"));
             //activityDTO.setNoofparticipantsMaleCFW((subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
             //activityDTO.setNoofparticipantsFemaleCFW((subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
             /* Activity description fields */
@@ -143,8 +143,8 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             /* Participation fields */
             activityDTO.setNoofdaysofParticipationNJPC((subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
             HashMap<String, Integer> noOfParticipants = (HashMap<String, Integer>) subject.getObservation("Number of participants");
-            activityDTO.setNoofparticipantsMaleNJPC(noOfParticipants.get("2966afcc-2c07-44cf-8711-3fc23f52a6b5"));
-            activityDTO.setNoofparticipantsFemaleNJPC(noOfParticipants.get("526b0d5d-51cc-4004-8c12-7a6c71c6c516"));
+            activityDTO.setNoofparticipantsMaleNJPC(noOfParticipants.get("526b0d5d-51cc-4004-8c12-7a6c71c6c516"));
+            activityDTO.setNoofparticipantsFemaleNJPC(noOfParticipants.get("2966afcc-2c07-44cf-8711-3fc23f52a6b5"));
 //            activityDTO.setNoofparticipantsMaleNJPC((subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
 //            activityDTO.setNoofparticipantsFemaleNJPC((subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
             /* Photograph fields */

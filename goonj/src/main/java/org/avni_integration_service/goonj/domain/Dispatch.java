@@ -22,7 +22,6 @@ public class Dispatch implements GoonjEntity {
     private static final String DemandIdField = "DemandId";
     private static final String DispatchLineItemsField = "DispatchLineItems";
     private static final String DispatchStatusIdField = "DispatchStatusId"; //2 mappings, 1 as setExternalID and another as Dispatch Status Id concept
-    private static final List<String> Core_Fields = Arrays.asList(DispatchDateField, DemandIdField, DispatchLineItemsField);
 
     public static final String LAST_UPDATED_DATE_TIME = "LastUpdatedDateTime";
     public static final String TARGET_COMMUNITY = "TargetCommunity";
@@ -31,11 +30,12 @@ public class Dispatch implements GoonjEntity {
     public static final String DEMAND = "Demand";
     public static final String ACCOUNT_ID = "AccountId";
     public static final String ACCOUNT_NAME = "AccountName";
+    private static final List<String> Core_Fields = Arrays.asList(DispatchDateField, DemandIdField, DispatchLineItemsField);
     public static final String ACCOUNT_CODE = "AccountCode";
     public static final String DISPATCH_STATE = "DispatchState";
     public static final String DISPATCH_DISTRICT = "DispatchDistrict";
     private static final List<String> Ignored_Fields = Arrays.asList(LAST_UPDATED_DATE_TIME, TARGET_COMMUNITY,
-            LOCAL_DEMAND, DISASTER_TYPE, DEMAND, ACCOUNT_ID, ACCOUNT_NAME, ACCOUNT_CODE, DISPATCH_STATE, DISPATCH_DISTRICT);
+            LOCAL_DEMAND, DISASTER_TYPE, DEMAND, ACCOUNT_ID, ACCOUNT_CODE, DISPATCH_STATE, DISPATCH_DISTRICT);
 
     private Map<String, Object> response;
 

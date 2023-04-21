@@ -19,17 +19,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DistributionWorker extends GeneralEncounterWorker {
+public class DistributionWorker extends SubjectWorker {
     private final DistributionRepository distributionRepository;
     @Autowired
-    public DistributionWorker(AvniEncounterRepository avniEncounterRepository,
-                              AvniSubjectRepository avniSubjectRepository,
+    public DistributionWorker(AvniSubjectRepository avniSubjectRepository,
                               AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
                               AvniGoonjErrorService avniGoonjErrorService,
                               IntegratingEntityStatusRepository integrationEntityStatusRepository,
                               DistributionRepository distributionRepository,
                               ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
-        super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
+        super(avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, integrationEntityStatusRepository,
                 GoonjErrorType.DistributionAttributesMismatch, GoonjEntityType.Distribution, Logger.getLogger(DistributionWorker.class),
                 errorClassifier, integrationSystem);
@@ -37,13 +36,13 @@ public class DistributionWorker extends GeneralEncounterWorker {
 
     }
     public void process() throws Exception {
-        processEncounters();
+        processSubjects();
     }
     @Override
-    protected void createOrUpdateGeneralEncounter(GeneralEncounter generalEncounter, Subject subject) {
-        processDistributionEvent(generalEncounter, subject);
+    protected void createSubject(Subject subject) {
+        processDistributionEvent(subject);
     }
-    private void processDistributionEvent(GeneralEncounter generalEncounter, Subject subject) {
-        syncEncounterToGoonj(subject, generalEncounter, distributionRepository, "DistributionId");
+    private void processDistributionEvent(Subject subject) {
+        syncSubjectToGoonj(subject, distributionRepository, "DistributionId");
     }
 }

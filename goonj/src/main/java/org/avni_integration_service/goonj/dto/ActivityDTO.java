@@ -16,7 +16,7 @@ import java.util.ArrayList;
         "LocalityVillageName",
         "CreatedBy",
         "ModifiedBy",
-        "AccountCode",
+        "AccountName",
         "TypeofInitiative",
         "ActivityStartDate",
         "ActivityEndDate",
@@ -53,8 +53,8 @@ public class ActivityDTO {
 
     @JsonProperty("SourceId")
     private String sourceId;
-    @JsonProperty("AccountCode")
-    private String AccountCode;
+    @JsonProperty("AccountName")
+    private String AccountName;
     @JsonProperty("ActivityCategory")
     private String activityCategory;
     @JsonProperty("ActivityConductedWithStudents")
@@ -138,7 +138,7 @@ public class ActivityDTO {
 
     /**
      * @param sourceId
-     * @param AccountCode
+     * @param AccountName
      * @param breadth
      * @param noofparticipantsFemaleNJPC
      * @param schoolAanganwadiLearningCenterName
@@ -177,7 +177,7 @@ public class ActivityDTO {
      * @param duringImplementationPhotograph
      * @param afterImplementationPhotograph
      */
-    public ActivityDTO(String sourceId, String AccountCode, String activityCategory, String activityConductedWithStudents,
+    public ActivityDTO(String sourceId, String AccountName, String activityCategory, String activityConductedWithStudents,
                        String typeOfSchool, String s2sPhotograph, String njpcPhotograph, String activityEndDate,
                        String activityStartDate, String activitySubType, String activityType, String block,
                        Long breadth, Long depthHeight, Long diameter, String district, Long length,
@@ -190,7 +190,7 @@ public class ActivityDTO {
                        String afterImplementationPhotograph) {
         super();
         this.sourceId = sourceId;
-        this.AccountCode = AccountCode;
+        this.AccountName = AccountName;
         this.activityCategory = activityCategory;
         this.activityConductedWithStudents = activityConductedWithStudents;
         this.typeOfSchool = typeOfSchool;
@@ -240,14 +240,14 @@ public class ActivityDTO {
         this.sourceId = sourceId;
     }
 
-    @JsonProperty("AccountCode")
-    public String getAccountCode() {
-        return AccountCode;
+    @JsonProperty("AccountName")
+    public String getAccountName() {
+        return AccountName;
     }
 
-    @JsonProperty("AccountCode")
-    public void setAccountCode(String accountCode) {
-        AccountCode = accountCode;
+    @JsonProperty("AccountName")
+    public void setAccountName(String accountName) {
+        AccountName = accountName;
     }
 
     @JsonProperty("ActivityCategory")
