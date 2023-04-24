@@ -3,6 +3,7 @@ package org.avni_integration_service.goonj.repository;
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.domain.DistributionConstants;
@@ -28,13 +29,16 @@ import static org.avni_integration_service.goonj.domain.DispatchReceivedStatusLi
 public class DistributionRepository extends GoonjBaseRepository implements DistributionConstants {
 
     public static final String WEB_MEDIA = "/web/media";
+    private AvniSubjectRepository avniSubjectRepository;
 
     @Autowired
     public DistributionRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                   @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
-                                  GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
+                                  GoonjConfig goonjConfig, AvniHttpClient avniHttpClient,
+                                  AvniSubjectRepository avniSubjectRepository) {
         super(integratingEntityStatusRepository, restTemplate,
                 goonjConfig, GoonjEntityType.Distribution.name(), avniHttpClient);
+        this.avniSubjectRepository = avniSubjectRepository;
     }
     @Override
     public HashMap<String, Object>[] fetchEvents() {
@@ -84,7 +88,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setTypeOfCommunity((String) subject.getObservation(TARGET_COMMUNITY));
         distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
         distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
-        List<String> images = (ArrayList<String>) subject.getObservation(IMAGES);
+        List<String> images = subject.getObservation(IMAGES) == null ? new ArrayList<>() : (ArrayList<String>) subject.getObservation(IMAGES);
         distributionDTO.setPhotographInformation(images.stream().map(Object::toString).collect(Collectors.joining(";")));
         List<DistributionLine> d =  new ArrayList<>();
         d.add(createDistributionLine(subject));
@@ -132,13 +136,14 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     }
 
     private DistributionLine createDistributionLine(Subject subject) {
+        String implemenationInventoryId = (String) subject.getObservation(INVENTORY_ID);
+        Subject inventorySubject = avniSubjectRepository.getSubject(implemenationInventoryId);
         String sourceId = getSourceId(subject.getUuid(), (String) subject.get(DISPATCH_STATUS_LINE_ITEM_ID));
         String distributedTo = (String) subject.getObservation(DISTRIBUTED_TO);
-        String implemenationInventoryId = (String) subject.getObservation(INVENTORY_ID);
         String unit = (String) subject.getObservation(UNIT);
         int noOfDistributions = (int) subject.getObservation(NUMBER_OF_DISTRIBUTIONS);
         int quantity = (int) subject.getObservation(QUANTITY);
-        return new DistributionLine(sourceId, distributedTo, implemenationInventoryId, noOfDistributions, quantity, unit);
+        return new DistributionLine(sourceId, distributedTo, inventorySubject.getExternalId(), noOfDistributions, quantity, unit);
     }
     private DistributionActivities createDistributionActivities(Subject subject) {
         String activityId = (String) subject.getObservation(ACTIVITIES_DONE);

@@ -5,10 +5,7 @@ import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.util.MapUtil;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -40,7 +37,7 @@ public class Demand implements GoonjEntity{
         subject.setExternalId(MapUtil.getString(DemandIdField, response));
         subject.setFirstName(MapUtil.getString(DemandNameField, response));
         subject.setVoided(MapUtil.getBoolean(DemandIsVoidedField, response));
-        String[] arrayOfTCs = MapUtil.getString(DemandTargetCommunity, response).split(";");
+        String[] arrayOfTCs = MapUtil.getString(DemandTargetCommunity, response) != null ? MapUtil.getString(DemandTargetCommunity, response).split(";") : null;
         subject.addObservation("Target Community", arrayOfTCs);
 //        subject.addObservation("Type of Disaster", demandDto.getTypeOfDisaster());
 //        subject.addObservation("Number of people", this.getNumberOfPeople());
