@@ -87,7 +87,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setBlock(location.get(BLOCK));
         activityDTO.setLocalityVillageName(location.get(VILLAGE));
         /* Activity Account fields */
-        activityDTO.setAccountName((String) subject.getObservation(ACCOUNT_NAME));
+        activityDTO.setnameOfAccount((String) subject.getObservation(ACCOUNT_NAME));
         /* Activity description fields */
         activityDTO.setTypeofInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
         /* Activity Date fields */

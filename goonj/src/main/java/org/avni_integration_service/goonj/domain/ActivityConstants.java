@@ -7,8 +7,8 @@ public interface ActivityConstants {
     String DISTRICT = "District";
     String BLOCK = "Block";
     String VILLAGE = "Village";
-    String ACCOUNT_NAME = "Account name";
-    String TYPE_OF_INITIATIVE = "Type of Initiative";
+    String ACCOUNT_NAME = "Account  name";
+    String TYPE_OF_INITIATIVE = "Type of initiative";
     String ACTIVITY_START_DATE = "Activity Start Date";
     String ACTIVITY_END_DATE = "Activity End Date";
     String ACTIVITY_TYPE = "Activity Type";
