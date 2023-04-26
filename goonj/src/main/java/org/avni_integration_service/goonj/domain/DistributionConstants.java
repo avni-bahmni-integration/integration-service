@@ -10,7 +10,7 @@ public interface DistributionConstants {
     String LOCATION = "location";
     String TOLA_MOHALLA = "Tola / Mohalla";
     String DISTRIBUTION_DATE = "Distribution Date";
-    String ACCOUNT_NAME = "Account name";
+    String ACCOUNT_NAME = "Account  name";
     String TARGET_COMMUNITY = "Target Community";
     String TYPE_OF_INITIATIVE = "Type of Initiative";
     String TYPE_OF_DISASTER = "Type of Disaster";

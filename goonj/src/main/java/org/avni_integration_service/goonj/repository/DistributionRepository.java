@@ -132,27 +132,29 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         }
         distributionDTO.setReportsCrosschecked((String) subject.getObservation(REPORTS_CROSS_CHECKED));
         distributionDTO.setRemarks((String) subject.getObservation(REMARKS));
+        distributionDTO.setCreatedBy(subject.getCreatedBy());
+        distributionDTO.setModifiedBy(subject.getLastModifiedBy());
         return distributionDTO;
     }
 
     private DistributionLine createDistributionLine(Subject subject) {
         String implemenationInventoryId = (String) subject.getObservation(INVENTORY_ID);
         Subject inventorySubject = avniSubjectRepository.getSubject(implemenationInventoryId);
-        String sourceId = getSourceId(subject.getUuid(), (String) subject.get(DISPATCH_STATUS_LINE_ITEM_ID));
+        String inventoryExternalId = inventorySubject.getExternalId();
+        String sourceId = getSourceId(subject.getUuid(), inventoryExternalId);
         String distributedTo = (String) subject.getObservation(DISTRIBUTED_TO);
         String unit = (String) subject.getObservation(UNIT);
         int noOfDistributions = (int) subject.getObservation(NUMBER_OF_DISTRIBUTIONS);
         int quantity = (int) subject.getObservation(QUANTITY);
-        return new DistributionLine(sourceId, distributedTo, inventorySubject.getExternalId(), noOfDistributions, quantity, unit);
+        return new DistributionLine(sourceId, distributedTo, inventoryExternalId, noOfDistributions, quantity, unit);
     }
     private DistributionActivities createDistributionActivities(Subject subject) {
-        String activityId = (String) subject.getObservation(ACTIVITIES_DONE);
+        String activitySourceId = (String) subject.getObservation(ACTIVITIES_DONE);
         int numberOfPersons = (int) subject.getObservation(NUMBER_OF_PERSONS);
-        return new DistributionActivities(activityId, numberOfPersons);
+        return new DistributionActivities(activitySourceId, numberOfPersons);
     }
 
-    public String getSourceId(String subjectUUID, String dispatchLineItemId) {
-        String sourceId = subjectUUID+ DISTRIBUTION_LI_NAME_CONNECTOR + dispatchLineItemId ;
-        return sourceId;
+    public String getSourceId(String subjectUUID, String inventoryId) {
+        return subjectUUID+ DISTRIBUTION_LI_NAME_CONNECTOR + inventoryId;
     }
 }

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DistributionActivities {
 
-    @JsonProperty("activityId")
-    private String activityId;
+    @JsonProperty("ActivitySourceId")
+    private String ActivitySourceId;
     @JsonProperty("numberOfPersons")
     private int numberOfPersons;
 
@@ -16,23 +16,23 @@ public class DistributionActivities {
     }
 
     /**
-     * @param activityId
+     * @param ActivitySourceId
      * @param numberOfPersons
      */
-    public DistributionActivities(String activityId, int numberOfPersons) {
+    public DistributionActivities(String ActivitySourceId, int numberOfPersons) {
         super();
-        this.activityId = activityId;
+        this.ActivitySourceId = ActivitySourceId;
         this.numberOfPersons = numberOfPersons;
     }
 
-    @JsonProperty("activityId")
+    @JsonProperty("ActivitySourceId")
     public String getaActivityId() {
-        return activityId;
+        return ActivitySourceId;
     }
 
-    @JsonProperty("activityId")
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
+    @JsonProperty("ActivitySourceId")
+    public void setActivityId(String activitySourceId) {
+        this.ActivitySourceId = activitySourceId;
     }
 
     @JsonProperty("numberOfPersons")
