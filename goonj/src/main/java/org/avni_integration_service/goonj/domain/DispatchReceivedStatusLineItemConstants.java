@@ -12,6 +12,8 @@ public interface DispatchReceivedStatusLineItemConstants {
     String KIT_NAME = "Kit Name";
     String UNIT = "Unit";
     String QUANTITY = "Quantity";
+    String QUANTITY_DISPATCHED = "Quantity (Dispatched)";
+    String QUANTITY_MATCHING = "Quantity matching";
     String EMPTY_STRING = "";
     String KIT_ID = "Kit Id";
     String MATERIAL_ID = "Material Id";
