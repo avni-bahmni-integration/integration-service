@@ -46,9 +46,9 @@ public abstract class GoonjBaseRepository {
 
     }
 
-    protected <T> T getResponse(Date dateTime, String resource,  Class<T> returnType) {
-        URI uri = URI.create(String.format("%s/%s?dateTimestamp=%s", goonjConfig.getAppUrl(), resource,
-                DateTimeUtil.formatDateTime(dateTime)));
+    protected <T> T getResponse(Date dateTime, String resource,  Class<T> returnType, String dateTimeParam) {
+        URI uri = URI.create(String.format("%s/%s?%s=%s", goonjConfig.getAppUrl(), resource,
+                dateTimeParam, DateTimeUtil.formatDateTime(dateTime)));
         ResponseEntity<T> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, returnType);
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             return responseEntity.getBody();
