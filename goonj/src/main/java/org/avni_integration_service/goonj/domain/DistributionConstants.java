@@ -61,4 +61,14 @@ public interface DistributionConstants {
 //    String DISTRIBUTION_DONE_TO = "Distribution done to";
     String DISTRIBUTION_LI_NAME_CONNECTOR = "#";
 
+    String SPECIFIC_INITIATIVE = "Specific Initiative";
+    String CFW = "CFW";
+    String NJPC = "NJPC";
+    String RAHAT = "Rahat";
+    String S_2_S = "S2S";
+    String VAAPSI = "Vaapsi";
+    String ONLY_CFW = "Only CFW";
+    String ONLY_NJPC = "Only NJPC";
+    String ONLY_RAHAT = "Only Rahat";
+    String ONLY_S_2_S = "Only S2S";
 }

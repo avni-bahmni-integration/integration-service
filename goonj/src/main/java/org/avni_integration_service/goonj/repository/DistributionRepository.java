@@ -86,7 +86,6 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         Date distributionDate = DateTimeUtil.convertToDate((String) subject.getObservation(DISTRIBUTION_DATE));
         distributionDTO.setDateOfDistribution(DateTimeUtil.formatDate(distributionDate));
         distributionDTO.setTypeOfCommunity((String) subject.getObservation(TARGET_COMMUNITY));
-        distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
         distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         List<String> images = subject.getObservation(IMAGES) == null ? new ArrayList<>() : (ArrayList<String>) subject.getObservation(IMAGES);
         distributionDTO.setPhotographInformation(images.stream().map(Object::toString).collect(Collectors.joining(";")));
@@ -96,8 +95,21 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         List<DistributionActivities> activities =  new ArrayList<>();
         activities.add(createDistributionActivities(subject));
         distributionDTO.setActivities(activities);
+        if (subject.getObservation(TYPE_OF_INITIATIVE).equals(CFW)) {
+            distributionDTO.setTypeOfInitiative(ONLY_CFW);
+        }
+        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(NJPC)) {
+            distributionDTO.setTypeOfInitiative(ONLY_NJPC);
+        }
+        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(RAHAT)) {
+            distributionDTO.setTypeOfInitiative(ONLY_RAHAT);
+        }
+        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(S_2_S)) {
+            distributionDTO.setTypeOfInitiative(ONLY_S_2_S);
+        }
         /* vaapsi fields */
-        if (subject.getObservation(TYPE_OF_INITIATIVE).equals("Vaapsi")) {
+        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(VAAPSI)) {
+            distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
             distributionDTO.setSurveyedBy((String) subject.getObservation(SURVEYED_BY));
             distributionDTO.setMonitoredByOrDistributor((String) subject.getObservation(MONITORED_BY_DISTRIBUTOR));
             distributionDTO.setApprovedOrVerifiedBy((String) subject.getObservation(APPROVED_OR_VERIFIED_BY));
@@ -121,7 +133,8 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
                 distributionDTO.setTotalNumberOfReceivers((String) subject.getObservation(NUMBER_OF_RECEIVERS));
             }
         }
-        if (subject.getObservation(TYPE_OF_INITIATIVE).equals("Specific Initiative")) {
+        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(SPECIFIC_INITIATIVE)) {
+            distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
             distributionDTO.setCentreName((String) subject.getObservation(CENTERS_NAME));
             distributionDTO.setShareABriefProvidedMaterial((String) subject.getObservation(PROVIDED_MATERIAL));
             distributionDTO.setHowtheMaterialMakesaDifference((String) subject.getObservation(MATERIAL_MAKES_DIFFERENCE));
@@ -129,6 +142,9 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
             distributionDTO.setNoOfFamiliesReached((String) subject.getObservation(NUMBER_OF_FAMILIES_REACHED));
             distributionDTO.setNoOfIndividualReached((String) subject.getObservation(NUMBER_OF_INDIVIDUALS_REACHED));
 
+        }
+        else {
+            distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
         }
         distributionDTO.setReportsCrosschecked((String) subject.getObservation(REPORTS_CROSS_CHECKED));
         distributionDTO.setRemarks((String) subject.getObservation(REMARKS));

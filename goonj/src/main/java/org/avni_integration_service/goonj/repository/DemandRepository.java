@@ -47,7 +47,7 @@ public class DemandRepository extends GoonjBaseRepository {
     }
 
     public DemandsResponseDTO getDemands(Date dateTime) {
-        return super.getResponse( dateTime, "DemandService/getDemands", DemandsResponseDTO.class);
+        return super.getResponse( dateTime, "DemandService/getDemands", DemandsResponseDTO.class, "dateTimestamp");
     }
 
     public HashMap<String, Object> getDemand(String uuid) {

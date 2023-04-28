@@ -48,7 +48,7 @@ public class InventoryRepository extends GoonjBaseRepository {
     }
 
     public InventoryResponseDTO getInventoryItemsDTOS(Date dateTime) {
-        return super.getResponse( dateTime, "ImplementationInventoryService/getImplementationInventories", InventoryResponseDTO.class);
+        return super.getResponse( dateTime, "ImplementationInventoryService/getImplementationInventories", InventoryResponseDTO.class, "dateTimeStamp");
     }
 
     public HashMap<String, Object> getInventoryItemsDTO(String uuid) {

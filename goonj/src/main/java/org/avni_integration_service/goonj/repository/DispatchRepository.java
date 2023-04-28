@@ -50,7 +50,7 @@ public class DispatchRepository extends GoonjBaseRepository {
     }
 
     public DispatchesResponseDTO getDispatches(Date dateTime) {
-        return super.getResponse( dateTime, "DispatchService/getDispatches", DispatchesResponseDTO.class);
+        return super.getResponse( dateTime, "DispatchService/getDispatches", DispatchesResponseDTO.class, "dateTimestamp");
     }
 
     public HashMap<String, Object> getDispatch(String uuid) {
