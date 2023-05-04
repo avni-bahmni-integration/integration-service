@@ -49,26 +49,20 @@ public interface DistributionConstants {
     String NUMBER_OF_INDIVIDUALS_REACHED = "Total Number of Individuals Reached";
     String REMARKS = "Remarks";
     String REPORTS_CROSS_CHECKED = "Reports Cross Checked";
-
-//    String DISPATCH_STATUS_ID_OLD = "Dispatch status id (Dispatch)";
-//    String DISPATCH_STATUS_ID_NEW = "Dispatch Status Id";
-//    String RECEIVED = "Received";
-//    String NOT_RECEIVED = "Not received";
-//    String POC_ID = "POC ID";
-//    String MATERIALS = "Materials";
-//    String KIT_DISPATCH = "Kit - Dispatch";
-//    String NON_KIT_MATERIAL_DISPATCH = "Non Kit Material - Dispatch";
-//    String DISTRIBUTION_DONE_TO = "Distribution done to";
+    String DISTRIBUTION_DETAILS = "Distribution details";
     String DISTRIBUTION_LI_NAME_CONNECTOR = "#";
-
     String SPECIFIC_INITIATIVE = "Specific Initiative";
     String CFW = "CFW";
     String NJPC = "NJPC";
     String RAHAT = "Rahat";
     String S_2_S = "S2S";
     String VAAPSI = "Vaapsi";
+    String CFW_S2S = "CFW-S2S";
     String ONLY_CFW = "Only CFW";
     String ONLY_NJPC = "Only NJPC";
     String ONLY_RAHAT = "Only Rahat";
     String ONLY_S_2_S = "Only S2S";
+    String TYPE_OF_SCHOOL = "Type of school";
+    String SCHOOL_ANGANWADI_NAME = "School / Aanganwadi / Learning Center Name";
+
 }

@@ -7,10 +7,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.domain.DistributionConstants;
-import org.avni_integration_service.goonj.dto.DistributionActivities;
-import org.avni_integration_service.goonj.dto.DistributionDTO;
-import org.avni_integration_service.goonj.dto.DistributionLine;
-import org.avni_integration_service.goonj.dto.DistributionRequestDTO;
+import org.avni_integration_service.goonj.dto.*;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +37,17 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
                 goonjConfig, GoonjEntityType.Distribution.name(), avniHttpClient);
         this.avniSubjectRepository = avniSubjectRepository;
     }
+
     @Override
     public HashMap<String, Object>[] fetchEvents() {
         throw new UnsupportedOperationException();
     }
+
     @Override
     public List<String> fetchDeletionEvents() {
         throw new UnsupportedOperationException();
     }
+
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
         throw new UnsupportedOperationException();
@@ -65,6 +65,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         requestDTO.setDistributions(Arrays.asList(createDistributionRequest(subject)));
         return requestDTO;
     }
+
     private DistributionDTO createDistributionRequest(Subject subject) {
         DistributionDTO distributionDTO = new DistributionDTO();
 //        String dispatchStatusId = (String) encounter.getObservation(DISPATCH_STATUS_ID_NEW);
@@ -89,23 +90,24 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         List<String> images = subject.getObservation(IMAGES) == null ? new ArrayList<>() : (ArrayList<String>) subject.getObservation(IMAGES);
         distributionDTO.setPhotographInformation(images.stream().map(Object::toString).collect(Collectors.joining(";")));
-        List<DistributionLine> d =  new ArrayList<>();
-        d.add(createDistributionLine(subject));
+        List<DistributionLine> d = new ArrayList<>(fetchDistributionLineItems(subject));
         distributionDTO.setDistributionLines(d);
-        List<DistributionActivities> activities =  new ArrayList<>();
-        activities.add(createDistributionActivities(subject));
+        List<DistributionActivities> activities = new ArrayList<>(fetchActivities(subject));
         distributionDTO.setActivities(activities);
         if (subject.getObservation(TYPE_OF_INITIATIVE).equals(CFW)) {
             distributionDTO.setTypeOfInitiative(ONLY_CFW);
-        }
-        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(NJPC)) {
+        } else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(NJPC)) {
             distributionDTO.setTypeOfInitiative(ONLY_NJPC);
-        }
-        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(RAHAT)) {
+        } else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(RAHAT)) {
             distributionDTO.setTypeOfInitiative(ONLY_RAHAT);
-        }
-        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(S_2_S)) {
+        } else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(S_2_S)) {
             distributionDTO.setTypeOfInitiative(ONLY_S_2_S);
+            distributionDTO.setTypeOfSchool((String) subject.getObservation(TYPE_OF_SCHOOL));
+            distributionDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_ANGANWADI_NAME));
+        } else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(CFW_S2S)){
+            distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
+            distributionDTO.setTypeOfSchool((String) subject.getObservation(TYPE_OF_SCHOOL));
+            distributionDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_ANGANWADI_NAME));
         }
         /* vaapsi fields */
         else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(VAAPSI)) {
@@ -132,8 +134,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
                 distributionDTO.setGroupName((String) subject.getObservation(GROUP_NAME));
                 distributionDTO.setTotalNumberOfReceivers((String) subject.getObservation(NUMBER_OF_RECEIVERS));
             }
-        }
-        else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(SPECIFIC_INITIATIVE)) {
+        } else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(SPECIFIC_INITIATIVE)) {
             distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
             distributionDTO.setCentreName((String) subject.getObservation(CENTERS_NAME));
             distributionDTO.setShareABriefProvidedMaterial((String) subject.getObservation(PROVIDED_MATERIAL));
@@ -142,8 +143,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
             distributionDTO.setNoOfFamiliesReached((String) subject.getObservation(NUMBER_OF_FAMILIES_REACHED));
             distributionDTO.setNoOfIndividualReached((String) subject.getObservation(NUMBER_OF_INDIVIDUALS_REACHED));
 
-        }
-        else {
+        } else {
             distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
         }
         distributionDTO.setReportsCrosschecked((String) subject.getObservation(REPORTS_CROSS_CHECKED));
@@ -153,24 +153,35 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         return distributionDTO;
     }
 
-    private DistributionLine createDistributionLine(Subject subject) {
-        String implemenationInventoryId = (String) subject.getObservation(INVENTORY_ID);
+    private List<DistributionLine> fetchDistributionLineItems(Subject subject) {
+        ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) subject.getObservations().get(DISTRIBUTION_DETAILS);
+        return md.stream().map(entry -> createDistributionLine(entry, subject)).collect(Collectors.toList());
+    }
+
+    private DistributionLine createDistributionLine(HashMap<String, Object> entry, Subject subject) {
+        String implemenationInventoryId = (String) entry.get(INVENTORY_ID);
         Subject inventorySubject = avniSubjectRepository.getSubject(implemenationInventoryId);
         String inventoryExternalId = inventorySubject.getExternalId();
         String sourceId = getSourceId(subject.getUuid(), inventoryExternalId);
-        String distributedTo = (String) subject.getObservation(DISTRIBUTED_TO);
-        String unit = (String) subject.getObservation(UNIT);
-        int noOfDistributions = (int) subject.getObservation(NUMBER_OF_DISTRIBUTIONS);
-        int quantity = (int) subject.getObservation(QUANTITY);
+        String distributedTo = (String) entry.get(DISTRIBUTED_TO);
+        String unit = (String) entry.get(UNIT);
+        int noOfDistributions = (int) entry.get(NUMBER_OF_DISTRIBUTIONS);
+        int quantity = (int) entry.get(QUANTITY);
         return new DistributionLine(sourceId, distributedTo, inventoryExternalId, noOfDistributions, quantity, unit);
     }
-    private DistributionActivities createDistributionActivities(Subject subject) {
-        String activitySourceId = (String) subject.getObservation(ACTIVITIES_DONE);
-        int numberOfPersons = (int) subject.getObservation(NUMBER_OF_PERSONS);
+
+    private List<DistributionActivities> fetchActivities(Subject subject) {
+        ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) subject.getObservations().get(DISTRIBUTION_DETAILS);
+        return md.stream().map(entry -> createDistributionActivities(entry, subject)).collect(Collectors.toList());
+    }
+
+    private DistributionActivities createDistributionActivities(HashMap<String, Object> entry, Subject subject) {
+        String activitySourceId = (String) entry.get(ACTIVITIES_DONE);
+        int numberOfPersons = (int) entry.get(NUMBER_OF_PERSONS);
         return new DistributionActivities(activitySourceId, numberOfPersons);
     }
 
     public String getSourceId(String subjectUUID, String inventoryId) {
-        return subjectUUID+ DISTRIBUTION_LI_NAME_CONNECTOR + inventoryId;
+        return subjectUUID + DISTRIBUTION_LI_NAME_CONNECTOR + inventoryId;
     }
 }

@@ -1,6 +1,5 @@
 package org.avni_integration_service.goonj.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -9,7 +8,14 @@ import java.util.Collections;
 import java.util.List;
 
 //@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"source_id", "state", "district", "block", "localityVillageName", "tolaMohalla", "dateOfDistribution", "accountCode", "nameOfAccount", "typeOfCommunity", "typeOfInitiative", "photographInformation", "createdBy", "modifiedBy", "distributionLines", "distributedTo", "inventoryIds", "numberOfDistributions", "quantity", "unit", "activities", "surveyedBy", "monitoredByOrDistributor", "approvedOrVerifiedBy", "teamOrExternal", "nameOfPOC", "pocContactNo", "reachedTo", "totalNumberOfReceivers", "groupName", "anyOtherDocumentSubmitted", "reportsCrosschecked", "name", "gender", "age", "fatherMotherName", "phoneNumber", "presentOccupation", "monthlyIncome", "noOfFamilyMember", "centreName", "shareABriefProvidedMaterial", "howtheMaterialMakesaDifference", "materialGivenFor", "noOfIndividualReached", "remarks"})
+@JsonPropertyOrder({"source_id", "state", "district", "block", "localityVillageName", "tolaMohalla", "dateOfDistribution",
+        "accountCode", "nameOfAccount", "typeOfCommunity", "typeOfInitiative", "photographInformation", "createdBy",
+        "modifiedBy", "distributionLines", "distributedTo", "inventoryIds", "numberOfDistributions", "quantity", "unit",
+        "activities", "surveyedBy", "monitoredByOrDistributor", "approvedOrVerifiedBy", "teamOrExternal", "nameOfPOC",
+        "pocContactNo", "reachedTo", "totalNumberOfReceivers", "groupName", "anyOtherDocumentSubmitted", "reportsCrosschecked",
+        "name", "gender", "age", "fatherMotherName", "phoneNumber", "presentOccupation", "monthlyIncome", "noOfFamilyMember",
+        "centreName", "shareABriefProvidedMaterial", "howtheMaterialMakesaDifference", "materialGivenFor", "noOfIndividualReached",
+        "remarks", "TypeOfSchool", "SchoolAanganwadiLearningCenterName"})
 public class DistributionDTO {
 
     @JsonProperty("sourceId")
@@ -98,6 +104,10 @@ public class DistributionDTO {
     private String noOfFamiliesReached;
     @JsonProperty("remarks")
     private String remarks;
+    @JsonProperty("TypeOfSchool")
+    private String TypeOfSchool;
+    @JsonProperty("SchoolAanganwadiLearningCenterName")
+    private String SchoolAanganwadiLearningCenterName;
 
     /**
      * No args constructor for use in serialization
@@ -149,6 +159,8 @@ public class DistributionDTO {
      * @param noOfIndividualReached
      * @param noOfFamiliesReached
      * @param remarks
+     * @param TypeOfSchool
+     * @param SchoolAanganwadiLearningCenterName
      */
     public DistributionDTO(String source_id, String state, String district, String block,
                            String localityVillageName, String tolaMohalla, String dateOfDistribution,
@@ -163,7 +175,7 @@ public class DistributionDTO {
                            String monthlyIncome, String noOfFamilyMember, String centreName,
                            String shareABriefProvidedMaterial, String howtheMaterialMakesaDifference,
                            String materialGivenFor, String noOfIndividualReached, String noOfFamiliesReached,
-                           String remarks) {
+                           String remarks, String TypeOfSchool, String SchoolAanganwadiLearningCenterName) {
         super();
         this.source_id = source_id;
         this.state = state;
@@ -208,6 +220,8 @@ public class DistributionDTO {
         this.noOfFamiliesReached = noOfFamiliesReached;
         this.noOfIndividualReached = noOfIndividualReached;
         this.remarks = remarks;
+        this.TypeOfSchool = TypeOfSchool;
+        this.SchoolAanganwadiLearningCenterName = SchoolAanganwadiLearningCenterName;
     }
 
     @JsonProperty("sourceId")
@@ -546,7 +560,6 @@ public class DistributionDTO {
     public void setNoOfFamiliesReached(String noOfFamiliesReached) {
         this.noOfFamiliesReached = noOfFamiliesReached;
     }
-
     @JsonProperty("remarks")
     public String getRemarks() {
         return remarks;
@@ -554,5 +567,21 @@ public class DistributionDTO {
     @JsonProperty("remarks")
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+    @JsonProperty("TypeOfSchool")
+    public String getTypeOfSchool() {
+        return TypeOfSchool;
+    }
+    @JsonProperty("TypeOfSchool")
+    public void setTypeOfSchool(String typeOfSchool) {
+        TypeOfSchool = typeOfSchool;
+    }
+    @JsonProperty("SchoolAanganwadiLearningCenterName")
+    public String getSchoolAanganwadiLearningCenterName() {
+        return SchoolAanganwadiLearningCenterName;
+    }
+    @JsonProperty("SchoolAanganwadiLearningCenterName")
+    public void setSchoolAanganwadiLearningCenterName(String schoolAanganwadiLearningCenterName) {
+        SchoolAanganwadiLearningCenterName = schoolAanganwadiLearningCenterName;
     }
 }

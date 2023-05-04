@@ -145,8 +145,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             HashMap<String, Integer> noOfParticipants = (HashMap<String, Integer>) subject.getObservation("Number of participants");
             activityDTO.setNoofparticipantsMaleNJPC(noOfParticipants.get("526b0d5d-51cc-4004-8c12-7a6c71c6c516"));
             activityDTO.setNoofparticipantsFemaleNJPC(noOfParticipants.get("2966afcc-2c07-44cf-8711-3fc23f52a6b5"));
-//            activityDTO.setNoofparticipantsMaleNJPC((subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-//            activityDTO.setNoofparticipantsFemaleNJPC((subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
+            activityDTO.setNoofparticipantsNJPCOther(noOfParticipants.get("a043fea3-1658-4b5e-becd-ee55ab305a03"));
             /* Photograph fields */
             List<String> njpcPhotographs = (ArrayList<String>) subject.getObservation(PHOTOGRAPH);
             activityDTO.setNjpcPhotograph(njpcPhotographs.stream().map(Object::toString).collect(Collectors.joining(";")));
