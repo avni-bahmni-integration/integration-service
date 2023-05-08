@@ -49,7 +49,8 @@ public interface DistributionConstants {
     String NUMBER_OF_INDIVIDUALS_REACHED = "Total Number of Individuals Reached";
     String REMARKS = "Remarks";
     String REPORTS_CROSS_CHECKED = "Reports Cross Checked";
-    String DISTRIBUTION_DETAILS = "Distribution details";
+    String DISTRIBUTION_DETAILS = "Inventory details";
+    String ACTIVITY_DETAILS = "Activity details";
     String DISTRIBUTION_LI_NAME_CONNECTOR = "#";
     String SPECIFIC_INITIATIVE = "Specific Initiative";
     String CFW = "CFW";

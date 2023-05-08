@@ -89,10 +89,11 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setTypeOfCommunity((String) subject.getObservation(TARGET_COMMUNITY));
         distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         List<String> images = subject.getObservation(IMAGES) == null ? new ArrayList<>() : (ArrayList<String>) subject.getObservation(IMAGES);
-        distributionDTO.setPhotographInformation(images.stream().map(Object::toString).collect(Collectors.joining(";")));
-        List<DistributionLine> d = new ArrayList<>(fetchDistributionLineItems(subject));
+        distributionDTO.setPhotographInformation(images.stream().map(
+                x -> "https://app.avniproject.org/web/media?url="  + x).collect(Collectors.joining(";")));
+        List<DistributionLine> d = fetchDistributionLineItems(subject);
         distributionDTO.setDistributionLines(d);
-        List<DistributionActivities> activities = new ArrayList<>(fetchActivities(subject));
+        List<DistributionActivities> activities = fetchActivities(subject);
         distributionDTO.setActivities(activities);
         if (subject.getObservation(TYPE_OF_INITIATIVE).equals(CFW)) {
             distributionDTO.setTypeOfInitiative(ONLY_CFW);
@@ -171,14 +172,19 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     }
 
     private List<DistributionActivities> fetchActivities(Subject subject) {
-        ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) subject.getObservations().get(DISTRIBUTION_DETAILS);
-        return md.stream().map(entry -> createDistributionActivities(entry, subject)).collect(Collectors.toList());
+        ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) subject.getObservations().get(ACTIVITY_DETAILS);
+        return md.stream().map(this::createDistributionActivities)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
-    private DistributionActivities createDistributionActivities(HashMap<String, Object> entry, Subject subject) {
+    private DistributionActivities createDistributionActivities(HashMap<String, Object> entry) {
         String activitySourceId = (String) entry.get(ACTIVITIES_DONE);
-        int numberOfPersons = (int) entry.get(NUMBER_OF_PERSONS);
-        return new DistributionActivities(activitySourceId, numberOfPersons);
+        if (activitySourceId != null) {
+            int numberOfPersons = (int) entry.get(NUMBER_OF_PERSONS);
+            return new DistributionActivities(activitySourceId, numberOfPersons);
+        }
+        return null;
     }
 
     public String getSourceId(String subjectUUID, String inventoryId) {
