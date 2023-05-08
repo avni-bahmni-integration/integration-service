@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Lazy
-public interface OpenERPProperties {
-    public int getConnectionTimeoutInMilliseconds();
-    public int getReplyTimeoutInMilliseconds();
+public interface IBahmniAtomFeedProperties {
+    int getConnectionTimeoutInMilliseconds();
+    int getReplyTimeoutInMilliseconds();
 }

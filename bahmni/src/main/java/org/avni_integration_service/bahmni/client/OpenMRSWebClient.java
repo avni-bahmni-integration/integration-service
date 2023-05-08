@@ -10,13 +10,13 @@ import java.net.URI;
 public class OpenMRSWebClient extends AbstractWebClient {
     private static Logger logger = Logger.getLogger(OpenMRSWebClient.class);
 
-    public OpenMRSWebClient(OpenERPAtomFeedProperties properties) {
+    public OpenMRSWebClient(BahmniAtomFeedProperties properties) {
         connectionDetails = connectionDetails(properties);
         httpClient = new HttpClient(connectionDetails, new OpenMRSLoginAuthenticator(connectionDetails));
     }
 
     @Override
-    protected ConnectionDetails connectionDetails(OpenERPAtomFeedProperties properties) {
+    protected ConnectionDetails connectionDetails(BahmniAtomFeedProperties properties) {
         return new ConnectionDetails(properties.getAuthenticationURI(),
                 properties.getOpenMRSUser(),
                 properties.getOpenMRSPassword(),

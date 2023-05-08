@@ -165,3 +165,4 @@ setup: setup-log-dir
 	touch goonj/src/test/resources/goonj-secret.properties
 	touch goonj/src/test/resources/avni-secret.properties
 	touch goonj/src/test/resources/bahmni-secret.properties
+	touch amrit/src/test/resources/amrit-secret.properties

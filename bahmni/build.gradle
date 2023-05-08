@@ -56,7 +56,6 @@ dependencies {
     implementation group: 'org.ict4h', name: 'atomfeed-client', version: '1.9.4'
     implementation group: 'org.ict4h', name: 'atomfeed-spring-server', version: '1.9.4'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'com.bugsnag:bugsnag-spring:3.6.3'
 }
 

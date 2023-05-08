@@ -8,24 +8,23 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 
 @Component
-public class OpenERPAtomFeedProperties implements OpenERPProperties {
-//todo - delete all openerp name
-    private static Logger logger = Logger.getLogger(OpenERPAtomFeedProperties.class);
+public class BahmniAtomFeedProperties implements IBahmniAtomFeedProperties {
+    private static final Logger logger = Logger.getLogger(BahmniAtomFeedProperties.class);
 
-    @Value("${openerp.connectionTimeoutInMilliseconds}")
-    private String openErpConTimeOut;
+    @Value("${bahmni.connectionTimeoutInMilliseconds}")
+    private String bahmniConnectionTimeOut;
 
     @Override
     public int getConnectionTimeoutInMilliseconds() {
-        return Integer.parseInt(openErpConTimeOut);
+        return Integer.parseInt(bahmniConnectionTimeOut);
     }
 
-    @Value("${openerp.replyTimeoutInMilliseconds}")
-    private String openErpReplyTimeOut;
+    @Value("${bahmni.replyTimeoutInMilliseconds}")
+    private String bahmniReplyTimeOut;
 
     @Override
     public int getReplyTimeoutInMilliseconds() {
-        return Integer.parseInt(openErpReplyTimeOut);
+        return Integer.parseInt(bahmniReplyTimeOut);
     }
 
     @Value("${openmrs.auth.uri}")
@@ -51,21 +50,21 @@ public class OpenERPAtomFeedProperties implements OpenERPProperties {
 
     @PostConstruct
     private void debug() {
-        logger.debug("**************** DEBUG OpenERPAtomFeedProperties ************************ ");
+        logger.debug("**************** DEBUG Bahmni AtomFeed Properties ************************ ");
         HashMap<String, String> properties = getInfo();
         for (String s : properties.keySet()) {
             logger.debug(String.format("%s=%s",s, properties.get(s)));
 
         }
-        logger.debug("**************** DEBUG OpenERPAtomFeedProperties ************************ ");
+        logger.debug("**************** DEBUG Bahmni AtomFeed Properties ************************ ");
     }
 
 
 
     private HashMap<String, String> getInfo() {
         HashMap<String, String> values = new HashMap<>();
-        values.put("openerp.connectionTimeoutInMilliseconds",openErpConTimeOut );
-        values.put("openerp.replyTimeoutInMilliseconds",openErpReplyTimeOut );
+        values.put("bahmni.connectionTimeoutInMilliseconds", bahmniConnectionTimeOut);
+        values.put("bahmni.replyTimeoutInMilliseconds", bahmniReplyTimeOut);
         values.put("openmrs.auth.uri",openmrsAuthUri );
         values.put("openmrs.user",openmrsUser );
         return values;

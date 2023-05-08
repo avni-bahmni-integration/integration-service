@@ -24,7 +24,7 @@ public abstract class AbstractWebClient {
         return httpClient.get(uri,klass);
     }
 
-    protected abstract ConnectionDetails connectionDetails(OpenERPAtomFeedProperties properties);
+    protected abstract ConnectionDetails connectionDetails(BahmniAtomFeedProperties properties);
 
     protected abstract Logger getLogger();
 
