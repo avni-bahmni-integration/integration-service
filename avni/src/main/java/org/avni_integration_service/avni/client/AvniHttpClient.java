@@ -25,15 +25,12 @@ public class AvniHttpClient {
     private static final Logger logger = Logger.getLogger(AvniHttpClient.class);
 
     private static ThreadLocal<AvniSession> avniSessions = new ThreadLocal<>();
-//    private AvniSession avniSession;
 
     public void setAvniSession(AvniSession avniSession) {
-//        this.avniSession = avniSession;
         avniSessions.set(avniSession);
     }
 
     AvniSession getAvniSession() {
-//        return avniSession;
         AvniSession avniSession = avniSessions.get();
         if (avniSession == null)
             throw new IllegalStateException("No Avni connection available. Have you called setAvniConnectionDetails.");

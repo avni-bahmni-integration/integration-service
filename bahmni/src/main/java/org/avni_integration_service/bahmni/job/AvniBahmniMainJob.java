@@ -3,6 +3,8 @@ package org.avni_integration_service.bahmni.job;
 import com.bugsnag.Bugsnag;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.SyncDirection;
+import org.avni_integration_service.avni.client.AvniHttpClient;
+import org.avni_integration_service.bahmni.client.BahmniAvniSessionFactory;
 import org.avni_integration_service.bahmni.worker.AvniBahmniErrorRecordsWorker;
 import org.avni_integration_service.bahmni.worker.avni.EnrolmentWorker;
 import org.avni_integration_service.bahmni.worker.avni.GeneralEncounterWorker;
@@ -70,8 +72,15 @@ public class AvniBahmniMainJob {
     @Autowired
     private HealthCheckService healthCheckService;
 
+    @Autowired
+    private AvniHttpClient avniHttpClient;
+
+    @Autowired
+    private BahmniAvniSessionFactory bahmniAvniSessionFactory;
+
     public void execute() {
         try {
+            avniHttpClient.setAvniSession(bahmniAvniSessionFactory.createSession());
             List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
             Constants allConstants = constantsRepository.findAllConstants();
 
