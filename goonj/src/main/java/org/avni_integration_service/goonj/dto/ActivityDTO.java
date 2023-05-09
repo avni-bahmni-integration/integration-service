@@ -104,6 +104,8 @@ public class ActivityDTO {
     private int noofparticipantsMaleNJPC;
     @JsonProperty("NoofparticipantsNJPCOther")
     private int noofparticipantsNJPCOther;
+    @JsonProperty("NoofparticipantsCFWOther")
+    private int noofparticipantsCFWOther;
     @JsonProperty("NoofparticipantsS2S")
     private Long noofparticipantsS2S;
     @JsonProperty("NoofWorkingDays")
@@ -170,6 +172,7 @@ public class ActivityDTO {
      * @param njpcPhotograph
      * @param noofparticipantsMaleNJPC
      * @param noofparticipantsNJPCOther
+     * @param noofparticipantsCFWOther
      * @param activitySubType
      * @param activityType
      * @param noofdaysofParticipationS2S
@@ -187,7 +190,8 @@ public class ActivityDTO {
                        Long breadth, Long depthHeight, Long diameter, String district, Long length,
                        String localityVillageName, String measurementType, Long noofdaysofParticipationNJPC,
                        Long noofdaysofParticipationS2S, int noofparticipantsFemaleCFW, int noofparticipantsFemaleNJPC,
-                       int noofparticipantsMaleCFW, int noofparticipantsMaleNJPC, int noofparticipantsNJPCOther, Long noofparticipantsS2S,
+                       int noofparticipantsMaleCFW, int noofparticipantsMaleNJPC, int noofparticipantsNJPCOther,
+                       int noofparticipantsCFWOther, Long noofparticipantsS2S,
                        Long noofWorkingDays, Integer nos, String objectiveofCFWwork, String schoolAanganwadiLearningCenterName,
                        String state, String typeofInitiative, String otherObjective, String otherSubType,
                        String createdBy, String modifiedBy, String beforeImplementationPhotograph, String duringImplementationPhotograph,
@@ -219,6 +223,7 @@ public class ActivityDTO {
         this.noofparticipantsMaleCFW = noofparticipantsMaleCFW;
         this.noofparticipantsMaleNJPC = noofparticipantsMaleNJPC;
         this.noofparticipantsNJPCOther = noofparticipantsNJPCOther;
+        this.noofparticipantsCFWOther = noofparticipantsCFWOther;
         this.noofparticipantsS2S = noofparticipantsS2S;
         this.noofWorkingDays = noofWorkingDays;
         this.nos = nos;
@@ -484,13 +489,25 @@ public class ActivityDTO {
     public void setNoofparticipantsMaleNJPC(int noofparticipantsMaleNJPC) {
         this.noofparticipantsMaleNJPC = noofparticipantsMaleNJPC;
     }
+
     @JsonProperty("NoofparticipantsNJPCOther")
     public int getNoofparticipantsNJPCOther() {
         return noofparticipantsNJPCOther;
     }
+
     @JsonProperty("NoofparticipantsNJPCOther")
     public void setNoofparticipantsNJPCOther(int noofparticipantsNJPCOther) {
         this.noofparticipantsNJPCOther = noofparticipantsNJPCOther;
+    }
+
+    @JsonProperty("NoofparticipantsCFWOther")
+    public int getNoofparticipantsCFWOther() {
+        return noofparticipantsCFWOther;
+    }
+
+    @JsonProperty("NoofparticipantsCFWOther")
+    public void setNoofparticipantsCFWOther(int noofparticipantsCFWOther) {
+        this.noofparticipantsCFWOther = noofparticipantsCFWOther;
     }
 
     @JsonProperty("NoofparticipantsS2S")

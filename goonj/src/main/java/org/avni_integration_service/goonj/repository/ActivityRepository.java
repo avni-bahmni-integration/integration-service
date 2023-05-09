@@ -33,6 +33,9 @@ import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.
 public class ActivityRepository extends GoonjBaseRepository implements ActivityConstants {
 
     protected static final Logger logger = LoggerFactory.getLogger(ActivityRepository.class);
+    public static final String NUMBER_MALE_PARTICIPANTS = "526b0d5d-51cc-4004-8c12-7a6c71c6c516";
+    public static final String NUMBER_FEMALE_PARTICIPANTS = "2966afcc-2c07-44cf-8711-3fc23f52a6b5";
+    public static final String NUMBER_OTHER_PARTICIPANTS = "a043fea3-1658-4b5e-becd-ee55ab305a03";
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final IntegrationSystem integrationSystem;
 
@@ -100,15 +103,15 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
 
         activityDTO.setActivityConductedWithStudents((String) subject.getObservation(ACTIVITY_CONDUCTED_WITH_STUDENTS));
         activityDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_AANGANWADI_LEARNINGCENTER_NAME));
+        HashMap<String, Integer> noOfParticipants = (HashMap<String, Integer>) subject.getObservation("Number of participants");
 
         if (subject.getObservation(TYPE_OF_INITIATIVE).equals("CFW")) {
             /* Participation fields */
             activityDTO.setNoofWorkingDays((subject.getObservation(NUMBER_OF_WORKING_DAYS) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_WORKING_DAYS));
-            HashMap<String, Integer> noOfParticipants = (HashMap<String, Integer>) subject.getObservation("Number of participants");
-            activityDTO.setNoofparticipantsMaleCFW(noOfParticipants.get("526b0d5d-51cc-4004-8c12-7a6c71c6c516"));
-            activityDTO.setNoofparticipantsFemaleCFW(noOfParticipants.get("2966afcc-2c07-44cf-8711-3fc23f52a6b5"));
-            //activityDTO.setNoofparticipantsMaleCFW((subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_MALE));
-            //activityDTO.setNoofparticipantsFemaleCFW((subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_PARTICIPANTS_FEMALE));
+            activityDTO.setNoofparticipantsMaleCFW(getParticipantNos(noOfParticipants, NUMBER_MALE_PARTICIPANTS));
+            activityDTO.setNoofparticipantsFemaleCFW(getParticipantNos(noOfParticipants, NUMBER_FEMALE_PARTICIPANTS));
+            activityDTO.setNoofparticipantsCFWOther(getParticipantNos(noOfParticipants, NUMBER_OTHER_PARTICIPANTS));
+
             /* Activity description fields */
             activityDTO.setActivityCategory((String) subject.getObservation(ACTIVITY_CATEGORY));
             mapActivityType(activityDTO, subject);
@@ -142,10 +145,9 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         if (subject.getObservation(TYPE_OF_INITIATIVE).equals("NJPC")) {
             /* Participation fields */
             activityDTO.setNoofdaysofParticipationNJPC((subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
-            HashMap<String, Integer> noOfParticipants = (HashMap<String, Integer>) subject.getObservation("Number of participants");
-            activityDTO.setNoofparticipantsMaleNJPC(noOfParticipants.get("526b0d5d-51cc-4004-8c12-7a6c71c6c516"));
-            activityDTO.setNoofparticipantsFemaleNJPC(noOfParticipants.get("2966afcc-2c07-44cf-8711-3fc23f52a6b5"));
-            activityDTO.setNoofparticipantsNJPCOther(noOfParticipants.get("a043fea3-1658-4b5e-becd-ee55ab305a03"));
+            activityDTO.setNoofparticipantsMaleNJPC(getParticipantNos(noOfParticipants, NUMBER_MALE_PARTICIPANTS));
+            activityDTO.setNoofparticipantsFemaleNJPC(getParticipantNos(noOfParticipants, NUMBER_FEMALE_PARTICIPANTS));
+            activityDTO.setNoofparticipantsNJPCOther(getParticipantNos(noOfParticipants, NUMBER_OTHER_PARTICIPANTS));
             /* Photograph fields */
             List<String> njpcPhotographs = (ArrayList<String>) subject.getObservation(PHOTOGRAPH);
             activityDTO.setNjpcPhotograph(njpcPhotographs.stream().map(Object::toString).collect(Collectors.joining(";")));
@@ -154,6 +156,11 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setCreatedBy(subject.getCreatedBy());
         activityDTO.setModifiedBy(subject.getLastModifiedBy());
         return activityDTO;
+    }
+
+    private Integer getParticipantNos(HashMap<String, Integer> noOfParticipants, String participants) {
+        Object numberOfParticipants = noOfParticipants.get(participants);
+        return numberOfParticipants  == null ? 0 : (Integer) numberOfParticipants;
     }
 
     protected void mapActivityType(ActivityDTO activityDTO, AvniBaseContract subject) {
