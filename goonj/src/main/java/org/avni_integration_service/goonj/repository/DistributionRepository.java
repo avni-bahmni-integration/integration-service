@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -173,6 +174,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
 
     private List<DistributionActivities> fetchActivities(Subject subject) {
         ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) subject.getObservations().get(ACTIVITY_DETAILS);
+        if (md == null) return Collections.emptyList();
         return md.stream().map(this::createDistributionActivities)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
