@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -101,18 +102,19 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
     }
 
     public DispatchReceivedStatusLineItem createDispatchReceivedStatusLineItem(HashMap<String, Object> entry) {
-        long receivedQuantity;
+        int receivedQuantity;
         String dispatchStatusLineItemId = (String) entry.get(DISPATCH_STATUS_LINE_ITEM_ID);
         String typeOfMaterial = (String) entry.get(TYPE_OF_MATERIAL);
         String itemName = typeOfMaterial.equals(CONTRIBUTED_ITEM)?
                 (String) entry.get(CONTRIBUTED_ITEM_NAME):
                 (typeOfMaterial.equals(KIT) ? (String) entry.get(KIT_NAME) : (String) entry.get(MATERIAL_NAME));
-        long dispatchedQuantity = entry.get(QUANTITY_DISPATCHED) != null ? (Integer) entry.get(QUANTITY_DISPATCHED) : 0L;
+        int dispatchedQuantity = entry.get(QUANTITY_DISPATCHED) != null ?
+                (int) entry.get(QUANTITY_DISPATCHED) : 0;
         boolean quantityMatching = entry.get(QUANTITY_MATCHING).equals("Yes");
         if (quantityMatching) {
             receivedQuantity = dispatchedQuantity;
         } else {
-            receivedQuantity = entry.get(QUANTITY) != null ? (Integer) entry.get(QUANTITY) : 0L;
+            receivedQuantity = entry.get(QUANTITY) != null ? (int) entry.get(QUANTITY) : 0;
         }
         return new DispatchReceivedStatusLineItem(dispatchStatusLineItemId, mapTypeOfMaterial(entry), itemName,
                 dispatchStatusLineItemId, EMPTY_STRING, EMPTY_STRING, dispatchedQuantity, receivedQuantity);

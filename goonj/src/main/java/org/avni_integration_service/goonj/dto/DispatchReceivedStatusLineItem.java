@@ -30,9 +30,9 @@ public class DispatchReceivedStatusLineItem {
     @JsonProperty("ReceivingStatus")
     private String receivingStatus;
     @JsonProperty("DispatchedQuantity")
-    private Long dispatchedQuantity;
+    private int dispatchedQuantity;
     @JsonProperty("ReceivedQuantity")
-    private Long receivedQuantity;
+    private int receivedQuantity;
 
     /**
      * No args constructor for use in serialization
@@ -51,7 +51,7 @@ public class DispatchReceivedStatusLineItem {
      * @param dispatchedQuantity
      * @param receivedQuantity
      */
-    public DispatchReceivedStatusLineItem(String sourceId, String typeOfMaterial, String itemName, String dispatchStatusLineItem, String unit, String receivingStatus, Long dispatchedQuantity, Long receivedQuantity) {
+    public DispatchReceivedStatusLineItem(String sourceId, String typeOfMaterial, String itemName, String dispatchStatusLineItem, String unit, String receivingStatus, int dispatchedQuantity, int receivedQuantity) {
         super();
         this.sourceId = sourceId;
         this.typeOfMaterial = typeOfMaterial;
@@ -124,22 +124,22 @@ public class DispatchReceivedStatusLineItem {
     }
 
     @JsonProperty("DispatchedQuantity")
-    public Long getDispatchedQuantity() {
+    public int getDispatchedQuantity() {
         return dispatchedQuantity;
     }
 
     @JsonProperty("DispatchedQuantity")
-    public void setDispatchedQuantity(Long dispatchedQuantity) {
+    public void setDispatchedQuantity(int dispatchedQuantity) {
         this.dispatchedQuantity = dispatchedQuantity;
     }
 
     @JsonProperty("ReceivedQuantity")
-    public Long getReceivedQuantity() {
+    public int getReceivedQuantity() {
         return receivedQuantity;
     }
 
     @JsonProperty("ReceivedQuantity")
-    public void setReceivedQuantity(Long receivedQuantity) {
+    public void setReceivedQuantity(int receivedQuantity) {
         this.receivedQuantity = receivedQuantity;
     }
 

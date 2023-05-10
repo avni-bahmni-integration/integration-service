@@ -10,6 +10,7 @@ import org.avni_integration_service.goonj.config.GoonjMappingDbConstants;
 import org.avni_integration_service.goonj.domain.ActivityConstants;
 import org.avni_integration_service.goonj.dto.ActivityDTO;
 import org.avni_integration_service.goonj.dto.ActivityRequestDTO;
+import org.avni_integration_service.goonj.dto.DistributionActivities;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
@@ -127,9 +128,9 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             activityDTO.setLength((subject.getObservation(LENGTH) == null) ? 0L : (Integer) subject.getObservation(LENGTH));
             activityDTO.setDepthHeight((subject.getObservation(HEIGHT_DEPTH) == null) ? 0L : (Integer) subject.getObservation(HEIGHT_DEPTH));
             /* Photograph fields */
-            activityDTO.setBeforeImplementationPhotograph((String) subject.getObservation(BEFORE_IMPLEMENTATION_PHOTOGRAPH));
-            activityDTO.setDuringImplementationPhotograph((String) subject.getObservation(DURING_IMPLEMENTATION_PHOTOGRAPH));
-            activityDTO.setAfterImplementationPhotograph((String) subject.getObservation(AFTER_IMPLEMENTATION_PHOTOGRAPH));
+            activityDTO.setBeforeImplementationPhotograph(getPhotographStrings(BEFORE_IMPLEMENTATION_PHOTOGRAPH, subject));
+            activityDTO.setDuringImplementationPhotograph(getPhotographStrings(DURING_IMPLEMENTATION_PHOTOGRAPH, subject));
+            activityDTO.setAfterImplementationPhotograph(getPhotographStrings(AFTER_IMPLEMENTATION_PHOTOGRAPH, subject));
         }
         if (subject.getObservation(TYPE_OF_INITIATIVE).equals("S2S")) {
             /* Participation fields */
@@ -137,8 +138,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             activityDTO.setNoofdaysofParticipationS2S((subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION) == null) ? 0L : (Integer) subject.getObservation(NUMBER_OF_DAYS_OF_PARTICIPATION));
             activityDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_AANGANWADI_LEARNINGCENTER_NAME));
             /* Photograph fields */
-            List<String> s2sPhotograph = (ArrayList<String>) subject.getObservation(PHOTOGRAPH);
-            activityDTO.setS2sPhotograph(s2sPhotograph.stream().map(Object::toString).collect(Collectors.joining(";")));
+            activityDTO.setS2sPhotograph(getPhotographStrings(PHOTOGRAPH, subject));
             /* Activity description fields */
             activityDTO.setTypeOfSchool((String) subject.getObservation(TYPE_OF_SCHOOL));
         }
@@ -149,8 +149,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             activityDTO.setNoofparticipantsFemaleNJPC(getParticipantNos(noOfParticipants, NUMBER_FEMALE_PARTICIPANTS));
             activityDTO.setNoofparticipantsNJPCOther(getParticipantNos(noOfParticipants, NUMBER_OTHER_PARTICIPANTS));
             /* Photograph fields */
-            List<String> njpcPhotographs = (ArrayList<String>) subject.getObservation(PHOTOGRAPH);
-            activityDTO.setNjpcPhotograph(njpcPhotographs.stream().map(Object::toString).collect(Collectors.joining(";")));
+            activityDTO.setNjpcPhotograph(getPhotographStrings(PHOTOGRAPH, subject));
         }
          /* Other fields */
         activityDTO.setCreatedBy(subject.getCreatedBy());
@@ -171,5 +170,10 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
                 activityDTO.setActivityType(answerMapping.getIntSystemValue());
             }
         }
+    }
+    private String getPhotographStrings(String photo, Subject subject) {
+        List<String> images = (ArrayList<String>) subject.getObservation(photo);
+        return images.stream().map(
+                x -> "https://app.avniproject.org/web/media?url="  + x).collect(Collectors.joining(";"));
     }
 }
