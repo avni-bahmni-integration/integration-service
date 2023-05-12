@@ -173,6 +173,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
     }
     private String getPhotographStrings(String photo, Subject subject) {
         List<String> images = (ArrayList<String>) subject.getObservation(photo);
+        if (images == null) return null;
         return images.stream().map(
                 x -> "https://app.avniproject.org/web/media?url="  + x).collect(Collectors.joining(";"));
     }

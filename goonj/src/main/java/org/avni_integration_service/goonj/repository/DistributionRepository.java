@@ -166,7 +166,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         String inventoryExternalId = inventorySubject.getExternalId();
         String sourceId = getSourceId(subject.getUuid(), inventoryExternalId);
         String distributedTo = (String) entry.get(DISTRIBUTED_TO);
-        String unit = (String) entry.get(UNIT);
+        String unit = (String) inventorySubject.getObservation(UNIT);
         int noOfDistributions = (int) entry.get(NUMBER_OF_DISTRIBUTIONS);
         int quantity = (int) entry.get(QUANTITY);
         return new DistributionLine(sourceId, distributedTo, inventoryExternalId, noOfDistributions, quantity, unit);
