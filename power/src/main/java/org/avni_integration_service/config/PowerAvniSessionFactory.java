@@ -1,6 +1,7 @@
 package org.avni_integration_service.config;
 
 import org.avni_integration_service.avni.client.AvniSession;
+import org.avni_integration_service.avni.client.IdpType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

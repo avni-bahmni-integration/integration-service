@@ -1,6 +1,6 @@
-package org.avni_integration_service.avni.domain;
+package org.avni_integration_service.avni.domain.auth;
 
-public class CognitoDetailsResponse {
+public class CognitoDetails {
     private String poolId;
     private String clientId;
 

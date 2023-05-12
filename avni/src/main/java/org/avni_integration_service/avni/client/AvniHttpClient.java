@@ -1,7 +1,7 @@
 package org.avni_integration_service.avni.client;
 
 import org.apache.log4j.Logger;
-import org.avni_integration_service.avni.domain.CognitoDetailsResponse;
+import org.avni_integration_service.avni.domain.auth.IdpDetailsResponse;
 import org.avni_integration_service.util.ObjectJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -122,9 +122,9 @@ public class AvniHttpClient {
 
         RestTemplate restTemplate = new RestTemplate();
         logger.debug("Getting cognito details");
-        ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(getAvniSession().apiUrl("/cognito-details"), CognitoDetailsResponse.class);
-        CognitoDetailsResponse cognitoDetails = response.getBody();
-        return getAvniSession().fetchIdToken(cognitoDetails);
+        ResponseEntity<IdpDetailsResponse> response = restTemplate.getForEntity(getAvniSession().apiUrl("/idp-details"), IdpDetailsResponse.class);
+        IdpDetailsResponse idpDetailsResponse = response.getBody();
+        return getAvniSession().fetchIdToken(idpDetailsResponse);
     }
 
     public String getUri(String url, HashMap<String, String> queryParams) {

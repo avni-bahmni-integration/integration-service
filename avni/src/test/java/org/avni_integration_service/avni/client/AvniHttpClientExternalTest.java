@@ -22,15 +22,6 @@ class AvniHttpClientExternalTest {
     }
 
     @Test
-    @Disabled
-    void refreshAuthToken() {
-        avniHttpClient.fetchAuthToken();
-        avniHttpClient.get("/concept", HashMap.class);
-        avniConnectionDetails.refreshToken();
-        avniHttpClient.get("/concept", HashMap.class);
-    }
-
-    @Test
     void clearAuthInformation() {
         avniHttpClient.fetchAuthToken();
         avniHttpClient.get("/concept", HashMap.class);

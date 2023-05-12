@@ -1,6 +1,7 @@
 package org.avni_integration_service.bahmni.client;
 
 import org.avni_integration_service.avni.client.AvniSession;
+import org.avni_integration_service.avni.client.IdpType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,10 @@ public class BahmniAvniSessionFactory {
     @Value("${bahmni.avni.authentication.enabled}")
     private boolean authEnabled;
 
+    @Value("${bahmni.avni.idp.type}")
+    private String idpType;
+
     public AvniSession createSession() {
-        return new AvniSession(apiUrl, implUser, implPassword, authEnabled);
+        return new AvniSession(apiUrl, implUser, implPassword, authEnabled, IdpType.valueOf(idpType));
     }
 }
