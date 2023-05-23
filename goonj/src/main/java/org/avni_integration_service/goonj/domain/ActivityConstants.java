@@ -7,6 +7,7 @@ public interface ActivityConstants {
     String DISTRICT = "District";
     String BLOCK = "Block";
     String VILLAGE = "Village";
+    String TOLA_MOHALLA = "Tola / Mohalla";
     String ACCOUNT_NAME = "Account  name";
     String TYPE_OF_INITIATIVE = "Type of initiative";
     String ACTIVITY_START_DATE = "Activity Start Date";

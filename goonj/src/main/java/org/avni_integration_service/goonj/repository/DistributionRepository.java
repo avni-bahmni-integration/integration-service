@@ -63,7 +63,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
 
     private DistributionRequestDTO convertSubjectToDistributionRequest(Subject subject) {
         DistributionRequestDTO requestDTO = new DistributionRequestDTO();
-        requestDTO.setDistributions(Arrays.asList(createDistributionRequest(subject)));
+        requestDTO.setDistributions(List.of(createDistributionRequest(subject)));
         return requestDTO;
     }
 
@@ -81,7 +81,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setDistrict(location.get(DISTRICT));
         distributionDTO.setBlock(location.get(BLOCK));
         distributionDTO.setLocalityVillageName(location.get(VILLAGE));
-        distributionDTO.setTolaMohalla(location.get(TOLA_MOHALLA));
+        distributionDTO.setTolaMohalla((String) subject.getObservation(TOLA_MOHALLA));
         /* Distribution Account fields */
         distributionDTO.setNameOfAccount((String) subject.getObservation(ACCOUNT_NAME));
         /* Distribution Related fields*/
@@ -119,18 +119,19 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
             distributionDTO.setApprovedOrVerifiedBy((String) subject.getObservation(APPROVED_OR_VERIFIED_BY));
             distributionDTO.setTeamOrExternal((String) subject.getObservation(TEAM_OR_EXTERNAL));
             distributionDTO.setNameOfPOC((String) subject.getObservation(POC_NAME));
-            distributionDTO.setPocContactNo((String) subject.getObservation(POC_CONTACT_NO));
+            Map<String, Object> contactObs = (Map<String, Object>) subject.getObservation(POC_CONTACT_NO);
+            distributionDTO.setPocContactNo((String) contactObs.get("phoneNumber"));
             distributionDTO.setReachedTo((String) subject.getObservation(REACHED_TO));
             distributionDTO.setAnyOtherDocumentSubmitted((String) subject.getObservation(ANY_OTHER_DOCUMENT_SUBMITTED));
             if (subject.getObservation(REACHED_TO).equals("Individual")) {
                 distributionDTO.setName((String) subject.getObservation(NAME));
                 distributionDTO.setGender((String) subject.getObservation(GENDER));
                 distributionDTO.setFatherMotherName((String) subject.getObservation(FATHER_MOTHER_NAME));
-                distributionDTO.setAge((String) subject.getObservation(AGE));
-                distributionDTO.setPhoneNumber((String) subject.getObservation(PHONE_NUMBER));
+                distributionDTO.setAge((Integer) subject.getObservation(AGE));
+                distributionDTO.setPhoneNumber((String) ((Map<String, Object>) subject.getObservation(POC_CONTACT_NO)).get("phoneNumber"));
                 distributionDTO.setPresentOccupation((String) subject.getObservation(PRESENT_OCCUPATION));
-                distributionDTO.setNoOfFamilyMember((String) subject.getObservation(NUMBER_OF_FAMILY_MEMBERS));
-                distributionDTO.setMonthlyIncome((String) subject.getObservation(MONTHLY_INCOME));
+                distributionDTO.setNoOfFamilyMember((int) subject.getObservation(NUMBER_OF_FAMILY_MEMBERS));
+                distributionDTO.setMonthlyIncome((int) subject.getObservation(MONTHLY_INCOME));
             }
             if (subject.getObservation(REACHED_TO).equals("Group")) {
                 distributionDTO.setGroupName((String) subject.getObservation(GROUP_NAME));

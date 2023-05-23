@@ -82,7 +82,6 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
     private ActivityDTO createActivityRequest(Subject subject) {
         ActivityDTO activityDTO = new ActivityDTO();
         /* Activity ID and relationship fields */
-        // Todo: Distribution should be mapped!
         activityDTO.setSourceId(subject.getUuid());
         /* Activity location fields */
         HashMap<String, String> location = (HashMap<String, String>) subject.get(LOCATION);
@@ -90,6 +89,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setDistrict(location.get(DISTRICT));
         activityDTO.setBlock(location.get(BLOCK));
         activityDTO.setLocalityVillageName(location.get(VILLAGE));
+        activityDTO.setTolaMohalla((String) subject.getObservation(TOLA_MOHALLA));
         /* Activity Account fields */
         activityDTO.setnameOfAccount((String) subject.getObservation(ACCOUNT_NAME));
         /* Activity description fields */

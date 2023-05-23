@@ -79,7 +79,7 @@ public class DistributionDTO {
     @JsonProperty("gender")
     private String gender;
     @JsonProperty("age")
-    private String age;
+    private int age;
     @JsonProperty("father_MotherName")
     private String fatherMotherName;
     @JsonProperty("phoneNumber")
@@ -87,9 +87,9 @@ public class DistributionDTO {
     @JsonProperty("presentOccupation")
     private String presentOccupation;
     @JsonProperty("monthlyIncome")
-    private String monthlyIncome;
+    private int monthlyIncome;
     @JsonProperty("noOfFamilyMember")
-    private String noOfFamilyMember;
+    private int noOfFamilyMember;
     @JsonProperty("centreName")
     private String centreName;
     @JsonProperty("shareABriefProvidedMaterial")
@@ -170,9 +170,9 @@ public class DistributionDTO {
                            String surveyedBy, String monitoredByOrDistributor, String approvedOrVerifiedBy,
                            String teamOrExternal, String nameOfPOC, String pocContactNo, String reachedTo,
                            String totalNumberOfReceivers, String groupName, String anyOtherDocumentSubmitted,
-                           String reportsCrosschecked, String name, String gender, String age,
+                           String reportsCrosschecked, String name, String gender, int age,
                            String fatherMotherName, String phoneNumber, String presentOccupation,
-                           String monthlyIncome, String noOfFamilyMember, String centreName,
+                           int monthlyIncome, int noOfFamilyMember, String centreName,
                            String shareABriefProvidedMaterial, String howtheMaterialMakesaDifference,
                            String materialGivenFor, String noOfIndividualReached, String noOfFamiliesReached,
                            String remarks, String TypeOfSchool, String SchoolAanganwadiLearningCenterName) {
@@ -465,11 +465,11 @@ public class DistributionDTO {
         this.gender = gender;
     }
     @JsonProperty("age")
-    public String getAge() {
+    public int getAge() {
         return age;
     }
     @JsonProperty("age")
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
     @JsonProperty("father_MotherName")
@@ -497,19 +497,19 @@ public class DistributionDTO {
         this.presentOccupation = presentOccupation;
     }
     @JsonProperty("monthlyIncome")
-    public String getMonthlyIncome() {
+    public int getMonthlyIncome() {
         return monthlyIncome;
     }
     @JsonProperty("monthlyIncome")
-    public void setMonthlyIncome(String monthlyIncome) {
+    public void setMonthlyIncome(int monthlyIncome) {
         this.monthlyIncome = monthlyIncome;
     }
     @JsonProperty("noOfFamilyMember")
-    public String getNoOfFamilyMember() {
+    public int getNoOfFamilyMember() {
         return noOfFamilyMember;
     }
     @JsonProperty("noOfFamilyMember")
-    public void setNoOfFamilyMember(String noOfFamilyMember) {
+    public void setNoOfFamilyMember(int noOfFamilyMember) {
         this.noOfFamilyMember = noOfFamilyMember;
     }
     @JsonProperty("centreName")

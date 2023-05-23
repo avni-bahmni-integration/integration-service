@@ -14,6 +14,7 @@ import java.util.ArrayList;
         "District",
         "Block",
         "LocalityVillageName",
+        "tolaMohalla",
         "CreatedBy",
         "ModifiedBy",
         "nameOfAccount",
@@ -88,6 +89,8 @@ public class ActivityDTO {
     private Long length;
     @JsonProperty("LocalityVillageName")
     private String localityVillageName;
+    @JsonProperty("tolaMohalla")
+    private String tolaMohalla;
     @JsonProperty("MeasurementType")
     private String measurementType;
     @JsonProperty("NoofdaysofParticipationNJPC")
@@ -148,6 +151,7 @@ public class ActivityDTO {
      * @param noofparticipantsFemaleNJPC
      * @param schoolAanganwadiLearningCenterName
      * @param localityVillageName
+     * @param tolaMohalla
      * @param noofdaysofParticipationNJPC
      * @param noofWorkingDays
      * @param noofparticipantsS2S
@@ -188,7 +192,7 @@ public class ActivityDTO {
                        String typeOfSchool, String s2sPhotograph, String njpcPhotograph, String activityEndDate,
                        String activityStartDate, String activitySubType, String activityType, String block,
                        Long breadth, Long depthHeight, Long diameter, String district, Long length,
-                       String localityVillageName, String measurementType, Long noofdaysofParticipationNJPC,
+                       String localityVillageName, String tolaMohalla, String measurementType, Long noofdaysofParticipationNJPC,
                        Long noofdaysofParticipationS2S, int noofparticipantsFemaleCFW, int noofparticipantsFemaleNJPC,
                        int noofparticipantsMaleCFW, int noofparticipantsMaleNJPC, int noofparticipantsNJPCOther,
                        int noofparticipantsCFWOther, Long noofparticipantsS2S,
@@ -215,6 +219,7 @@ public class ActivityDTO {
         this.district = district;
         this.length = length;
         this.localityVillageName = localityVillageName;
+        this.tolaMohalla = tolaMohalla;
         this.measurementType = measurementType;
         this.noofdaysofParticipationNJPC = noofdaysofParticipationNJPC;
         this.noofdaysofParticipationS2S = noofdaysofParticipationS2S;
@@ -420,6 +425,16 @@ public class ActivityDTO {
         this.localityVillageName = localityVillageName;
     }
 
+    @JsonProperty("tolaMohalla")
+    public String getTolaMohalla() {
+        return tolaMohalla;
+    }
+
+    @JsonProperty("tolaMohalla")
+    public void setTolaMohalla(String tolaMohalla) {
+        this.tolaMohalla = tolaMohalla;
+    }
+
     @JsonProperty("MeasurementType")
     public String getMeasurementType() {
         return measurementType;
@@ -604,6 +619,7 @@ public class ActivityDTO {
     public String getCreatedBy() {
         return createdBy;
     }
+
     @JsonProperty("CreatedBy")
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
@@ -618,26 +634,32 @@ public class ActivityDTO {
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
+
     @JsonProperty("BeforeImplementationPhotograph")
     public String getBeforeImplementationPhotograph() {
         return beforeImplementationPhotograph;
     }
+
     @JsonProperty("BeforeImplementationPhotograph")
     public void setBeforeImplementationPhotograph(String beforeImplementationPhotograph) {
         this.beforeImplementationPhotograph = beforeImplementationPhotograph;
     }
+
     @JsonProperty("DuringImplementationPhotograph")
     public String getDuringImplementationPhotograph() {
         return duringImplementationPhotograph;
     }
+
     @JsonProperty("DuringImplementationPhotograph")
     public void setDuringImplementationPhotograph(String duringImplementationPhotograph) {
         this.duringImplementationPhotograph = duringImplementationPhotograph;
     }
+
     @JsonProperty("AfterImplementationPhotograph")
     public String getAfterImplementationPhotograph() {
         return afterImplementationPhotograph;
     }
+
     @JsonProperty("AfterImplementationPhotograph")
     public void setAfterImplementationPhotograph(String afterImplementationPhotograph) {
         this.afterImplementationPhotograph = afterImplementationPhotograph;
