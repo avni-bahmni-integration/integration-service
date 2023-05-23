@@ -49,7 +49,7 @@ public class Dispatch implements GoonjEntity {
         Subject subject = new Subject();
         subject.setSubjectType("Dispatch");
         Date dispatchDate = DateTimeUtil.convertToDateFromGoonjDateString(MapUtil.getString(DispatchDateField, response));
-        dispatchDate = DateTimeUtil.offsetTimeZone(dispatchDate, DateTimeUtil.IST, DateTimeUtil.UTC);
+//        dispatchDate = DateTimeUtil.offsetTimeZone(dispatchDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         subject.setRegistrationDate(dispatchDate);
         subject.setAddress(MapUtil.getString(DispatchStateField, response) +", "+MapUtil.getString(DispatchDistrictField, response));
         subject.setExternalId(MapUtil.getString(DispatchStatusIdField, response));
