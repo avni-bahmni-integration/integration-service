@@ -13,18 +13,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component("InventoryRepository")
 public class InventoryRepository extends GoonjBaseRepository {
     @Autowired
-    public InventoryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                               @Qualifier("GoonjRestTemplate")RestTemplate restTemplate,
-                               GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
-        super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Inventory.name(), avniHttpClient);
+    public InventoryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository, @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
+        super(integratingEntityStatusRepository, restTemplate, goonjConfig, GoonjEntityType.Inventory.name(), avniHttpClient);
     }
 
     @Override
@@ -34,7 +30,7 @@ public class InventoryRepository extends GoonjBaseRepository {
 
     @Override
     public List<String> fetchDeletionEvents() {
-        throw new UnsupportedOperationException();
+        return Arrays.stream(getInventoryItemsDTOS(getCutOffDateTime()).getDeletedItemsDTOS()).filter(obj -> obj instanceof String).map(obj -> (String) obj).collect(Collectors.toList());
     }
 
     @Override
@@ -48,7 +44,7 @@ public class InventoryRepository extends GoonjBaseRepository {
     }
 
     public InventoryResponseDTO getInventoryItemsDTOS(Date dateTime) {
-        return super.getResponse( dateTime, "ImplementationInventoryService/getImplementationInventories", InventoryResponseDTO.class, "dateTimeStamp");
+        return super.getResponse(dateTime, "ImplementationInventoryService/getImplementationInventories", InventoryResponseDTO.class, "dateTimeStamp");
     }
 
     public HashMap<String, Object> getInventoryItemsDTO(String uuid) {

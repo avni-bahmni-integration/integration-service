@@ -27,6 +27,9 @@ public class InventoryWorker extends BaseGoonjWorker {
 
     @Override
     public void processDeletions() {
-        throw new UnsupportedOperationException();
+        List<String> deletedItems = fetchDeletionEvents();
+        for (String deletedDS : deletedItems) {
+            eventWorker.processDeletion(deletedDS);
+        }
     }
 }

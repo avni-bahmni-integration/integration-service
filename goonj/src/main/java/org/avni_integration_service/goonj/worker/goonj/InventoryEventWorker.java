@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class InventoryEventWorker extends GoonjEventWorker implements ErrorRecor
 
     @Override
     public void processDeletion(String deletedEntity) {
-        throw new UnsupportedOperationException();
+        processInventoryDeletion(deletedEntity);
     }
 
     @Override
@@ -80,6 +81,18 @@ public class InventoryEventWorker extends GoonjEventWorker implements ErrorRecor
         if (StringUtils.hasText(lastModifiedDate)) {
             intEnt.setReadUptoDateTime(DateTimeUtil.convertToDate(lastModifiedDate));
             integratingEntityStatusRepository.save(intEnt);
+        }
+    }
+
+    private void processInventoryDeletion(String deletedEntity) {
+        try {
+            logger.debug(String.format("Processing inventory deletion: externalId %s", deletedEntity));
+            avniSubjectRepository.delete(deletedEntity);
+        } catch (HttpClientErrorException.NotFound e) {
+            logger.error(String.format("Failed to delete non-existent inventory: externalId %s", deletedEntity));
+        } catch (Exception e) {
+            logger.error(String.format("Failed to delete inventory: externalId %s", deletedEntity));
+            throw e;
         }
     }
 }

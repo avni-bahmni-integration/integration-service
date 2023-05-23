@@ -152,6 +152,7 @@ public class AvniGoonjMainJob {
             if (hasTask(tasks, IntegrationTask.GoonjInventory)) {
                 logger.info("Processing GoonjInventory");
                 inventoryWorker.process();
+                inventoryWorker.processDeletions();
             }
         } catch (Throwable e) {
             logger.error("Failed processInventory", e);
