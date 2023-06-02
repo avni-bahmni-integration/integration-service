@@ -101,8 +101,10 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         Date activityStartDate = DateTimeUtil.convertToDate((String) subject.getObservation(ACTIVITY_START_DATE));
         activityStartDate = DateTimeUtil.offsetTimeZone(activityStartDate, DateTimeUtil.UTC, DateTimeUtil.IST);
         activityDTO.setActivityStartDate(DateTimeUtil.formatDate(activityStartDate));
-
-        activityDTO.setActivityConductedWithStudents((String) subject.getObservation(ACTIVITY_CONDUCTED_WITH_STUDENTS));
+        List<String> studentActivities = (ArrayList<String>) subject.getObservation(ACTIVITY_CONDUCTED_WITH_STUDENTS);
+        if (studentActivities != null) {
+            activityDTO.setActivityConductedWithStudents(String.join(";", studentActivities));
+        }
         activityDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_AANGANWADI_LEARNINGCENTER_NAME));
         HashMap<String, Integer> noOfParticipants = (HashMap<String, Integer>) subject.getObservation("Number of participants");
 
@@ -151,7 +153,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             /* Photograph fields */
             activityDTO.setNjpcPhotograph(getPhotographStrings(PHOTOGRAPH, subject));
         }
-         /* Other fields */
+        /* Other fields */
         activityDTO.setCreatedBy(subject.getCreatedBy());
         activityDTO.setModifiedBy(subject.getLastModifiedBy());
         return activityDTO;
@@ -159,7 +161,7 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
 
     private Integer getParticipantNos(HashMap<String, Integer> noOfParticipants, String participants) {
         Object numberOfParticipants = noOfParticipants.get(participants);
-        return numberOfParticipants  == null ? 0 : (Integer) numberOfParticipants;
+        return numberOfParticipants == null ? 0 : (Integer) numberOfParticipants;
     }
 
     protected void mapActivityType(ActivityDTO activityDTO, AvniBaseContract subject) {
@@ -171,10 +173,16 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             }
         }
     }
+
     private String getPhotographStrings(String photo, Subject subject) {
-        List<String> images = (ArrayList<String>) subject.getObservation(photo);
-        if (images == null) return null;
-        return images.stream().map(
-                x -> "https://app.avniproject.org/web/media?url="  + x).collect(Collectors.joining(";"));
+        if (subject.getObservation(photo) instanceof ArrayList) {
+            List<String> images = (ArrayList<String>) subject.getObservation(photo);
+            if (images == null) return null;
+            return images.stream().map(
+                    x -> "https://app.avniproject.org/web/media?url=" + x).collect(Collectors.joining(";"));
+        } else {
+            String image = (String) subject.getObservation(photo);
+            return "https://app.avniproject.org/web/media?url=" + image;
+        }
     }
 }
