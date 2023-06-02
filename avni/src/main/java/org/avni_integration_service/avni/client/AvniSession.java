@@ -61,7 +61,7 @@ public class AvniSession {
         if (authenticationResultType != null && authenticationResultType.getIdToken() != null && !authenticationResultType.getIdToken().isEmpty()) {
             return authenticationResultType.getIdToken();
         } else if (keycloakResponse != null)
-            return keycloakResponse.getIdToken();
+            return keycloakResponse.getAccessToken();
         return null;
     }
 
@@ -92,7 +92,7 @@ public class AvniSession {
                             entity,
                             KeycloakResponse.class);
             keycloakResponse = responseEntity.getBody();
-            return keycloakResponse.getIdToken();
+            return keycloakResponse.getAccessToken();
         }
     }
 
