@@ -15,8 +15,7 @@ public class AvniPowerMainJob {
 
     private static final Logger logger = Logger.getLogger(AvniPowerMainJob.class);
 
-    @Value("${power.healthcheck.slug}")
-    private String healthCheckSlug;
+    private static final String HEALTHCHECK_SLUG = "power";
 
     @Autowired
     private Bugsnag bugsnag;
@@ -37,9 +36,9 @@ public class AvniPowerMainJob {
         try {
             avniHttpClient.setAvniSession(powerAvniSessionFactory.createSession());
             callDetailsWorker.fetchCallDetails();
-            healthCheckService.success(healthCheckSlug);
+            healthCheckService.success(HEALTHCHECK_SLUG);
         } catch (Throwable e) {
-            healthCheckService.failure(healthCheckSlug);
+            healthCheckService.failure(HEALTHCHECK_SLUG);
             logger.error("Failed", e);
             bugsnag.notify(e);
         }

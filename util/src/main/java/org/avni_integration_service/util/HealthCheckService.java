@@ -17,8 +17,8 @@ public class HealthCheckService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${healthcheck.api.key}")
-    private String healthCheckApiKey;
+    @Value("${healthcheck.ping.key}")
+    private String healthCheckPingKey;
 
     @Autowired
     public HealthCheckService(RestTemplate restTemplate) {
@@ -27,8 +27,8 @@ public class HealthCheckService {
 
     private void ping(String slug, String status) {
         try {
-            if (!(slug.isEmpty() ||  healthCheckApiKey.isEmpty()))
-                restTemplate.exchange(URI.create(String.format("%s/%s/%s/%s", PING_BASE_URL, healthCheckApiKey, slug, status)), HttpMethod.GET, null, String.class);
+            if (!healthCheckPingKey.equals("dummy"))
+                restTemplate.exchange(URI.create(String.format("%s/%s/%s/%s", PING_BASE_URL, healthCheckPingKey, slug, status)), HttpMethod.GET, null, String.class);
         }
         catch(Exception e) {
             logger.error("Health check ping failed:", e);

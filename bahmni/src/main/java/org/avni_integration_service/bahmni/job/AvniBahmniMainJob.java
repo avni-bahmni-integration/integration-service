@@ -24,10 +24,9 @@ import java.util.List;
 @Component
 public class AvniBahmniMainJob {
     private static final Logger logger = Logger.getLogger(AvniBahmniMainJob.class);
-    
-    @Value("${bahmni.healthcheck.slug}")
-    private String healthCheckSlug;
 
+    private static final String HEALTHCHECK_SLUG = "bahmni";
+    
     @Autowired
     private PatientWorker patientWorker;
     @Autowired
@@ -129,9 +128,9 @@ public class AvniBahmniMainJob {
                 logger.info("Processing BahmniVisitDateFix");
                 fixBahmniVisitAndEncounterDates();
             }
-            healthCheckService.success(healthCheckSlug);
+            healthCheckService.success(HEALTHCHECK_SLUG);
         } catch (Exception e) {
-            healthCheckService.failure(healthCheckSlug);
+            healthCheckService.failure(HEALTHCHECK_SLUG);
             logger.error("Failed", e);
             bugsnag.notify(e);
         }
