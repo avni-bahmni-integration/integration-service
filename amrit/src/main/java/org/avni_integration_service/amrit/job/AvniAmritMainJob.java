@@ -18,9 +18,9 @@ import java.util.List;
 public class AvniAmritMainJob {
 
     private static final Logger logger = Logger.getLogger(AvniAmritMainJob.class);
-
-    @Value("${healthcheck.mainJob}")
-    private String mainJobId;
+    
+    @Value("${amrit.healthcheck.slug}")
+    private String healthCheckSlug;
 
     @Autowired
     private Bugsnag bugsnag;
@@ -62,11 +62,11 @@ public class AvniAmritMainJob {
             processBornBirth(tasks);
             processCBAC(tasks);
             processErrors(tasks);
+            healthCheckService.success(healthCheckSlug);
         } catch (Throwable e) {
+            healthCheckService.failure(healthCheckSlug);
             logger.error("Failed AvniAmritMainJob", e);
             bugsnag.notify(e);
-        } finally {
-            healthCheckService.verify(mainJobId);
         }
     }
 

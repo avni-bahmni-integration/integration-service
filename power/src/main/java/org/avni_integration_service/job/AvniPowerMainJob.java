@@ -15,8 +15,8 @@ public class AvniPowerMainJob {
 
     private static final Logger logger = Logger.getLogger(AvniPowerMainJob.class);
 
-    @Value("${healthcheck.mainJob}")
-    private String mainJobId;
+    @Value("${power.healthcheck.slug}")
+    private String healthCheckSlug;
 
     @Autowired
     private Bugsnag bugsnag;
@@ -35,15 +35,13 @@ public class AvniPowerMainJob {
 
     public void execute() {
         try {
-            logger.info("Starting the Exotel call sync into Avni");
             avniHttpClient.setAvniSession(powerAvniSessionFactory.createSession());
             callDetailsWorker.fetchCallDetails();
+            healthCheckService.success(healthCheckSlug);
         } catch (Throwable e) {
+            healthCheckService.failure(healthCheckSlug);
             logger.error("Failed", e);
             bugsnag.notify(e);
-        } finally {
-            healthCheckService.verify(mainJobId);
         }
     }
-
 }

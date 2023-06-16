@@ -62,7 +62,7 @@ public class AmritTokenService {
             int statusCode = (int) body.get("statusCode");
             if(statusCode != 200) {
                 throw new RuntimeException(String.format("Error fetching token, Status code: %d, Error Status: %s, Error message: %s", statusCode,
-                        (String) body.get("status"),(String) body.get("errorMessage")));
+                        (String) body.get("status"),(String) body.get("x")));
             }
             Map map = (Map) body.get("data");
             return (String) map.get("key");
