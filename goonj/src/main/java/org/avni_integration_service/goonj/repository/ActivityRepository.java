@@ -41,9 +41,6 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final IntegrationSystem integrationSystem;
 
-    @Value("${goonj.sf.mediaUrlPrefix}")
-    private String mediaUrl;
-
     @Autowired
     public ActivityRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                               @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig,
@@ -183,10 +180,10 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             List<String> images = (ArrayList<String>) subject.getObservation(photo);
             if (images == null) return null;
             return images.stream().map(
-                    x -> mediaUrl + x).collect(Collectors.joining(";"));
+                    x -> goonjConfig.getMediaUrl() + x).collect(Collectors.joining(";"));
         } else {
             String image = (String) subject.getObservation(photo);
-            return mediaUrl + image;
+            return goonjConfig.getMediaUrl() + image;
         }
     }
 }

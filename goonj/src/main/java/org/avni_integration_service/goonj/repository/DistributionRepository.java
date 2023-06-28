@@ -30,9 +30,6 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     public static final String WEB_MEDIA = "/web/media";
     private AvniSubjectRepository avniSubjectRepository;
 
-    @Value("${goonj.sf.mediaUrlPrefix}")
-    private String mediaUrl;
-
     @Autowired
     public DistributionRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                   @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
@@ -95,7 +92,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         List<String> images = subject.getObservation(IMAGES) == null ? new ArrayList<>() : (ArrayList<String>) subject.getObservation(IMAGES);
         distributionDTO.setPhotographInformation(images.stream().map(
-                x -> mediaUrl  + x).collect(Collectors.joining(";")));
+                x -> goonjConfig.getMediaUrl()  + x).collect(Collectors.joining(";")));
         List<DistributionLine> d = fetchDistributionLineItems(subject);
         distributionDTO.setDistributionLines(d);
         List<DistributionActivities> activities = fetchActivities(subject);
