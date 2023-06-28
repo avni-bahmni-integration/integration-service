@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -39,6 +40,9 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
     public static final String NUMBER_OTHER_PARTICIPANTS = "a043fea3-1658-4b5e-becd-ee55ab305a03";
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final IntegrationSystem integrationSystem;
+
+    @Value("${goonj.sf.mediaUrlPrefix}")
+    private String mediaUrl;
 
     @Autowired
     public ActivityRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
@@ -179,10 +183,10 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             List<String> images = (ArrayList<String>) subject.getObservation(photo);
             if (images == null) return null;
             return images.stream().map(
-                    x -> "https://app.avniproject.org/web/media?url=" + x).collect(Collectors.joining(";"));
+                    x -> mediaUrl + x).collect(Collectors.joining(";"));
         } else {
             String image = (String) subject.getObservation(photo);
-            return "https://app.avniproject.org/web/media?url=" + image;
+            return mediaUrl + image;
         }
     }
 }

@@ -12,6 +12,7 @@ import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +29,9 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
 
     public static final String WEB_MEDIA = "/web/media";
     private AvniSubjectRepository avniSubjectRepository;
+
+    @Value("${goonj.sf.mediaUrlPrefix}")
+    private String mediaUrl;
 
     @Autowired
     public DistributionRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
@@ -91,7 +95,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         List<String> images = subject.getObservation(IMAGES) == null ? new ArrayList<>() : (ArrayList<String>) subject.getObservation(IMAGES);
         distributionDTO.setPhotographInformation(images.stream().map(
-                x -> "https://app.avniproject.org/web/media?url="  + x).collect(Collectors.joining(";")));
+                x -> mediaUrl  + x).collect(Collectors.joining(";")));
         List<DistributionLine> d = fetchDistributionLineItems(subject);
         distributionDTO.setDistributionLines(d);
         List<DistributionActivities> activities = fetchActivities(subject);
