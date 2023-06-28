@@ -38,6 +38,9 @@ public class GoonjConfig {
     @Value("${goonj.sf.tokenExpiry}")
     private int tokenExpiry;
 
+    @Value("${goonj.sf.mediaUrlPrefix}")
+    private String mediaUrl;
+
     @Autowired
     private TokenService tokenService;
 
@@ -70,6 +73,10 @@ public class GoonjConfig {
 
     public int getTokenExpiry() {
         return tokenExpiry;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
     }
 
     @Bean("GoonjRestTemplate")
