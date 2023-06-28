@@ -21,7 +21,7 @@ public abstract class GoonjBaseRepository {
     private static final String DELETION_SOURCE_ID = "sourceId";
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final RestTemplate goonjRestTemplate;
-    private final GoonjConfig goonjConfig;
+    protected final GoonjConfig goonjConfig;
     private final String entityType;
     protected final AvniHttpClient avniHttpClient;
 
