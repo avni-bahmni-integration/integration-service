@@ -25,8 +25,7 @@ import java.util.List;
 public class AvniGoonjMainJob {
     private static final Logger logger = Logger.getLogger(AvniGoonjMainJob.class);
 
-    @Value("${healthcheck.mainJob}")
-    private String mainJobId;
+    private static final String HEALTHCHECK_SLUG = "goonj";
 
     @Autowired
     private DemandWorker demandWorker;
@@ -79,11 +78,11 @@ public class AvniGoonjMainJob {
             processDispatchReceiptAndDistribution(tasks);
             processInventory(tasks);
             processErrors(tasks);
+            healthCheckService.success(HEALTHCHECK_SLUG);
         } catch (Throwable e) {
+            healthCheckService.failure(HEALTHCHECK_SLUG);
             logger.error("Failed AvniGoonjMainJob", e);
             bugsnag.notify(e);
-        } finally {
-            healthCheckService.verify(mainJobId);
         }
     }
 
