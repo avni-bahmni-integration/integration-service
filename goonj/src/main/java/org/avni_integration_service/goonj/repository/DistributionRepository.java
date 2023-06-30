@@ -83,8 +83,14 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         if (location.get(BLOCK).equals("Other")) {
             distributionDTO.setBlock((String) subject.getObservation(OTHER_BLOCK));
         }
+        else {
+            distributionDTO.setBlock(location.get(BLOCK));
+        }
         if (location.get(VILLAGE).equals("Other")) {
             distributionDTO.setLocalityVillageName((String) subject.getObservation(OTHER_VILLAGE));
+        }
+        else {
+            distributionDTO.setLocalityVillageName(location.get(VILLAGE));
         }
         distributionDTO.setTolaMohalla((String) subject.getObservation(TOLA_MOHALLA));
         /* Distribution Account fields */

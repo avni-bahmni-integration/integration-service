@@ -91,8 +91,14 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         if (location.get(BLOCK).equals("Other")) {
             activityDTO.setBlock((String) subject.getObservation(OTHER_BLOCK));
         }
+        else {
+            activityDTO.setBlock(location.get(BLOCK));
+        }
         if (location.get(VILLAGE).equals("Other")) {
             activityDTO.setLocalityVillageName((String) subject.getObservation(OTHER_VILLAGE));
+        }
+        else {
+            activityDTO.setLocalityVillageName(location.get(VILLAGE));
         }
         activityDTO.setBlock(location.get(BLOCK));
         activityDTO.setLocalityVillageName(location.get(VILLAGE));
