@@ -4,8 +4,10 @@ public interface DistributionConstants {
 
     String RESOURCE_DISTRIBUTION = "DistributionService/upsertDistribution";
     String BLOCK = "Block";
+    String OTHER_BLOCK = "Other Block";
     String DISTRICT = "District";
     String VILLAGE = "Village";
+    String OTHER_VILLAGE = "Other Village";
     String STATE = "State";
     String LOCATION = "location";
     String TOLA_MOHALLA = "Tola / Mohalla";

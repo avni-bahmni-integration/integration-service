@@ -80,8 +80,12 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         HashMap<String, String> location = (HashMap<String, String>) subject.get(LOCATION);
         distributionDTO.setState(location.get(STATE));
         distributionDTO.setDistrict(location.get(DISTRICT));
-        distributionDTO.setBlock(location.get(BLOCK));
-        distributionDTO.setLocalityVillageName(location.get(VILLAGE));
+        if (location.get(BLOCK).equals("Other")) {
+            distributionDTO.setBlock((String) subject.getObservation(OTHER_BLOCK));
+        }
+        if (location.get(VILLAGE).equals("Other")) {
+            distributionDTO.setLocalityVillageName((String) subject.getObservation(OTHER_VILLAGE));
+        }
         distributionDTO.setTolaMohalla((String) subject.getObservation(TOLA_MOHALLA));
         /* Distribution Account fields */
         distributionDTO.setNameOfAccount((String) subject.getObservation(ACCOUNT_NAME));

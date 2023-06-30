@@ -88,6 +88,12 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         HashMap<String, String> location = (HashMap<String, String>) subject.get(LOCATION);
         activityDTO.setState(location.get(STATE));
         activityDTO.setDistrict(location.get(DISTRICT));
+        if (location.get(BLOCK).equals("Other")) {
+            activityDTO.setBlock((String) subject.getObservation(OTHER_BLOCK));
+        }
+        if (location.get(VILLAGE).equals("Other")) {
+            activityDTO.setLocalityVillageName((String) subject.getObservation(OTHER_VILLAGE));
+        }
         activityDTO.setBlock(location.get(BLOCK));
         activityDTO.setLocalityVillageName(location.get(VILLAGE));
         activityDTO.setTolaMohalla((String) subject.getObservation(TOLA_MOHALLA));
