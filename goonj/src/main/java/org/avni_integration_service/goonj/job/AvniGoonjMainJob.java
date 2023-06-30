@@ -110,7 +110,7 @@ public class AvniGoonjMainJob {
                  */
                 dispatchWorker.processDeletions();
                 // Todo: Dispatch line items to  be deleted!
-//                dispatchWorker.processDispatchLineItemDeletions();
+                dispatchWorker.processDispatchLineItemDeletions();
             }
         } catch (Throwable e) {
             logger.error("Failed processDemandAndDispatch", e);

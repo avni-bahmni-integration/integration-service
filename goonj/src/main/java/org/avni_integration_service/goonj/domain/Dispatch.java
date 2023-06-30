@@ -35,7 +35,7 @@ public class Dispatch implements GoonjEntity {
     public static final String DISPATCH_STATE = "DispatchState";
     public static final String DISPATCH_DISTRICT = "DispatchDistrict";
     private static final List<String> Ignored_Fields = Arrays.asList(LAST_UPDATED_DATE_TIME, TARGET_COMMUNITY,
-            LOCAL_DEMAND, DISASTER_TYPE, DEMAND, ACCOUNT_ID, ACCOUNT_CODE, DISPATCH_STATE, DISPATCH_DISTRICT);
+            LOCAL_DEMAND, DISASTER_TYPE, ACCOUNT_ID, ACCOUNT_CODE, DISPATCH_STATE, DISPATCH_DISTRICT);
 
     private Map<String, Object> response;
 
