@@ -10,6 +10,7 @@ import org.avni_integration_service.goonj.worker.avni.DispatchReceiptWorker;
 import org.avni_integration_service.goonj.worker.avni.DistributionWorker;
 import org.avni_integration_service.goonj.worker.goonj.DemandEventWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchEventWorker;
+import org.avni_integration_service.goonj.worker.goonj.InventoryEventWorker;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
@@ -36,6 +37,8 @@ public class AvniGoonjErrorRecordsWorker {
     private DistributionWorker distributionWorker;
     @Autowired
     private ActivityWorker activityWorker;
+    @Autowired
+    private InventoryEventWorker inventoryEventWorker;
     @Autowired
     private IntegrationSystemRepository integrationSystemRepository;
 
@@ -78,6 +81,7 @@ public class AvniGoonjErrorRecordsWorker {
             if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Activity.name())) return activityWorker;
             if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Demand.name())) return demandEventWorker;
             if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Dispatch.name())) return dispatchEventWorker;
+            if (errorRecord.getIntegratingEntityType().equals(GoonjEntityType.Inventory.name())) return inventoryEventWorker;
         }
         throw new AssertionError(String.format("Invalid error record with AvniEntityType=%s / GoonjEntityType=%s", errorRecord.getAvniEntityType(), errorRecord.getIntegratingEntityType()));
     }
