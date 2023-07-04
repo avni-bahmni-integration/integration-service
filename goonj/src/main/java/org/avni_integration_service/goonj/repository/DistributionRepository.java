@@ -81,17 +81,13 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setState(location.get(STATE));
         distributionDTO.setDistrict(location.get(DISTRICT));
         if (location.get(BLOCK).equals("Other")) {
-            distributionDTO.setBlock((String) subject.getObservation(OTHER_BLOCK));
+            distributionDTO.setOtherBlock((String) subject.getObservation(OTHER_BLOCK));
         }
-        else {
-            distributionDTO.setBlock(location.get(BLOCK));
-        }
+        distributionDTO.setBlock(location.get(BLOCK));
         if (location.get(VILLAGE).equals("Other")) {
-            distributionDTO.setLocalityVillageName((String) subject.getObservation(OTHER_VILLAGE));
+            distributionDTO.setOtherVillage((String) subject.getObservation(OTHER_VILLAGE));
         }
-        else {
-            distributionDTO.setLocalityVillageName(location.get(VILLAGE));
-        }
+        distributionDTO.setLocalityVillageName(location.get(VILLAGE));
         distributionDTO.setTolaMohalla((String) subject.getObservation(TOLA_MOHALLA));
         /* Distribution Account fields */
         distributionDTO.setNameOfAccount((String) subject.getObservation(ACCOUNT_NAME));
@@ -102,7 +98,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         List<String> images = subject.getObservation(IMAGES) == null ? new ArrayList<>() : (ArrayList<String>) subject.getObservation(IMAGES);
         distributionDTO.setPhotographInformation(images.stream().map(
-                x -> goonjConfig.getMediaUrl()  + x).collect(Collectors.joining(";")));
+                x -> goonjConfig.getMediaUrl() + x).collect(Collectors.joining(";")));
         List<DistributionLine> d = fetchDistributionLineItems(subject);
         distributionDTO.setDistributionLines(d);
         List<DistributionActivities> activities = fetchActivities(subject);
@@ -117,7 +113,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
             distributionDTO.setTypeOfInitiative(ONLY_S_2_S);
             distributionDTO.setTypeOfSchool((String) subject.getObservation(TYPE_OF_SCHOOL));
             distributionDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_ANGANWADI_NAME));
-        } else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(CFW_S2S)){
+        } else if (subject.getObservation(TYPE_OF_INITIATIVE).equals(CFW_S2S)) {
             distributionDTO.setTypeOfInitiative((String) subject.getObservation(TYPE_OF_INITIATIVE));
             distributionDTO.setTypeOfSchool((String) subject.getObservation(TYPE_OF_SCHOOL));
             distributionDTO.setSchoolAanganwadiLearningCenterName((String) subject.getObservation(SCHOOL_ANGANWADI_NAME));

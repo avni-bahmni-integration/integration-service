@@ -16,7 +16,8 @@ public class Demand implements GoonjEntity{
     private static final String DemandTargetCommunity = "TargetCommunity";
     private static final String DemandIdField = "DemandId";
     private static final String DemandIsVoidedField = "IsVoided";
-
+    private static final String DemandStatusField = "DemandStatus";
+    private static final String DispatchStatusField = "DispatchStatus";
     private Map<String, Object> response;
 
     private static final List<String> Core_Fields = Arrays.asList(DemandNameField, DemandDistrictField,

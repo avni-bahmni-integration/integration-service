@@ -89,18 +89,12 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
         activityDTO.setState(location.get(STATE));
         activityDTO.setDistrict(location.get(DISTRICT));
         if (location.get(BLOCK).equals("Other")) {
-            activityDTO.setBlock((String) subject.getObservation(OTHER_BLOCK));
-        }
-        else {
-            activityDTO.setBlock(location.get(BLOCK));
-        }
-        if (location.get(VILLAGE).equals("Other")) {
-            activityDTO.setLocalityVillageName((String) subject.getObservation(OTHER_VILLAGE));
-        }
-        else {
-            activityDTO.setLocalityVillageName(location.get(VILLAGE));
+            activityDTO.setOtherBlock((String) subject.getObservation(OTHER_BLOCK));
         }
         activityDTO.setBlock(location.get(BLOCK));
+        if (location.get(VILLAGE).equals("Other")) {
+            activityDTO.setOtherVillage((String) subject.getObservation(OTHER_VILLAGE));
+        }
         activityDTO.setLocalityVillageName(location.get(VILLAGE));
         activityDTO.setTolaMohalla((String) subject.getObservation(TOLA_MOHALLA));
         /* Activity Account fields */

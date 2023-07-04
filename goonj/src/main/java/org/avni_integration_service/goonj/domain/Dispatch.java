@@ -30,10 +30,12 @@ public class Dispatch implements GoonjEntity {
     public static final String DEMAND = "Demand";
     public static final String ACCOUNT_ID = "AccountId";
     public static final String ACCOUNT_NAME = "AccountName";
-    private static final List<String> Core_Fields = Arrays.asList(DispatchDateField, DispatchLineItemsField);
     public static final String ACCOUNT_CODE = "AccountCode";
     public static final String DISPATCH_STATE = "DispatchState";
     public static final String DISPATCH_DISTRICT = "DispatchDistrict";
+    private static final String DispatchStatusField = "Status";
+    private static final String DispatchStageField = "DispatchStage";
+    private static final List<String> Core_Fields = Arrays.asList(DispatchDateField, DispatchLineItemsField);
     private static final List<String> Ignored_Fields = Arrays.asList(LAST_UPDATED_DATE_TIME, TARGET_COMMUNITY,
             LOCAL_DEMAND, DISASTER_TYPE, ACCOUNT_ID, ACCOUNT_CODE, DISPATCH_STATE, DISPATCH_DISTRICT);
 

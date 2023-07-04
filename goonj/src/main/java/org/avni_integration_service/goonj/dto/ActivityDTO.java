@@ -13,7 +13,9 @@ import java.util.ArrayList;
         "State",
         "District",
         "Block",
+        "OtherBlock",
         "LocalityVillageName",
+        "OtherVillage",
         "tolaMohalla",
         "CreatedBy",
         "ModifiedBy",
@@ -77,6 +79,10 @@ public class ActivityDTO {
     private String activityType;
     @JsonProperty("Block")
     private String block;
+    @JsonProperty("OtherBlock")
+    private String otherBlock;
+    @JsonProperty("OtherVillage")
+    private String otherVillage;
     @JsonProperty("Breadth")
     private Long breadth;
     @JsonProperty("DepthHeight")
@@ -161,6 +167,8 @@ public class ActivityDTO {
      * @param activityEndDate
      * @param measurementType
      * @param block
+     * @param otherBlock
+     * @param otherVillage
      * @param state
      * @param activityStartDate
      * @param activityCategory
@@ -190,8 +198,8 @@ public class ActivityDTO {
      */
     public ActivityDTO(String sourceId, String nameOfAccount, String activityCategory, String activityConductedWithStudents,
                        String typeOfSchool, String s2sPhotograph, String njpcPhotograph, String activityEndDate,
-                       String activityStartDate, String activitySubType, String activityType, String block,
-                       Long breadth, Long depthHeight, Long diameter, String district, Long length,
+                       String activityStartDate, String activitySubType, String activityType, String block, String otherBlock,
+                       String otherVillage, Long breadth, Long depthHeight, Long diameter, String district, Long length,
                        String localityVillageName, String tolaMohalla, String measurementType, Long noofdaysofParticipationNJPC,
                        Long noofdaysofParticipationS2S, int noofparticipantsFemaleCFW, int noofparticipantsFemaleNJPC,
                        int noofparticipantsMaleCFW, int noofparticipantsMaleNJPC, int noofparticipantsNJPCOther,
@@ -213,6 +221,8 @@ public class ActivityDTO {
         this.activitySubType = activitySubType;
         this.activityType = activityType;
         this.block = block;
+        this.otherBlock = otherBlock;
+        this.otherVillage = otherVillage;
         this.breadth = breadth;
         this.depthHeight = depthHeight;
         this.diameter = diameter;
@@ -363,6 +373,22 @@ public class ActivityDTO {
     @JsonProperty("Block")
     public void setBlock(String block) {
         this.block = block;
+    }
+    @JsonProperty("OtherBlock")
+    public String getOtherBlock() {
+        return otherBlock;
+    }
+    @JsonProperty("OtherBlock")
+    public void setOtherBlock(String otherBlock) {
+        this.otherBlock = otherBlock;
+    }
+    @JsonProperty("OtherVillage")
+    public String getOtherVillage() {
+        return otherVillage;
+    }
+    @JsonProperty("OtherVillage")
+    public void setOtherVillage(String otherVillage) {
+        this.otherVillage = otherVillage;
     }
 
     @JsonProperty("Breadth")
