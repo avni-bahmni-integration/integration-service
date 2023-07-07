@@ -5,6 +5,7 @@ import org.avni_integration_service.goonj.config.GoonjMappingDbConstants;
 import org.avni_integration_service.goonj.domain.GoonjEntity;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
+import org.avni_integration_service.integration_data.domain.framework.MappingException;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.avni_integration_service.util.ObsDataType;
@@ -41,8 +42,9 @@ public abstract class BaseGoonjService {
             else if (dataTypeHint == ObsDataType.Coded && goonjEntity.getValue(obsField) != null) {
                 MappingMetaData answerMapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, goonjEntity.getValue(obsField).toString(), integrationSystem);
                 if(answerMapping == null) {
-                    logger.error("Answer Mapping entry not found for observation field: " + obsField);
-                    continue;
+                    String errorMessage = "Answer Mapping entry not found for coded concept answer field: " + obsField;
+                    logger.error(errorMessage);
+                    throw new MappingException(errorMessage);
                 }
                 observationHolder.addObservation(mapping.getAvniValue(), answerMapping.getAvniValue());
             }
