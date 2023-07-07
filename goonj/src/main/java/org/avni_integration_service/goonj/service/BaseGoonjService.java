@@ -40,6 +40,10 @@ public abstract class BaseGoonjService {
                 observationHolder.addObservation(mapping.getAvniValue(), goonjEntity.getValue(obsField));
             else if (dataTypeHint == ObsDataType.Coded && goonjEntity.getValue(obsField) != null) {
                 MappingMetaData answerMapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, goonjEntity.getValue(obsField).toString(), integrationSystem);
+                if(answerMapping == null) {
+                    logger.error("Answer Mapping entry not found for observation field: " + obsField);
+                    continue;
+                }
                 observationHolder.addObservation(mapping.getAvniValue(), answerMapping.getAvniValue());
             }
         }
