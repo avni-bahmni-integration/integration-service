@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AvniSessionET {
+@Disabled
+class AvniSessionExternalTest {
     @Test
     void getIdToken() {
         AvniSession avniSession = new AvniSession("http://localhost:8021", "vin@jsscp", "password", true, IdpType.Keycloak);
