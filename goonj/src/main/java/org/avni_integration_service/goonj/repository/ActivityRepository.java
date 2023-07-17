@@ -5,12 +5,10 @@ import org.avni_integration_service.avni.domain.AvniBaseContract;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
-import org.avni_integration_service.goonj.config.GoonjConfig;
-import org.avni_integration_service.goonj.config.GoonjMappingDbConstants;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.ActivityConstants;
 import org.avni_integration_service.goonj.dto.ActivityDTO;
 import org.avni_integration_service.goonj.dto.ActivityRequestDTO;
-import org.avni_integration_service.goonj.dto.DistributionActivities;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
@@ -21,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -43,13 +40,13 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
 
     @Autowired
     public ActivityRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                              @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig,
+                              @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
                               MappingMetaDataRepository mappingMetaDataRepository, IntegrationSystemRepository integrationSystemRepository,
-                              AvniHttpClient avniHttpClient) {
+                              AvniHttpClient avniHttpClient, GoonjContextProvider goonjContextProvider) {
         super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Activity.name(), avniHttpClient);
+                GoonjEntityType.Activity.name(), avniHttpClient, goonjContextProvider);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
-        this.integrationSystem = integrationSystemRepository.findByName(GoonjMappingDbConstants.IntSystemName);
+        this.integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit);
     }
 
     @Override
@@ -186,10 +183,10 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
             List<String> images = (ArrayList<String>) subject.getObservation(photo);
             if (images == null) return null;
             return images.stream().map(
-                    x -> goonjConfig.getMediaUrl() + x).collect(Collectors.joining(";"));
+                    x -> goonjContextProvider.get().getMediaUrl() + x).collect(Collectors.joining(";"));
         } else {
             String image = (String) subject.getObservation(photo);
-            return goonjConfig.getMediaUrl() + image;
+            return goonjContextProvider.get().getMediaUrl() + image;
         }
     }
 }

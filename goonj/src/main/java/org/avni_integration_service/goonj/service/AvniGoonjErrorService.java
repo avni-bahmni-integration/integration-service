@@ -3,6 +3,7 @@ package org.avni_integration_service.goonj.service;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
@@ -22,12 +23,14 @@ public class AvniGoonjErrorService {
     private final ErrorRecordRepository errorRecordRepository;
     private final IntegrationSystemRepository integrationSystemRepository;
     private final ErrorTypeRepository errorTypeRepository;
+    private final GoonjContextProvider goonjContextProvider;
 
     @Autowired
-    public AvniGoonjErrorService(ErrorRecordRepository errorRecordRepository, IntegrationSystemRepository integrationSystemRepository, ErrorTypeRepository errorTypeRepository) {
+    public AvniGoonjErrorService(ErrorRecordRepository errorRecordRepository, IntegrationSystemRepository integrationSystemRepository, ErrorTypeRepository errorTypeRepository, GoonjContextProvider goonjContextProvider) {
         this.errorRecordRepository = errorRecordRepository;
         this.integrationSystemRepository = integrationSystemRepository;
         this.errorTypeRepository = errorTypeRepository;
+        this.goonjContextProvider = goonjContextProvider;
     }
 
     public List<ErrorType> getUnprocessableErrorTypes() {
@@ -57,7 +60,7 @@ public class AvniGoonjErrorService {
     }
 
     private ErrorType getErrorType(GoonjErrorType goonjErrorType) {
-        return errorTypeRepository.findByNameAndIntegrationSystem(goonjErrorType.name(), integrationSystemRepository.findByName("Goonj"));
+        return errorTypeRepository.findByNameAndIntegrationSystem(goonjErrorType.name(), goonjContextProvider.get().getIntegrationSystem());
     }
 
     private ErrorRecord saveGoonjError(String uuid, GoonjErrorType goonjErrorType, GoonjEntityType goonjEntityType, String errorMsg) {
@@ -78,7 +81,7 @@ public class AvniGoonjErrorService {
             errorRecord.setEntityId(uuid);
             errorRecord.addErrorType(getErrorType(goonjErrorType), errorMsg);
             errorRecord.setProcessingDisabled(false);
-            errorRecord.setIntegrationSystem(integrationSystemRepository.findByName("Goonj"));
+            errorRecord.setIntegrationSystem(integrationSystemRepository.findEntity(goonjContextProvider.get().getIntegrationSystem().getId()));
             errorRecordRepository.save(errorRecord);
         }
         return errorRecord;

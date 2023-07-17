@@ -5,6 +5,9 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.client.AvniSession;
+import org.avni_integration_service.goonj.config.GoonjAvniSessionFactory;
+import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.worker.AvniGoonjErrorRecordsWorker;
 import org.avni_integration_service.goonj.worker.avni.ActivityWorker;
 import org.avni_integration_service.goonj.worker.avni.DispatchReceiptWorker;
@@ -12,11 +15,9 @@ import org.avni_integration_service.goonj.worker.avni.DistributionWorker;
 import org.avni_integration_service.goonj.worker.goonj.DemandWorker;
 import org.avni_integration_service.goonj.worker.goonj.DispatchWorker;
 import org.avni_integration_service.goonj.worker.goonj.InventoryWorker;
-import org.avni_integration_service.integration_data.repository.ConstantsRepository;
 import org.avni_integration_service.util.HealthCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -46,12 +47,6 @@ public class AvniGoonjMainJob {
     private InventoryWorker inventoryWorker;
 
     @Autowired
-    private ConstantsRepository constantsRepository;
-
-    @Value("${goonj.app.tasks}")
-    private String tasks;
-
-    @Autowired
     private AvniGoonjErrorRecordsWorker errorRecordsWorker;
 
     @Autowired
@@ -64,15 +59,18 @@ public class AvniGoonjMainJob {
     private HealthCheckService healthCheckService;
 
     @Autowired
-    @Qualifier("GoonjAvniSession")
-    private AvniSession goonjAvniSession;
+    private GoonjAvniSessionFactory goonjAvniSessionFactory;
 
-    public void execute() {
+    @Autowired
+    private GoonjContextProvider goonjContextProvider;
+
+    public void execute(GoonjConfig goonjConfig) {
         try {
             logger.info("Executing Goonj Main Job");
-            avniHttpClient.setAvniSession(goonjAvniSession);
+            avniHttpClient.setAvniSession(goonjAvniSessionFactory.createSession());
+            goonjContextProvider.set(goonjConfig);
 
-            List<IntegrationTask> tasks = IntegrationTask.getTasks(this.tasks);
+            List<IntegrationTask> tasks = IntegrationTask.getTasks(goonjConfig.getTasks());
             processDemandAndDispatch(tasks);
             processActivity(tasks);
             processDispatchReceiptAndDistribution(tasks);

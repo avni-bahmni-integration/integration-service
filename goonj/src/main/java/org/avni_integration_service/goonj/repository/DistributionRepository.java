@@ -5,24 +5,19 @@ import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
-import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.DistributionConstants;
 import org.avni_integration_service.goonj.dto.*;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.avni_integration_service.goonj.domain.DispatchReceivedStatusLineItemConstants.*;
 
 @Component("DistributionRepository")
 public class DistributionRepository extends GoonjBaseRepository implements DistributionConstants {
@@ -33,10 +28,10 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
     @Autowired
     public DistributionRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                   @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
-                                  GoonjConfig goonjConfig, AvniHttpClient avniHttpClient,
-                                  AvniSubjectRepository avniSubjectRepository) {
+                                  AvniHttpClient avniHttpClient,
+                                  AvniSubjectRepository avniSubjectRepository, GoonjContextProvider goonjContextProvider) {
         super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Distribution.name(), avniHttpClient);
+                GoonjEntityType.Distribution.name(), avniHttpClient, goonjContextProvider);
         this.avniSubjectRepository = avniSubjectRepository;
     }
 
@@ -98,7 +93,7 @@ public class DistributionRepository extends GoonjBaseRepository implements Distr
         distributionDTO.setDisasterType((String) subject.getObservation(TYPE_OF_DISASTER));
         List<String> images = subject.getObservation(IMAGES) == null ? new ArrayList<>() : (ArrayList<String>) subject.getObservation(IMAGES);
         distributionDTO.setPhotographInformation(images.stream().map(
-                x -> goonjConfig.getMediaUrl() + x).collect(Collectors.joining(";")));
+                x -> goonjContextProvider.get().getMediaUrl() + x).collect(Collectors.joining(";")));
         List<DistributionLine> d = fetchDistributionLineItems(subject);
         distributionDTO.setDistributionLines(d);
         List<DistributionActivities> activities = fetchActivities(subject);

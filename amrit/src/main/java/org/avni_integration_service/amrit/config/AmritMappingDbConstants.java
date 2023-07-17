@@ -20,5 +20,4 @@ public class AmritMappingDbConstants {
     public static final String MappingType_CBACRoot = "CBACRoot";
     public static final String MappingType_CBACObservations = "CBACObservations";
     public static final String MAPPING_GROUP_MASTER_IDS = "MasterId";
-    public static final String IntSystemName = "Amrit";
 }

@@ -7,6 +7,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.repository.ActivityRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
@@ -25,11 +26,12 @@ public class ActivityWorker extends SubjectWorker {
                           AvniGoonjErrorService avniGoonjErrorService,
                           IntegratingEntityStatusRepository integrationEntityStatusRepository,
                           ActivityRepository activityRepository,
-                          ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
+                          ErrorClassifier errorClassifier,
+                          GoonjContextProvider goonjContextProvider) {
         super(avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, integrationEntityStatusRepository,
                 GoonjErrorType.ActivityAttributesMismatch, GoonjEntityType.Activity, Logger.getLogger(ActivityWorker.class),
-                errorClassifier, integrationSystem);
+                errorClassifier, goonjContextProvider);
         this.activityRepository = activityRepository;
     }
     public void process() throws Exception {

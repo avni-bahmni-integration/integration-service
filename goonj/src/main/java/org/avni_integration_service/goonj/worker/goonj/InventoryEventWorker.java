@@ -6,6 +6,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.Inventory;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.InventoryService;
@@ -34,8 +35,8 @@ public class InventoryEventWorker extends GoonjEventWorker implements ErrorRecor
     @Autowired
     public InventoryEventWorker(InventoryService inventoryService, AvniGoonjErrorService avniGoonjErrorService,
                                 AvniSubjectRepository avniSubjectRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                                ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
-        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Inventory, errorClassifier, integrationSystem);
+                                ErrorClassifier errorClassifier, GoonjContextProvider goonjContextProvider) {
+        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Inventory, errorClassifier, goonjContextProvider);
         this.inventoryService = inventoryService;
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.avniSubjectRepository = avniSubjectRepository;

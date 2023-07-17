@@ -2,6 +2,7 @@ package org.avni_integration_service.goonj.service;
 
 import org.avni_integration_service.avni.domain.QuestionGroupObservations;
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.Dispatch;
 import org.avni_integration_service.goonj.domain.DispatchLineItem;
 import org.avni_integration_service.goonj.repository.DispatchRepository;
@@ -21,13 +22,11 @@ import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.
 @Service
 public class DispatchService extends BaseGoonjService {
     private final DispatchRepository dispatchRepository;
-    private final AvniGoonjErrorService avniGoonjErrorService;
 
     @Autowired
-    public DispatchService(DispatchRepository dispatchRepository, AvniGoonjErrorService avniGoonjErrorService, MappingMetaDataRepository mappingMetaDataRepository, IntegrationSystemRepository integrationSystemRepository) {
-        super(mappingMetaDataRepository, integrationSystemRepository);
+    public DispatchService(DispatchRepository dispatchRepository, AvniGoonjErrorService avniGoonjErrorService, MappingMetaDataRepository mappingMetaDataRepository, GoonjContextProvider goonjContextProvider) {
+        super(mappingMetaDataRepository, goonjContextProvider);
         this.dispatchRepository = dispatchRepository;
-        this.avniGoonjErrorService = avniGoonjErrorService;
     }
 
     public HashMap<String, Object> getDispatch(String uuid) {

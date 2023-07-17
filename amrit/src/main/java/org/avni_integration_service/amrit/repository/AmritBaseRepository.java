@@ -54,7 +54,7 @@ public abstract class AmritBaseRepository {
         this.mappingTypeRepository = mappingTypeRepository;
         this.entityType = entityType;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
-        this.integrationSystem = integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName);
+        this.integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit);
     }
 
     private <T extends AmritBaseResponse> boolean extractResponse(ResponseEntity<T> responseEntity) {

@@ -4,7 +4,7 @@ import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
-import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.dto.DeletedDispatchStatusLineItem;
 import org.avni_integration_service.goonj.dto.DispatchesResponseDTO;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
@@ -21,10 +21,9 @@ import java.util.List;
 public class DispatchRepository extends GoonjBaseRepository {
     @Autowired
     public DispatchRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                            @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
-                              GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
-        super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Dispatch.name(), avniHttpClient);
+                              @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
+                              AvniHttpClient avniHttpClient, GoonjContextProvider goonjContextProvider) {
+        super(integratingEntityStatusRepository, restTemplate, GoonjEntityType.Dispatch.name(), avniHttpClient, goonjContextProvider);
     }
 
     @Override

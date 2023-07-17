@@ -6,6 +6,7 @@ import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.service.AvniAmritErrorService;
 import org.avni_integration_service.amrit.service.BeneficiaryService;
 import org.avni_integration_service.avni.SyncDirection;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
@@ -44,10 +45,10 @@ public class AmritErrorRecordWorker {
             if (syncDirection.equals(SyncDirection.AvniToAmrit))
                 errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
                         avniAmritErrorService.getUnprocessableErrorTypes(),
-                        integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName), pageRequest);
+                        integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit), pageRequest);
             else if (syncDirection.equals(SyncDirection.AvniToAmrit) && !allErrors)
                 errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
-                        avniAmritErrorService.getUnprocessableErrorTypes(), integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName), pageRequest);
+                        avniAmritErrorService.getUnprocessableErrorTypes(), integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit), pageRequest);
             else
                 throw new RuntimeException("Invalid arguments");
 

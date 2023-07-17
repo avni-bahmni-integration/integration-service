@@ -1,27 +1,21 @@
 package org.avni_integration_service.goonj.config;
 
 import org.avni_integration_service.avni.client.AvniSession;
-import org.avni_integration_service.avni.client.IdpType;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class GoonjAvniSessionFactory {
-    @Value("${goonj.avni.api.url}")
-    private String apiUrl;
+    private final GoonjContextProvider goonjContextProvider;
 
-    @Value("${goonj.avni.impl.username}")
-    private String implUser;
+    @Autowired
+    public GoonjAvniSessionFactory(GoonjContextProvider goonjContextProvider) {
+        this.goonjContextProvider = goonjContextProvider;
+    }
 
-    @Value("${goonj.avni.impl.password}")
-    private String implPassword;
-
-    @Value("${goonj.avni.authentication.enabled}")
-    private boolean authEnabled;
-
-    @Bean("GoonjAvniSession")
     public AvniSession createSession() {
-        return new AvniSession(apiUrl, implUser, implPassword, authEnabled);
+        GoonjConfig goonjConfig = goonjContextProvider.get();
+        return new AvniSession(goonjConfig.getApiUrl(), goonjConfig.getAvniImplUser(), goonjConfig.getImplPassword(), goonjConfig.getAuthEnabled());
     }
 }

@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
-import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.avni_integration_service.util.ObjectJsonMapper;
@@ -21,18 +21,18 @@ public abstract class GoonjBaseRepository {
     private static final String DELETION_SOURCE_ID = "sourceId";
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
     private final RestTemplate goonjRestTemplate;
-    protected final GoonjConfig goonjConfig;
     private final String entityType;
     protected final AvniHttpClient avniHttpClient;
+    protected final GoonjContextProvider goonjContextProvider;
 
     public GoonjBaseRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                               RestTemplate restTemplate, GoonjConfig goonjConfig, String entityType,
-                               AvniHttpClient avniHttpClient) {
+                               RestTemplate restTemplate, String entityType,
+                               AvniHttpClient avniHttpClient, GoonjContextProvider goonjContextProvider) {
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.goonjRestTemplate = restTemplate;
-        this.goonjConfig = goonjConfig;
         this.entityType = entityType;
         this.avniHttpClient = avniHttpClient;
+        this.goonjContextProvider = goonjContextProvider;
     }
 
 
@@ -47,7 +47,7 @@ public abstract class GoonjBaseRepository {
     }
 
     protected <T> T getResponse(Date dateTime, String resource,  Class<T> returnType, String dateTimeParam) {
-        URI uri = URI.create(String.format("%s/%s?%s=%s", goonjConfig.getAppUrl(), resource,
+        URI uri = URI.create(String.format("%s/%s?%s=%s", goonjContextProvider.get().getAppUrl(), resource,
                 dateTimeParam, DateTimeUtil.formatDateTime(dateTime)));
         ResponseEntity<T> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, returnType);
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -71,7 +71,7 @@ public abstract class GoonjBaseRepository {
     }
 
     protected <T> T getSingleEntityResponse(String resource, String filter, String uuid, Class<T> returnType) {
-        URI uri = URI.create(String.format("%s/%s?%s=%s", goonjConfig.getAppUrl(), resource, filter, uuid));
+        URI uri = URI.create(String.format("%s/%s?%s=%s", goonjContextProvider.get().getAppUrl(), resource, filter, uuid));
         ResponseEntity<T> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.GET, null, returnType);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return responseEntity.getBody();
@@ -82,7 +82,7 @@ public abstract class GoonjBaseRepository {
 
     protected HashMap<String, Object>[] createSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
         logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
-        URI uri = URI.create(String.format("%s/%s", goonjConfig.getAppUrl(), resource));
+        URI uri = URI.create(String.format("%s/%s", goonjContextProvider.get().getAppUrl(), resource));
         ParameterizedTypeReference<HashMap<String, Object>[]> responseType = new ParameterizedTypeReference<>() {};
         ResponseEntity<HashMap<String, Object>[]> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -94,7 +94,7 @@ public abstract class GoonjBaseRepository {
 
     protected Object deleteSingleEntity(String resource, HttpEntity<?> requestEntity) throws RestClientResponseException {
         logger.info("Request body:" + ObjectJsonMapper.writeValueAsString(requestEntity.getBody()));
-        URI uri = URI.create(String.format("%s/%s", goonjConfig.getAppUrl(), resource));
+        URI uri = URI.create(String.format("%s/%s", goonjContextProvider.get().getAppUrl(), resource));
         ParameterizedTypeReference<Object> responseType = new ParameterizedTypeReference<>() {};
         ResponseEntity<Object> responseEntity = goonjRestTemplate.exchange(uri, HttpMethod.POST, requestEntity, responseType);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {

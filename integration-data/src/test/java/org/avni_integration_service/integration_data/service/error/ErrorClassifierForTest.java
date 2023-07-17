@@ -19,7 +19,7 @@ public class ErrorClassifierForTest extends AbstractSpringTest implements ErrorC
         @Autowired
         public ErrorClassifierForTest(ErrorClassifier errorClassifier, IntegrationSystemRepository integrationSystemRepository) {
                 this.errorClassifier = errorClassifier;
-                this.integrationSystem = integrationSystemRepository.findByName(INT_SYSTEM_GOONJ);
+                this.integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Goonj);
         }
 
         @Test

@@ -1,7 +1,6 @@
 package org.avni_integration_service.integration_data.service.error;
 
 public interface ErrorClassifierForGoonjTestConstants {
-    String INT_SYSTEM_GOONJ = "Goonj";
     String STRING_FORMAT_BUFFETED_ERROR_MSG = "<<Head -- %s -- tail>>";
     String ERROR_MSG_STANDARD_SKIP = "aafafasdg adfad1232r @SDA!2CGAE7670$%.!";
     String ERROR_MSG_DISPATCH_MISSING_DEMAND = "Individual not found with UUID 'null' or External ID 'a1CHE0000001qqz2AA'";
@@ -13,5 +12,4 @@ public interface ErrorClassifierForGoonjTestConstants {
     String ERROR_MSG_DISPATCH_RECEIPT_LINE_ITEM_MISMATCH = "FIELD_CUSTOM_VALIDATION_EXCEPTION, Material Received can not be inserted or updated as Related Dispatch Status have no Line Item";
     String ERROR_MSG_DISTRIBUTION_DISASTER_MISSING = "FIELD_CUSTOM_VALIDATION_EXCEPTION, Please fill in the Disaster Type, if the Type of Initiative contains Rahat.";
     String ERROR_MSG_ACTIVITY_MEASUREMENT_TYPE_MISSING = "FIELD_CUSTOM_VALIDATION_EXCEPTION, Please fill in Measurement Type.";
-
 }

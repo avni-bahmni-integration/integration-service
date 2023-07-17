@@ -9,6 +9,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.repository.DistributionRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
@@ -27,11 +28,12 @@ public class DistributionWorker extends SubjectWorker {
                               AvniGoonjErrorService avniGoonjErrorService,
                               IntegratingEntityStatusRepository integrationEntityStatusRepository,
                               DistributionRepository distributionRepository,
-                              ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
+                              ErrorClassifier errorClassifier,
+                                GoonjContextProvider goonjContextProvider) {
         super(avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, integrationEntityStatusRepository,
                 GoonjErrorType.DistributionAttributesMismatch, GoonjEntityType.Distribution, Logger.getLogger(DistributionWorker.class),
-                errorClassifier, integrationSystem);
+                errorClassifier, goonjContextProvider);
         this.distributionRepository = distributionRepository;
 
     }

@@ -1,7 +1,10 @@
 package org.avni_integration_service.web;
 
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
+import org.avni_integration_service.integration_data.domain.config.IntegrationSystemConfig;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
+import org.avni_integration_service.integration_data.repository.config.IntegrationSystemConfigRepository;
+import org.avni_integration_service.web.contract.IntegrationSystemContract;
 import org.avni_integration_service.web.contract.NamedEntityContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +29,7 @@ public class IntegrationSystemController {
     }
 
     @RequestMapping(value = "/int/integrationSystem", method = {RequestMethod.GET})
-    public List<NamedEntityContract> getIntegrationSystems(@RequestParam(value = "ids", required = false) String ids, Pageable pageable) {
+    public List<IntegrationSystemContract> getIntegrationSystems(@RequestParam(value = "ids", required = false) String ids, Pageable pageable) {
         if (ids == null) {
             Page<IntegrationSystem> all = integrationSystemRepository.findAll(pageable);
             return mapStream(all.stream());
@@ -36,13 +39,13 @@ public class IntegrationSystemController {
         }
     }
 
-    private List<NamedEntityContract> mapStream(Stream<IntegrationSystem> all) {
-        return all.map((NamedEntityContract::new)).sorted(Comparator.comparing(NamedEntityContract::getName)).collect(Collectors.toList());
+    private List<IntegrationSystemContract> mapStream(Stream<IntegrationSystem> all) {
+        return all.map(IntegrationSystemContract::new).sorted(Comparator.comparing(IntegrationSystemContract::getType)).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/int/integrationSystem/{id}", method = {RequestMethod.GET})
-    public NamedEntityContract getIntegrationSystems(@PathVariable("id") int id) {
+    public IntegrationSystemContract getIntegrationSystems(@PathVariable("id") int id) {
         IntegrationSystem integrationSystem = integrationSystemRepository.getEntity(id);
-        return new NamedEntityContract(integrationSystem);
+        return new IntegrationSystemContract(integrationSystem);
     }
 }

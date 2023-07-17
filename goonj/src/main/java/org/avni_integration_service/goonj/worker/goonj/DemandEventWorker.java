@@ -6,6 +6,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.Demand;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.service.DemandService;
@@ -24,16 +25,14 @@ import java.util.Map;
 public class DemandEventWorker extends GoonjEventWorker implements ErrorRecordWorker {
     private static final Logger logger = Logger.getLogger(DemandEventWorker.class);
     private final DemandService demandService;
-    private final AvniGoonjErrorService avniGoonjErrorService;
     private final AvniSubjectRepository avniSubjectRepository;
 
     @Autowired
     public DemandEventWorker(DemandService demandService, AvniGoonjErrorService avniGoonjErrorService,
                              AvniSubjectRepository avniSubjectRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                             ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
-        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Demand, errorClassifier, integrationSystem);
+                             ErrorClassifier errorClassifier, GoonjContextProvider goonjContextProvider) {
+        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Demand, errorClassifier, goonjContextProvider);
         this.demandService = demandService;
-        this.avniGoonjErrorService = avniGoonjErrorService;
         this.avniSubjectRepository = avniSubjectRepository;
     }
 

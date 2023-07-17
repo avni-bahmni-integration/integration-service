@@ -67,7 +67,8 @@ public class ErrorRecordLogController extends BaseController{
         errorWebContract.setLoggedAt(errorRecordLog.getLoggedAt());
         errorWebContract.setErrorMsg(errorRecordLog.getErrorMsg());
         errorWebContract.setProcessingDisabled(errorRecordLog.getErrorRecord().isProcessingDisabled());
-        errorWebContract.setIntegrationSystem(errorRecordLog.getErrorRecord().getIntegrationSystem().getName());
+        errorWebContract.setIntegrationSystem(errorRecordLog.getErrorRecord().getIntegrationSystem().getSystemType().name());
+        errorWebContract.setIntegrationSystemInstance(errorRecordLog.getErrorRecord().getIntegrationSystem().getName());
         AvniEntityType avniEntityType = errorRecordLog.getErrorRecord().getAvniEntityType();
         if (avniEntityType != null)
             errorWebContract.setAvniEntityType(avniEntityType.name());

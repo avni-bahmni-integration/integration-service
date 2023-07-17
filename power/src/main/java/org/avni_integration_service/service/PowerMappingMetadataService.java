@@ -1,6 +1,7 @@
 package org.avni_integration_service.service;
 
 import org.avni_integration_service.avni.domain.Task;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.MappingMetaData;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
@@ -37,7 +38,7 @@ public class PowerMappingMetadataService {
                 "PhoneNumber",
                 mappingType,
                 intSystemValue,
-                integrationSystemRepository.findByName("power")
+                integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.power)
         );
         if(mappingMetaData == null) {
             throw new RuntimeException(String.format("Unable to find %s mapping for %s phoneNumber",
@@ -58,7 +59,7 @@ public class PowerMappingMetadataService {
     public Set<String> findAllCallPhoneNumbers() {
         List<MappingMetaData> mappingMetaDataList = mappingMetaDataRepository.findAllByMappingGroupNameAndIntegrationSystem(
                 "PhoneNumber",
-                integrationSystemRepository.findByName("power")
+                integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.power)
         );
         return mappingMetaDataList == null ? Collections.emptySet() : mappingMetaDataList.stream()
                 .map(MappingMetaData::getIntSystemValue).collect(Collectors.toSet());

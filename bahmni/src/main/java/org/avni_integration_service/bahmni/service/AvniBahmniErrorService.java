@@ -10,6 +10,7 @@ import org.avni_integration_service.bahmni.BahmniErrorType;
 import org.avni_integration_service.bahmni.contract.OpenMRSFullEncounter;
 import org.avni_integration_service.bahmni.contract.OpenMRSPatient;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
@@ -63,7 +64,7 @@ public class AvniBahmniErrorService {
     }
 
     private ErrorType getErrorType(BahmniErrorType bahmniErrorType) {
-        return errorTypeRepository.findByNameAndIntegrationSystem(bahmniErrorType.name(), integrationSystemRepository.findByName("bahmni"));
+        return errorTypeRepository.findByNameAndIntegrationSystem(bahmniErrorType.name(), integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.bahmni));
     }
 
     public boolean hasError(String entityId, BahmniEntityType bahmniEntityType) {
@@ -98,7 +99,7 @@ public class AvniBahmniErrorService {
             errorRecord.setEntityId(uuid);
             errorRecord.addErrorType(getErrorType(bahmniErrorType));
             errorRecord.setProcessingDisabled(false);
-            errorRecord.setIntegrationSystem(integrationSystemRepository.findByName("bahmni"));
+            errorRecord.setIntegrationSystem(integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.bahmni));
             errorRecordRepository.save(errorRecord);
         }
         return errorRecord;

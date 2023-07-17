@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.avni_integration_service.config.PowerEntityType;
 import org.avni_integration_service.config.PowerErrorType;
 import org.avni_integration_service.dto.CallDTO;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
@@ -44,7 +45,7 @@ public class PowerErrorRecordWorker {
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
             errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
                     avniPowerErrorService.getUnprocessableErrorTypes(),
-                    integrationSystemRepository.findByName("power"),
+                    integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.power),
                     pageRequest);
             List<ErrorRecord> errorRecords = errorRecordPage.getContent();
             for (ErrorRecord errorRecord : errorRecords) {

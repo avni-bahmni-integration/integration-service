@@ -6,6 +6,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.Dispatch;
 import org.avni_integration_service.goonj.dto.DeletedDispatchStatusLineItem;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
@@ -31,8 +32,8 @@ public class DispatchEventWorker extends GoonjEventWorker implements ErrorRecord
     @Autowired
     public DispatchEventWorker(DispatchService dispatchService, AvniGoonjErrorService avniGoonjErrorService,
                                AvniSubjectRepository avniSubjectRepository, IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                               ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
-        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Dispatch, errorClassifier, integrationSystem);
+                               ErrorClassifier errorClassifier, GoonjContextProvider goonjContextProvider) {
+        super(avniGoonjErrorService, integratingEntityStatusRepository, GoonjEntityType.Dispatch, errorClassifier, goonjContextProvider);
         this.dispatchService = dispatchService;
         this.avniSubjectRepository = avniSubjectRepository;
     }

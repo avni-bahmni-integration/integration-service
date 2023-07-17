@@ -4,8 +4,7 @@ import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
-import org.avni_integration_service.goonj.config.GoonjConfig;
-import org.avni_integration_service.goonj.dto.DemandsResponseDTO;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.dto.InventoryResponseDTO;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,8 @@ import java.util.stream.Collectors;
 @Component("InventoryRepository")
 public class InventoryRepository extends GoonjBaseRepository {
     @Autowired
-    public InventoryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository, @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
-        super(integratingEntityStatusRepository, restTemplate, goonjConfig, GoonjEntityType.Inventory.name(), avniHttpClient);
+    public InventoryRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository, @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, AvniHttpClient avniHttpClient, GoonjContextProvider goonjContextProvider) {
+        super(integratingEntityStatusRepository, restTemplate, GoonjEntityType.Inventory.name(), avniHttpClient, goonjContextProvider);
     }
 
     @Override

@@ -66,10 +66,10 @@ create-test-db:
 	$(call _build_db,avni_int_test)
 
 build-test-db: create-test-db
-	./gradlew :integration-data:migrateTestDb
-	./gradlew --stacktrace :bahmni:migrateTestDb
-	./gradlew --stacktrace :goonj:migrateTestDb
-	./gradlew --stacktrace :amrit:migrateTestDb
+	./gradlew :integrator:migrateTestDb
+#	./gradlew --stacktrace :bahmni:migrateTestDb
+#	./gradlew --stacktrace :goonj:migrateTestDb
+#	./gradlew --stacktrace :amrit:migrateTestDb
 
 drop-test-db:
 	$(call _drop_db,avni_int_test)

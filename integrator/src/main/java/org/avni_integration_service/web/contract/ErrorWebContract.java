@@ -12,6 +12,7 @@ public class ErrorWebContract {
     private String errorMsg;
     private boolean processingDisabled;
     private String integrationSystem;
+    private String integrationSystemInstance;
 
     public int getId() {
         return id;
@@ -83,5 +84,13 @@ public class ErrorWebContract {
 
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+    public String getIntegrationSystemInstance() {
+        return integrationSystemInstance;
+    }
+
+    public void setIntegrationSystemInstance(String integrationSystemInstance) {
+        this.integrationSystemInstance = integrationSystemInstance;
     }
 }

@@ -1,6 +1,7 @@
 package org.avni_integration_service.goonj.service;
 
 import org.avni_integration_service.avni.domain.Subject;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.Demand;
 import org.avni_integration_service.goonj.repository.DemandRepository;
 import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
@@ -15,13 +16,11 @@ import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.
 @Service
 public class DemandService extends BaseGoonjService {
     private final DemandRepository demandRepository;
-    private final AvniGoonjErrorService avniGoonjErrorService;
 
     @Autowired
-    public DemandService(DemandRepository demandRepositoryGoonj, AvniGoonjErrorService avniGoonjErrorService, MappingMetaDataRepository mappingMetaDataRepository, IntegrationSystemRepository integrationSystemRepository) {
-        super(mappingMetaDataRepository, integrationSystemRepository);
+    public DemandService(DemandRepository demandRepositoryGoonj, MappingMetaDataRepository mappingMetaDataRepository, GoonjContextProvider goonjContextProvider) {
+        super(mappingMetaDataRepository, goonjContextProvider);
         this.demandRepository = demandRepositoryGoonj;
-        this.avniGoonjErrorService = avniGoonjErrorService;
     }
 
     public HashMap<String, Object> getDemand(String uuid) {

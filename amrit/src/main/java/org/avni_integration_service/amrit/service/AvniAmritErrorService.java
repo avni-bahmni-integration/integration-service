@@ -5,6 +5,7 @@ import org.avni_integration_service.amrit.config.AmritEntityType;
 import org.avni_integration_service.amrit.config.AmritErrorType;
 import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.integration_data.domain.AvniEntityType;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
@@ -58,7 +59,7 @@ public class AvniAmritErrorService {
     }
 
     private ErrorType getErrorType(AmritErrorType amritErrorType) {
-        return errorTypeRepository.findByNameAndIntegrationSystem(amritErrorType.name(), integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName));
+        return errorTypeRepository.findByNameAndIntegrationSystem(amritErrorType.name(), integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit));
     }
 
     private ErrorRecord saveAmritError(String uuid, AmritErrorType amritErrorType, AmritEntityType AmritEntityType, String errorMsg) {
@@ -79,7 +80,7 @@ public class AvniAmritErrorService {
             errorRecord.setEntityId(uuid);
             errorRecord.addErrorType(getErrorType(amritErrorType), errorMsg);
             errorRecord.setProcessingDisabled(false);
-            errorRecord.setIntegrationSystem(integrationSystemRepository.findByName(AmritMappingDbConstants.IntSystemName));
+            errorRecord.setIntegrationSystem(integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit));
             errorRecordRepository.save(errorRecord);
         }
         return errorRecord;

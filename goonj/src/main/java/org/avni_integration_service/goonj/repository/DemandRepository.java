@@ -4,7 +4,7 @@ import org.avni_integration_service.avni.client.AvniHttpClient;
 import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
-import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.dto.DemandsResponseDTO;
 import org.avni_integration_service.integration_data.repository.IntegratingEntityStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,9 @@ public class DemandRepository extends GoonjBaseRepository {
     @Autowired
     public DemandRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                             @Qualifier("GoonjRestTemplate")RestTemplate restTemplate,
-                            GoonjConfig goonjConfig, AvniHttpClient avniHttpClient) {
+                            AvniHttpClient avniHttpClient, GoonjContextProvider goonjContextProvider) {
         super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.Demand.name(), avniHttpClient);
+                GoonjEntityType.Demand.name(), avniHttpClient, goonjContextProvider);
     }
 
     @Override

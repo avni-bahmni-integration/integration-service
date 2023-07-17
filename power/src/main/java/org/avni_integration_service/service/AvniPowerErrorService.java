@@ -3,6 +3,7 @@ package org.avni_integration_service.service;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.config.PowerEntityType;
 import org.avni_integration_service.config.PowerErrorType;
+import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorRecordRepository;
@@ -30,7 +31,7 @@ public class AvniPowerErrorService {
     }
 
     private ErrorType getErrorType(PowerErrorType powerErrorType) {
-        return errorTypeRepository.findByNameAndIntegrationSystem(powerErrorType.name(), integrationSystemRepository.findByName("power"));
+        return errorTypeRepository.findByNameAndIntegrationSystem(powerErrorType.name(), integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.power));
     }
 
     public List<ErrorType> getUnprocessableErrorTypes() {
@@ -55,7 +56,7 @@ public class AvniPowerErrorService {
             errorRecord.setEntityId(uuid);
             errorRecord.addErrorType(getErrorType(powerErrorType));
             errorRecord.setProcessingDisabled(false);
-            errorRecord.setIntegrationSystem(integrationSystemRepository.findByName("power"));
+            errorRecord.setIntegrationSystem(integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.power));
             errorRecordRepository.save(errorRecord);
         }
         return errorRecord;

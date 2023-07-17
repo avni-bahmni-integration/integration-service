@@ -6,7 +6,7 @@ import org.avni_integration_service.avni.domain.GeneralEncounter;
 import org.avni_integration_service.avni.domain.Subject;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.config.GoonjConfig;
-import org.avni_integration_service.goonj.config.GoonjMappingDbConstants;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.DispatchReceiptConstants;
 import org.avni_integration_service.goonj.domain.DispatchReceivedStatusLineItemConstants;
 import org.avni_integration_service.goonj.dto.DispatchReceivedStatusLineItem;
@@ -20,9 +20,7 @@ import org.avni_integration_service.integration_data.repository.IntegrationSyste
 import org.avni_integration_service.integration_data.repository.MappingMetaDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -37,33 +35,35 @@ import static org.avni_integration_service.goonj.config.GoonjMappingDbConstants.
 public class DispatchReceiptRepository extends GoonjBaseRepository
         implements DispatchReceiptConstants, DispatchReceivedStatusLineItemConstants {
     private static final Logger logger = Logger.getLogger(DispatchReceiptRepository.class);
-    private final boolean deleteAndRecreateDispatchReceipt;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final IntegrationSystem integrationSystem;
 
     @Autowired
     public DispatchReceiptRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                                     @Qualifier("GoonjRestTemplate") RestTemplate restTemplate, GoonjConfig goonjConfig,
+                                     @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
                                      MappingMetaDataRepository mappingMetaDataRepository,
                                      IntegrationSystemRepository integrationSystemRepository, AvniHttpClient avniHttpClient,
-                                     @Value("${goonj.app.recreate.dispatch.receipt.enabled}") boolean deleteAndRecreateDispatchReceipt) {
+                                     GoonjContextProvider goonjContextProvider) {
         super(integratingEntityStatusRepository, restTemplate,
-                goonjConfig, GoonjEntityType.DispatchReceipt.name(), avniHttpClient);
+                GoonjEntityType.DispatchReceipt.name(), avniHttpClient, goonjContextProvider);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
-        this.integrationSystem = integrationSystemRepository.findByName(GoonjMappingDbConstants.IntSystemName);
-        this.deleteAndRecreateDispatchReceipt = deleteAndRecreateDispatchReceipt;
+        this.integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit);
     }
+
     @Override
     public HashMap<String, Object>[] fetchEvents() {
         throw new UnsupportedOperationException();
     }
+
     @Override
     public List<String> fetchDeletionEvents() {
         throw new UnsupportedOperationException();
     }
+
     public HashMap<String, Object>[] createEvent(Subject subject) {
         throw new UnsupportedOperationException();
     }
+
     @Override
     public HashMap<String, Object>[] createEvent(Subject subject, GeneralEncounter encounter) {
         deleteAndRecreateDispatchReceipt(encounter);
@@ -73,7 +73,8 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
     }
 
     private void deleteAndRecreateDispatchReceipt(GeneralEncounter encounter) {
-        if(deleteAndRecreateDispatchReceipt) {
+        GoonjConfig goonjConfig = goonjContextProvider.get();
+        if (goonjConfig.getDeleteAndRecreateDispatchReceipt()) {
             try {
                 deleteEvent(RESOURCE_DELETE_DISPATCH_RECEIVED_STATUS, encounter);
             } catch (HttpClientErrorException.NotFound hce) {
@@ -96,6 +97,7 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
         requestDTO.setDispatchReceivedStatus(Arrays.asList(drsDTO));
         return requestDTO;
     }
+
     private List<DispatchReceivedStatusLineItem> fetchDrsLineItemsFromEncounter(GeneralEncounter encounter) {
         ArrayList<HashMap<String, Object>> md = (ArrayList<HashMap<String, Object>>) encounter.getObservations().get(RECEIVED_MATERIAL);
         return md.stream().map(entry -> createDispatchReceivedStatusLineItem(entry)).collect(Collectors.toList());
@@ -105,8 +107,8 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
         int receivedQuantity;
         String dispatchStatusLineItemId = (String) entry.get(DISPATCH_STATUS_LINE_ITEM_ID);
         String typeOfMaterial = (String) entry.get(TYPE_OF_MATERIAL);
-        String itemName = typeOfMaterial.equals(CONTRIBUTED_ITEM)?
-                (String) entry.get(CONTRIBUTED_ITEM_NAME):
+        String itemName = typeOfMaterial.equals(CONTRIBUTED_ITEM) ?
+                (String) entry.get(CONTRIBUTED_ITEM_NAME) :
                 (typeOfMaterial.equals(KIT) ? (String) entry.get(KIT_NAME) : (String) entry.get(MATERIAL_NAME));
         int dispatchedQuantity = entry.get(QUANTITY_DISPATCHED) != null ?
                 (int) entry.get(QUANTITY_DISPATCHED) : 0;
@@ -121,7 +123,7 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
     }
 
     protected String mapTypeOfMaterial(HashMap<String, Object> encounter) {
-        if(encounter.get(TYPE_OF_MATERIAL) != null) {
+        if (encounter.get(TYPE_OF_MATERIAL) != null) {
             MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(MappingGroup_DispatchReceipt, MappingType_Obs,
                     (String) encounter.get(TYPE_OF_MATERIAL), integrationSystem);
             if (answerMapping != null) {

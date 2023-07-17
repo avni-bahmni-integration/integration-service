@@ -1,100 +1,78 @@
 package org.avni_integration_service.goonj.config;
 
-import org.avni_integration_service.goonj.service.TokenService;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
-import org.avni_integration_service.integration_data.repository.IntegrationSystemRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.avni_integration_service.integration_data.domain.config.IntegrationSystemConfigCollection;
+import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-
-@Component
 public class GoonjConfig {
-    @Value("${goonj.sf.authUrl}")
-    private String salesForceAuthUrl;
+    private final IntegrationSystemConfigCollection integrationSystemConfigCollection;
+    private IntegrationSystem integrationSystem;
+//            goonj.app.tasks=${GOONJ_APP_TASKS:all}
+//            goonj.app.recreate.dispatch.receipt.enabled=${GOONJ_RECREATE_DISPATCH_RECEIPT:false}
 
-    @Value("${goonj.sf.userName}")
-    private String loginUserName;
+    public GoonjConfig(IntegrationSystemConfigCollection integrationSystemConfigCollection, IntegrationSystem integrationSystem) {
+        this.integrationSystemConfigCollection = integrationSystemConfigCollection;
+        this.integrationSystem = integrationSystem;
+    }
 
-    @Value("${goonj.sf.password}")
-    private String loginPassword;
-
-    @Value("${goonj.sf.clientId}")
-    private String clientId;
-
-    @Value("${goonj.sf.clientSecret}")
-    private String clientSecret;
-
-    @Value("${goonj.sf.appUrl}")
-    private String appUrl;
-
-    @Value("${goonj.sf.tokenExpiry}")
-    private int tokenExpiry;
-
-    @Value("${goonj.sf.mediaUrlPrefix}")
-    private String mediaUrl;
-
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private IntegrationSystemRepository integrationSystemRepository;
+    private String getStringConfigValue(String key, String defaultValue) {
+        String configValue = integrationSystemConfigCollection.getConfigValue(key);
+        return StringUtils.hasLength(configValue) ? configValue : defaultValue;
+    }
 
     public String getSalesForceAuthUrl() {
-        return salesForceAuthUrl;
+        return getStringConfigValue("sales_force_url", "https://test.salesforce.com/services/oauth2/token");
     }
 
     public String getLoginUserName() {
-        return loginUserName;
+        return getStringConfigValue("sales_force_user", "goonj-main-dummy");
     }
 
     public String getLoginPassword() {
-        return loginPassword;
+        return getStringConfigValue("sales_force_password", "goonj-main-dummy");
     }
 
     public String getClientId() {
-        return clientId;
+        return getStringConfigValue("sales_force_client_id", "goonj-main-dummy");
     }
 
     public String getClientSecret() {
-        return clientSecret;
+        return getStringConfigValue("sales_force_client_secret", "goonj-main-dummy");
     }
 
     public String getAppUrl() {
-        return appUrl;
-    }
-
-    public int getTokenExpiry() {
-        return tokenExpiry;
+        return getStringConfigValue("sales_force_app_url", "https://goonj--goonjstage.my.salesforce.com/services/apexrest/v1");
     }
 
     public String getMediaUrl() {
-        return mediaUrl;
+        return getStringConfigValue("sales_force_media_url_prefix", "https://staging.avniproject.org/web/media?url=");
     }
 
-    @Bean("GoonjRestTemplate")
-    RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplateBuilder()
-                .interceptors((httpRequest, bytes, execution) -> {
-                    httpRequest.getHeaders().add(HttpHeaders.AUTHORIZATION,
-                            "Bearer " + tokenService.getRefreshedToken().getTokenValue());
-                    httpRequest.getHeaders().remove(HttpHeaders.ACCEPT);
-                    return execution.execute(httpRequest, bytes);
-                })
-                .build();
-        restTemplate.setMessageConverters(Arrays.asList(new MappingJackson2HttpMessageConverter()));
-        return restTemplate;
+    public String getApiUrl() {
+        return getStringConfigValue("avni_api_url", "dummy");
     }
 
-    @Bean("GoonjIntegrationSystem")
-    public IntegrationSystem getGoonjIntegrationSystem() {
-        return integrationSystemRepository.findByName(GoonjMappingDbConstants.IntSystemName);
+    public String getAvniImplUser() {
+        return getStringConfigValue("avni_user", "dummy");
+    }
+
+    public String getImplPassword() {
+        return getStringConfigValue("avni_password", "dummy");
+    }
+
+    public boolean getAuthEnabled() {
+        return Boolean.parseBoolean(getStringConfigValue("avni_auth_enabled", "true"));
+    }
+
+    public String getTasks() {
+        return getStringConfigValue("int_tasks", "all");
+    }
+
+    public boolean getDeleteAndRecreateDispatchReceipt() {
+        return Boolean.parseBoolean(getStringConfigValue("recreate_dispatch_receipt_enabled", "false"));
+    }
+
+    public IntegrationSystem getIntegrationSystem() {
+        return integrationSystem;
     }
 }

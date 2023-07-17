@@ -2,7 +2,9 @@ package org.avni_integration_service.goonj.service;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.goonj.config.GoonjConfig;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.domain.AuthResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,17 +23,19 @@ import java.time.Instant;
 
 @Service
 public class TokenService {
-
     private static final Logger logger = Logger.getLogger(TokenService.class);
     private final Duration clockSkew = Duration.ofSeconds(60);
     private final Clock clock = Clock.systemUTC();
-    private final GoonjConfig goonjConfig;
     private final RestTemplate restTemplate;
+    private final GoonjContextProvider goonjContextProvider;
     private OAuth2AccessToken tokenCache;
 
-    public TokenService(GoonjConfig goonjConfig, RestTemplate restTemplate) {
-        this.goonjConfig = goonjConfig;
+    @Value("${goonj.sf.tokenExpiry}")
+    private int tokenExpiry;
+
+    public TokenService(RestTemplate restTemplate, GoonjContextProvider goonjContextProvider) {
         this.restTemplate = restTemplate;
+        this.goonjContextProvider = goonjContextProvider;
     }
 
     public OAuth2AccessToken getRefreshedToken() {
@@ -46,6 +50,8 @@ public class TokenService {
     }
 
     public OAuth2AccessToken loginWithCredentials() {
+        GoonjConfig goonjConfig = goonjContextProvider.get();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
@@ -56,13 +62,13 @@ public class TokenService {
         map.add("client_secret", goonjConfig.getClientSecret());
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
-        ResponseEntity< AuthResponse > response = restTemplate
+        ResponseEntity<AuthResponse> response = restTemplate
                 .postForEntity(URI.create(goonjConfig.getSalesForceAuthUrl()), request, AuthResponse.class);
         AuthResponse authResponse = response.getBody();
         Long issuedAt = Long.parseLong(authResponse.getIssuedAt());
         OAuth2AccessToken a2at = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, authResponse.getAccessToken(),
                 Instant.ofEpochMilli(issuedAt),
-                Instant.ofEpochMilli(issuedAt+goonjConfig.getTokenExpiry()));
+                Instant.ofEpochMilli(issuedAt + tokenExpiry));
 
         return a2at;
     }
