@@ -30,7 +30,7 @@ public abstract class BaseGoonjService {
     protected void populateObservations(ObservationHolder observationHolder, GoonjEntity goonjEntity, String mappingGroup) {
         List<String> observationFields = goonjEntity.getObservationFields();
         for (String obsField : observationFields) {
-            MappingMetaData mapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, obsField, goonjContextProvider.get().getIntegrationSystem());
+            MappingMetaData mapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, obsField, goonjContextProvider.get().getIntegrationSystem().getId());
             if(mapping == null) {
                 logger.error("Mapping entry not found for observation field: " + obsField);
                 continue;
@@ -39,7 +39,7 @@ public abstract class BaseGoonjService {
             if (dataTypeHint == null)
                 observationHolder.addObservation(mapping.getAvniValue(), goonjEntity.getValue(obsField));
             else if (dataTypeHint == ObsDataType.Coded && goonjEntity.getValue(obsField) != null) {
-                MappingMetaData answerMapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, goonjEntity.getValue(obsField).toString(), goonjContextProvider.get().getIntegrationSystem());
+                MappingMetaData answerMapping = mappingMetaDataRepository.getAvniMappingIfPresent(mappingGroup, MappingType_Obs, goonjEntity.getValue(obsField).toString(), goonjContextProvider.get().getIntegrationSystem().getId());
                 if(answerMapping == null) {
                     String errorMessage = "Answer Mapping entry not found for coded concept answer field: " + obsField;
                     logger.error(errorMessage);

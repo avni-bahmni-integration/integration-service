@@ -1,5 +1,6 @@
 package org.avni_integration_service.integration_data.service.error;
 
+import org.avni_integration_service.integration_data.context.ContextIntegrationSystem;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.ErrorTypeRepository;
@@ -28,6 +29,12 @@ public class ErrorClassifier {
      * @param errorMsg
      * @return
      */
+    public ErrorType classify(ContextIntegrationSystem integrationSystem, String errorMsg) {
+        List<ErrorType> allErrorTypesByIntegrationSystem = errorTypeRepository.findAllByIntegrationSystemId(integrationSystem.getId());
+        return allErrorTypesByIntegrationSystem.stream().filter(errType -> evaluate(errorMsg, errType))
+                .findAny().orElse(null);
+    }
+
     public ErrorType classify(IntegrationSystem integrationSystem, String errorMsg) {
         List<ErrorType> allErrorTypesByIntegrationSystem = errorTypeRepository.findAllByIntegrationSystem(integrationSystem);
         return allErrorTypesByIntegrationSystem.stream().filter(errType -> evaluate(errorMsg, errType))
@@ -41,7 +48,7 @@ public class ErrorClassifier {
      * @param error
      * @return
      */
-    public ErrorType classify(IntegrationSystem integrationSystem, @NonNull Exception error) {
+    public ErrorType classify(ContextIntegrationSystem integrationSystem, @NonNull Exception error) {
         return classify(integrationSystem, error.getLocalizedMessage());
     }
 

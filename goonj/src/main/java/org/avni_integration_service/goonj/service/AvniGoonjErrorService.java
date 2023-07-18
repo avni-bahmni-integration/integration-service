@@ -60,7 +60,7 @@ public class AvniGoonjErrorService {
     }
 
     private ErrorType getErrorType(GoonjErrorType goonjErrorType) {
-        return errorTypeRepository.findByNameAndIntegrationSystem(goonjErrorType.name(), goonjContextProvider.get().getIntegrationSystem());
+        return errorTypeRepository.findByNameAndIntegrationSystemId(goonjErrorType.name(), goonjContextProvider.get().getIntegrationSystem().getId());
     }
 
     private ErrorRecord saveGoonjError(String uuid, GoonjErrorType goonjErrorType, GoonjEntityType goonjEntityType, String errorMsg) {

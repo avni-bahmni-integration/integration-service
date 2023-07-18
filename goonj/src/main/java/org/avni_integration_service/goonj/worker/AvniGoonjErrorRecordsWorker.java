@@ -52,15 +52,16 @@ public class AvniGoonjErrorRecordsWorker {
         do {
             logger.info(String.format("Starting page number: %d for sync direction: %s", pageNumber, syncDirection.name()));
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+            int integrationSystemId = goonjContextProvider.get().getIntegrationSystem().getId();
             if (syncDirection.equals(SyncDirection.AvniToGoonj))
-                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
-                        avniGoonjErrorService.getUnprocessableErrorTypes(), goonjContextProvider.get().getIntegrationSystem(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByAvniEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemIdOrderById(
+                        avniGoonjErrorService.getUnprocessableErrorTypes(), integrationSystemId, pageRequest);
             else if (syncDirection.equals(SyncDirection.GoonjToAvni) && !allErrors)
-                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
-                        avniGoonjErrorService.getUnprocessableErrorTypes(), goonjContextProvider.get().getIntegrationSystem(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemIdOrderById(
+                        avniGoonjErrorService.getUnprocessableErrorTypes(), integrationSystemId, pageRequest);
             else if (syncDirection.equals(SyncDirection.GoonjToAvni) && allErrors)
-                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
-                        avniGoonjErrorService.getUnprocessableErrorTypes(), goonjContextProvider.get().getIntegrationSystem(), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemIdOrderById(
+                        avniGoonjErrorService.getUnprocessableErrorTypes(), integrationSystemId, pageRequest);
             else
                 throw new RuntimeException("Invalid arguments");
 

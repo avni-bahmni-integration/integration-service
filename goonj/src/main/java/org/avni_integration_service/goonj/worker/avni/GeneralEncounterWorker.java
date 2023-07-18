@@ -10,6 +10,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
@@ -37,14 +38,14 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     private final String encounterType;
     private final Logger logger;
     private final ErrorClassifier errorClassifier;
-    private final IntegrationSystem integrationSystem;
+    private final GoonjContextProvider goonjContextProvider;
 
     public GeneralEncounterWorker(AvniEncounterRepository avniEncounterRepository, AvniSubjectRepository avniSubjectRepository,
                                   AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
                                   AvniGoonjErrorService avniGoonjErrorService,
                                   IntegratingEntityStatusRepository integrationEntityStatusRepository,
                                   GoonjErrorType goonjErrorType, GoonjEntityType entityType, Logger logger,
-                                  ErrorClassifier errorClassifier, IntegrationSystem integrationSystem) {
+                                  ErrorClassifier errorClassifier, GoonjContextProvider goonjContextProvider) {
         this.avniEncounterRepository = avniEncounterRepository;
         this.avniSubjectRepository = avniSubjectRepository;
         this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
@@ -55,7 +56,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
         this.encounterType = entityType.getDbName();
         this.logger = logger;
         this.errorClassifier = errorClassifier;
-        this.integrationSystem = integrationSystem;
+        this.goonjContextProvider = goonjContextProvider;
     }
 
     public void processEncounters() throws Exception {
@@ -129,7 +130,7 @@ public abstract class GeneralEncounterWorker implements ErrorRecordWorker {
     protected void handleError(GeneralEncounter generalEncounter, Exception exception,
                                boolean updateSyncStatus, GoonjErrorType goonjErrorType) throws Exception {
         logger.error(String.format("Avni encounter %s could not be synced to Goonj Salesforce. ", generalEncounter.getUuid()), exception);
-        ErrorType classifiedErrorType = errorClassifier.classify(integrationSystem, exception);
+        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(), exception);
         if(classifiedErrorType == null) {
             throw exception;
         }

@@ -9,6 +9,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
 import org.avni_integration_service.goonj.GoonjMappingGroup;
+import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.repository.DispatchReceiptRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
@@ -28,11 +29,11 @@ public class DispatchReceiptWorker extends GeneralEncounterWorker {
                                  AvniGoonjErrorService avniGoonjErrorService,
                                  IntegratingEntityStatusRepository integrationEntityStatusRepository,
                                  DispatchReceiptRepository dispatchReceiptRepository,
-                                 ErrorClassifier errorClassifier, @Qualifier("GoonjIntegrationSystem") IntegrationSystem integrationSystem) {
+                                 ErrorClassifier errorClassifier, GoonjContextProvider goonjContextProvider) {
         super(avniEncounterRepository, avniSubjectRepository, avniIgnoredConceptsRepository,
                 avniGoonjErrorService, integrationEntityStatusRepository,
                 GoonjErrorType.DispatchReceiptAttributesMismatch, GoonjEntityType.DispatchReceipt, Logger.getLogger(DispatchReceiptWorker.class),
-                errorClassifier, integrationSystem);
+                errorClassifier, goonjContextProvider);
         this.dispatchReceiptRepository = dispatchReceiptRepository;
     }
     public void process() throws Exception {

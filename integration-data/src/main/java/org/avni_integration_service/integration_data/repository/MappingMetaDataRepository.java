@@ -20,6 +20,7 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
     MappingMetaData findByMappingGroupAndMappingType(MappingGroup mappingGroup, MappingType mappingType);
 
     MappingMetaData findByMappingGroupNameAndMappingTypeNameAndIntSystemValueAndIntegrationSystem(String mappingGroup, String mappingType, String intSystemValue, IntegrationSystem integrationSystem);
+    MappingMetaData findByMappingGroupNameAndMappingTypeNameAndIntSystemValueAndIntegrationSystemId(String mappingGroup, String mappingType, String intSystemValue, int integrationSystemId);
 
     MappingMetaData findByMappingGroupNameAndMappingTypeNameAndAvniValueAndIntegrationSystem(String mappingGroup, String mappingType, String avniValue, IntegrationSystem integrationSystem);
 
@@ -32,6 +33,10 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
 
     default MappingMetaData getAvniMappingIfPresent(String mappingGroup, String mappingType, String intSystemValue, IntegrationSystem integrationSystem) {
         return findByMappingGroupNameAndMappingTypeNameAndIntSystemValueAndIntegrationSystem(mappingGroup, mappingType, intSystemValue, integrationSystem);
+    }
+
+    default MappingMetaData getAvniMappingIfPresent(String mappingGroup, String mappingType, String intSystemValue, int integrationSystemId) {
+        return findByMappingGroupNameAndMappingTypeNameAndIntSystemValueAndIntegrationSystemId(mappingGroup, mappingType, intSystemValue, integrationSystemId);
     }
 
     default MappingMetaData getIntSystemMappingIfPresent(String mappingGroup, String mappingType, String avniMapping, IntegrationSystem integrationSystem) {

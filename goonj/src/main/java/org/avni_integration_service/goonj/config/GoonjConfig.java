@@ -1,18 +1,19 @@
 package org.avni_integration_service.goonj.config;
 
+import org.avni_integration_service.integration_data.context.ContextIntegrationSystem;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.config.IntegrationSystemConfigCollection;
 import org.springframework.util.StringUtils;
 
 public class GoonjConfig {
     private final IntegrationSystemConfigCollection integrationSystemConfigCollection;
-    private IntegrationSystem integrationSystem;
+    private final ContextIntegrationSystem integrationSystem;
 //            goonj.app.tasks=${GOONJ_APP_TASKS:all}
 //            goonj.app.recreate.dispatch.receipt.enabled=${GOONJ_RECREATE_DISPATCH_RECEIPT:false}
 
     public GoonjConfig(IntegrationSystemConfigCollection integrationSystemConfigCollection, IntegrationSystem integrationSystem) {
         this.integrationSystemConfigCollection = integrationSystemConfigCollection;
-        this.integrationSystem = integrationSystem;
+        this.integrationSystem = new ContextIntegrationSystem(integrationSystem);
     }
 
     private String getStringConfigValue(String key, String defaultValue) {
@@ -72,7 +73,7 @@ public class GoonjConfig {
         return Boolean.parseBoolean(getStringConfigValue("recreate_dispatch_receipt_enabled", "false"));
     }
 
-    public IntegrationSystem getIntegrationSystem() {
+    public ContextIntegrationSystem getIntegrationSystem() {
         return integrationSystem;
     }
 }

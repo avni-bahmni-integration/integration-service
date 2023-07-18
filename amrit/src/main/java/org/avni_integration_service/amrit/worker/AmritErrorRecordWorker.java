@@ -2,9 +2,7 @@ package org.avni_integration_service.amrit.worker;
 
 import org.apache.log4j.Logger;
 import org.avni_integration_service.amrit.config.AmritEntityType;
-import org.avni_integration_service.amrit.config.AmritMappingDbConstants;
 import org.avni_integration_service.amrit.service.AvniAmritErrorService;
-import org.avni_integration_service.amrit.service.BeneficiaryService;
 import org.avni_integration_service.avni.SyncDirection;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorRecord;
@@ -42,13 +40,14 @@ public class AmritErrorRecordWorker {
         do {
             logger.info(String.format("Starting page number: %d", pageNumber));
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+            Integer integrationSystemId = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit).getId();
             if (syncDirection.equals(SyncDirection.AvniToAmrit))
-                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemIdOrderById(
                         avniAmritErrorService.getUnprocessableErrorTypes(),
-                        integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit), pageRequest);
+                        integrationSystemId, pageRequest);
             else if (syncDirection.equals(SyncDirection.AvniToAmrit) && !allErrors)
-                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemOrderById(
-                        avniAmritErrorService.getUnprocessableErrorTypes(), integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit), pageRequest);
+                errorRecordPage = errorRecordRepository.findAllByIntegratingEntityTypeNotNullAndProcessingDisabledFalseAndErrorRecordLogsErrorTypeNotInAndIntegrationSystemIdOrderById(
+                        avniAmritErrorService.getUnprocessableErrorTypes(), integrationSystemId, pageRequest);
             else
                 throw new RuntimeException("Invalid arguments");
 
