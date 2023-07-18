@@ -2,7 +2,6 @@ plugins {
     id 'org.springframework.boot' version '2.5.6'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
-    id "org.flywaydb.flyway" version "7.1.1"
 }
 
 group = 'org.avni_integration_service'
@@ -30,18 +29,6 @@ tasks.withType(Test).all {
 
 tasks.withType(JavaExec) {
     jvmArgs += '--enable-preview'
-}
-
-task migrateTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    url = 'jdbc:postgresql://localhost:5432/avni_int_test'
-    user = 'avni_int'
-    password = 'password'
-}
-
-task migrateDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    url = 'jdbc:postgresql://localhost:5432/avni_int'
-    user = 'avni_int'
-    password = 'password'
 }
 
 dependencies {

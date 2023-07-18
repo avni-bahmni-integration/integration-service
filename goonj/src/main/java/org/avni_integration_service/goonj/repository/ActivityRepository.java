@@ -36,17 +36,15 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
     public static final String NUMBER_FEMALE_PARTICIPANTS = "2966afcc-2c07-44cf-8711-3fc23f52a6b5";
     public static final String NUMBER_OTHER_PARTICIPANTS = "a043fea3-1658-4b5e-becd-ee55ab305a03";
     private final MappingMetaDataRepository mappingMetaDataRepository;
-    private final IntegrationSystem integrationSystem;
 
     @Autowired
     public ActivityRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                               @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
-                              MappingMetaDataRepository mappingMetaDataRepository, IntegrationSystemRepository integrationSystemRepository,
+                              MappingMetaDataRepository mappingMetaDataRepository,
                               AvniHttpClient avniHttpClient, GoonjContextProvider goonjContextProvider) {
         super(integratingEntityStatusRepository, restTemplate,
                 GoonjEntityType.Activity.name(), avniHttpClient, goonjContextProvider);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
-        this.integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit);
     }
 
     @Override
@@ -170,8 +168,9 @@ public class ActivityRepository extends GoonjBaseRepository implements ActivityC
 
     protected void mapActivityType(ActivityDTO activityDTO, AvniBaseContract subject) {
         if (subject.getObservation(ACTIVITY_TYPE) != null) {
+            int integrationSystemId = goonjContextProvider.get().getIntegrationSystem().getId();
             MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(MappingGroup_Activity, MappingType_Obs,
-                    (String) subject.getObservation(ACTIVITY_TYPE), integrationSystem);
+                    (String) subject.getObservation(ACTIVITY_TYPE), integrationSystemId);
             if (answerMapping != null) {
                 activityDTO.setActivityType(answerMapping.getIntSystemValue());
             }

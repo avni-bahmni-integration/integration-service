@@ -36,18 +36,16 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
         implements DispatchReceiptConstants, DispatchReceivedStatusLineItemConstants {
     private static final Logger logger = Logger.getLogger(DispatchReceiptRepository.class);
     private final MappingMetaDataRepository mappingMetaDataRepository;
-    private final IntegrationSystem integrationSystem;
 
     @Autowired
     public DispatchReceiptRepository(IntegratingEntityStatusRepository integratingEntityStatusRepository,
                                      @Qualifier("GoonjRestTemplate") RestTemplate restTemplate,
                                      MappingMetaDataRepository mappingMetaDataRepository,
-                                     IntegrationSystemRepository integrationSystemRepository, AvniHttpClient avniHttpClient,
+                                     AvniHttpClient avniHttpClient,
                                      GoonjContextProvider goonjContextProvider) {
         super(integratingEntityStatusRepository, restTemplate,
                 GoonjEntityType.DispatchReceipt.name(), avniHttpClient, goonjContextProvider);
         this.mappingMetaDataRepository = mappingMetaDataRepository;
-        this.integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit);
     }
 
     @Override
@@ -125,7 +123,7 @@ public class DispatchReceiptRepository extends GoonjBaseRepository
     protected String mapTypeOfMaterial(HashMap<String, Object> encounter) {
         if (encounter.get(TYPE_OF_MATERIAL) != null) {
             MappingMetaData answerMapping = mappingMetaDataRepository.getIntSystemMappingIfPresent(MappingGroup_DispatchReceipt, MappingType_Obs,
-                    (String) encounter.get(TYPE_OF_MATERIAL), integrationSystem);
+                    (String) encounter.get(TYPE_OF_MATERIAL), goonjContextProvider.get().getIntegrationSystem().getId());
             if (answerMapping != null) {
                 return answerMapping.getIntSystemValue();
             }

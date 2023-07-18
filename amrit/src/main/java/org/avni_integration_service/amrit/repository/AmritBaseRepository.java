@@ -34,8 +34,8 @@ public abstract class AmritBaseRepository {
 
     private final AmritTokenService amritTokenService;
     private final IntegratingEntityStatusRepository integratingEntityStatusRepository;
-    private final IntegrationSystem integrationSystem;
     private final MappingGroupRepository mappingGroupRepository;
+    private final IntegrationSystemRepository integrationSystemRepository;
     private final MappingTypeRepository mappingTypeRepository;
     private final MappingMetaDataRepository mappingMetaDataRepository;
     private final RestTemplate amritRestTemplate;
@@ -51,10 +51,10 @@ public abstract class AmritBaseRepository {
         this.mappingGroupRepository = mappingGroupRepository;
         this.amritRestTemplate = restTemplate;
         this.amritApplicationConfig = amritApplicationConfig;
+        this.integrationSystemRepository = integrationSystemRepository;
         this.mappingTypeRepository = mappingTypeRepository;
         this.entityType = entityType;
         this.mappingMetaDataRepository = mappingMetaDataRepository;
-        this.integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit);
     }
 
     private <T extends AmritBaseResponse> boolean extractResponse(ResponseEntity<T> responseEntity) {
@@ -135,7 +135,7 @@ public abstract class AmritBaseRepository {
         MappingType mappingTypeEntity = mappingTypeRepository.findByName(mappingType);
         List<MappingMetaData> amritFields = mappingMetaDataRepository.findAllByMappingGroupAndMappingType(mappingGroupEntity, mappingTypeEntity);
 
-
+        IntegrationSystem integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Amrit);
         for (MappingMetaData amritField : amritFields) {
             MappingMetaData mapping = mappingMetaDataRepository
                     .getAvniMappingIfPresent(mappingGroup, mappingType, amritField.getIntSystemValue(), integrationSystem);

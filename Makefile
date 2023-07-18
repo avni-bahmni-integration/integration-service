@@ -1,4 +1,5 @@
 include bahmni/bahmni.mk
+include externalDB.mk
 
 help:
 	@IFS=$$'\n' ; \
@@ -53,10 +54,6 @@ build-db:
 
 build-db-schema:
 	./gradlew --stacktrace :integration-data:migrateDb
-	./gradlew --stacktrace :bahmni:migrateDb
-	./gradlew --stacktrace :goonj:migrateDb
-	./gradlew --stacktrace :amrit:migrateDb
-	./gradlew --stacktrace :power:migrateDb
 	psql -h localhost -p $(dbPort) -U avni_int -d avni_int < integration-data/src/main/resources/db/util/superadmin.sql;
 
 drop-db:
@@ -66,10 +63,7 @@ create-test-db:
 	$(call _build_db,avni_int_test)
 
 build-test-db: create-test-db
-	./gradlew :integrator:migrateTestDb
-#	./gradlew --stacktrace :bahmni:migrateTestDb
-#	./gradlew --stacktrace :goonj:migrateTestDb
-#	./gradlew --stacktrace :amrit:migrateTestDb
+	./gradlew :integration-data:migrateTestDb
 
 drop-test-db:
 	$(call _drop_db,avni_int_test)
