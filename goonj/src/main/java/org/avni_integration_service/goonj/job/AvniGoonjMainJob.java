@@ -67,8 +67,9 @@ public class AvniGoonjMainJob {
     public void execute(GoonjConfig goonjConfig) {
         try {
             logger.info("Executing Goonj Main Job");
-            avniHttpClient.setAvniSession(goonjAvniSessionFactory.createSession());
             goonjContextProvider.set(goonjConfig);
+            avniHttpClient.setAvniSession(goonjAvniSessionFactory.createSession());
+
 
             List<IntegrationTask> tasks = IntegrationTask.getTasks(goonjConfig.getTasks());
             processDemandAndDispatch(tasks);

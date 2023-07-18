@@ -19,4 +19,11 @@ public class IntegrationSystemConfig extends BaseIntegrationSpecificEntity {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "key='" + key + '\'' +
+                '}';
+    }
 }

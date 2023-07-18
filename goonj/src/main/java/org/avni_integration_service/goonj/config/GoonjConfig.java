@@ -8,8 +8,6 @@ import org.springframework.util.StringUtils;
 public class GoonjConfig {
     private final IntegrationSystemConfigCollection integrationSystemConfigCollection;
     private final ContextIntegrationSystem integrationSystem;
-//            goonj.app.tasks=${GOONJ_APP_TASKS:all}
-//            goonj.app.recreate.dispatch.receipt.enabled=${GOONJ_RECREATE_DISPATCH_RECEIPT:false}
 
     public GoonjConfig(IntegrationSystemConfigCollection integrationSystemConfigCollection, IntegrationSystem integrationSystem) {
         this.integrationSystemConfigCollection = integrationSystemConfigCollection;
@@ -22,7 +20,7 @@ public class GoonjConfig {
     }
 
     public String getSalesForceAuthUrl() {
-        return getStringConfigValue("sales_force_url", "https://test.salesforce.com/services/oauth2/token");
+        return getStringConfigValue("sales_force_auth_url", "https://test.salesforce.com/services/oauth2/token");
     }
 
     public String getLoginUserName() {

@@ -12,19 +12,21 @@ public class IntegrationSystemConfigCollection {
         this.integrationSystemConfigs = integrationSystemConfigs;
     }
 
+    private String getConfigValue(String key, String defaultValue) {
+        String value = getConfigValue(key);
+        return value == null ? defaultValue : value;
+    }
+
     public String getConfigValue(String key) {
         IntegrationSystemConfig integrationSystemConfig = integrationSystemConfigs.stream().filter(x -> x.getKey().equals(key)).findFirst().orElse(null);
-        if (integrationSystemConfig == null) {
-            throw new RuntimeException(String.format("No config found for key: %s", key));
-        }
-        return integrationSystemConfig.getValue();
+        return integrationSystemConfig == null ? null : integrationSystemConfig.getValue();
     }
 
     public String getMainScheduledJobCron() {
-        return this.getConfigValue(MAIN_SCHEDULED_JOB_CRON);
+        return this.getConfigValue(MAIN_SCHEDULED_JOB_CRON, "-");
     }
 
     public String getErrorScheduledJobCron() {
-        return this.getConfigValue(ERROR_SCHEDULED_JOB_CRON);
+        return this.getConfigValue(ERROR_SCHEDULED_JOB_CRON, "-");
     }
 }

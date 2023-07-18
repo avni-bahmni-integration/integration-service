@@ -14,11 +14,14 @@ import org.avni_integration_service.job.AvniPowerMainJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.support.CronExpression;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -60,18 +63,25 @@ public class IntegrationJobScheduler {
         this.integrationSystemRepository = integrationSystemRepository;
     }
 
+    @PostConstruct
     public void scheduleAll() {
-        taskScheduler.schedule(avniPowerMainJob::execute, new CronTrigger(powerCron));
-        taskScheduler.schedule(avniPowerFullErrorJob::execute, new CronTrigger(powerCronError));
-        taskScheduler.schedule(avniAmritMainJob::execute, new CronTrigger(amritCron));
-        taskScheduler.schedule(avniAmritFullErrorJob::execute, new CronTrigger(amritCronError));
+        if (CronExpression.isValidExpression(powerCron)) taskScheduler.schedule(avniPowerMainJob::execute, new CronTrigger(powerCron));
+        if (CronExpression.isValidExpression(powerCronError)) taskScheduler.schedule(avniPowerFullErrorJob::execute, new CronTrigger(powerCronError));
+        if (CronExpression.isValidExpression(amritCron)) taskScheduler.schedule(avniAmritMainJob::execute, new CronTrigger(amritCron));
+        if (CronExpression.isValidExpression(amritCronError)) taskScheduler.schedule(avniAmritFullErrorJob::execute, new CronTrigger(amritCronError));
 
         List<IntegrationSystem> goonjSystems = integrationSystemRepository.findAllBySystemType(IntegrationSystem.IntegrationSystemType.Goonj);
         goonjSystems.forEach(goonjSystem -> {
             IntegrationSystemConfigCollection integrationSystemConfigs = integrationSystemConfigRepository.getInstanceConfiguration(goonjSystem);
             GoonjConfig goonjConfig = new GoonjConfig(integrationSystemConfigs, goonjSystem);
-            taskScheduler.schedule(() -> avniGoonjMainJob.execute(goonjConfig), new CronTrigger(integrationSystemConfigs.getMainScheduledJobCron()));
-            taskScheduler.schedule(() -> avniGoonjFullErrorJob.execute(goonjConfig), new CronTrigger(integrationSystemConfigs.getErrorScheduledJobCron()));
+            String mainScheduledJobCron = integrationSystemConfigs.getMainScheduledJobCron();
+            String errorScheduledJobCron = integrationSystemConfigs.getErrorScheduledJobCron();
+
+            if (CronExpression.isValidExpression(mainScheduledJobCron))
+                taskScheduler.schedule(() -> avniGoonjMainJob.execute(goonjConfig), new CronTrigger(mainScheduledJobCron));
+
+            if (CronExpression.isValidExpression(errorScheduledJobCron))
+                taskScheduler.schedule(() -> avniGoonjFullErrorJob.execute(goonjConfig), new CronTrigger(errorScheduledJobCron));
         });
     }
 }

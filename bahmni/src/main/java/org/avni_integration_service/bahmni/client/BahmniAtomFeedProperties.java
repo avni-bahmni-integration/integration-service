@@ -59,8 +59,6 @@ public class BahmniAtomFeedProperties implements IBahmniAtomFeedProperties {
         logger.debug("**************** DEBUG Bahmni AtomFeed Properties ************************ ");
     }
 
-
-
     private HashMap<String, String> getInfo() {
         HashMap<String, String> values = new HashMap<>();
         values.put("bahmni.connectionTimeoutInMilliseconds", bahmniConnectionTimeOut);
@@ -69,6 +67,4 @@ public class BahmniAtomFeedProperties implements IBahmniAtomFeedProperties {
         values.put("openmrs.user",openmrsUser );
         return values;
     }
-
-
 }

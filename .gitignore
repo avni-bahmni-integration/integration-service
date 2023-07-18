@@ -12,3 +12,4 @@ amrit/src/test/resources/amrit-secret.properties
 
 **/bin/**
 *.iml
+/integration-data/src/main/resources/db/onetime/poststart-move-goonj-config-to.db.sql
