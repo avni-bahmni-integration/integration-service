@@ -6,5 +6,5 @@ public enum GoonjErrorType {
     MultipleSubjectsWithId, SubjectIdNull, ErroredAvniEncounter,
     DemandAttributesMismatch, DispatchAttributesMismatch, DispatchReceiptAttributesMismatch,
     DistributionAttributesMismatch, ActivityAttributesMismatch, ImplementationInventoryAttributesMismatch,
-    DemandDeletionFailure, DispatchDeletionFailure, DispatchLineItemsDeletionFailure;
+    DemandDeletionFailure, DispatchDeletionFailure, DispatchLineItemsDeletionFailure, UnclassifiedError;
 }

@@ -74,4 +74,7 @@ public class GoonjConfig {
     public ContextIntegrationSystem getIntegrationSystem() {
         return integrationSystem;
     }
+    public Boolean getBypassErrors() {
+        return Boolean.parseBoolean(getStringConfigValue("goonj_bypass_errors", "true"));
+    }
 }

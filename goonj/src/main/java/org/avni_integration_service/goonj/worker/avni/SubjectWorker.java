@@ -8,6 +8,7 @@ import org.avni_integration_service.avni.repository.AvniSubjectRepository;
 import org.avni_integration_service.avni.worker.ErrorRecordWorker;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
+import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.repository.GoonjBaseRepository;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
@@ -36,6 +37,7 @@ public abstract class SubjectWorker implements ErrorRecordWorker {
     private final Logger logger;
     private final ErrorClassifier errorClassifier;
     private final GoonjContextProvider goonjContextProvider;
+    private final GoonjConfig goonjConfig;
 
     public SubjectWorker(AvniSubjectRepository avniSubjectRepository,
                          AvniIgnoredConceptsRepository avniIgnoredConceptsRepository,
@@ -43,7 +45,7 @@ public abstract class SubjectWorker implements ErrorRecordWorker {
                          IntegratingEntityStatusRepository integrationEntityStatusRepository,
                          GoonjErrorType goonjErrorType, GoonjEntityType entityType, Logger logger,
                          ErrorClassifier errorClassifier,
-                         GoonjContextProvider goonjContextProvider) {
+                         GoonjContextProvider goonjContextProvider, GoonjConfig goonjConfig) {
         this.avniSubjectRepository = avniSubjectRepository;
         this.avniIgnoredConceptsRepository = avniIgnoredConceptsRepository;
         this.avniGoonjErrorService = avniGoonjErrorService;
@@ -54,6 +56,7 @@ public abstract class SubjectWorker implements ErrorRecordWorker {
         this.logger = logger;
         this.errorClassifier = errorClassifier;
         this.goonjContextProvider = goonjContextProvider;
+        this.goonjConfig = goonjConfig;
     }
 
     public void processSubjects() throws Exception {
@@ -119,7 +122,7 @@ public abstract class SubjectWorker implements ErrorRecordWorker {
     protected void handleError(Subject subject, Exception exception,
                                boolean updateSyncStatus, GoonjErrorType goonjErrorType) throws Exception {
         logger.error(String.format("Avni subject %s could not be synced to Goonj Salesforce. ", subject.getUuid()), exception);
-        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(), exception);
+        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(), exception, goonjConfig.getBypassErrors());
         if(classifiedErrorType == null) {
             throw exception;
         }

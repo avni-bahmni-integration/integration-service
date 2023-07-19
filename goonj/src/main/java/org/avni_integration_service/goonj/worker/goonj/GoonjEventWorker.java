@@ -3,6 +3,7 @@ package org.avni_integration_service.goonj.worker.goonj;
 import org.apache.log4j.Logger;
 import org.avni_integration_service.goonj.GoonjEntityType;
 import org.avni_integration_service.goonj.GoonjErrorType;
+import org.avni_integration_service.goonj.config.GoonjConfig;
 import org.avni_integration_service.goonj.config.GoonjContextProvider;
 import org.avni_integration_service.goonj.service.AvniGoonjErrorService;
 import org.avni_integration_service.goonj.util.DateTimeUtil;
@@ -22,14 +23,17 @@ public abstract class GoonjEventWorker {
     protected final GoonjEntityType entityType;
     private final ErrorClassifier errorClassifier;
     private final GoonjContextProvider goonjContextProvider;
+    private final GoonjConfig goonjConfig;
 
     public GoonjEventWorker(AvniGoonjErrorService avniGoonjErrorService, IntegratingEntityStatusRepository integratingEntityStatusRepository,
-                            GoonjEntityType entityType, ErrorClassifier errorClassifier, GoonjContextProvider goonjContextProvider) {
+                            GoonjEntityType entityType, ErrorClassifier errorClassifier, GoonjContextProvider goonjContextProvider,
+                            GoonjConfig goonjConfig) {
         this.avniGoonjErrorService = avniGoonjErrorService;
         this.integratingEntityStatusRepository = integratingEntityStatusRepository;
         this.entityType = entityType;
         this.errorClassifier = errorClassifier;
         this.goonjContextProvider = goonjContextProvider;
+        this.goonjConfig = goonjConfig;
     }
 
     abstract void process(Map<String, Object> event) throws Exception;
@@ -65,7 +69,7 @@ public abstract class GoonjEventWorker {
 
     protected void handleError(Map<String, Object> event, Exception exception, String entityId, GoonjErrorType goonjErrorType) throws Exception {
         logger.error(String.format("Goonj %s %s could not be synced to Goonj Salesforce. ", entityType, event.get(entityId)), exception);
-        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(), exception);
+        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(), exception, goonjConfig.getBypassErrors());
         if(classifiedErrorType == null) {
             throw exception;
         }
