@@ -1,5 +1,6 @@
 package org.avni_integration_service.integration_data.service.error;
 
+import org.avni_integration_service.integration_data.context.ContextIntegrationSystem;
 import org.avni_integration_service.integration_data.domain.IntegrationSystem;
 import org.avni_integration_service.integration_data.domain.error.ErrorType;
 import org.avni_integration_service.integration_data.repository.AbstractSpringTest;
@@ -14,12 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest(classes = {ErrorClassifier.class, IntegrationSystemRepository.class})
 public class ErrorClassifierForTest extends AbstractSpringTest implements ErrorClassifierForGoonjTestConstants {
         private final ErrorClassifier errorClassifier;
-        private final IntegrationSystem integrationSystem;
+        private final ContextIntegrationSystem integrationSystem;
 
         @Autowired
         public ErrorClassifierForTest(ErrorClassifier errorClassifier, IntegrationSystemRepository integrationSystemRepository) {
                 this.errorClassifier = errorClassifier;
-                this.integrationSystem = integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Goonj);
+                this.integrationSystem = new ContextIntegrationSystem(integrationSystemRepository
+                        .findBySystemType(IntegrationSystem.IntegrationSystemType.Goonj));
         }
 
         @Test

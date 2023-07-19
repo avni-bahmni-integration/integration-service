@@ -64,7 +64,8 @@ public abstract class GoonjEventWorker {
 
     protected void handleError(Map<String, Object> event, Exception exception, String entityId, GoonjErrorType goonjErrorType) throws Exception {
         logger.error(String.format("Goonj %s %s could not be synced to Goonj Salesforce. ", entityType, event.get(entityId)), exception);
-        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(), exception, goonjContextProvider.get().getBypassErrors());
+        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(),
+                exception, goonjContextProvider.get().getBypassErrors(),  GoonjErrorType.UnclassifiedError.name());
         if(classifiedErrorType == null) {
             throw exception;
         }

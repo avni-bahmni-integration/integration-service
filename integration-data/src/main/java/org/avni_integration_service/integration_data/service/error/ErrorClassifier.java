@@ -35,13 +35,7 @@ public class ErrorClassifier {
      * @return
      */
     public ErrorType classify(ContextIntegrationSystem integrationSystem, String errorMsg) {
-        return classify(integrationSystem, errorMsg, false);
-    }
-
-    public ErrorType classify(IntegrationSystem integrationSystem, String errorMsg) {
-        List<ErrorType> allErrorTypesByIntegrationSystem = errorTypeRepository.findAllByIntegrationSystem(integrationSystem);
-        return allErrorTypesByIntegrationSystem.stream().filter(errType -> evaluate(errorMsg, errType))
-                .findAny().orElse(null);
+        return classify(integrationSystem, errorMsg, false, null);
     }
 
     /**
@@ -53,18 +47,18 @@ public class ErrorClassifier {
      * @return
      */
     public ErrorType classify(ContextIntegrationSystem integrationSystem, @NonNull Exception error) {
-        return classify(integrationSystem, error.getLocalizedMessage());
+        return classify(integrationSystem, error.getLocalizedMessage(), false, null);
     }
 
-    public ErrorType classify(ContextIntegrationSystem integrationSystem, @NonNull Exception error, Boolean bypassErrors) {
-        return classify(integrationSystem, error.getLocalizedMessage(), bypassErrors);
+    public ErrorType classify(ContextIntegrationSystem integrationSystem, @NonNull Exception error, Boolean bypassErrors, String fallBackErrorType) {
+        return classify(integrationSystem, error.getLocalizedMessage(), bypassErrors, fallBackErrorType);
     }
 
-    public ErrorType classify(ContextIntegrationSystem integrationSystem, String errorMsg, Boolean bypassErrors) {
+    public ErrorType classify(ContextIntegrationSystem integrationSystem, String errorMsg, Boolean bypassErrors, String fallBackErrorType) {
         List<ErrorType> allErrorTypesByIntegrationSystem = errorTypeRepository.findAllByIntegrationSystemId(integrationSystem.getId());
         return allErrorTypesByIntegrationSystem.stream().filter(errType -> evaluate(errorMsg, errType))
                 .findAny().orElseGet(() -> {
-                    if (bypassErrors) { return getFallbackRecord(); }
+                    if (bypassErrors) { return getFallbackRecord(integrationSystem, fallBackErrorType); }
                     else { return null; }
                 });
     }
@@ -87,9 +81,9 @@ public class ErrorClassifier {
         }
     }
 
-    private ErrorType getFallbackRecord() {
+    private ErrorType getFallbackRecord(ContextIntegrationSystem contextIntegrationSystem, String fallBackErrorType) {
         Optional<ErrorType> optionalErrorType = Optional
-                .ofNullable(errorTypeRepository.findByNameAndIntegrationSystem("UnclassifiedError", integrationSystemRepository.findBySystemType(IntegrationSystem.IntegrationSystemType.Goonj)));
+                .ofNullable(errorTypeRepository.findByNameAndIntegrationSystemId(fallBackErrorType, contextIntegrationSystem.getId()));
         return optionalErrorType.orElse(null);
     }
 

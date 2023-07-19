@@ -119,7 +119,8 @@ public abstract class SubjectWorker implements ErrorRecordWorker {
     protected void handleError(Subject subject, Exception exception,
                                boolean updateSyncStatus, GoonjErrorType goonjErrorType) throws Exception {
         logger.error(String.format("Avni subject %s could not be synced to Goonj Salesforce. ", subject.getUuid()), exception);
-        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(), exception, goonjContextProvider.get().getBypassErrors());
+        ErrorType classifiedErrorType = errorClassifier.classify(goonjContextProvider.get().getIntegrationSystem(),
+                exception, goonjContextProvider.get().getBypassErrors(), GoonjErrorType.UnclassifiedError.name());
         if (classifiedErrorType == null) {
             throw exception;
         }
