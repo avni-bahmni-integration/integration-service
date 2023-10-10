@@ -52,7 +52,7 @@ dependencies {
     compile group: 'org.ict4h', name: 'atomfeed-spring-server', version: '1.9.4'
     implementation platform('software.amazon.awssdk:bom:2.15.0')
     implementation 'software.amazon.awssdk:cognitoidentity'
-    implementation 'com.bugsnag:bugsnag-spring:3.+'
+    implementation 'com.bugsnag:bugsnag-spring:3.6.4'
 
     runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 
@@ -65,7 +65,7 @@ dependencies {
 
     compile "org.javatuples:javatuples:1.2"
 
-    implementation 'com.bugsnag:bugsnag-spring:3.+'
+    implementation 'com.bugsnag:bugsnag-spring:3.6.4'
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'

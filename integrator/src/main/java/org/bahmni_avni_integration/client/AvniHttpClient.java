@@ -61,6 +61,9 @@ public class AvniHttpClient {
                 return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
             }
             throw e;
+        } catch (org.springframework.web.client.HttpClientErrorException.Unauthorized e) {
+            this.clearAuthInformation();
+            return restTemplate.exchange(uri, method, getRequestEntity(json), returnType);
         }
     }
 
