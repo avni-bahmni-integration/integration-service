@@ -47,7 +47,7 @@ public class AvniHttpClient {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
 
-        URI uri = builder.build().toUri();
+        URI uri = builder.build().encode().toUri();
         return getResponseEntity(returnType, uri, HttpMethod.GET, null);
     }
 
@@ -79,18 +79,18 @@ public class AvniHttpClient {
         logger.info(String.format("POST: %s", url));
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
         String json = ObjectJsonMapper.writeValueAsString(t);
-        return getResponseEntity(returnType, builder.build().toUri(), HttpMethod.POST, json);
+        return getResponseEntity(returnType, builder.build().encode().toUri(), HttpMethod.POST, json);
     }
 
     public <T, U> ResponseEntity<U> put(String url, T requestBody, Class<U> returnType) {
         logger.info(String.format("PUT: %s", url));
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
         try {
-            return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
+            return restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
         } catch (HttpServerErrorException.InternalServerError e) {
             if (e.getMessage().contains("TokenExpiredException")) {
                 clearAuthInformation();
-                return restTemplate.exchange(builder.build().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
+                return restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.PUT, new HttpEntity<>(requestBody, authHeaders()), returnType);
             }
             throw e;
         }
