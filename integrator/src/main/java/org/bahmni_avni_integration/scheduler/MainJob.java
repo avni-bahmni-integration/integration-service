@@ -127,11 +127,10 @@ public class MainJob implements Job {
                 logger.info("Processing BahmniVisitDateFix");
                 fixBahmniVisitAndEncounterDates();
             }
+            healthCheckService.verifyMainJob();
         } catch (Exception e) {
             logger.error("Failed", e);
             bugsnag.notify(e);
-        } finally {
-            healthCheckService.verifyMainJob();
         }
         logger.info(String.format("Next job scheduled @ {%s}", context.getNextFireTime()));
     }
