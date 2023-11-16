@@ -66,9 +66,10 @@ public class ProgramEncounterService extends BaseAvniEncounterService {
             openMRSEncounterRepository.voidEncounter(existingEncounter);
         } else {
             logger.debug(String.format("Updating existing Bahmni Encounter %s", existingEncounter.getUuid()));
+            var visit = visitService.getAvniEnrolmentVisit(existingEncounter.getPatient().getUuid(), programEncounter.getEnrolmentId(), programEncounter.getProgram());
             var openMRSEncounter = encounterMapper.mapEncounterToExistingEncounter(existingEncounter,
                     programEncounter,
-                    constants);
+                    constants, visit);
             openMRSEncounterRepository.updateEncounter(openMRSEncounter);
             errorService.successfullyProcessed(programEncounter);
         }

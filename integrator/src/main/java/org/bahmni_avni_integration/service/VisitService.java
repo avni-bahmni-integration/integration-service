@@ -33,13 +33,16 @@ public class VisitService {
         return openMRSVisitRepository.getVisit(patientUuid, locationUuid, visitTypeUuid);
     }
 
-    private OpenMRSVisit getAvniRegistrationVisit(String patientUuid, Enrolment enrolment, String visitTypeUuid) {
+    public OpenMRSVisit getAvniEnrolmentVisit(String patientUuid, String enrolmentUUID, String programUUID) {
+        var visitTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment,
+                MappingType.CommunityEnrolment_VisitType,
+                programUUID);
         var avniUuidVisitAttributeTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.Common,
                 MappingType.AvniUUID_VisitAttributeType);
         String locationUuid = constantsRepository.findAllConstants().getValue(ConstantKey.IntegrationBahmniLocation);
         var visits = openMRSVisitRepository.getVisits(patientUuid, locationUuid, visitTypeUuid);
         return visits.stream()
-                .filter(visit -> matchesEnrolmentId(visit, enrolment, avniUuidVisitAttributeTypeUuid))
+                .filter(visit -> matchesEnrolmentId(visit, enrolmentUUID, avniUuidVisitAttributeTypeUuid))
                 .findFirst().orElse(null);
     }
 
@@ -111,10 +114,7 @@ public class VisitService {
     }
 
     public OpenMRSVisit getOrCreateVisit(OpenMRSPatient patient, Enrolment enrolment) {
-        var visitTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment,
-                MappingType.CommunityEnrolment_VisitType,
-                enrolment.getProgram());
-        var visit = getAvniRegistrationVisit(patient.getUuid(), enrolment, visitTypeUuid);
+        var visit = getAvniEnrolmentVisit(patient.getUuid(), enrolment.getUuid(), enrolment.getProgram());
         if (visit == null) {
             return createVisit(patient, enrolment);
         }
@@ -122,10 +122,10 @@ public class VisitService {
         return visit;
     }
 
-    private boolean matchesEnrolmentId(OpenMRSVisit visit, Enrolment enrolment, String avniUuidVisitAttributeTypeUuid) {
+    private boolean matchesEnrolmentId(OpenMRSVisit visit, String enrolmentUUID, String avniUuidVisitAttributeTypeUuid) {
         return visit.getAttributes().stream().anyMatch(visitAttribute ->
                 visitAttribute.getAttributeType().getUuid().equals(avniUuidVisitAttributeTypeUuid)
-                && visitAttribute.getValue().equals(enrolment.getUuid()));
+                && visitAttribute.getValue().equals(enrolmentUUID));
     }
 
     public void voidVisit(Enrolment enrolment, OpenMRSFullEncounter communityEnrolmentEncounter) {

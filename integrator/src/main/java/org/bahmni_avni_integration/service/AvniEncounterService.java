@@ -120,6 +120,7 @@ public class AvniEncounterService extends BaseAvniEncounterService {
     }
 
     public void updateCommunityEncounter(OpenMRSFullEncounter existingEncounter, GeneralEncounter generalEncounter, Constants constants) {
+        var visit = visitService.getAvniRegistrationVisit(existingEncounter.getPatient().getUuid());
         if (generalEncounter.getVoided()) {
             logger.debug(String.format("Voiding Bahmni Encounter %s because the Avni general encounter %s is voided",
                     existingEncounter.getUuid(),
@@ -129,7 +130,7 @@ public class AvniEncounterService extends BaseAvniEncounterService {
             logger.debug(String.format("Updating existing Bahmni general encounter %s", existingEncounter.getUuid()));
             var openMRSEncounter = encounterMapper.mapEncounterToExistingEncounter(existingEncounter,
                     generalEncounter,
-                    constants);
+                    constants, visit);
             openMRSEncounterRepository.updateEncounter(openMRSEncounter);
             errorService.successfullyProcessed(generalEncounter);
         }

@@ -74,26 +74,26 @@ public class EncounterMapper {
         return OpenMRSSaveObservation.createPrimitiveObs(bahmniValue, FormatAndParseUtil.toISODateString(encounter.getEncounterDateTime()), ObsDataType.Date);
     }
 
-    public OpenMRSEncounter mapEncounterToExistingEncounter(OpenMRSFullEncounter existingOpenMRSEncounter, ProgramEncounter programEncounter, Constants constants) {
+    public OpenMRSEncounter mapEncounterToExistingEncounter(OpenMRSFullEncounter existingOpenMRSEncounter, ProgramEncounter programEncounter, Constants constants, OpenMRSVisit visit) {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEncounter,
                 MappingType.CommunityProgramEncounter_EncounterType,
                 programEncounter.getEncounterType());
         String formConceptUuid = mappingMetaDataRepository.getBahmniFormUuidForProgramEncounter(programEncounter.getEncounterType());
-        return mapEncounterToExistingEncounter(existingOpenMRSEncounter, programEncounter, constants, encounterTypeUuid, formConceptUuid);
+        return mapEncounterToExistingEncounter(existingOpenMRSEncounter, programEncounter, constants, encounterTypeUuid, formConceptUuid, visit);
     }
 
-    public OpenMRSEncounter mapEncounterToExistingEncounter(OpenMRSFullEncounter existingOpenMRSEncounter, GeneralEncounter generalEncounter, Constants constants) {
+    public OpenMRSEncounter mapEncounterToExistingEncounter(OpenMRSFullEncounter existingOpenMRSEncounter, GeneralEncounter generalEncounter, Constants constants, OpenMRSVisit visit) {
         var encounterTypeUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.GeneralEncounter,
                 MappingType.CommunityEncounter_EncounterType,
                 generalEncounter.getEncounterType());
         String formConceptUuid = mappingMetaDataRepository.getBahmniFormUuidForGeneralEncounter(generalEncounter.getEncounterType());
-        return mapEncounterToExistingEncounter(existingOpenMRSEncounter, generalEncounter, constants, encounterTypeUuid, formConceptUuid);
+        return mapEncounterToExistingEncounter(existingOpenMRSEncounter, generalEncounter, constants, encounterTypeUuid, formConceptUuid, visit);
     }
 
-    private OpenMRSEncounter mapEncounterToExistingEncounter(OpenMRSFullEncounter existingEncounter, AvniBaseEncounter avniBaseEncounter, Constants constants, String encounterTypeUuid, String formConceptUuid) {
+    private OpenMRSEncounter mapEncounterToExistingEncounter(OpenMRSFullEncounter existingEncounter, AvniBaseEncounter avniBaseEncounter, Constants constants, String encounterTypeUuid, String formConceptUuid, OpenMRSVisit visit) {
         OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
         openMRSEncounter.setUuid(existingEncounter.getUuid());
-        openMRSEncounter.setEncounterDatetime(existingEncounter.getEncounterDatetime());
+        openMRSEncounter.setEncounterDatetime(MapperUtils.getEventDateTime(avniBaseEncounter.getEncounterDateTime(), visit));
         openMRSEncounter.setPatient(existingEncounter.getPatient().getUuid());
         openMRSEncounter.setEncounterType(encounterTypeUuid);
         openMRSEncounter.setLocation(constants.getValue(ConstantKey.IntegrationBahmniLocation));
