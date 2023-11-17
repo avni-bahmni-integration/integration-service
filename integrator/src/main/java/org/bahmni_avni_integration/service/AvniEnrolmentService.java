@@ -39,12 +39,7 @@ public class AvniEnrolmentService {
 
     public Enrolment getMatchingEnrolment(String subjectExternalId, BahmniSplitEncounter splitEncounter, BahmniEncounterToAvniEncounterMetaData metaData) {
         Enrolment[] enrolments = avniEnrolmentRepository.getEnrolments(subjectExternalId, metaData.getAvniProgramName(splitEncounter.getFormConceptSetUuid()));
-        return Arrays.stream(enrolments).min((o1, o2) -> {
-            DateTime encounterDateTime = new DateTime(splitEncounter.getOpenMRSEncounterDateTime());
-            DateTime enrolment1DateTime = new DateTime(o1.getEnrolmentDateTime());
-            DateTime enrolment2DateTime = new DateTime(o2.getEnrolmentDateTime());
-            return Minutes.minutesBetween(encounterDateTime, enrolment1DateTime).compareTo(Minutes.minutesBetween(encounterDateTime, enrolment2DateTime));
-        }).orElse(null);
+        return splitEncounter.getMatchingEnrolment(enrolments);
     }
 
     public Enrolment createEmptyEnrolmentFor(BahmniSplitEncounter bahmniSplitEncounter, BahmniEncounterToAvniEncounterMetaData metaData, GeneralEncounter avniPatient) {
