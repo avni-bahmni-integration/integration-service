@@ -25,6 +25,9 @@ public class AvniConfig {
     @Value("${avni.impl.user.id}")
     private int implementationUserId;
 
+    @Value("${app.httpClient.timeout}")
+    private int httpClientTimeout;
+
     public String getAvniPostgresUser() {
         return avniPostgresUser;
     }
@@ -47,5 +50,9 @@ public class AvniConfig {
 
     public int getImplementationUserId() {
         return implementationUserId;
+    }
+
+    public int getHttpClientTimeout() {
+        return httpClientTimeout;
     }
 }

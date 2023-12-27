@@ -122,6 +122,7 @@ public class AvniHttpClient {
         logger.debug("Getting cognito details");
         ResponseEntity<CognitoDetailsResponse> response = restTemplate.getForEntity(apiUrl("/cognito-details"), CognitoDetailsResponse.class);
         CognitoDetailsResponse cognitoDetails = response.getBody();
+        logger.debug("Received cognito response");
         helper = new AuthenticationHelper(cognitoDetails.getPoolId(), cognitoDetails.getClientId());
         authenticationResultType = helper.performSRPAuthentication(AVNI_IMPL_USER, AVNI_IMPL_PASSWORD);
         return authenticationResultType.getIdToken();

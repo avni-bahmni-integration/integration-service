@@ -1,5 +1,6 @@
 package org.bahmni_avni_integration;
 
+import org.bahmni_avni_integration.integration_data.config.AvniConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -17,12 +18,9 @@ import java.time.Duration;
 public class BahmniAvniIntegrationApplication {
     private final RestTemplate restTemplate;
 
-    @Value("${app.httpClient.timeout}")
-    private int httpClientTimeout;
-
     @Autowired
-	public BahmniAvniIntegrationApplication(Environment environment, RestTemplateBuilder restTemplateBuilder) {
-        Duration timeout = Duration.ofSeconds(httpClientTimeout);
+	public BahmniAvniIntegrationApplication(RestTemplateBuilder restTemplateBuilder, AvniConfig avniConfig) {
+        Duration timeout = Duration.ofSeconds(avniConfig.getHttpClientTimeout());
         restTemplate = restTemplateBuilder.setConnectTimeout(timeout)
                 .setReadTimeout(timeout)
                 .build();
