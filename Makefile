@@ -148,3 +148,13 @@ download-ashwini-backup:
 copy-backup-to-vagrant:
 	scp -P 2222 -i ~/.vagrant.d/insecure_private_key /tmp/abi-backup.sql root@127.0.0.1:/tmp/
 #######
+
+restore-ashwini-dump:
+ifndef dumpFile
+	@echo "Provde the dumpFile variable"
+	exit 1
+else
+	$(call _drop_db,avni_int_ashwini)
+	$(call _build_db,avni_int_ashwini)
+	psql -U bahmni_avni_admin -d avni_int_ashwini < $(dumpFile)
+endif

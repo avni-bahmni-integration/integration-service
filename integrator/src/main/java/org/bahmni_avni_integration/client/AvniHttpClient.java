@@ -42,13 +42,17 @@ public class AvniHttpClient {
     private AuthenticationHelper helper;
 
     public <T> ResponseEntity<T> get(String url, Map<String, String> queryParams, Class<T> returnType) {
+        URI uri = makeGetUri(url, queryParams);
+        return getResponseEntity(returnType, uri, HttpMethod.GET, null);
+    }
+
+    URI makeGetUri(String url, Map<String, String> queryParams) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl(url));
         for (var entry : queryParams.entrySet()) {
             builder.queryParam(entry.getKey(), entry.getValue());
         }
 
-        URI uri = builder.build().encode().toUri();
-        return getResponseEntity(returnType, uri, HttpMethod.GET, null);
+        return builder.build().encode().toUri();
     }
 
     private <T> ResponseEntity<T> getResponseEntity(Class<T> returnType, URI uri, HttpMethod method, String json) {
@@ -129,6 +133,6 @@ public class AvniHttpClient {
     }
 
     private String apiUrl(String url) {
-        return String.format("%s%s", AVNI_API_URL, url);
+        return String.format("%s%s?version=2", AVNI_API_URL, url);
     }
 }
