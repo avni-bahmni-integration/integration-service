@@ -96,6 +96,7 @@ public class HttpClient {
         String message = asString(httpResponse);
         if (statusCode != HttpStatus.SC_CREATED && statusCode != HttpStatus.SC_OK) {
             logger.error(message);
+            logger.error(json);
             throw new RuntimeException("Post failed");
         }
         return message;
