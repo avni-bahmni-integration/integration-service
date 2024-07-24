@@ -53,9 +53,21 @@ public interface MappingMetaDataRepository extends PagingAndSortingRepository<Ma
         return mapping.getBahmniValue();
     }
 
+    default String getMandatoryBahmniValue(MappingGroup mappingGroup, MappingType mappingType) {
+        MappingMetaData mapping = findByMappingGroupAndMappingType(mappingGroup, mappingType);
+        if (mapping == null) throw new RuntimeException(String.format("No mapping found for mapping group: %s, mapping type: %s", mappingGroup, mappingType));
+        return mapping.getBahmniValue();
+    }
+
     default String getBahmniValue(MappingGroup mappingGroup, MappingType mappingType, String avniValue) {
         MappingMetaData mapping = findByMappingGroupAndMappingTypeAndAvniValue(mappingGroup, mappingType, avniValue);
         if (mapping == null) return null;
+        return mapping.getBahmniValue();
+    }
+
+    default String getMandatoryBahmniValue(MappingGroup mappingGroup, MappingType mappingType, String avniValue) {
+        MappingMetaData mapping = findByMappingGroupAndMappingTypeAndAvniValue(mappingGroup, mappingType, avniValue);
+        if (mapping == null) throw new RuntimeException(String.format("No mapping found for mapping group: %s, mapping type: %s, avni value: %s", mappingGroup, mappingType, avniValue));
         return mapping.getBahmniValue();
     }
 

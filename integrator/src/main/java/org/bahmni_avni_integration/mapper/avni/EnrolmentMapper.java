@@ -77,14 +77,14 @@ public class EnrolmentMapper {
 
 
     private OpenMRSSaveObservation formGroupObservation(Enrolment enrolment, MappingType mappingType) {
-        var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
+        var formConcept = mappingMetaDataRepository.getMandatoryBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
         var groupObservation = new OpenMRSSaveObservation();
         groupObservation.setConcept(formConcept);
         return groupObservation;
     }
 
     private OpenMRSSaveObservation existingGroupObs(Enrolment enrolment, MappingType mappingType, OpenMRSFullEncounter existingEncounter) {
-        var formConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
+        var formConceptUuid = mappingMetaDataRepository.getMandatoryBahmniValue(MappingGroup.ProgramEnrolment, mappingType, enrolment.getProgram());
         Optional<OpenMRSObservation> existingGroupObs = existingEncounter.findObservation(formConceptUuid);
         var groupObservation = new OpenMRSSaveObservation();
         existingGroupObs.ifPresent(o -> groupObservation.setUuid(o.getObsUuid()));

@@ -59,7 +59,7 @@ public class SubjectMapper {
     }
 
     private List<OpenMRSSaveObservation> groupObs(List<OpenMRSSaveObservation> observations) {
-        var formConcept = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConcept = mappingMetaDataRepository.getMandatoryBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
         var groupObservation = new OpenMRSSaveObservation();
         groupObservation.setConcept(formConcept);
         groupObservation.setGroupMembers(observations);
@@ -67,7 +67,7 @@ public class SubjectMapper {
     }
 
     private List<OpenMRSSaveObservation> existingGroupObs(OpenMRSFullEncounter existingEncounter, List<OpenMRSSaveObservation> observations) {
-        var formConceptUuid = mappingMetaDataRepository.getBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
+        var formConceptUuid = mappingMetaDataRepository.getMandatoryBahmniValue(MappingGroup.PatientSubject, MappingType.CommunityRegistration_BahmniForm);
         Optional<OpenMRSObservation> existingGroupObs = existingEncounter.findObservation(formConceptUuid);
         var groupObservation = new OpenMRSSaveObservation();
         existingGroupObs.ifPresent(o -> groupObservation.setUuid(o.getObsUuid()));
